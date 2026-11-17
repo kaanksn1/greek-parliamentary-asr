@@ -1,0 +1,64 @@
+{
+  "schema": "greek-asr-inference-v1",
+  "status": "complete",
+  "purpose": "runtime-smoke",
+  "created_utc": "2026-11-17T21:21:38.360849+00:00",
+  "backend": "whisper",
+  "model": {
+    "model_id": "openai/whisper-small",
+    "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+    "pipeline_tag": "automatic-speech-recognition",
+    "license": "apache-2.0",
+    "source": "https://huggingface.co/openai/whisper-small",
+    "status": "metadata_verified_runtime_pending"
+  },
+  "seed": 42,
+  "device": "cuda",
+  "split": "train",
+  "manifest_sha256": "8e3ab7bde80a9a14065a48a6f8eb3fd995a431130501aa93ca5bcaf59ba58955",
+  "source_lock_sha256": "fd720cd46842ee20f9278d8635f36276d0bd44ccbca985a6c6c84d72c68defaa",
+  "test_protocol_sha256": null,
+  "expected_records": 3,
+  "total_audio_seconds": 6.609999999999999,
+  "training_performed": false,
+  "references_used_as_model_input": false,
+  "wer_cer": null,
+  "completed_records": 3,
+  "code_sha256": {
+    "greek_asr/infer.py": "a0e570b7c1c02b25305b68a5a82bdc4d486eaca80ba13c7d06844da496b77b6a",
+    "greek_asr/pretrained/__init__.py": "729b49beb875b629929f515457c1fc59680d28e6a56b9e14be1e656af37c7a2f",
+    "greek_asr/pretrained/nemo.py": "505a6460aa4d00162bf4b7b8435595eb88113d976ef24944b898378e9e8514c6",
+    "greek_asr/pretrained/qwen.py": "bc5b828ced4281bdc8ba60438e0cc1e2713dedb23e1193ca88b89a93718ff1f7",
+    "greek_asr/pretrained/whisper.py": "98c7df74f088102b8cba6d2ae5b16f7c08e9d4007bc71de61aeeb49770d91cfa"
+  },
+  "download_and_load_seconds": 11.496660356000007,
+  "settings": {
+    "language": "el",
+    "task": "transcribe",
+    "dtype": "float32",
+    "attention": "eager",
+    "num_beams": 1,
+    "do_sample": false,
+    "batch_size": 1,
+    "audio_input": "original mono PCM16 16000 Hz WAV",
+    "long_audio": "untruncated features and timestamp-based generation above 30 s",
+    "generation_length": "checkpoint generation_config default",
+    "reference_or_context_prompt": false
+  },
+  "inference_seconds_including_output_io": 3.156439626000008,
+  "predictions_sha256": "fc186b4c6f543b02212492967f9c7dcee0396ae1436907be60cdb668b6bc82e4",
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "qwen-asr": "0.0.6",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 1435415040
+  }
+}

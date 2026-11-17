@@ -1,0 +1,109 @@
+{
+  "purpose": "training-pilot runtime smoke only; not a benchmark or model-selection result",
+  "created_utc": "2026-11-17T18:20:19.296135+00:00",
+  "model": {
+    "model_id": "openai/whisper-small",
+    "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+    "pipeline_tag": "automatic-speech-recognition",
+    "license": "apache-2.0",
+    "source": "https://huggingface.co/openai/whisper-small",
+    "status": "metadata_verified_runtime_pending"
+  },
+  "language": "el",
+  "task": "transcribe",
+  "seed": 42,
+  "generation": {
+    "max_new_tokens": 96,
+    "num_beams": 1,
+    "do_sample": false
+  },
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.9.1+rocm7.2.1.gitff65f5bc",
+    "transformers": "4.57.6",
+    "numpy": "2.5.3",
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu": "AMD Radeon RX 7800 XT",
+    "dtype": "float32",
+    "attention": "eager"
+  },
+  "pilot_audit": {
+    "schema": "train-pilot-audit-v1",
+    "examples": 3,
+    "audio_files_checked": 3,
+    "total_audio_seconds": 6.609999999999999,
+    "inputs_sha256": {
+      "manifest.jsonl": "a9c5e5d47afbaafe1b1452e37bf10f953d31fb99fdd4c89242ab155ad537bc9e",
+      "source_summary.json": "065e00725f50b451e97ddf0cb6c6b5c0697e93bffabf1f7b3578c20c1518cb14",
+      "selected_source_lines.json": "a6e27e44d40b90be707792ed124ed2e7dae08fc12f35f507a9cc7be19e31b8d5"
+    },
+    "audio": [
+      {
+        "id": "train-pilot-0001",
+        "audio_path": "audio/train-pilot-0001.wav",
+        "sha256": "3a3d5d3dd14390eee2ec5a71be272154b6fa953766f4f746d086739e5505105c",
+        "duration_seconds": 2.51,
+        "sampling_rate": 16000,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 40160,
+        "compression_type": "NONE"
+      },
+      {
+        "id": "train-pilot-0002",
+        "audio_path": "audio/train-pilot-0002.wav",
+        "sha256": "558c1a270332a49d97d3e8993a307499fd7b719c05e6d9d6493ce2dde77896b5",
+        "duration_seconds": 2.2,
+        "sampling_rate": 16000,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 35200,
+        "compression_type": "NONE"
+      },
+      {
+        "id": "train-pilot-0003",
+        "audio_path": "audio/train-pilot-0003.wav",
+        "sha256": "719b0a4fb9f5205d8cab4fc74904fe796da07ebe30ae242ccefd76955982dbe6",
+        "duration_seconds": 1.9,
+        "sampling_rate": 16000,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 30400,
+        "compression_type": "NONE"
+      }
+    ],
+    "source_split": "train",
+    "reference_annotation_tags": {
+      "train-pilot-0003": [
+        "<spoken_noise>"
+      ]
+    },
+    "quality_status": "requires_reference_review",
+    "note": "Byte integrity and source lineage checked; no semantic audio/transcript adjudication or correction."
+  },
+  "download_and_load_seconds": 17.378761878,
+  "timings_not_a_warm_benchmark": [
+    {
+      "id": "train-pilot-0001",
+      "cold_inference_seconds": 4.298829158
+    },
+    {
+      "id": "train-pilot-0002",
+      "cold_inference_seconds": 0.39643644099999875
+    },
+    {
+      "id": "train-pilot-0003",
+      "cold_inference_seconds": 0.3870040800000041
+    }
+  ],
+  "peak_gpu_memory_allocated_bytes": 1435415552,
+  "predictions_sha256": "f99a13d56863a05ac811ad7c6218a5b323946847d5ef9c68ebe2db4138cef02f",
+  "source_lock_sha256": "fd720cd46842ee20f9278d8635f36276d0bd44ccbca985a6c6c84d72c68defaa",
+  "runner_sha256": "a89ee5f567250b83b9470ac1f1a53aef1b6d64bf180b157cc3c103f57690b291",
+  "references_used_as_model_input": false,
+  "training_performed": false,
+  "official_development_data_read": false,
+  "official_test_data_read": false,
+  "wer_cer": null,
+  "scoring_note": "no score claimed: tiny train pilot includes an unresolved source annotation marker"
+}

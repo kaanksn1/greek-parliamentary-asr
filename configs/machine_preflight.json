@@ -1,0 +1,15 @@
+{
+  "kind": "existing_environment_gpu_preflight",
+  "distribution": "Ubuntu-24.04",
+  "python": "3.12.3",
+  "torch": "2.9.1+rocm7.2.1.gitff65f5bc",
+  "hip": "7.2.53211-e1a6bc5663",
+  "gpu_available": true,
+  "gpu_name": "AMD Radeon RX 7800 XT",
+  "small_matrix_forward_backward_ok": true,
+  "asr_model_runtime_verified": true,
+  "verified_asr_model": "openai/whisper-small",
+  "asr_runtime_record": "results/runtime_smoke/whisper_small_train/run.json",
+  "project_training_environment_created": false,
+  "note": "Existing environment checked with small-matrix forward/backward and three-clip training-pilot inference; no package changes or model training."
+}

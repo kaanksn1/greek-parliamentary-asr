@@ -1,0 +1,6 @@
+# Common scoring, manifest validation and lightweight tests use Python 3.12 stdlib.
+# This deliberately empty requirements file is not the model runtime recipe.
+# Use scripts/setup_transformers_rocm.sh for Whisper/Qwen and
+# scripts/setup_nemo_rocm.sh for Canary/Parakeet in separate environments.
+# Their exact installed lock files and actual runtime evidence are documented
+# in the backend/runtime docs. Do not modify older projects' environments.

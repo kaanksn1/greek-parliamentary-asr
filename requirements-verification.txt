@@ -1,0 +1,4 @@
+# Optional independent scorer check; not the model-training environment.
+jiwer==4.0.0
+rapidfuzz==3.14.6
+click==8.5.1

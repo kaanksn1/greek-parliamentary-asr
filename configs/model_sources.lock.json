@@ -1,0 +1,46 @@
+﻿{
+    "schema":  "checkpoint-source-lock-v1",
+    "verified_on":  "2026-11-17",
+    "models":  [
+                   {
+                       "model_id":  "lighteternal/wav2vec2-large-xlsr-53-greek",
+                       "revision":  "c5c82840b689b827a2029deefe82670c7c5809a0",
+                       "pipeline_tag":  "automatic-speech-recognition",
+                       "license":  "apache-2.0",
+                       "source":  "https://huggingface.co/lighteternal/wav2vec2-large-xlsr-53-greek",
+                       "status":  "metadata_verified_runtime_pending"
+                   },
+                   {
+                       "model_id":  "openai/whisper-small",
+                       "revision":  "973afd24965f72e36ca33b3055d56a652f456b4d",
+                       "pipeline_tag":  "automatic-speech-recognition",
+                       "license":  "apache-2.0",
+                       "source":  "https://huggingface.co/openai/whisper-small",
+                       "status":  "metadata_verified_runtime_pending"
+                   },
+                   {
+                       "model_id":  "nvidia/canary-1b-v2",
+                       "revision":  "d455706339a6b32e1aa40f82c713a482a0c938e2",
+                       "pipeline_tag":  "automatic-speech-recognition",
+                       "license":  "cc-by-4.0",
+                       "source":  "https://huggingface.co/nvidia/canary-1b-v2",
+                       "status":  "metadata_verified_runtime_pending"
+                   },
+                   {
+                       "model_id":  "nvidia/parakeet-tdt-0.6b-v3",
+                       "revision":  "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+                       "pipeline_tag":  "automatic-speech-recognition",
+                       "license":  "cc-by-4.0",
+                       "source":  "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+                       "status":  "metadata_verified_runtime_pending"
+                   },
+                   {
+                       "model_id":  "Qwen/Qwen3-ASR-0.6B",
+                       "revision":  "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+                       "pipeline_tag":  "automatic-speech-recognition",
+                       "license":  "apache-2.0",
+                       "source":  "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+                       "status":  "metadata_verified_runtime_pending"
+                   }
+               ]
+}

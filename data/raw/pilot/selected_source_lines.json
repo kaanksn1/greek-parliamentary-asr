@@ -1,0 +1,23 @@
+[
+  {
+    "original_text_line": "alekshs_tsipras-olomeleia_37_00240000_00243000_4_1 εμείς μπορούμε σήμερα\n",
+    "original_utt2spk_line": "alekshs_tsipras-olomeleia_37_00240000_00243000_4_1 alekshs_tsipras\n",
+    "source_utterance_id": "alekshs_tsipras-olomeleia_37_00240000_00243000_4_1",
+    "text_member": "hparl/hparl_segmented_train/text",
+    "utt2spk_member": "hparl/hparl_segmented_train/utt2spk"
+  },
+  {
+    "original_text_line": "dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1 σε αυτήν την οικονομική δράση\n",
+    "original_utt2spk_line": "dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1 dhmhtrios_gakhs\n",
+    "source_utterance_id": "dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1",
+    "text_member": "hparl/hparl_segmented_train/text",
+    "utt2spk_member": "hparl/hparl_segmented_train/utt2spk"
+  },
+  {
+    "original_text_line": "iwannhs_balafas-olomeleia_47_02640000_02643000_1_2 τους ξεφεύγει η αντικατάσταση της <spoken_noise>\n",
+    "original_utt2spk_line": "iwannhs_balafas-olomeleia_47_02640000_02643000_1_2 iwannhs_balafas\n",
+    "source_utterance_id": "iwannhs_balafas-olomeleia_47_02640000_02643000_1_2",
+    "text_member": "hparl/hparl_segmented_train/text",
+    "utt2spk_member": "hparl/hparl_segmented_train/utt2spk"
+  }
+]

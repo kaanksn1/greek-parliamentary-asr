@@ -1,0 +1,7 @@
+* text=auto eol=lf
+# This historical metadata snapshot is byte-hashed by the original smoke run.
+configs/model_sources.lock.json -text whitespace=cr-at-eol
+*.wav -text
+*.flac -text
+*.png -text
+*.pdf -text

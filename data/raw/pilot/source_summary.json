@@ -1,0 +1,21 @@
+{
+  "archive_bytes": 11887118613,
+  "archive_member": "1b1c180978d84429b8f0df18895d946c/2e192bae4738437a8e22519f9fc25817/hparl.zip",
+  "archive_transfer_bytes": 17406252,
+  "archive_transfer_limit_bytes": 67108864,
+  "archive_url": "https://inventory.clarin.gr/storage/",
+  "catalog_sha256": "70b3eed87a655420b8ad38bca0ac928da52b718a43df07e23e99526d6c8a7ae9",
+  "count": 3,
+  "official_development_data_read": false,
+  "official_test_data_read": false,
+  "reference_policy": "original source training transcript, no text normalization or correction",
+  "seed": 42,
+  "selection": "seeded sample from sorted official training WAV members",
+  "source_catalog": "https://inventory.clarin.gr/catalogue_backend/api/registry/metadatarecord/1602/",
+  "total_audio_seconds": 6.609999999999999,
+  "training_metadata_sha256": {
+    "hparl/hparl_segmented_train/text": "30680b51037d39d30439552b501d7b8721590055fe6d50c7041df2de91f1e778",
+    "hparl/hparl_segmented_train/utt2spk": "85600fb37fc5f330c08a0f226b78e653079ccd10ee88ee2d0023b92acc7741e1"
+  },
+  "zip_directory_sha256": "010021dd1cbdf3aa83b3497ac3247e9e4e1aed59b4f32b042b12a1af9f5d3b46"
+}
