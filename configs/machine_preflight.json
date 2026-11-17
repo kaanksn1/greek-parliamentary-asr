@@ -11,5 +11,18 @@
   "verified_asr_model": "openai/whisper-small",
   "asr_runtime_record": "results/runtime_smoke/whisper_small_train/run.json",
   "project_training_environment_created": false,
+  "owner_inference_environments_created": true,
+  "owner_runtime_verified_on": "2026-11-18",
+  "owner_inference_environment_locks": [
+    "requirements-rocm.lock.txt",
+    "requirements-nemo.lock.txt"
+  ],
+  "owner_runtime_records": [
+    "results/runtime_smoke/owner_whisper_train/run.json",
+    "results/runtime_smoke/owner_qwen_train_verified/run.json",
+    "results/runtime_smoke/owner_canary_train/run.json",
+    "results/runtime_smoke/owner_parakeet_train_verified/run.json"
+  ],
+  "owner_runtime_scope": "Three unchanged official training clips per model; no training, WER/CER, dev/test access or full-data throughput claim. Separate inference environments do not establish teammates' training compatibility.",
   "note": "Existing environment checked with small-matrix forward/backward and three-clip training-pilot inference; no package changes or model training."
 }

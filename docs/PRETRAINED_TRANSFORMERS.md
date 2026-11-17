@@ -2,8 +2,9 @@
 
 Owner integration prepared on 18 November 2026. These adapters perform
 **inference without additional group training**. Adnan owns the separate
-Whisper fine-tuning implementation. This document does not claim a completed
-benchmark or a measured runtime for Qwen.
+Whisper fine-tuning implementation. Both adapters completed the three existing
+training-pilot recordings on the owner's GPU in a new isolated runtime. This
+document does not claim a completed benchmark or fine-tuning improvement.
 
 ## Shared interface
 
@@ -52,8 +53,11 @@ native-Transformers `-hf` conversion. The official package pins
 `transformers==4.57.6` and `accelerate==1.12.0`; its remaining runtime
 dependencies belong in the separately resolved environment lock.
 
-The Transformers package backend uses float32/eager attention, batch limit
-1, its documented 512-new-token default, one beam and no sampling. Calls
+The Transformers package backend uses float32, batch limit 1, its documented
+512-new-token default, one beam and no sampling. Eager attention is requested
+at loading, but the upstream composite model retains SDPA in its thinker,
+audio tower and text model. Both requested and observed per-module settings
+are recorded; we do not describe this run as entirely eager. Calls
 provide only the audio path, forced language `Greek`, empty context and
 `return_time_stamps=False`. No forced-aligner model is loaded. The upstream
 package handles its audio decoding/chunking in memory. Its finite generation
@@ -64,7 +68,9 @@ than silently omitted predictions.
 Primary references: [official Qwen quickstart](https://github.com/QwenLM/Qwen3-ASR),
 [package dependency declarations](https://github.com/QwenLM/Qwen3-ASR/blob/main/pyproject.toml),
 [official wrapper implementation](https://github.com/QwenLM/Qwen3-ASR/blob/main/qwen_asr/inference/qwen3_asr.py)
-and [model card](https://huggingface.co/Qwen/Qwen3-ASR-0.6B).
+and [model card](https://huggingface.co/Qwen/Qwen3-ASR-0.6B). The upstream
+[model implementation](https://github.com/QwenLM/Qwen3-ASR/blob/main/qwen_asr/core/transformers_backend/modeling_qwen3_asr.py)
+selects attention from each submodule's own configuration.
 
 ## Verification and remaining runtime work
 
@@ -72,7 +78,10 @@ and [model card](https://huggingface.co/Qwen/Qwen3-ASR-0.6B).
 audio-only Greek decoding, empty/malformed results, explicit device failure,
 unaltered source PCM, and the >30-second Whisper input path. Seven tests
 passed without downloading models or importing their heavy dependencies.
-These dependency doubles verify integration contracts; they are not evidence
-that Qwen or the new adapter has run on the target GPU. Actual central
-train-only runtime logs must be recorded separately before full experiments.
+These dependency doubles verify integration contracts. Separate actual GPU
+evidence is in `results/runtime_smoke/owner_whisper_train/` and
+`results/runtime_smoke/owner_qwen_train_verified/`, each with predictions and
+a run record. Both use the same three original training clips, without
+references as model input or WER/CER calculation. Environment setup and
+commands are in [RUNTIME_ENVIRONMENT.md](RUNTIME_ENVIRONMENT.md).
 No development/test audio was used to implement or test these adapters.

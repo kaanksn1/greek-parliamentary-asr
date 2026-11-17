@@ -9,9 +9,17 @@ from typing import Any
 class QwenBackend:
     def __init__(self, model: Any):
         self.model = model
+        observed_attention = {}
+        for name, module in model.model.named_modules():
+            implementation = getattr(getattr(module, "config", None), "_attn_implementation", None)
+            if isinstance(implementation, str):
+                observed_attention[name or "<root>"] = implementation
         self.settings = {
             "language": "Greek", "context": "", "return_time_stamps": False,
-            "dtype": "float32", "attention": "eager", "num_beams": 1,
+            "dtype": "float32", "requested_attention": "eager",
+            "observed_module_attention": observed_attention,
+            "attention_note": "upstream composite submodules may retain their default SDPA implementation",
+            "num_beams": 1,
             "do_sample": False, "max_inference_batch_size": 1,
             "max_new_tokens": 512, "backend": "qwen-asr transformers",
             "reference_or_context_prompt": False,

@@ -18,9 +18,10 @@ See `docs/SECONDARY_SOURCE_TR.md` and `DATA_LICENSE.md`.
 
 Current stage (18 November 2026): three original training WAVs and transcripts
 acquired and audited; common scoring code and baseline inventory created;
-Whisper-small GPU runtime checked on those WAVs. Owner adapters for Whisper,
-Canary, Parakeet and Qwen3-ASR and their common audio-only runner are implemented;
-new isolated runtime validation is in progress. No full benchmark result or
+Whisper, Qwen3-ASR, Canary and Parakeet completed GPU inference on those WAVs
+in two new isolated runtimes. Owner adapters and their common audio-only
+runner are implemented and exercised on this training fixture.
+No full benchmark result or
 training improvement is claimed. The full corpus has not yet been acquired,
 cleaned or frozen for evaluation.
 The five-member ownership plan is now assigned in `docs/TEAM.md`. Full runs
@@ -113,6 +114,28 @@ for Canary/Parakeet. Backend sources, dependencies and limitations are in
 [NEMO_RUNTIME.md](docs/NEMO_RUNTIME.md). Only `train` is permitted for runtime
 smokes. Full-data benchmark inference must wait for Samed's data delivery,
 the early immutable test freeze and later final protocol commit.
+The tested Transformers setup/replay and commands are in
+[RUNTIME_ENVIRONMENT.md](docs/RUNTIME_ENVIRONMENT.md). Install the pinned
+environment in WSL with `bash scripts/setup_transformers_rocm.sh`; use
+`bash scripts/setup_nemo_rocm.sh` for the separate NeMo environment. These
+assume an existing compatible GPU driver/runtime and do not alter older
+project environments.
+
+Actual owner runtime checks on 18 November (all on the same 3 training clips,
+6.61 seconds total; no model training, WER/CER or official dev/test access):
+
+| Standard baseline | Complete predictions | Actual run record |
+|---|---:|---|
+| Whisper-small | 3/3 | [run.json](results/runtime_smoke/owner_whisper_train/run.json) |
+| Qwen3-ASR-0.6B | 3/3 | [run.json](results/runtime_smoke/owner_qwen_train_verified/run.json) |
+| Canary-1B-v2 | 3/3 | [run.json](results/runtime_smoke/owner_canary_train/run.json) |
+| Parakeet-TDT-0.6B-v3 | 3/3 | [run.json](results/runtime_smoke/owner_parakeet_train_verified/run.json) |
+
+On ROCm, Parakeet's NVIDIA CUDA Graph acceleration is disabled before restore;
+the standard greedy TDT decoding is retained. Qwen's requested and observed
+attention implementations are recorded separately. These are documented runtime
+compatibility settings, not our trained-model contribution. Full benchmark
+performance and the remaining members' baselines are still pending.
 
 Members start their own assigned branch from `main`, test their changes and
 open a PR. See `docs/TEAM.md` for ownership. `contributions/README.md` lists the
@@ -137,6 +160,7 @@ settled. No paid storage or cloud compute is assumed.
 | `docs/HANDOFF_SAMED_TR.md` | Detailed data-owner task prompt, deliverables and acceptance checks |
 | `docs/PRETRAINED_TRANSFORMERS.md` | Whisper/Qwen APIs, standard settings and primary sources |
 | `docs/NEMO_RUNTIME.md` | Canary/Parakeet APIs, separate dependencies and actual runtime status |
+| `docs/RUNTIME_ENVIRONMENT.md` | Tested isolated Whisper/Qwen installation, lock replay and training-pilot commands |
 | `docs/BASELINES.md` | Required family inventory, verified checkpoint candidates and pending work |
 | `docs/PROTOCOL_DRAFT.md` | Draft experimental protocol; not a frozen final-test protocol |
 | `docs/INITIAL_WORK_TR.md` | Completed startup work, observed reference issue and remaining work |
@@ -153,12 +177,13 @@ settled. No paid storage or cloud compute is assumed.
 | `.gitignore` | Local environments, caches and generated experiment outputs; raw/clean data are not ignored |
 | `.gitattributes` | Consistent source line endings and binary audio/document handling |
 
-GPU preflight passed on the existing WSL ROCm installation: AMD Radeon RX 7800 XT,
-Python 3.12.3, PyTorch 2.9.1+ROCm 7.2.1, finite small-matrix forward/backward.
-Whisper-small also completed inference on the three training-pilot clips in
-that existing environment. Other ASR backends are pending; a separate complete
-training environment has not been created. The exact smoke environment and
-checkpoint are recorded in `results/runtime_smoke/whisper_small_train/run.json`.
+The original GPU preflight passed on the existing WSL ROCm installation:
+AMD Radeon RX 7800 XT, Python 3.12.3, PyTorch 2.9.1+ROCm 7.2.1, finite
+small-matrix forward/backward and three-clip Whisper inference. That historical
+record remains in `results/runtime_smoke/whisper_small_train/run.json`.
+The owner now has separate new Transformers and NeMo inference environments;
+their actual pins and current runtime evidence are recorded separately.
+The teammates' full training implementations/environments remain pending.
 
 Before full runs: obtain the official data release, freeze the original test,
 inspect real train/dev quality, acquire and audit the selected CSS10 release, measure
@@ -199,7 +224,7 @@ pip install -r requirements-verification.txt
 python scripts/verify_scoring.py
 ```
 
-Current lightweight verification: 43 unit tests passed (including the original
+Current lightweight verification: 44 unit tests passed (including the original
 15 startup tests); the independent startup JiWER check
 matched WER/CER on 500 deterministic fixture corpora. The latter are synthetic
 verification cases, not audio data or model results.
