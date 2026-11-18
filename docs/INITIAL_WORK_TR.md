@@ -1,4 +1,4 @@
-# Başlangıç durumu — 17 Kasım 2026
+# Başlangıç ve entegrasyon durumu — 18 Kasım 2026
 
 Çalışma konusu: **Yunanca parlamento konuşmalarında ASR ve alan verisiyle
 fine-tuning**. Dil/dataset rezervasyonu henüz sınıf tablosuna işlenmiş sayılmıyor.
@@ -7,10 +7,37 @@ fine-tuning**. Dil/dataset rezervasyonu henüz sınıf tablosuna işlenmiş say�
 atandı. İkinci eğitim kaynağı CSS10 Greek v1 seçildi; üreticinin bildirdiği
 4:08:14 ile HParl toplamı 123:55:56 kaynak havuzu ediyor. Bu, yerelde ölçülmüş
 veya temizlenip kullanılan süre değildir. [Kaynak incelemesi](SECONDARY_SOURCE_TR.md).
-Kullanıcının isteğiyle bu aşama görev/sınıf tablosu planlamasıyla biter; yeni
-uygulama, tam veri indirme veya eğitim bu güncellemenin parçası değildir.
+17 Kasım'daki plan aşamasından sonra, 18 Kasım'da kullanıcı Serdar'ın kendi
+görevlerini yapmayı, public repoyu açmayı, dört ekip arkadaşını davet etmeyi
+ve Samed için ayrıntılı prompt hazırlamayı atadı.
 
-Tamamlanan somut işler:
+18 Kasım entegrasyon teslimi:
+
+- Public repo açıldı ve kod yüklendi:
+  https://github.com/kaanksn1/greek-parliamentary-asr . Dört gerçek GitHub
+  hesabına write daveti gönderildi; davet kabulü üyenin kendi işlemidir.
+- Ortak veri/tahmin sözleşmesi `DATA_CONTRACT.md`, Samed'in ayrıntılı promptu
+  `HANDOFF_SAMED_TR.md` içinde. Kendi katkı raporumuz var; diğer üyelerin
+  raporları onlar adına doldurulmadı.
+- Dört standart pretrained adapter ve audio-only CLI eklendi. Eksik/bozuk
+  kayıt atılmaz; gerçek boş tahmin korunur, başarısız koşum ayrı kaydedilir.
+- İlk public clone'da ASR bağımlılığı kurulmadan 43 test geçti; NeMo/ROCm
+  regresyon kontrolüyle güncel sayı 44 oldu. Komut:
+  `python -S -m unittest discover -s tests -q`.
+- Bağımsız Whisper/Qwen ROCm ortamı kuruldu, gerçek paket lock'u ve yeniden
+  kurulum scripti eklendi. İki model de aynı üç özgün eğitim klibinde GPU'da
+  3/3 çıktı üretti. Qwen'in istenen ve gözlenen attention ayarları ayrı kayıtta.
+  `RUNTIME_ENVIRONMENT.md` ve `results/runtime_smoke/` gerçek kanıtları içerir.
+- Ayrı NeMo ortamı kuruldu. Canary ve Parakeet de aynı üç özgün eğitim
+  kaydında GPU'da 3/3 çıktı üretti. Parakeet'in NVIDIA CUDA Graph
+  hızlandırması ROCm için model kurulmadan önce kapatıldı; standart greedy
+  TDT algoritması korundu. Gerçek kayıtlar `results/runtime_smoke/`, ortam ve
+  düzeltme ayrıntısı `NEMO_RUNTIME.md` içinde. Tam benchmark/eğitim/test yok.
+
+Samed'in tam veri edinme, test dondurma ve temizliği hâlâ kendi görevidir.
+Kemal/Adnan model teslimleri ve Ozan'ın nihai değerlendirmesi henüz yapılmadı.
+
+17 Kasım başlangıcında tamamlanan somut işler:
 
 - HParl'in resmî katalog metadata'sı ve özgün ZIP dizini okundu: arşivde
   92.133 WAV var. Tam arşiv indirilmedi.

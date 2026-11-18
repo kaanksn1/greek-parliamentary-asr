@@ -3,7 +3,7 @@
 set -euo pipefail
 PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
-if [[ "${PROJECT_ROOT##*/}" != "project3_greek_asr" ]]; then
+if [[ ! -d "$PROJECT_ROOT/greek_asr" || ! -f "$PROJECT_ROOT/configs/model_sources.lock.json" ]]; then
   echo "Unexpected project directory; refusing environment setup." >&2
   exit 1
 fi
@@ -22,7 +22,7 @@ mkdir -p outputs
 if [[ -f requirements-rocm.lock.txt ]]; then
   "$P3_PYTHON" -m pip install --find-links https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2.1/ -r requirements-rocm.lock.txt
 else
-  "$P3_PYTHON" -m pip install --upgrade pip
+  "$P3_PYTHON" -m pip install 'pip==26.3'
   "$P3_PYTHON" -m pip install --find-links https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2.1/ \
     'https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2.1/torch-2.9.1%2Brocm7.2.1.lw.gitff65f5bc-cp312-cp312-linux_x86_64.whl' \
     'https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2.1/torchvision-0.24.0%2Brocm7.2.1.gitb919bd0c-cp312-cp312-linux_x86_64.whl' \

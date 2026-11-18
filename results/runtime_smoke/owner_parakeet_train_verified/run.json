@@ -1,0 +1,61 @@
+{
+  "schema": "greek-asr-inference-v1",
+  "status": "complete",
+  "purpose": "runtime-smoke",
+  "created_utc": "2026-11-17T21:33:58.160683+00:00",
+  "backend": "parakeet",
+  "model": {
+    "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+    "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+    "pipeline_tag": "automatic-speech-recognition",
+    "license": "cc-by-4.0",
+    "source": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+    "status": "metadata_verified_runtime_pending"
+  },
+  "seed": 42,
+  "device": "cuda",
+  "split": "train",
+  "manifest_sha256": "8e3ab7bde80a9a14065a48a6f8eb3fd995a431130501aa93ca5bcaf59ba58955",
+  "source_lock_sha256": "fd720cd46842ee20f9278d8635f36276d0bd44ccbca985a6c6c84d72c68defaa",
+  "test_protocol_sha256": null,
+  "expected_records": 3,
+  "total_audio_seconds": 6.609999999999999,
+  "training_performed": false,
+  "references_used_as_model_input": false,
+  "wer_cer": null,
+  "completed_records": 3,
+  "code_sha256": {
+    "greek_asr/infer.py": "a0e570b7c1c02b25305b68a5a82bdc4d486eaca80ba13c7d06844da496b77b6a",
+    "greek_asr/pretrained/__init__.py": "729b49beb875b629929f515457c1fc59680d28e6a56b9e14be1e656af37c7a2f",
+    "greek_asr/pretrained/nemo.py": "84a7f453ac89214e35f73ba264c2d12a4ddea1ad0882c5e4fc4f80597cb4b519",
+    "greek_asr/pretrained/qwen.py": "865c57e27b9b41acbcc693458cb15bfc9c354c03d8bf050b4a8a0a42814c74ad",
+    "greek_asr/pretrained/whisper.py": "98c7df74f088102b8cba6d2ae5b16f7c08e9d4007bc71de61aeeb49770d91cfa"
+  },
+  "download_and_load_seconds": 84.51331619100006,
+  "settings": {
+    "runtime": "nemo",
+    "checkpoint_file": "parakeet-tdt-0.6b-v3.nemo",
+    "batch_size": 1,
+    "source_lang": "auto",
+    "target_lang": "auto",
+    "decoder": "checkpoint defaults",
+    "use_cuda_graph_decoder": false,
+    "execution_override": "NVIDIA CUDA Graph optimization disabled on ROCm; same greedy TDT"
+  },
+  "inference_seconds_including_output_io": 7.416884169000014,
+  "predictions_sha256": "80a28a713b0c2a10c06ea912f9776decc3642a0eefbcefc5f6b86a78b9ad1702",
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "2.2.6",
+      "nemo-toolkit": "3.0.0",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 5061389824
+  }
+}

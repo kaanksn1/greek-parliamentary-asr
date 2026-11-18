@@ -33,6 +33,15 @@ def _import_runtime() -> tuple[Any, Any, Any]:
     return torch, hf_hub_download, ASRModel
 
 
+def _disable_parakeet_cuda_graphs(config: Any) -> None:
+    """Disable an NVIDIA-only execution optimization, keeping greedy TDT."""
+    from omegaconf import OmegaConf
+
+    OmegaConf.update(
+        config, "decoding.greedy.use_cuda_graph_decoder", False, force_add=True
+    )
+
+
 @dataclass
 class NemoBackend:
     """One restored model reused for all utterances in a run."""
@@ -43,10 +52,11 @@ class NemoBackend:
     checkpoint_path: str
     _model: Any
     _torch: Any
+    _cuda_graphs_disabled: bool = False
 
     @property
     def settings(self) -> dict[str, Any]:
-        return {
+        settings = {
             "runtime": "nemo",
             "checkpoint_file": MODEL_FILES[self.model_id],
             "batch_size": 1,
@@ -54,6 +64,10 @@ class NemoBackend:
             "target_lang": "el" if self.model_id == "nvidia/canary-1b-v2" else "auto",
             "decoder": "checkpoint defaults",
         }
+        if self._cuda_graphs_disabled:
+            settings["use_cuda_graph_decoder"] = False
+            settings["execution_override"] = "NVIDIA CUDA Graph optimization disabled on ROCm; same greedy TDT"
+        return settings
 
     def transcribe(self, audio_path: Path) -> str:
         path = Path(audio_path).resolve()
@@ -105,8 +119,22 @@ def load_backend(
         revision=revision,
         cache_dir=str(model_dir) if model_dir is not None else None,
     )
+    restore_options: dict[str, Any] = {}
+    rocm_parakeet = model_id == "nvidia/parakeet-tdt-0.6b-v3" and bool(
+        getattr(getattr(torch, "version", None), "hip", None)
+    )
+    if rocm_parakeet:
+        # NeMo 3's default TDT decoder probes NVIDIA's driver during model
+        # construction. ROCm must disable that execution optimization before
+        # restore, not after an already-failed model constructor. NeMo extracts
+        # only YAML for return_config, leaving source weights untouched.
+        config = model_class.restore_from(
+            restore_path=checkpoint_path, map_location="cpu", return_config=True
+        )
+        _disable_parakeet_cuda_graphs(config)
+        restore_options["override_config_path"] = config
     model = model_class.restore_from(
-        restore_path=checkpoint_path, map_location=torch_device
+        restore_path=checkpoint_path, map_location=torch_device, **restore_options
     )
     model.eval()
     return NemoBackend(
@@ -116,4 +144,5 @@ def load_backend(
         checkpoint_path=str(checkpoint_path),
         _model=model,
         _torch=torch,
+        _cuda_graphs_disabled=rocm_parakeet,
     )

@@ -18,6 +18,17 @@
 - Implemented owner inference integration for standard Whisper, Canary,
   Parakeet and Qwen3-ASR using immutable producer checkpoint revisions, plus
   the shared audio-only CLI and its runtime records/failure handling.
+- Created a separate WSL ROCm environment with its actual dependency lock and
+  reusable setup script; ran Whisper and Qwen successfully on all three
+  original training-pilot clips using the shared runner. Qwen's observed
+  composite attention configuration is recorded explicitly.
+- Created the separate NeMo ROCm environment and its actual dependency lock;
+  ran Canary and Parakeet successfully on all three original training clips.
+  Disabled Parakeet's NVIDIA CUDA Graph acceleration before construction on
+  ROCm, retaining the standard greedy TDT algorithm, with a regression test.
+- Verified the original 43 lightweight tests in a clean public clone without
+  ASR packages; the NeMo regression brings the current suite to 44 tests.
+  Checked original runtime-evidence hashes and recorded the successful runs.
 
 ## Limits and pending dependent work
 

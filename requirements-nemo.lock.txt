@@ -62,7 +62,7 @@ narwhals==2.29.0
 nemo-toolkit==3.0.0
 networkx==3.7
 numba==0.68.1
-numpy==1.26.4
+numpy==2.2.6
 nv-one-logger-core==2.3.1
 nv-one-logger-pytorch-lightning-integration==2.3.1
 nv-one-logger-training-telemetry==2.3.1

@@ -91,6 +91,10 @@ class QwenTests(unittest.TestCase):
         torch, snapshot, hub = dependencies()
         model = MagicMock()
         model.transcribe.return_value = [types.SimpleNamespace(text="καλημέρα", language="Greek")]
+        model.model.named_modules.return_value = [
+            ("", types.SimpleNamespace(config=types.SimpleNamespace(_attn_implementation="eager"))),
+            ("thinker", types.SimpleNamespace(config=types.SimpleNamespace(_attn_implementation="sdpa"))),
+        ]
         factory = MagicMock(return_value=model)
         package = types.SimpleNamespace(Qwen3ASRModel=types.SimpleNamespace(from_pretrained=factory))
         with tempfile.TemporaryDirectory() as directory:
@@ -107,6 +111,8 @@ class QwenTests(unittest.TestCase):
                          {"audio": str(audio), "language": "Greek", "context": "", "return_time_stamps": False})
         self.assertFalse(model.model.generation_config.do_sample)
         self.assertEqual(model.model.generation_config.num_beams, 1)
+        self.assertEqual(backend.settings["requested_attention"], "eager")
+        self.assertEqual(backend.settings["observed_module_attention"], {"<root>": "eager", "thinker": "sdpa"})
 
     def test_empty_text_is_retained_but_missing_or_multiple_results_are_errors(self):
         torch, _, _ = dependencies()

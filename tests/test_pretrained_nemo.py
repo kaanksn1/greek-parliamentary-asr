@@ -102,6 +102,26 @@ class NemoAdapterTests(unittest.TestCase):
                     load_backend(model_id=model_id, revision=revision, device="cpu")
         self.download.assert_not_called()
 
+    def test_rocm_parakeet_disables_only_nvidia_graph_optimization_before_restore(self):
+        self.torch.version = SimpleNamespace(hip="7.2")
+        config = object()
+        self.model_class.restore_from.side_effect = [config, self.model]
+        with patch("greek_asr.pretrained.nemo._disable_parakeet_cuda_graphs") as disable:
+            backend = self.load("nvidia/parakeet-tdt-0.6b-v3")
+        disable.assert_called_once_with(config)
+        calls = self.model_class.restore_from.call_args_list
+        self.assertEqual(calls[0].kwargs, {
+            "restore_path": "/cache/pinned/model.nemo", "map_location": "cpu", "return_config": True
+        })
+        self.assertEqual(calls[1].kwargs, {
+            "restore_path": "/cache/pinned/model.nemo", "map_location": self.device,
+            "override_config_path": config,
+        })
+        self.assertIs(backend.settings["use_cuda_graph_decoder"], False)
+        self.model.transcribe.return_value = ["Καλημέρα"]
+        self.assertEqual(backend.transcribe(self.audio), "Καλημέρα")
+        self.model.transcribe.assert_called_once_with([str(self.audio.resolve())], batch_size=1)
+
 
 if __name__ == "__main__":
     unittest.main()
