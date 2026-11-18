@@ -5,3 +5,12 @@ configs/model_sources.lock.json -text whitespace=cr-at-eol
 *.flac -text
 *.png -text
 *.pdf -text
+
+# Original source files are stored byte-for-byte: no line-ending or encoding
+# conversion (their SHA-256 values are recorded in the inventories/freeze).
+data/raw/hparl/release/** -text
+data/raw/css10_el/release/** -text
+# Source audio, if delivered in the repository, goes through Git LFS. The
+# pattern only applies to files that are actually added.
+data/raw/hparl/release/**/*.wav filter=lfs diff=lfs merge=lfs -text
+data/raw/css10_el/release/**/*.wav filter=lfs diff=lfs merge=lfs -text

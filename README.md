@@ -25,7 +25,8 @@ copyable follow-up prompt are in
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports
 about 120 hours, with an official session-based train/development/test split.
-Those are source-reported sizes, not measurements from a completed local download.
+Samed's local run measured exactly these split durations; the generated
+numbers are in [DATA_REPORT_TR.md](docs/DATA_REPORT_TR.md).
 The planned additional training source is CSS10 Greek v1, a single-speaker
 audiobook corpus. The producer reports `04:08:14`; its distribution metadata
 lists CC0. Combined source availability is `123:55:56` (about 124 hours), not
@@ -38,8 +39,9 @@ Whisper, Qwen3-ASR, Canary and Parakeet completed GPU inference on those WAVs
 in two new isolated runtimes. Owner adapters and their common audio-only
 runner are implemented and exercised on this training fixture.
 No full benchmark result or
-training improvement is claimed. The full corpus has not yet been acquired,
-cleaned or frozen for evaluation.
+training improvement is claimed. The full corpus was acquired, the original
+test frozen and train/dev/CSS10 cleaned on Samed's machine (PR #2); delivery of
+the audio into this repository and independent byte verification are pending.
 The five-member ownership plan is now assigned in `docs/TEAM.md`. Full runs
 will be central on Serdar's PC and Ozan will present. The user authorized
 owner implementation on 18 November. Write collaborator invitations were sent
@@ -101,9 +103,37 @@ python -m greek_asr.data prepare-clean --css10-archive <kaggle zip>
 python -m greek_asr.data verify
 ```
 
-Status: code and synthetic end-to-end tests are implemented (the suite now has
-73 tests: the earlier 44 plus 29 data tests); the full corpus has not yet been
-downloaded, frozen or cleaned.
+### Split used and speaker overlap
+
+We use the **official HParl 1.0.0 session-based train/dev/test split**. It is
+**not speaker-disjoint**: most test speakers also speak in train (other
+sessions); session overlap between splits is zero. The professor's email
+(How 1) permits a documented official split, so the frozen test is kept and not
+resplit. Results are therefore **not** presented as generalization to unseen
+speakers. Speakers, utterances, hours and sessions per split and per training
+condition, test examples whose speaker occurs in training, and literal
+(untransformed) test-sentence matches in each actual training target are
+generated in `docs/DATA_REPORT_TR.md` (section 4b) and
+`data/clean/cohort_summary.json`; `python -m greek_asr.data split-summary`
+recomputes them from the manifests without audio. CSS10 has no per-utterance
+speaker/recording IDs (one reader and one book per its producer); those
+records are counted as unknown, not invented.
+
+### Data status
+
+| Part | Status |
+|---|---|
+| Acquisition, test freeze (`d28c97f`), audit and cleaning | Run on Samed's machine with the full corpus |
+| Code, tests, manifests, clean references, cleaning log, audit, source records | In this repository |
+| Original Kaldi metadata and CSS10 transcript | In this repository, byte-checked by `verify-source-metadata` |
+| Source audio (test/dev/CSS10) | Pending: Git LFS quota confirmation by the repository owner |
+| Source audio (train) | Blocked: exceeds the free LFS storage together with the rest; method undecided |
+| Independent full-byte `verify` on a clean clone | Pending until the audio is delivered |
+
+`docs/DATA_REPORT_TR.md` is the generated data report (sources, freeze, raw
+inventory, audit flags, cleaning results with examples, split/speaker and
+literal overlap, delivery sizes). It is produced by
+`python -m greek_asr.data report` and must not be edited by hand.
 
 The scorer accepts JSONL references (`id`, `reference`) and predictions (`id`,
 `text`). Full ID equality is required. It reports corpus WER/CER from edit
@@ -208,6 +238,9 @@ settled. No paid storage or cloud compute is assumed.
 | `greek_asr/data/` | Samed's data pipeline: acquisition, test freeze, audit, cleaning, report, delivery shards |
 | `configs/data_cleaning.json` | Versioned train/dev/CSS10 cleaning policy and flag thresholds |
 | `docs/DATA_PIPELINE_TR.md` | Data pipeline design, rule justifications and run order |
+| `docs/DATA_REPORT_TR.md` | Generated data report (numbers only from pipeline outputs; regenerate, never hand-edit) |
+| `configs/data_delivery.json` | Decision record for how/whether each data group is delivered in the repository |
+| `data/` | Raw source records, frozen test, raw/clean manifests and references, audit and cleaning outputs (see `data/README.md`) |
 | `requirements-data.txt` | Exact data-pipeline dependency (`numpy`) |
 | `tests/test_data_pipeline.py`, `tests/data_fixtures.py` | Synthetic end-to-end data tests with known problems |
 | `contributions/` | Actual individual reports and required filename/status inventory |

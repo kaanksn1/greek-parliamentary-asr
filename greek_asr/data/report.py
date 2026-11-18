@@ -9,7 +9,9 @@ from __future__ import annotations
 from collections import defaultdict
 from pathlib import Path
 
+from .cohort import cohort_summary
 from .common import ROOT, TAG_PATTERN, DataError, hms, read_json, read_jsonl, sha256_file, write_output
+from .publish import delivery_plan
 
 REPORTED = {"train": "99:31:41", "dev": "09:03:33", "test": "11:12:28"}
 CSS10_REPORTED = "04:08:14"
@@ -141,13 +143,62 @@ def build_report(root: Path = ROOT) -> str:
             "üretmeyecek. İşaretler puanlamada referansta bırakılırsa her biri silme hatası sayılır ve WER yapay olarak "
             "yükselir. Bu işaretlerin referans ve hipotezde aynı kuralla ele alınması Ozan'ın puanlama politikasında, "
             "dev üzerinde ve test dosyalarına yazılmadan kararlaştırılmalıdır.", ""]
+    cohort = cohort_summary(root)
+    out += ["## 4b. Bölüm, konuşmacı ve test cümlesi örtüşmesi", "",
+            "Kullanılan bölüm: **HParl 1.0.0'ın resmî oturum bazlı train/dev/test bölümü**. Bu bölüm konuşmacıdan "
+            "bağımsız (speaker-disjoint) **değildir**: aynı milletvekilleri farklı oturumlarda birden çok bölümde "
+            "konuşuyor. Hocanın mailindeki How 1 seçeneği belgelenmiş resmî bölümün kullanılmasına izin veriyor; "
+            "dondurulmuş test bu nedenle yeniden bölünmedi. Sonuçlar yeni konuşmacılara genelleme ölçümü olarak "
+            "sunulmamalıdır; ölçülen şey, test konuşmacılarının train'de de bulunabildiği yeni oturumlardaki başarımdır "
+            "(ortak konuşmacı sayıları aşağıda). Sayılar manifestlerden koddan hesaplanır (ses okunmaz).", ""]
+    rows = []
+    labels = {"train": "ham HParl train", "dev": "HParl dev", "test": "HParl test (dondurulmuş)",
+              "clean_dev": "temiz dev (kullanılan)"}
+    for name, data in cohort["splits"].items():
+        rows.append([labels.get(name, name), data["records"], f"{data['hours']:.3f}", data["known_speakers"],
+                     data["records_without_speaker_id"], data["known_sessions_or_recordings"]])
+    for name, data in cohort["training_conditions"].items():
+        if name == "raw_hparl_train":
+            continue
+        rows.append([f"eğitim koşulu `{name}`", data["records"], f"{data['hours']:.3f}", data["known_speakers"],
+                     data["records_without_speaker_id"], data["known_sessions_or_recordings"]])
+    out += _table(["Küme", "Örnek", "Saat", "Bilinen konuşmacı", "Konuşmacı ID'si boş örnek", "Oturum"], rows)
+    out += ["Konuşmacı ID'si boş örnekler bilinen konuşmacı sayısına katılmaz; sayıları ayrı sütunda yazılır. "
+            + cohort["css10_identity_note"], ""]
+    pair_rows = [[pair.replace("&", " ∩ "), data["speakers"], data["sessions_or_recordings"]]
+                 for pair, data in cohort["pairwise_overlaps"].items()]
+    out += _table(["Bölüm çifti", "Ortak konuşmacı", "Ortak oturum"], pair_rows)
+    raw_train = cohort["training_conditions"].get("raw_hparl_train", {})
+    if raw_train:
+        out += [f"Testteki {cohort['test']['records']} örneğin "
+                f"{raw_train['test_examples_whose_speaker_is_in_this_training']} tanesinin konuşmacısı train'de de var "
+                f"({raw_train['test_speakers_also_in_this_training']} ortak konuşmacı).", ""]
+    out += ["**Test cümlelerinin eğitimde birebir bulunması.** Literal eşitlik: dondurulmuş test referans "
+            "string'i hiçbir dönüşüm uygulanmadan (etiket silme, büyük/küçük harf, Unicode veya boşluk düzeltmesi "
+            "yok) eğitim koşulunun en az bir hedef string'ine eşitse eşleşme sayılır. Aynı cümle birden çok test "
+            "örneğinde geçebildiği için örnek sayısı ve benzersiz metin sayısı ayrı verilir.", ""]
+    rows = []
+    for name, data in cohort["training_conditions"].items():
+        literal, normalized = data["literal_test_overlap"], data["normalized_test_overlap"]
+        rows.append([f"`{name}`", literal["matched_test_examples"], literal["matched_distinct_test_texts"],
+                     normalized["matched_test_examples"], normalized["matched_distinct_normalized_texts"],
+                     f"`{data['references']['path']}` `{data['references']['sha256'][:16]}…`"])
+    out += _table(["Eğitim hedefi", "Literal eşleşen test örneği", "Literal benzersiz metin",
+                   "Normalize eşleşen test örneği", "Normalize benzersiz metin", "Karşılaştırılan referans dosyası"],
+                  rows)
+    out += [f"Test referansları: `{cohort['test']['references']['path']}` "
+            f"`{cohort['test']['references']['sha256']}` ({cohort['test']['records']} örnek, "
+            f"{cohort['test']['distinct_reference_texts']} benzersiz metin). Normalize sütunlar ayrı bir ölçüdür: iki "
+            "tarafta da `<...>` işaretleri silinir, Unicode NFC, casefold ve boşluk birleştirme uygulanır; literal "
+            "eşitlik yerine sunulmaz. Hiçbir eşleşen cümle testten silinmedi; dondurulmuş test değişmedi. "
+            "Makine okunur kayıt: `data/clean/cohort_summary.json`.", ""]
     rows = [[name, *(audit_summary["overlaps"][name].get(pair, "—") for pair in
                      ("hparl_train&hparl_dev", "hparl_train&hparl_test", "hparl_dev&hparl_test"))]
-            for name in ("original_ids", "speakers", "recordings_or_sessions", "distinct_texts_exact_after_casefold")]
-    out += ["Bölümler arası örtüşme (yalnız raporlanır; test tarafı hiçbir zaman değiştirilmez):", ""]
+            for name in ("original_ids", "distinct_texts_after_tag_strip_nfc_casefold_space")
+            if name in audit_summary["overlaps"]]
+    out += ["Denetim adımındaki ek kontroller (ham bölümler arası; `distinct_texts_after_tag_strip_nfc_casefold_space` "
+            "normalize benzersiz metin kesişimidir, literal değildir):", ""]
     out += _table(["Tür", "train∩dev", "train∩test", "dev∩test"], rows)
-    out += ["Konuşmacı örtüşmesi resmî bölümün konuşmacıdan bağımsız olmadığını gösterir; bu bir sızıntı düzeltmesi "
-            "gerektirmez ama sonuç yorumunda belirtilmelidir. Aynı metin örtüşmesi kısa, sık kalıplardan doğabilir.", ""]
 
     out += ["## 5. Temizlik sonucu", "",
             "Bir kayıt birden çok çıkarma kuralına uyuyorsa yalnız config'teki ilk kurala yazılır (çifte sayım yok).", ""]
@@ -193,6 +244,30 @@ def build_report(root: Path = ROOT) -> str:
                 f"`{harmonization['allowed_non_letter_characters'] or 'yok'}`. Özgün ve normalize metin "
                 "`data/manifests/raw/css10_el_texts.jsonl` içinde değişmeden durur.", ""]
 
+    config = read_json(root / "configs/data_cleaning.json")
+    flags_cfg = config["flags"]
+    rate_rows = []
+    for record in read_jsonl(root / "data/clean/review_queue.jsonl"):
+        if "cps_boundary" in record["flags"]:
+            evidence = record["flags"]["cps_boundary"]
+            rate_rows.append([SUBSET_LABEL.get(record["subset"], record["subset"]), f"`{record['id']}`",
+                              f"{evidence['chars_per_second']:.2f}", f"{evidence['duration_seconds']:.2f}",
+                              evidence["chars"], "korundu, inceleme bekliyor"])
+    extreme = {subset: data["dropped_by_rule"].get("cps_extreme", 0) for subset, data in stats.items()
+               if isinstance(data, dict) and "dropped_by_rule" in data}
+    out += ["### Konuşma hızı kuralı (otomatik kalite sezgiseli)", "",
+            f"Saniye başına boşluk dışı karakter > {flags_cfg['cps_extreme_min']:g} olan train/CSS10 kayıtları "
+            "hizalama sorunu **adayı** olarak eğitimden çıkarılır (train p99 değerinin yaklaşık üç katı; bu "
+            "kayıtlarda birkaç saniyelik sese yüzlerce–binlerce karakter düşüyor). Bu bir sezgiseldir: kayıtlar "
+            "dinlenmedi, etiketlerin yanlış olduğu kanıtlanmadı. "
+            f"{flags_cfg['cps_boundary_min']:g}–{flags_cfg['cps_extreme_min']:g} aralığı belirsiz kabul edilir; "
+            "bu kayıtlar eğitimde **korunur** ve inceleme kuyruğuna yazılır. Dev'de hiçbir kayıt bu kuralla "
+            "çıkarılmaz. Bir modelin bu hedeflerle eğitilip eğitilemeyeceği model/tokenizer'a bağlıdır; kural bunun "
+            "genel ispatı olarak sunulmaz. Çıkarılan: "
+            + ", ".join(f"{SUBSET_LABEL.get(k, k)} {v}" for k, v in extreme.items()) + ".", ""]
+    if rate_rows:
+        out += _table(["Bölüm", "Sınır kaydı (korundu)", "kar/sn", "Süre (sn)", "Karakter", "Durum"], rate_rows)
+
     out += ["## 6. Gerçek örnekler (günlükten)", ""]
     seen = defaultdict(int)
     rows = []
@@ -232,10 +307,11 @@ def build_report(root: Path = ROOT) -> str:
     out += ["## 8. Sınırlamalar ve bilinen eksikler", "",
             "- Otomatik bayraklar (sessizlik, kırpılma, konuşma hızı aykırılığı, şüpheli tekrar) dinlenmeden hatalı "
             "sayılmadı; kayıtlar korunup inceleme kuyruğuna yazıldı.",
-            "- Ses–metin hizası ASR modeliyle kontrol edilmedi; model çıktısı doğrulanmış gold sayılmaz. Yalnız fiziksel "
-            "olarak imkânsız konuşma hızı (`cps_implausible`, saniyede 40 karakterin üstü; train p99 değerinin iki katından "
-            "fazla) train/CSS10'dan çıkarıldı. Bu kayıtlarda transkript sesten çok daha uzundur; CTC kaybı etiket "
-            "uzunluğu çerçeve sayısını aştığında tanımsızdır ve sıralı modellerde hedef metin kesilir.",
+            "- Ses–metin hizası ASR modeliyle kontrol edilmedi; model çıktısı doğrulanmış gold sayılmaz. Konuşma hızı "
+            "kuralı otomatik bir sezgiseldir; çıkarılan kayıtların yanlış etiketli olduğu dinlenerek doğrulanmadı.",
+            "- Resmî bölüm konuşmacıdan bağımsız değildir (bölüm 4b); sonuçlar yeni konuşmacılara genelleme "
+            "ölçümü değildir.",
+            "- İnsan inceleme kararı uygulanmadıysa (bölüm 5) hiçbir kayıt dinlenmiş sayılmaz.",
             "- Yeniden kodlanmış/kesilmiş tekrarlar SHA-256 ile yakalanamaz; yalnız şüphe sezgiseli vardır.",
             "- CSS10 tek konuşmacılı sesli kitap okumasıdır; parlamento konuşmasını temsil etmez ve yararı henüz "
             "gösterilmedi. Sadece train'e girdi.",
@@ -245,19 +321,49 @@ def build_report(root: Path = ROOT) -> str:
             "- Oturum kimliği kaynakta ayrı alan değilse utterance ID deseninden türetilir; yöntem ve başarısız "
             "türetme sayısı envanterde yazılıdır.", ""]
 
-    out += ["## 9. Yeniden üretme komutları", "", "```bash",
+    plan = delivery_plan(root)
+    out += ["## 9. Verinin repoda teslimi", "",
+            "Boyutlar kaydedilmiş arşiv listelerinden (`archive_members.tsv`) hesaplanır; durum "
+            "`configs/data_delivery.json` karar kaydından okunur. Ham ve temiz manifestler aynı ses baytlarını "
+            "paylaşır (train/dev için ses türetilmedi), bu yüzden ikinci bir ses kopyası yoktur. Yalnız indirme "
+            "script'i veya Release bağlantısı teslim sayılmaz.", ""]
+    rows = []
+    for name, group in plan["groups"].items():
+        decision = plan["decisions"].get(name, {})
+        rows.append([f"`{name}`", group["files"], f"{group['gib']:.3f}", decision.get("method", "—"),
+                     decision.get("status", "teslim edilmez (manifestte yok)" if "unreferenced" in name else "—")])
+    out += _table(["Grup", "Dosya", "GiB", "Yöntem", "Durum"], rows)
+    cumulative = plan["cumulative_audio_gib_in_priority_order"]
+    out += [f"Ücretsiz Git LFS depolama: {plan['free_lfs_storage_gib']:g} GiB. Test + dev + CSS10 sesi kümülatif "
+            f"{cumulative.get('css10_used_wav', 0):.3f} GiB "
+            f"({'sığıyor' if plan['fits_free_lfs_without_train'] else 'sığmıyor'}); tam train eklenince "
+            f"{cumulative.get('hparl_train_wav', 0):.3f} GiB "
+            f"({'sığıyor' if plan['fits_free_lfs_with_full_train'] else 'sığmıyor'}). `pending`/`blocked` durumundaki gruplar teslim edilmiş "
+            "sayılmaz. Kaynak metin dosyalarının bayt eşitliği temiz clone'da "
+            "`python -m greek_asr.data verify-source-metadata` ile kontrol edilir.", ""]
+    environment = clean_summary.get("environment")
+    if environment:
+        out += [f"Bu çıktıları üreten ortam: Python {environment['python']}, NumPy {environment['numpy']}, "
+                f"{environment['system']}.", ""]
+
+    out += ["## 10. Yeniden üretme komutları", "", "```bash",
             "python -m greek_asr.data hparl-download            # ~11.9 GB, kaldığı yerden devam eder",
             "python -m greek_asr.data prepare-freeze            # extract + ham manifest + test freeze + doğrulama",
-            "python -m greek_asr.data prepare-clean --css10-archive <kaggle.zip>   # CSS10 + audit + clean + rapor + verify",
+            "python -m greek_asr.data prepare-clean --css10-archive <kaggle.zip> --transcript el/transcript.txt",
+            "python -m greek_asr.data split-summary             # konuşmacı/oturum ve literal örtüşme (ses gerekmez)",
+            "python -m greek_asr.data verify-source-metadata    # Kaldi/CSS10 kaynak metin dosyalarının bayt kontrolü",
+            "python -m greek_asr.data delivery-plan             # gerçek teslim boyutları",
             "python -m greek_asr.data verify                    # tüm manifestleri sözleşme ve sesle doğrular",
             "python -m unittest discover -s tests -v", "```", "",
             "Ayrıntılı açıklama: `docs/DATA_PIPELINE_TR.md`.", ""]
 
     train = stats["hparl_train"]
     mixed = conditions["conditions"]["hparl_css10"]
-    out += ["## 10. Sunum için veri slaytı taslağı ve konuşmacı notu", "",
+    out += ["## 11. Sunum için veri slaytı taslağı ve konuşmacı notu", "",
             "**Slayt 1 — Veri ve test dondurma**", "",
-            "- HParl 1.0.0 (CC BY-NC 4.0): resmî oturum bazlı train/dev/test korundu.",
+            "- HParl 1.0.0 (CC BY-NC 4.0): resmî oturum bazlı train/dev/test korundu; bölüm konuşmacıdan bağımsız "
+            f"değil (testteki {cohort['splits'].get('test', {}).get('known_speakers', '?')} konuşmacının "
+            f"{cohort['pairwise_overlaps'].get('train&test', {}).get('speakers', '?')} tanesi train'de de var).",
             f"- Test erkenden donduruldu: {freeze['record_count']} kayıt, {_hours(freeze['total_duration_seconds'])}; "
             "her ses ve referans SHA-256 ile kayıtlı, hiçbir işlem yok.",
             "- Ek kaynak CSS10 Greek yalnız eğitimde.", "",
@@ -266,10 +372,14 @@ def build_report(root: Path = ROOT) -> str:
             f"({_hours(train['raw_seconds'])} → {_hours(train['kept_seconds'])}); "
             f"{train['modified_records']} transkriptte işaret temizliği.",
             "- Çıkarma kuralları: " + (", ".join(f"{k}: {v}" for k, v in train["dropped_by_rule"].items()) or "yok") + ".",
-            f"- Karışık eğitim koşulu: {_hours(mixed['total_seconds'])}; dev ve test iki koşulda da aynı.", "",
+            f"- Karışık eğitim koşulu: {_hours(mixed['total_seconds'])}; dev ve test iki koşulda da aynı.",
+            "- Testte literal olarak eğitimde de bulunan örnek: "
+            + ", ".join(f"{name} {data['literal_test_overlap']['matched_test_examples']}"
+                        for name, data in cohort["training_conditions"].items()) + ".", "",
             "**Konuşmacı notu (Ozan için):** Testi her şeyden önce dondurduk ve sonra hiç dokunmadık; bunu "
             "hash'lerle kanıtlıyoruz. Temizliği yalnız train/dev'de, kural ve gerekçesiyle yaptık; her değişiklik "
-            "günlükte. Otomatik bayrakları hata saymadık, dinlemeye bıraktık. CSS10'un katkısı ayrı deneyle ölçülecek.", ""]
+            "günlükte. Otomatik bayrakları hata saymadık, dinlemeye bıraktık. Resmî bölüm konuşmacıdan bağımsız "
+            "olmadığı için sonuçları yeni konuşmacıya genelleme diye sunmuyoruz. CSS10'un katkısı ayrı deneyle ölçülecek.", ""]
     return "\n".join(out)
 
 

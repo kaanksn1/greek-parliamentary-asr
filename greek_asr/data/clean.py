@@ -10,12 +10,14 @@ recorded in ``configs/review_decisions.jsonl`` with reviewer and method.
 """
 from __future__ import annotations
 
+import platform
 import random
 import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
 from .audit import audit_inputs_current, load_config, load_items
+from .cohort import cohort_summary
 from .common import (TAG_PATTERN, DataError, ROOT, is_greek_letter, json_bytes, jsonl_bytes, read_json,
                      read_jsonl, sha256_bytes, sha256_file, strip_annotation_tags, write_output)
 from .freeze import verify_freeze
@@ -23,11 +25,20 @@ from .freeze import verify_freeze
 STRUCTURAL = {"missing_audio", "audio_unreadable", "zero_frames", "ambiguous_audio", "duplicate_id",
               "malformed_transcript_line", "audio_path_escapes_release"}
 NOT_LABELLED = {"audio_without_transcript"}
-REVIEW_FLAGS = {"cps_implausible", "digital_silence", "duration_short", "duration_long", "low_level", "clipping", "silence_heavy", "long_edge_silence",
-                "cps_high", "cps_low", "duplicate_suspect", "non_greek_characters", "format_nonstandard",
+REVIEW_FLAGS = {"cps_boundary", "cps_extreme", "digital_silence", "duration_short", "duration_long", "low_level",
+                "clipping", "silence_heavy", "long_edge_silence", "cps_high", "cps_low", "duplicate_suspect", "non_greek_characters", "format_nonstandard",
                 "reported_duration_mismatch", "annotation_only", "empty_reference"}
 OUTPUTS = {"hparl_train": "train", "hparl_dev": "dev", "css10_el": "css10_el_train"}
 RAW_FILES = {"hparl_train": "hparl_train", "hparl_dev": "hparl_dev", "css10_el": "css10_el"}
+
+
+def environment() -> dict:
+    try:
+        import numpy
+        numpy_version = numpy.__version__
+    except ImportError:  # recorded, the audit step itself needs numpy
+        numpy_version = None
+    return {"python": platform.python_version(), "numpy": numpy_version, "system": platform.system()}
 
 
 def text_hash(text: str | None) -> str | None:
@@ -293,12 +304,14 @@ def run_clean(root: Path = ROOT, config_path: Path | None = None) -> dict:
         "note": "CSS10 audio keeps its original sampling rate; model input pipelines resample at load time.",
     }
     write_output(root / "data/manifests/conditions.json", json_bytes(conditions))
+    cohort_sha = write_output(root / "data/clean/cohort_summary.json", json_bytes(cohort_summary(root)))
     order_key = {"hparl_train": 0, "hparl_dev": 1, "css10_el": 2}
     log.sort(key=lambda r: (order_key.get(r["subset"], 9), r["id"], r["action"]))
     review.sort(key=lambda r: (order_key.get(r["subset"], 9), r["id"]))
     summary = {"schema": "p3-data-clean-v1", "policy_version": version, "config_sha256": config_sha,
                "audit_summary_sha256": sha256_file(root / "data/audit/audit_summary.json"),
-               "review_decisions_applied": len(decisions), "subsets": stats,
+               "review_decisions_applied": len(decisions), "subsets": stats, "cohort_summary_sha256": cohort_sha,
+               "environment": environment(),
                "log_sha256": write_output(root / "data/clean/cleaning_log.jsonl", jsonl_bytes(log)),
                "review_queue_sha256": write_output(root / "data/clean/review_queue.jsonl", jsonl_bytes(review)),
                "log_entries": dict(sorted(Counter(r["action"] for r in log).items())),

@@ -153,7 +153,7 @@ class TestFreezeTests(PipelineFixture):
         self.assertEqual(refs[hid("test2")], TEST["test2"][1])  # <spoken_noise> kept in test
         self.assertTrue(all(r["source"] == "hparl" and r["split"] == "test" for r in test.values()))
         freeze_record = read_json(self.root / "data/manifests/test.freeze.json")
-        self.assertEqual(freeze_record["record_count"], 3)
+        self.assertEqual(freeze_record["record_count"], 4)
         self.assertEqual(freeze_record["test_manifest_sha256"], sha256_file(self.root / "data/manifests/test.jsonl"))
 
     def test_cleaning_and_rerun_never_change_the_frozen_test(self):
@@ -203,14 +203,14 @@ class CleaningTests(PipelineFixture):
         logged = self.log()
         expected = {"dup": "duplicate_audio", "pcmdup": "duplicate_pcm", "testcopy": "overlap_test_audio",
                     "devcopy": "overlap_dev_audio", "long": "duration_long", "annot": "annotation_only",
-                    "silent": "digital_silence", "misaligned": "cps_implausible"}
+                    "silent": "digital_silence", "misaligned": "cps_extreme"}
         for key, rule in expected.items():
             entries = logged[hid(key)]
             self.assertEqual([(e["action"], e["rule"]) for e in entries], [("drop", rule)], key)
-            self.assertEqual(entries[0]["rule_version"], "p3-data-clean-v2")
+            self.assertEqual(entries[0]["rule_version"], "p3-data-clean-v3")
             self.assertIsNotNone(entries[0]["before"]["audio_sha256"])
         self.assertEqual(logged[hid("dup")][0]["evidence"], {"duplicate_of": hid("good1")})
-        self.assertGreater(logged[hid("misaligned")][0]["evidence"]["chars_per_second"], 40)
+        self.assertGreater(logged[hid("misaligned")][0]["evidence"]["chars_per_second"], 60)
 
     def test_annotation_tag_is_removed_only_from_train_targets_and_logged(self):
         modified = self.log()[hid("noise")][0]
@@ -223,11 +223,13 @@ class CleaningTests(PipelineFixture):
     def test_healthy_records_are_kept_unchanged_and_flags_go_to_review(self):
         train = self.manifest("train.jsonl")
         raw = {r["id"]: r for r in read_jsonl(self.root / "data/manifests/raw/hparl_train.jsonl")}
-        for key in ("good1", "good2", "clip"):
+        for key in ("good1", "good2", "clip", "boundary"):
             self.assertEqual(train[hid(key)], raw[hid(key)])
         self.assertNotIn(hid("good1"), self.log())
         review = {r["id"]: r for r in read_jsonl(self.root / "data/clean/review_queue.jsonl")}
         self.assertIn("clipping", review[hid("clip")]["flags"])
+        rate = review[hid("boundary")]["flags"]["cps_boundary"]["chars_per_second"]
+        self.assertTrue(40 < rate <= 60, rate)  # uncertain speech rate is kept, not dropped
         self.assertEqual(set(self.manifest("dev.jsonl")), {hid("dev1"), hid("dev2")})
 
     def test_counts_and_durations_reconcile_with_the_log(self):
@@ -258,7 +260,7 @@ class CleaningTests(PipelineFixture):
         self.assertEqual(set(mixed) - set(only), set(css))
         self.assertEqual({k: v for k, v in mixed.items() if k in only}, only)
         conditions = read_json(self.root / "data/manifests/conditions.json")
-        self.assertEqual(conditions["conditions"]["hparl_css10"]["records"], {"css10_el": 2, "hparl": 4})
+        self.assertEqual(conditions["conditions"]["hparl_css10"]["records"], {"css10_el": 2, "hparl": 5})
         self.assertEqual(conditions["shared_dev"]["manifest"], "data/manifests/dev.jsonl")
 
     def test_rerun_with_same_inputs_is_byte_identical(self):
@@ -355,13 +357,57 @@ class ContractAndCliTests(PipelineFixture):
         with self.assertRaisesRegex(DataError, "corrupted"):
             publish.unpack(root, index, shards)
 
+    def test_literal_overlap_counts_examples_and_distinct_texts_without_any_normalization(self):
+        from greek_asr.data.cohort import literal_overlap, normalized_overlap
+
+        train = ["ναι", "Καλημέρα", "<spoken_noise> ευχαριστώ", "ευχαριστώ  πολύ"]
+        test = [("t1", "ναι"), ("t2", "ναι"), ("t3", "καλημέρα"), ("t4", "ευχαριστώ"),
+                ("t5", "<spoken_noise> ευχαριστώ"), ("t6", "ευχαριστώ πολύ")]
+        literal = literal_overlap(train, test)
+        self.assertEqual((literal["matched_test_examples"], literal["matched_distinct_test_texts"]), (3, 2))
+        normalized = normalized_overlap(train, test)
+        self.assertEqual((normalized["matched_test_examples"], normalized["matched_distinct_normalized_texts"]), (6, 4))
+
+    def test_cohort_summary_reports_speakers_unknown_ids_and_literal_matches(self):
+        from greek_asr.data.cohort import cohort_summary
+
+        summary = cohort_summary(self.root)
+        raw = summary["training_conditions"]["raw_hparl_train"]["literal_test_overlap"]
+        self.assertEqual((raw["matched_test_examples"], raw["matched_distinct_test_texts"]), (2, 1))  # test3+test4
+        clean = summary["training_conditions"]["clean_hparl_only"]["literal_test_overlap"]
+        self.assertEqual(clean["matched_test_examples"], 0)  # the only "ναι" train item was a PCM duplicate
+        mixed = summary["training_conditions"]["clean_hparl_css10"]
+        self.assertEqual(mixed["records_without_speaker_id"], 2)  # CSS10 kept records, counted not invented
+        self.assertEqual(mixed["known_speakers"], summary["training_conditions"]["clean_hparl_only"]["known_speakers"])
+        self.assertEqual(summary["pairwise_overlaps"]["train&test"]["speakers"], 1)  # spkb in train and test4
+        self.assertEqual(summary["training_conditions"]["raw_hparl_train"]
+                         ["test_examples_whose_speaker_is_in_this_training"], 1)
+        self.assertEqual(read_json(self.root / "data/clean/cohort_summary.json"), summary)
+
+    def test_source_metadata_bytes_are_checked_and_line_ending_changes_fail(self):
+        from greek_asr.data import publish
+
+        root = self.copy_project()
+        self.assertEqual(publish.verify_source_metadata(root)["status"], "ok")
+        text = root / "data/raw/hparl/release/hparl_segmented_test/text"
+        text.write_bytes(text.read_bytes().replace(b"\n", b"\r\n"))
+        with self.assertRaisesRegex(DataError, "line endings"):
+            publish.verify_source_metadata(root)
+        plan = publish.delivery_plan(root)
+        self.assertEqual(plan["groups"]["hparl_test_wav"]["files"], len(TEST))
+        self.assertEqual(plan["groups"]["css10_unreferenced_wav"]["files"], 1)  # not referenced, not delivered
+
     def test_report_is_generated_from_outputs(self):
         report = (self.root / "docs/DATA_REPORT_TR.md").read_text(encoding="utf-8")
         freeze_record = read_json(self.root / "data/manifests/test.freeze.json")
         self.assertIn(freeze_record["test_manifest_sha256"], report)
         self.assertIn("`duration_long`", report)
         self.assertIn("τους ξεφεύγει η αντικατάσταση της", report)
-        self.assertIn("test: 1/3 referans", report)
+        self.assertIn("test: 1/4 referans", report)
+        self.assertIn("speaker-disjoint) **değildir**", report)
+        self.assertIn("Literal eşleşen test örneği", report)
+        self.assertNotIn("sızıntı düzeltmesi gerektirmez", report)
+        self.assertNotIn("fiziksel", report)
 
 
 class DownloadTests(unittest.TestCase):

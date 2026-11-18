@@ -77,6 +77,7 @@ TRAIN = {
     "missing": (uid("spkl", 7, 99700), "δεν υπάρχει ήχος", "missing", 0, 0),
     "misaligned": (uid("spkr", 8, 99800), " ".join(["η κυβέρνηση φέρνει σήμερα στη βουλή το νομοσχέδιο"] * 6),
                    "speech", 1.0, 13),
+    "boundary": (uid("spks", 8, 99900), "η κυβέρνηση φέρνει σήμερα στη βουλή το νομοσχέδιο", "speech", 1.0, 14),
 }
 UNLABELLED_TRAIN = uid("spkz", 9, 12345)
 DEV = {
@@ -87,6 +88,7 @@ TEST = {
     "test1": (uid("spko", 21, 10000), "κυρίες και κύριοι συνάδελφοι", "speech", 2.6, 8),
     "test2": (uid("spkp", 21, 20000), "ψηφίζουμε <spoken_noise> το νομοσχέδιο", "speech", 2.1, 9),
     "test3": (uid("spkq", 22, 30000), "ναι", "speech", 0.8, 10),
+    "test4": (uid("spkb", 22, 40000), "ναι", "speech", 0.7, 15),
 }
 CSS10 = [
     ("Paramythi_horis_onoma/Paramythi_horis_onoma_0000.wav", "Ήταν μια φορά ένας βασιλιάς.",

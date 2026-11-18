@@ -11,7 +11,7 @@ import os
 import sys
 from pathlib import Path
 
-from . import audit, clean, css10, freeze, hparl, publish, report
+from . import audit, clean, cohort, css10, freeze, hparl, publish, report
 from .common import ROOT, DataError, read_json, read_jsonl, validate_manifest_row
 
 
@@ -121,6 +121,18 @@ def cmd_publish_plan(args) -> dict:
     return publish.plan(args.root, args.quota_gib)
 
 
+def cmd_split_summary(args) -> dict:
+    return cohort.cohort_summary(args.root)
+
+
+def cmd_verify_source_metadata(args) -> dict:
+    return publish.verify_source_metadata(args.root)
+
+
+def cmd_delivery_plan(args) -> dict:
+    return publish.delivery_plan(args.root)
+
+
 def cmd_pack(args) -> dict:
     return publish.pack(args.root, args.source, args.output, args.max_bytes)
 
@@ -188,6 +200,11 @@ def build_parser() -> argparse.ArgumentParser:
         .add_argument("--skip-audio", action="store_true")
     add("publish-plan", cmd_publish_plan, "sizes of raw/clean deliverables vs a Git LFS quota") \
         .add_argument("--quota-gib", type=float, default=10.0)
+    add("split-summary", cmd_split_summary,
+        "speakers/utterances/hours/sessions and literal test-sentence overlap (no audio needed)")
+    add("verify-source-metadata", cmd_verify_source_metadata,
+        "byte-check committed Kaldi/CSS10 source text files against recorded hashes (no audio needed)")
+    add("delivery-plan", cmd_delivery_plan, "real deliverable sizes from archive listings + delivery decisions")
     packer = add("pack", cmd_pack, "deterministic tar shards (< GitHub release asset limit) + committed index")
     packer.add_argument("--source", required=True, help="project-relative directory, e.g. data/raw/hparl/release/train_wavs")
     packer.add_argument("--output", type=Path, required=True, help="directory outside the repo for the shards")
@@ -209,6 +226,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    try:  # use the operating system's certificate store when available (Windows CLARIN downloads)
+        import truststore
+        truststore.inject_into_ssl()
+    except ImportError:
+        pass
     for stream in (sys.stdout, sys.stderr):  # Greek text must not crash a Windows console
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8", errors="backslashreplace")

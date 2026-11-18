@@ -6,9 +6,16 @@ testler `tests/test_data_pipeline.py` içindedir. Gerçek veri sayıları
 `docs/DATA_REPORT_TR.md` dosyasına koddan yazılır. Bu belgede sonuç rakamı
 yoktur.
 
-Durum: kod ve sentetik fixture üzerindeki uçtan uca testler hazır. Tam HParl
-indirme, test dondurma ve temizlik **henüz gerçek veride çalıştırılmadı**.
-Aşağıdaki adımlar Samed'in bilgisayarında yapılacak.
+Durum (18 Kasım 2026):
+
+- **Samed'in bilgisayarında yapılan gerçek koşum:** HParl ve CSS10 edinildi,
+  test temizlikten önce donduruldu (`d28c97f`), denetim ve temizlik çalıştı.
+  Sayılar raporda.
+- **Repoda olanlar:** kod, testler, bütün manifestler, temiz referanslar,
+  temizlik günlüğü, denetim çıktıları ve kaynak kayıtları. Özgün Kaldi ve CSS10
+  metin dosyaları da bu sürümden itibaren repoda.
+- **Henüz olmayanlar:** ses dosyalarının repoya teslimi (bölüm 7). Bu yüzden
+  ses baytlarıyla yapılacak bağımsız `verify` / `verify-freeze` kontrolü bekliyor.
 
 ## 1. Samed'in bilgisayarında çalıştırma
 
@@ -81,7 +88,7 @@ Sonra:
    `python -m greek_asr.data subset --hours 20 --seed 42`. Seed ve ID listesi
    `data/manifests/subsets/*.selection.json` içine yazılır. Saat değerini
    Serdar'ın ölçümüne göre seç.
-4. `python -m greek_asr.data publish-plan` ile teslim boyutunu ölç (bölüm 7).
+4. `python -m greek_asr.data delivery-plan` ile teslim boyutunu ölç (bölüm 7).
 5. Temizlik commit'i, kendi katkı dosyan ve PR açıklaması.
 
 ## 2. Aşamalar ve çıktılar
@@ -131,7 +138,8 @@ kaydedilir.
 | `overlap_hparl_audio` | CSS10 | çıkarma | İki kaynak arasında aynı ses. |
 | `duplicate_audio` / `duplicate_pcm` | bölüm içinde | ID sırasında ilki kalır, diğerleri çıkar | Aynı ses iki kez öğrenilmesin. `duplicate_pcm` yalnız WAV başlığı farklı kopyadır. |
 | `digital_silence` | train, CSS10 | çıkarma | Bütün örnekler sıfır; metni içeremez. |
-| `cps_implausible` (>40 karakter/sn) | train, CSS10 | çıkarma (dev'de yalnız işaret) | Fiziksel olarak imkânsız konuşma hızı: transkript sesin çok ötesinde (birkaç saniyelik sese yüzlerce–binlerce karakter). Eşik train p99'unun (20 kar/sn) iki katı. CTC'de etiket çerçeveden uzun olunca kayıp tanımsızdır. |
+| `cps_extreme` (>60 karakter/sn) | train, CSS10 | çıkarma (dev'de yalnız işaret) | **Otomatik kalite sezgiseli**, kanıt değil. Saniye başına boşluk dışı karakter train p99'unun (≈20) yaklaşık üç katını aşıyor; bu kayıtlarda birkaç saniyelik sese yüzlerce–binlerce karakter düşüyor, yani hizalama sorunu adayı. Kayıtlar dinlenmedi. |
+| `cps_boundary` (40–60 karakter/sn) | train, CSS10, dev | **korunur**, inceleme kuyruğuna girer | Belirsiz bölge: hızlı konuşma ile hizalama hatası ayırt edilemiyor. v2'de bu kayıtlar çıkarılmıştı; v3 onları geri aldı. |
 | `duration_long` (>30 sn) | train, CSS10 | çıkarma (dev'de yalnız işaret) | Yaygın fine-tuning pencereleri (ör. Whisper 30 sn) uzun parçayı kırpar ve hedef metinle uyumu bozar. |
 | `empty_reference`, `annotation_only` | train, CSS10 | çıkarma (dev'de korunur) | Konuşulmuş kelime içermeyen hedef. |
 | `strip_annotation_tags` | yalnız train hedef metni | metin değişikliği | `<spoken_noise>` bir kelime değildir; modelin bunu yazı olarak üretmesi istenmez. |
@@ -146,6 +154,10 @@ Yalnız işaretlenip korunan ve inceleme kuyruğuna giren bayraklar:
 `format_nonstandard` (16 kHz/mono/16 bit dışı) ve `reported_duration_mismatch`
 (CSS10 bildirilen/ölçülen süre).
 
+Konuşma hızı kuralı için not: bir modelin uzun hedefle eğitilip eğitilemeyeceği
+(ör. CTC'de hedef uzunluğu ile çerçeve sayısı ilişkisi) model ve tokenizer'a
+bağlıdır. Bu kural o konuda genel bir ispat olarak kullanılmaz.
+
 Bu eşikler kaba aday seçicidir. Gerçek veri raporunda dağılım yüzdelikleri
 görülür. Bir eşik değiştirilecekse yalnız train/dev dağılımına bakılarak,
 gerekçesiyle ve yeni `policy_version` ile değiştirilir. **Test istatistiğine
@@ -155,6 +167,25 @@ Dev'de çıkarma yalnız yapısal sorunlar, test kopyaları ve bölüm içi bire
 tekrarlar için yapılır. Dev referansları değiştirilmez, çünkü dev testle aynı
 koşulda puanlanmalıdır. `<spoken_noise>` gibi işaretlerin puanlamada nasıl ele
 alınacağına Ozan'ın puanlama politikası karar verir.
+
+### Bölüm, konuşmacı ve test cümlesi örtüşmesi
+
+- **Kullanılan bölüm:** HParl'in resmî oturum bazlı bölümü. Konuşmacıdan
+  bağımsız değildir. Hocanın mailindeki How 1 seçeneği belgelenmiş resmî
+  bölümü kullanmaya izin veriyor. Dondurulmuş test yeniden bölünmez. Sonuçlar
+  yeni konuşmacılara genelleme ölçümü olarak sunulmaz.
+- **Sayılar:** `python -m greek_asr.data split-summary` (ses gerekmez)
+  konuşmacı, örnek, saat ve oturum sayılarını; ortak konuşmacı/oturumları;
+  konuşmacısı train'de de olan test örneklerini her bölüm ve eğitim koşulu için
+  verir. `clean` aynı içeriği `data/clean/cohort_summary.json` dosyasına yazar.
+- **Bilinmeyen kimlikler:** CSS10'da örnek bazında konuşmacı/kayıt kimliği yok.
+  Bunlar uydurulmaz, ayrı sütunda bilinmeyen olarak sayılır. Üretici tek okuyucu
+  ve tek kitap bildiriyor, bu bilgi raporda kaynağıyla yazılır.
+- **Literal örtüşme:** test referans string'i, hiçbir dönüşüm olmadan eğitim
+  koşulunun bir hedef string'ine eşitse eşleşmedir. Eşleşen test örneği sayısı
+  ve benzersiz metin sayısı ayrı verilir.
+- **Normalize örtüşme:** `<...>` silme + NFC + casefold + boşluk birleştirme.
+  Ayrı bir ölçüdür, literal yerine sunulmaz.
 
 ## 4. CSS10 metin uyumlaması
 
@@ -217,52 +248,49 @@ gereken `test_manifest_sha256` değeri dondurma kaydında hazırdır.
 
 ## 7. Ham/temiz verinin repoda teslimi
 
-Hoca ham ve temiz verinin public repoda olmasını istiyor. Bağlantı veya
-script tek başına yeterli değil. `python -m greek_asr.data publish-plan --quota-gib 10`
-gerçek boyutları bölüm bölüm verir.
+Hoca ham ve temiz verinin public repoda olmasını istiyor. Bağlantı, Release
+dosyası veya indirme script'i tek başına teslim sayılmaz.
 
-Kaynak bildirimine göre HParl'in 16 kHz/16 bit sesi yaklaşık 13,8 GB tutar.
-Train ~11,5 GB, dev ~1,0 GB, test ~1,3 GB. Bu rakamlar ölçüm değildir;
-`publish-plan` gerçek değeri verir. GitHub Free hesaplarda Git LFS için
-10 GiB depolama ve ayda 10 GiB indirme dahildir. İndirme kotası her clone ve
-pull ile repo sahibinin hesabından düşer. Güncel kota Serdar'ın hesabında
-Settings → Billing altında görülür. **Ücretli paket alınmaz.**
+**Gerçek boyutlar:** `python -m greek_asr.data delivery-plan`. Bu komut
+kaydedilmiş arşiv listelerinden hesaplar, ses gerekmez. Rapordaki tablo da
+aynı fonksiyondan üretilir.
 
-Serdar'la seçilecek iki uygulanabilir yol:
+**Karar kaydı:** `configs/data_delivery.json`. Her grup için yöntem ve durum
+(`in_repo`, `pending`, `blocked`) yazar. Bir durum yalnız push'lanmış repoda
+gerçekten doğruysa değiştirilir.
 
-1. **Test, dev, CSS10 ve metin dosyaları Git LFS'te; HParl train sesi GitHub
-   Release dosyalarında.**
+**Teslim yolları:**
 
-   ```bash
-   git lfs install
-   git lfs track "data/raw/**/*.wav"            # .gitattributes'a yazar; commit'e ekle
-   echo "data/raw/hparl/release/train_wavs/" >> .git/info/exclude   # yerel; train sesi yanlışlıkla eklenmesin
-   python -m greek_asr.data pack --source data/raw/hparl/release/train_wavs --output ../p3-release-shards
-   git add .gitattributes data/raw/hparl/release data/raw/css10_el data/release_index
-   ```
+- **Metin kaynakları (Kaldi `text`, `utt2spk`, `spk2utt`, `wav.scp`,
+  `spk2gender` ve CSS10 `transcript.txt`):** düz Git ile teslim edilir.
+  `.gitattributes` içindeki `-text` kuralı satır sonu dönüşümünü kapatır.
+  Temiz clone'da `python -m greek_asr.data verify-source-metadata` her dosyanın
+  bayt hash'ini kayıtlarla karşılaştırır.
+- **Ses:** `.gitattributes` kaynak WAV'larını Git LFS'e yönlendirir (yalnız
+  eklenen dosyalara uygulanır). GitHub Free'de LFS için 10 GiB depolama ve
+  ayda 10 GiB indirme var. İkisi de repo sahibinin hesabından düşer.
+  **Ücretli paket alınmaz.**
+  - Test + dev + kullanılan CSS10 kopyası kotaya sığar.
+  - Tam train eklenince kota aşılır.
+  - Bu yüzden train sesi, gerçekten eğitimde kullanılacak alt küme veya repo
+    sahibiyle kararlaştırılan başka bir ücretsiz depo-içi yol netleşene kadar
+    `blocked` durumunda.
+- **Ses değişmediği için** ham ve temiz manifestler aynı baytları paylaşır;
+  ikinci bir ses kopyası üretilmez. CSS10 arşivindeki bayt bayt aynı ikinci
+  kopya teslim edilmez, `archive_members.tsv` içinde listelidir.
 
-   `pack` her parçayı 1,9 GB altında tutar ve `data/release_index/*.json`
-   indeksini repoya yazar. Parçalar Serdar tarafından repo Release'ine
-   yüklenir. İndiren kişi `python -m greek_asr.data unpack --index ... --shards ...`
-   ile hash kontrollü açar. Gerçek klasör adları `LAYOUT.json` içindedir;
-   `train_wavs` pilot kaydında görülen addır.
-2. **Kota içinde kalan alt küme**: oturum bazlı `subset` ile seçilmiş train
-   alt kümesi ve dev/test LFS'te. Bu yol eğitim verisini küçültür. Gerekçesi
-   donanım bütçesiyle yazılmalıdır.
-
-Her iki yolda da LFS indirme kotasını korumak için ekip üyeleri sesi
-gerekmedikçe `GIT_LFS_SKIP_SMUDGE=1 git clone ...` ile klonlayabilir. Kendi
-makinesinde sesi aynı arşivden `prepare-freeze` ile yeniden açan herkes aynı
-hash'leri elde eder. `verify-freeze` bunu kanıtlar.
-
-Temiz bir clone'da gerçek ses baytlarını doğrulama:
+LFS sesi eklendikten sonra temiz bir clone'da gerçek dosyalarla doğrulama:
 
 ```bash
-git lfs pull && python -m greek_asr.data verify
+git lfs pull
+python -m greek_asr.data verify-source-metadata
+python -m greek_asr.data verify-freeze
+python -m greek_asr.data verify          # train sesi de repodaysa
 ```
 
-LFS pointer dosyası ses sanılmaz. Pipeline pointer'ı görünce
-"Git LFS pointer" hatası verir.
+LFS pointer dosyası ses sanılmaz, pipeline pointer görünce "Git LFS pointer"
+hatası verir. `pack`/`unpack` komutları hash kontrollü parça üretir. Bunlar
+yalnız taşıma aracıdır, tek başına "veri repoda" şartını karşılamaz.
 
 ## 8. Testler
 
@@ -289,13 +317,22 @@ Sınananlar:
 - Zip-slip ve link reddi
 - İndirmenin kaldığı yerden devam etmesi ve Range'e uymayan sunucunun reddi
 - Release parçalarının gidiş-dönüşü ve bozulma tespiti
+- Literal örtüşmede aynı cümleyi taşıyan iki test örneğinin tek benzersiz metin
+  sayılması; etiket ve büyük/küçük harf farkının literal eşleşme sayılmaması
+- Konuşmacı/oturum özetinde bilinmeyen CSS10 kimliklerinin ayrıca sayılması
+- 40–60 karakter/sn sınır kaydının korunup inceleme kuyruğuna girmesi
+- Kaynak metin dosyasında satır sonu değişince `verify-source-metadata`
+  kontrolünün başarısız olması
 
 ## 9. Açık konular
 
-- Gerçek veri henüz çalıştırılmadı; bütün sayılar `DATA_REPORT_TR.md`
-  üretildiğinde ortaya çıkacak.
-- Teslim yöntemi (bölüm 7) Serdar'la kararlaştırılacak.
-- İnceleme kuyruğunun ne kadarının dinleneceği, gerçek kuyruğun büyüklüğüne
-  göre belirlenecek. Dinlenen her karar kaydedilecek.
-- Eğitim bütçesi ve alt küme ihtiyacı Serdar'ın ölçümüne bağlı.
-- Karışım oranı ve adım politikası Adnan/Serdar'ın kararıdır.
+- **Ses teslimi:** test/dev/CSS10 sesi için LFS kotası repo sahibinden onay
+  bekliyor. Train sesi için yöntem belirsiz (bölüm 7). Teslim tamamlanana kadar
+  temiz clone'da tam `verify` yapılamaz.
+- **İnceleme kuyruğu:** hiçbir kayıt dinlenmedi, insan inceleme kararı sıfır.
+  Dinlenen her karar `configs/review_decisions.jsonl` dosyasına yazılır.
+- **Eğitim bütçesi:** alt küme ihtiyacı Serdar'ın donanım ölçümüne bağlı.
+- **Karışım politikası:** oran ve adım politikası Adnan/Serdar'ın kararıdır.
+- **Puanlama:** `<spoken_noise>` ve diğer normalizasyon kararları Ozan'ın
+  ortak puanlama politikasındadır. Dondurulmuş dev/test referansları
+  değiştirilmez.

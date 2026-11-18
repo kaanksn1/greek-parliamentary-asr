@@ -206,9 +206,12 @@ def run_audit(root: Path = ROOT, config_path: Path | None = None, workers: int =
             flag(identity, "silence_heavy", item["speech_fraction"])
         if max(item["leading_silence_seconds"], item["trailing_silence_seconds"]) > flags_cfg["long_edge_silence_seconds"]:
             flag(identity, "long_edge_silence", [item["leading_silence_seconds"], item["trailing_silence_seconds"]])
-        if text.strip() and item["chars_per_second"] > flags_cfg["cps_implausible_max"]:
-            flag(identity, "cps_implausible", {"chars_per_second": item["chars_per_second"], "chars": item["n_chars"],
-                                               "duration_seconds": item["duration_seconds"]})
+        rate = {"chars_per_second": item["chars_per_second"], "chars": item["n_chars"],
+                "duration_seconds": item["duration_seconds"]}
+        if text.strip() and item["chars_per_second"] > flags_cfg["cps_extreme_min"]:
+            flag(identity, "cps_extreme", rate)  # automatic alignment-problem heuristic, not proof
+        elif text.strip() and item["chars_per_second"] > flags_cfg["cps_boundary_min"]:
+            flag(identity, "cps_boundary", rate)  # uncertain: kept for review
         median, mad = cps_reference[item["source"]]
         if mad > 0 and text.strip():
             z = (item["chars_per_second"] - median) / (1.4826 * mad)
@@ -292,7 +295,7 @@ def run_audit(root: Path = ROOT, config_path: Path | None = None, workers: int =
         overlaps[name] = {f"{a}&{b}": len(ids_of(a, field) & ids_of(b, field)) for a, b in pairs}
     overlaps["original_ids"] = {f"{a}&{b}": len({x.split(":", 1)[1] for x in ids_of(a, "id")} &
                                                {x.split(":", 1)[1] for x in ids_of(b, "id")}) for a, b in pairs}
-    overlaps["distinct_texts_exact_after_casefold"] = {f"{a}&{b}": len(text_sets.get(a, set()) & text_sets[b])
+    overlaps["distinct_texts_after_tag_strip_nfc_casefold_space"] = {f"{a}&{b}": len(text_sets.get(a, set()) & text_sets[b])
                                                        for a, b in pairs}
 
     summary_subsets = {}
