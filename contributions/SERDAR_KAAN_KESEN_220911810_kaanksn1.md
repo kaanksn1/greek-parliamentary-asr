@@ -29,11 +29,18 @@
 - Verified the original 43 lightweight tests in a clean public clone without
   ASR packages; the NeMo regression brings the current suite to 44 tests.
   Checked original runtime-evidence hashes and recorded the successful runs.
+- Reviewed Samed's PR #2 without implementing or modifying his data pipeline:
+  ran its 73 tests in the declared NumPy environment, regenerated its report,
+  checked freeze history and independently counted speaker/literal-text
+  overlaps. Recorded remaining audio-delivery and documentation issues.
+- Updated owner integration requirements to the two new professor emails,
+  preserving the official-test freeze and teammates' work ownership.
 
 ## Limits and pending dependent work
 
-The full original test has not yet been frozen. Samed's full acquisition,
-cleaning, logs and data deliverable remain with Samed. Kemal's and Adnan's
+Samed submitted early test-freeze metadata and his data pipeline in PR #2;
+full audio delivery, independent byte verification and review corrections
+are pending. His pipeline and cleaning authorship remain his. Kemal's and Adnan's
 model training implementations, Ozan's final evaluation and all full benchmark
 runs remain pending. No custom-data bonus, trained-model improvement or new
 human annotation is claimed. Personal contribution percentages are not results.

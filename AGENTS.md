@@ -29,11 +29,24 @@ outputs are not verified gold. The professor reply shared on 17 November is
 recorded in `docs/TEACHER_CLARIFICATION_TR.md`: freeze the original test data
 early, before train/dev cleaning or mixed-corpus experiments. Do not clean,
 filter, add/drop, resplit or relabel test data. Keep the second corpus out of
-the parliamentary test. A test freeze has not yet been completed.
+the parliamentary test. Samed submitted freeze metadata in PR #2; the review
+verified that it has not changed since its initial commit. Full source audio
+and Kaldi metadata delivery/independent byte verification are still pending.
 
 Freeze and commit the final model/settings/scoring protocol separately, before
-test inference/scoring. Do not tune from test. Do not infer permission for
-additional test transformations from the approval of train/dev changes.
+test inference/scoring. Do not tune from test. The two further professor
+emails shared on 18 November are summarized in
+`docs/TEACHER_UPDATES_2026-11-18_TR.md`. One common versioned scoring-time
+normalization policy must be selected on train/dev for every reference and
+hypothesis. This does not authorize rewriting frozen source files.
+
+Split by speaker/group when designing a new split. The professor explicitly
+permits a documented official split if the README identifies it and reports
+whether speakers are separate. HParl's official session split is NOT speaker
+disjoint; disclose overlaps, do not call it unseen-speaker evaluation, and do
+not silently resplit the previously frozen original test. Report speakers,
+utterances, hours and literal test-sentence matches in training separately
+from normalized unique-text overlaps.
 
 The two-corpus cleaning plan and domain-focused evaluation were approved in
 principle; that is not a completed bonus award. There is no professor-specified
@@ -46,6 +59,10 @@ See `docs/SECONDARY_SOURCE_TR.md` for provenance and limitations.
 The draft normalization is not the final Greek scoring rule. Keep references
 and predictions under one common, versioned policy. Report corpus edit counts,
 full cohort identity and source hashes.
+Run every baseline supported for Greek. An unsupported checkpoint needs a
+model-card-backed explanation, not a wrong-language run. Bare encoders are
+not ASR. Published fine-tuned checkpoints remain baselines; our own training
+is explicitly attributed and reported as our training contribution.
 
 Verification for common scoring changes:
 `python -m unittest discover -s tests -v` from this directory.

@@ -5,6 +5,14 @@ models and evaluation. Samed implements the full data pipeline; the owner
 provides the common inference runner. Nothing here claims completed full-data
 acquisition, cleaning or test freezing.
 
+The later teacher emails shared on 18 November add explicit speaker/group
+splitting and reporting rules; see `TEACHER_UPDATES_2026-11-18_TR.md`. A
+documented official split is permitted with speaker-overlap disclosure.
+HParl's official session split has overlapping speakers. A new custom split
+must group related recordings before seeded assignment; never randomize clips.
+PR #2 contains Samed's proposed source/clean manifests and early freeze, but
+full audio delivery and independent byte verification remain under review.
+
 ## Audio manifests
 
 UTF-8 JSONL, one complete record per utterance:
@@ -52,7 +60,8 @@ source/release identity, original test membership/IDs, audio and reference hashe
 manifest/reference file hashes, actual recording/session mapping where available,
 record count and creation date. The freeze and corresponding raw test data are
 committed through Samed's PR and verified by Serdar. Ozan later checks the same
-cohort. This early data freeze is still pending.
+cohort. Samed's submitted early freeze metadata is unchanged since its initial
+commit; source audio/Kaldi files are not yet delivered for independent checks.
 
 The late final model/scoring protocol is separate. Before final inference it
 must be committed, set `selection_fixed: true`, specify `scoring_policy` and

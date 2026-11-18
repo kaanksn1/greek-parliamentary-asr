@@ -9,25 +9,36 @@ authorized by the existence of this draft.
    data early: source version, ID/session list and audio/reference hashes.
    Do not clean, filter, add/drop, resplit or relabel that test data. Keep
    the second corpus out of the parliamentary test. This data freeze is
-   separate from the later model/settings freeze and is not yet completed.
+   separate from the later model/settings freeze. PR #2 supplies its metadata;
+   independent verification against the complete source audio is still pending.
 2. Inspect train first, verify audio decoding, duration, silence/clipping,
    duplicates and transcript alignment. Record real corrections/removals.
    Preserve human transcript provenance; model hypotheses are not verified gold.
+   Apply the professor's latest split rule: a new split groups related clips by
+   speaker/recording/session before seeded assignment. A documented official
+   split is permitted with explicit README disclosure of speaker separation.
+   HParl's official session split has speaker overlap: do not describe it as
+   speaker-disjoint or silently change the already-frozen original test.
+   Report per-split speakers/utterances/hours and literal test-sentence matches
+   in each actual training condition, apart from normalized unique-text overlaps.
 3. Use the largest statistically useful dataset feasible within actual
    hardware/time/cost limits. The professor specified no fixed minimum hours.
    Measure train/dev throughput, VRAM and epoch cost before justifying a subset.
    Keep the frozen test sessions; any train/dev changes are made without
    consulting test labels or scores. The three-clip runtime check is not
    evidence of statistical sufficiency or full-training feasibility.
-4. Reconcile the baseline matrix with all Week 9 slides. Implement/train the
-   applicable standard families and retain their ordinary results separately.
+4. Use the exact family list in the professor's second email shared on 18 November.
+   Implement/train every language-applicable standard family and retain ordinary
+   results separately. Unsupported language/head cases need model-card evidence
+   and an explanation; never report a bare encoder or wrong-language ASR result.
 5. Choose the final Greek normalization using train/development examples. The
    initial scorer only performs Unicode NFC, case folding and whitespace
    normalization; accents, digits and punctuation are preserved. CER counts
-   internal spaces. This provisional policy must not be mistaken for an
-   established Greek benchmark normalization or permission to transform the
-   frozen test. Keep source test audio/references unchanged; do not assume an
-   exception to the professor's no-test-processing instruction.
+   internal spaces. This policy is provisional. The second new email explicitly
+   requires one common scoring normalization for all systems. Apply that chosen
+   policy consistently in memory to references and hypotheses, preserving frozen
+   source test audio/reference files. Annotation tags are a dev-only policy
+   decision, not grounds for hand-editing test references or tuning from test.
 6. Primary candidate metric: corpus WER. Secondary candidate: corpus CER,
    substitution/deletion/insertion counts and clearly defined error slices.
    Both metrics use the same IDs/reference policy for every model. Empty
@@ -53,6 +64,10 @@ authorized by the existence of this draft.
 
 The professor reply shared on 17 November is in `TEACHER_CLARIFICATION_TR.md`.
 Open before full runs: full data acquisition; class reservation; deadline;
-full slides; actual test-data freeze; selected CSS10 release acquisition/audit; measured data budget;
+working standard recipes; full audio delivery/independent freeze verification;
+the PR #2 data-review corrections; measured data budget;
 Greek scoring policy; each baseline's working recipe. These are pending facts,
 not completed tasks. The minimum-hour question is resolved: no fixed number.
+The required baseline list and official-split exception are clarified in
+`TEACHER_UPDATES_2026-11-18_TR.md`; PR #2 already contains source/clean metadata
+and an early freeze, while its full audio delivery remains incomplete.

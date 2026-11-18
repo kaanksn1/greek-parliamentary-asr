@@ -5,6 +5,12 @@ kopyalayabileceği ayrıntılı görev promptudur; işin yapıldığına dair bi
 değildir. Samed'in görevi aşağıdaki ilk veri aşamasıyla başlayabilir. Ortak
 veri sözleşmesi ve repo bağlantısı güncel README'den kontrol edilmelidir.
 
+**İlk atamanın tarihsel kaydı:** Samed daha sonra PR #2'yi teslim etti.
+O sürümün incelemesi ve güncel düzeltme promptu
+[SAMED_PR2_REVIEW_TR.md](reviews/SAMED_PR2_REVIEW_TR.md) içindedir. Yeni
+çalışmaya ilk görevi tekrarlayarak veya testi yeniden dondurarak başlanmaz;
+mevcut freeze korunarak inceleme maddeleri tamamlanır.
+
 18 Kasım devir güncellemesi: public repo ve ortak arayüz hazır; güncel hafif
 test sayısı 44. Serdar'ın dört hazır modeli de yalnız mevcut üç train klibinde
 GPU kontrolünden geçti. Bu, tam veri edinme/temizleme, testin dondurulması veya

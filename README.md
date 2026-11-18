@@ -6,6 +6,22 @@ in-domain fine-tuning experiment.**
 
 Public repository: https://github.com/kaanksn1/greek-parliamentary-asr
 
+The two latest professor emails are summarized in
+[TEACHER_UPDATES_2026-11-18_TR.md](docs/TEACHER_UPDATES_2026-11-18_TR.md).
+New splits must group related recordings by speaker/session. Documented
+official splits are permitted with explicit speaker-overlap disclosure.
+HParl's official session split has overlapping speakers, so it is not an
+unseen-speaker evaluation. Each split needs speaker/utterance/hour counts and
+literal test-sentence matches in the actual training targets. All supported
+baselines share one dev-selected normalization/scoring policy.
+
+Samed's [data PR #2](https://github.com/kaanksn1/greek-parliamentary-asr/pull/2)
+has been reviewed at `4e4a80d`: its 73 tests pass and generated report/freeze
+metadata are consistent, but full audio delivery and review corrections remain
+pending. It has not been merged. Findings, exact overlap diagnostics and a
+copyable follow-up prompt are in
+[SAMED_PR2_REVIEW_TR.md](docs/reviews/SAMED_PR2_REVIEW_TR.md).
+
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports
 about 120 hours, with an official session-based train/development/test split.
@@ -165,10 +181,13 @@ settled. No paid storage or cloud compute is assumed.
 | `docs/PROTOCOL_DRAFT.md` | Draft experimental protocol; not a frozen final-test protocol |
 | `docs/INITIAL_WORK_TR.md` | Completed startup work, observed reference issue and remaining work |
 | `docs/TEACHER_CLARIFICATION_TR.md` | Professor approval, immutable test requirement and data-budget rule |
+| `docs/TEACHER_UPDATES_2026-11-18_TR.md` | New speaker/group split rule, official-split exception and exact baseline/scoring requirements |
+| `docs/reviews/` | Samed PR #2 review, reproducible metadata diagnostics and follow-up instructions; no model benchmark |
 | `results/runtime_smoke/` | Real train-pilot predictions and runtime record; no benchmark scores |
 | `contributions/` | Actual individual reports and required filename/status inventory |
 | `AGENTS.md` | Scope and test instructions for coding assistants |
 | `requirements.txt` | Dependency scope of the initial implementation |
+| `scripts/review_data_submission.py` | Read-only integration review of submitted manifests, literal repeated test sentences and freeze history |
 | `requirements-verification.txt` | Exact optional JiWER oracle-check dependencies |
 | `requirements-rocm.lock.txt` | Actual isolated Whisper/Qwen environment pins, including AMD wheel identities |
 | `requirements-nemo.lock.txt` | Actual separate NeMo environment pins; runtime validation status in its documentation |
