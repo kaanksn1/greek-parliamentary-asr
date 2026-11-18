@@ -1,37 +1,37 @@
 {
   "conditions": {
     "hparl_css10": {
-      "manifest_sha256": "4f4a0916afe5697757644be71fae21166791ebaea8fd28d10470611e87b2978a",
+      "manifest_sha256": "be04630140de184a13b5ff3d5a0bc2700ae8563d39e064e56c7e84cea2d80342",
       "records": {
-        "css10_el": 1844,
-        "hparl": 76324
+        "css10_el": 1843,
+        "hparl": 76296
       },
-      "references_sha256": "306af766c43659fb33e8da643f967771c9a1ddf2fdb94df9fd4fe80f0f866145",
+      "references_sha256": "0d13f1732dfd35b69ff9e34364dc9329bb8a244e1ebddb34fb15acae4d509918",
       "sampling_rates": {
-        "16000": 76324,
-        "22050": 1844
+        "16000": 76296,
+        "22050": 1843
       },
       "seconds": {
-        "css10_el": 14894.17,
-        "hparl": 358274.85
+        "css10_el": 14890.767,
+        "hparl": 358129.57
       },
-      "total_seconds": 373169.02,
+      "total_seconds": 373020.337,
       "train_manifest": "data/manifests/train_hparl_css10.jsonl",
       "train_references": "data/manifests/references/train_hparl_css10.jsonl"
     },
     "hparl_only": {
-      "manifest_sha256": "8e2f3c5db229e33b3e86393178c67e6cf9214cfe0d34ee6746ba7cc7f06c143f",
+      "manifest_sha256": "6b9e7ad74f09a7e059b3b7c5616563d73088fa91183bacf0fde4825e90be5e45",
       "records": {
-        "hparl": 76324
+        "hparl": 76296
       },
-      "references_sha256": "b7cb320e59eec41f214985244001bfb0131c255d64e199cb772822f037410233",
+      "references_sha256": "7a12618c426b358a0307bdc428ca29442b81fa32ec8269bcc34ef4ed8d1b43e9",
       "sampling_rates": {
-        "16000": 76324
+        "16000": 76296
       },
       "seconds": {
-        "hparl": 358274.85
+        "hparl": 358129.57
       },
-      "total_seconds": 358274.85,
+      "total_seconds": 358129.57,
       "train_manifest": "data/manifests/train.jsonl",
       "train_references": "data/manifests/references/train.jsonl"
     }
@@ -45,7 +45,7 @@
   },
   "mixing_policy": "Not set by the data owner. Mixing ratio, sampling, steps/epochs and the matched optimisation budget are chosen by Adnan/Serdar on HParl dev and recorded in their runs.",
   "note": "CSS10 audio keeps its original sampling rate; model input pipelines resample at load time.",
-  "policy_version": "p3-data-clean-v1",
+  "policy_version": "p3-data-clean-v2",
   "schema": "p3-training-conditions-v1",
   "shared_dev": {
     "manifest": "data/manifests/dev.jsonl",

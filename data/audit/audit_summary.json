@@ -1,5 +1,5 @@
 {
-  "config_sha256": "5ef8b86073af80690650be9fc7bb9add249b5aea593bc033675ed0ca67f1152b",
+  "config_sha256": "75a924bb05fa0c46adbebc31f0f5ea0d508ff37e2ec7048ee1cf3c29e3163d23",
   "cps_reference": {
     "css10_el": {
       "mad": 1.1568,
@@ -52,7 +52,7 @@
       "hparl_train&hparl_test": 76
     }
   },
-  "policy_version": "p3-data-clean-v1",
+  "policy_version": "p3-data-clean-v2",
   "schema": "p3-data-audit-v1",
   "subsets": {
     "css10_el": {
@@ -153,11 +153,13 @@
       },
       "flag_counts": {
         "cps_high": 1,
+        "cps_implausible": 1,
         "cps_low": 22,
         "non_greek_characters": 1839
       },
       "flag_seconds": {
         "cps_high": 3.402,
+        "cps_implausible": 3.402,
         "cps_low": 212.836,
         "non_greek_characters": 14871.78
       },
@@ -394,6 +396,7 @@
       "flag_counts": {
         "annotation_tag": 44487,
         "cps_high": 62,
+        "cps_implausible": 28,
         "duplicate_audio": 17,
         "duplicate_suspect": 14,
         "long_edge_silence": 7,
@@ -403,6 +406,7 @@
       "flag_seconds": {
         "annotation_tag": 197386.71,
         "cps_high": 203.47,
+        "cps_implausible": 145.28,
         "duplicate_audio": 26.49,
         "duplicate_suspect": 21.87,
         "long_edge_silence": 48.35,

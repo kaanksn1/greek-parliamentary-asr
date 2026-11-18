@@ -49,6 +49,7 @@ Bayraklar adaydır; tek başına hatalı veri kanıtı değildir. Bir kayıt bir
 |---|---|---|---|
 | `annotation_tag` | 0 | 4267 (312.5 dk) | 44487 (3289.8 dk) |
 | `cps_high` | 1 (0.1 dk) | 9 (0.4 dk) | 62 (3.4 dk) |
+| `cps_implausible` | 1 (0.1 dk) | 0 | 28 (2.4 dk) |
 | `cps_low` | 22 (3.5 dk) | 0 | 0 |
 | `duplicate_audio` | 0 | 0 | 17 (0.4 dk) |
 | `duplicate_suspect` | 0 | 1 (0.0 dk) | 14 (0.4 dk) |
@@ -57,6 +58,8 @@ Bayraklar adaydır; tek başına hatalı veri kanıtı değildir. Bir kayıt bir
 | `silence_heavy` | 0 | 0 | 6 (0.3 dk) |
 
 Aynı baytlı ses grupları: 17 grup / 34 kayıt (test dahil karşılaştırma). Aynı PCM içerikli gruplar: 17. Yöntem SHA-256 ile birebir tekrarları ve yalnız WAV başlığı farklı kopyaları yakalar; yeniden kodlanmış, kesilmiş veya ses düzeyi değişmiş tekrarları yakalamaz. Bunlar için aynı konuşmacı + aynı metin + ±tolerans süre eşleşmesi `duplicate_suspect` olarak işaretlenir ve dinlemeye bırakılır.
+
+**Puanlama için önemli:** kaynak referanslarında `<spoken_noise>` gibi işaretler sık geçiyor (yalnız okundu, değiştirilmedi): dev: 4267/7113 referans (%60.0), 5235 işaret; test: 5122/8679 referans (%59.0), 6219 işaret. Train hedeflerinden çıkarıldıkları için modeller bu işaretleri üretmeyecek. İşaretler puanlamada referansta bırakılırsa her biri silme hatası sayılır ve WER yapay olarak yükselir. Bu işaretlerin referans ve hipotezde aynı kuralla ele alınması Ozan'ın puanlama politikasında, dev üzerinde ve test dosyalarına yazılmadan kararlaştırılmalıdır.
 
 Bölümler arası örtüşme (yalnız raporlanır; test tarafı hiçbir zaman değiştirilmez):
 
@@ -75,29 +78,30 @@ Bir kayıt birden çok çıkarma kuralına uyuyorsa yalnız config'teki ilk kura
 
 | Bölüm | Ham kayıt | Ham süre | Temiz kayıt | Temiz süre | Çıkarılan | Çıkarılan süre | Metni değişen |
 |---|---|---|---|---|---|---|---|
-| HParl train | 76341 | 99.53 sa (99:31:41) | 76324 | 99.52 sa (99:31:15) | 17 | 0.4 dk | 44470 |
+| HParl train | 76341 | 99.53 sa (99:31:41) | 76296 | 99.48 sa (99:28:50) | 45 | 2.9 dk | 44452 |
 | HParl dev | 7113 | 9.06 sa (9:03:33) | 7113 | 9.06 sa (9:03:33) | 0 | 0.0 dk | 0 |
-| CSS10 Greek (yalnız train) | 1844 | 4.14 sa (4:08:14) | 1844 | 4.14 sa (4:08:14) | 0 | 0.0 dk | 1843 |
+| CSS10 Greek (yalnız train) | 1844 | 4.14 sa (4:08:14) | 1843 | 4.14 sa (4:08:11) | 1 | 0.1 dk | 1842 |
 
 | Bölüm | İşlem | Kural | Kayıt | Süre |
 |---|---|---|---|---|
+| HParl train | çıkarma | `cps_implausible` | 28 | 2.4 dk |
 | HParl train | çıkarma | `duplicate_audio` | 17 | 0.4 dk |
-| HParl train | metin | `strip_annotation_tags` | 44470 | — |
-| HParl train | inceleme (korundu) | `cps_high` | 62 | — |
+| HParl train | metin | `strip_annotation_tags` | 44452 | — |
+| HParl train | inceleme (korundu) | `cps_high` | 34 | — |
 | HParl train | inceleme (korundu) | `duplicate_suspect` | 14 | — |
 | HParl train | inceleme (korundu) | `long_edge_silence` | 7 | — |
-| HParl train | inceleme (korundu) | `non_greek_characters` | 323 | — |
+| HParl train | inceleme (korundu) | `non_greek_characters` | 322 | — |
 | HParl train | inceleme (korundu) | `silence_heavy` | 6 | — |
 | HParl dev | inceleme (korundu) | `cps_high` | 9 | — |
 | HParl dev | inceleme (korundu) | `duplicate_suspect` | 1 | — |
 | HParl dev | inceleme (korundu) | `non_greek_characters` | 31 | — |
-| CSS10 Greek (yalnız train) | metin | `collapse_whitespace` | 1839 | — |
-| CSS10 Greek (yalnız train) | metin | `lowercase` | 1770 | — |
-| CSS10 Greek (yalnız train) | metin | `remove_characters_absent_from_hparl_train` | 1839 | — |
-| CSS10 Greek (yalnız train) | inceleme (korundu) | `cps_high` | 1 | — |
+| CSS10 Greek (yalnız train) | çıkarma | `cps_implausible` | 1 | 0.1 dk |
+| CSS10 Greek (yalnız train) | metin | `collapse_whitespace` | 1838 | — |
+| CSS10 Greek (yalnız train) | metin | `lowercase` | 1769 | — |
+| CSS10 Greek (yalnız train) | metin | `remove_characters_absent_from_hparl_train` | 1838 | — |
 | CSS10 Greek (yalnız train) | inceleme (korundu) | `cps_low` | 22 | — |
 
-Günlük: `data/clean/cleaning_log.jsonl` (46330 satır, SHA-256 `357b94ff7be070bce3961e3e8da7c51e7f8b6ca96d461d5e6981f2de0ecea19e`). İnceleme kuyruğu: `data/clean/review_queue.jsonl` (473 kayıt). Uygulanan insan inceleme kararı: 0.
+Günlük: `data/clean/cleaning_log.jsonl` (46340 satır, SHA-256 `5bd3d438eef36e774eb8aabc81ec2cc58081e053e8004a1daef1a7832c8f242a`). İnceleme kuyruğu: `data/clean/review_queue.jsonl` (444 kayıt). Uygulanan insan inceleme kararı: 0.
 
 CSS10 metin uyumlaması: üreticinin normalize metni (sayılar yazıyla) alındı, NFC uygulandı, küçük harfe çevirme = True (HParl train büyük harf oranı 0.0), HParl train referanslarında hiç geçmeyen harf dışı karakterler boşluğa çevrildi. HParl train'de korunan harf dışı karakterler: `yok`. Özgün ve normalize metin `data/manifests/raw/css10_el_texts.jsonl` içinde değişmeden durur.
 
@@ -107,6 +111,8 @@ CSS10 metin uyumlaması: üreticinin normalize metni (sayılar yazıyla) alınd�
 |---|---|---|---|---|---|---|
 | HParl train | modify_text | `strip_annotation_tags` | `hparl:afrodith_stampoulh-olomeleia_12_05115000_05118000_1_1` | <spoken_noise> και συνάδελφοι θα προσπαθήσω να μη γίνω και εγώ κακή | και συνάδελφοι θα προσπαθήσω να μη γίνω και εγώ κακή | — |
 | HParl train | modify_text | `strip_annotation_tags` | `hparl:afrodith_stampoulh-olomeleia_12_05117500_05120500_1_1` | <spoken_noise> οικονομολόγος διότι δεν είμαι οικονομολόγος όπως κάποιοι συνάδελφοι προηγο… | οικονομολόγος διότι δεν είμαι οικονομολόγος όπως κάποιοι συνάδελφοι προηγουμένως γίνανε κ… | — |
+| HParl train | drop | `cps_implausible` | `hparl:aleksandros_flampourarhs-olomeleia_42_01207500_01210500_3_1` | — | — | {'chars': 4619, 'chars_per_second': 549.881, 'duration_seco… |
+| HParl train | drop | `cps_implausible` | `hparl:anastasia_xristodoulopoylou-olomeleia_45_00012500_00015500_1_1` | — | — | {'chars': 4071, 'chars_per_second': 1109.2643, 'duration_se… |
 | HParl train | drop | `duplicate_audio` | `hparl:dhmhtrios_kammenos-olomeleia_36_00835000_00838000_1_1` | — | — | {'duplicate_of': 'hparl:dhmhtrios_kammenos-olomeleia_36_008… |
 | HParl train | drop | `duplicate_audio` | `hparl:dhmhtrios_koutsoumpas-olomeleia_31_01647500_01650500_1_1` | — | — | {'duplicate_of': 'hparl:dhmhtrios_koutsoumpas-olomeleia_31_… |
 | CSS10 Greek (yalnız train) | modify_text | `lowercase+remove_characters_absent_from_hparl_train+collapse_whitespace` | `css10_el:Paramythi_horis_onoma_0000` | Όταν κατάλαβε ο γερο-Βασιλιάς Συνετός πως μετρήθηκαν πια οι μέρες του, φώναξε το γιο του,… | όταν κατάλαβε ο γερο βασιλιάς συνετός πως μετρήθηκαν πια οι μέρες του φώναξε το γιο του τ… | — |
@@ -115,6 +121,7 @@ CSS10 metin uyumlaması: üreticinin normalize metni (sayılar yazıyla) alınd�
 | CSS10 Greek (yalnız train) | modify_text | `lowercase` | `css10_el:Paramythi_horis_onoma_0007` | δέσποζε τη χώρα όπου ζούσαν με άνεση οι πολίτες δρόμοι φαρδείς και καλοστρωμένοι ένωναν τ… | δέσποζε τη χώρα όπου ζούσαν με άνεση οι πολίτες δρόμοι φαρδείς και καλοστρωμένοι ένωναν τ… | — |
 | CSS10 Greek (yalnız train) | modify_text | `remove_characters_absent_from_hparl_train+collapse_whitespace` | `css10_el:Paramythi_horis_onoma_0009` | από πάνω από τον ψηλό πύργο του παλατιού του, έβλεπε απέραντα χωράφια σπαρμένα, ρεματιές … | από πάνω από τον ψηλό πύργο του παλατιού του έβλεπε απέραντα χωράφια σπαρμένα ρεματιές κα… | — |
 | CSS10 Greek (yalnız train) | modify_text | `lowercase` | `css10_el:Paramythi_horis_onoma_0466` | Και με μεγαλόπρεπη κίνηση σήκωσε την περγαμηνή και ξεσκέπασε | και με μεγαλόπρεπη κίνηση σήκωσε την περγαμηνή και ξεσκέπασε | — |
+| CSS10 Greek (yalnız train) | drop | `cps_implausible` | `css10_el:Paramythi_horis_onoma_0856` | — | — | {'chars': 138, 'chars_per_second': 40.5612, 'duration_secon… |
 
 Önce/sonra metin yalnız metni değişen kayıtlarda günlükte tutulur; çıkarılan kayıtlarda metin hash'i ve ses hash'i vardır. Dinleyerek doğrulanmayan Yunanca metin tahminle düzeltilmedi.
 
@@ -122,8 +129,8 @@ CSS10 metin uyumlaması: üreticinin normalize metni (sayılar yazıyla) alınd�
 
 | Koşul | Manifest | Kayıt | Süre | Örnekleme hızı | SHA-256 |
 |---|---|---|---|---|---|
-| hparl_only | `data/manifests/train.jsonl` | hparl: 76324 | 99.52 sa (99:31:15) | 16000: 76324 | `8e2f3c5db229e33b…` |
-| hparl_css10 | `data/manifests/train_hparl_css10.jsonl` | css10_el: 1844, hparl: 76324 | 103.66 sa (103:39:29) | 16000: 76324, 22050: 1844 | `4f4a0916afe56977…` |
+| hparl_only | `data/manifests/train.jsonl` | hparl: 76296 | 99.48 sa (99:28:50) | 16000: 76296 | `6b9e7ad74f09a7e0…` |
+| hparl_css10 | `data/manifests/train_hparl_css10.jsonl` | css10_el: 1843, hparl: 76296 | 103.62 sa (103:37:00) | 16000: 76296, 22050: 1843 | `be04630140de184a…` |
 | ortak dev | `data/manifests/dev.jsonl` | hparl: 7113 | 9.06 sa (9:03:33) | 16000: 7113 | `316fbcfbfaf42a3f…` |
 | dondurulmuş test | `data/manifests/test.jsonl` | 8679 | 11.21 sa (11:12:28) | — | `b0842bfbcbffa173…` |
 
@@ -132,7 +139,7 @@ Karışım oranı, örnekleme, adım/epoch sayısı ve iki koşulun eşlenmiş e
 ## 8. Sınırlamalar ve bilinen eksikler
 
 - Otomatik bayraklar (sessizlik, kırpılma, konuşma hızı aykırılığı, şüpheli tekrar) dinlenmeden hatalı sayılmadı; kayıtlar korunup inceleme kuyruğuna yazıldı.
-- Ses–metin hizası ASR modeliyle kontrol edilmedi; model çıktısı doğrulanmış gold sayılmaz.
+- Ses–metin hizası ASR modeliyle kontrol edilmedi; model çıktısı doğrulanmış gold sayılmaz. Yalnız fiziksel olarak imkânsız konuşma hızı (`cps_implausible`, saniyede 40 karakterin üstü; train p99 değerinin iki katından fazla) train/CSS10'dan çıkarıldı. Bu kayıtlarda transkript sesten çok daha uzundur; CTC kaybı etiket uzunluğu çerçeve sayısını aştığında tanımsızdır ve sıralı modellerde hedef metin kesilir.
 - Yeniden kodlanmış/kesilmiş tekrarlar SHA-256 ile yakalanamaz; yalnız şüphe sezgiseli vardır.
 - CSS10 tek konuşmacılı sesli kitap okumasıdır; parlamento konuşmasını temsil etmez ve yararı henüz gösterilmedi. Sadece train'e girdi.
 - HParl'de transkript–ses farkları kaynağın kendi segmentasyonundan gelebilir; düzeltme yapılmadı.
@@ -161,8 +168,8 @@ Ayrıntılı açıklama: `docs/DATA_PIPELINE_TR.md`.
 
 **Slayt 2 — Temizlik**
 
-- HParl train: 76341 → 76324 kayıt (99.53 sa (99:31:41) → 99.52 sa (99:31:15)); 44470 transkriptte işaret temizliği.
-- Çıkarma kuralları: duplicate_audio: 17.
-- Karışık eğitim koşulu: 103.66 sa (103:39:29); dev ve test iki koşulda da aynı.
+- HParl train: 76341 → 76296 kayıt (99.53 sa (99:31:41) → 99.48 sa (99:28:50)); 44452 transkriptte işaret temizliği.
+- Çıkarma kuralları: cps_implausible: 28, duplicate_audio: 17.
+- Karışık eğitim koşulu: 103.62 sa (103:37:00); dev ve test iki koşulda da aynı.
 
 **Konuşmacı notu (Ozan için):** Testi her şeyden önce dondurduk ve sonra hiç dokunmadık; bunu hash'lerle kanıtlıyoruz. Temizliği yalnız train/dev'de, kural ve gerekçesiyle yaptık; her değişiklik günlükte. Otomatik bayrakları hata saymadık, dinlemeye bıraktık. CSS10'un katkısı ayrı deneyle ölçülecek.
