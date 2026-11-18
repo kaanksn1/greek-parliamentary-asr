@@ -1,0 +1,20 @@
+{
+  "_comment": "Condition 2 of 2 (own fine-tuning contribution): HParl + CSS10 Greek train (CSS10 is training-only; dev/test stay HParl-only, see docs/DATA_CONTRACT.md). Must stay byte-identical to whisper_hparl_only.json except train_manifest/train_references/condition, so the only intended difference is data composition. max_steps is pending Serdar's pilot measurement (same value required in both conditions); see docs/SEQUENCE_MODELS.md.",
+  "condition": "hparl_plus_css10",
+  "model_id": "openai/whisper-small",
+  "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+  "train_manifest": "data/manifests/train_hparl_css10.jsonl",
+  "train_references": "data/manifests/references/train_hparl_css10.jsonl",
+  "dev_manifest": "data/manifests/dev.jsonl",
+  "dev_references": "data/manifests/references/dev.jsonl",
+  "language": "el",
+  "task": "transcribe",
+  "sample_rate": 16000,
+  "seed": 42,
+  "learning_rate": 0.00001,
+  "micro_batch_size": 8,
+  "gradient_accumulation_steps": 2,
+  "max_steps": null,
+  "warmup_steps": 50,
+  "dev_eval_every": 100
+}
