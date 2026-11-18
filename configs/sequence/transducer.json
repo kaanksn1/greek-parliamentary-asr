@@ -1,0 +1,20 @@
+{
+  "_comment": "Standard RNN-T transducer ASR (greek_asr.models.transducer). max_steps/batch_size/gradient_accumulation_steps are left pending: Serdar's pilot must measure real step time/VRAM before a non-arbitrary training-length decision. See docs/SEQUENCE_MODELS.md.",
+  "architecture": "RNN-T: unidirectional pyramidal LSTM encoder, LSTM prediction network, feed-forward joint network",
+  "primary_sources": [
+    "Graves (2012), Sequence Transduction with Recurrent Neural Networks, arXiv:1211.3711",
+    "He et al. (2019), Streaming End-to-end Speech Recognition for Mobile Devices"
+  ],
+  "loss_backend": "torchaudio.functional.rnnt_loss (BSD-2-Clause; see docs/SEQUENCE_MODELS.md 'RNN-T loss backend')",
+  "train_manifest": "data/manifests/train.jsonl",
+  "train_references": "data/manifests/references/train.jsonl",
+  "dev_manifest": "data/manifests/dev.jsonl",
+  "dev_references": "data/manifests/references/dev.jsonl",
+  "seed": 42,
+  "sample_rate": 16000,
+  "learning_rate": 0.0003,
+  "batch_size": 16,
+  "gradient_accumulation_steps": 1,
+  "max_steps": null,
+  "dev_eval_every": 500
+}
