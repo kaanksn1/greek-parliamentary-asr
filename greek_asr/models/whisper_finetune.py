@@ -16,16 +16,36 @@ separate baseline row (owned by Serdar) from this fine-tuning contribution.
 
 Labels: the processor's tokenizer prefix is pinned to (language, task) before
 encoding, so BOS/language/task tokens are real target content, not padding.
-Only genuine padding positions (via the tokenizer's attention mask, not a
-token-id guess) are set to -100; the real EOS token is therefore never masked.
-References are tokenized with ``truncation=False``: a reference is never
-silently cut to fit a length limit (see ``build_labels``).
+The tokenizer's encoding starts with the real ``decoder_start_token_id``,
+which the model's own ``shift_tokens_right`` call re-adds when it builds the
+decoder input from ``labels`` -- so ``build_labels`` drops that leading token
+from the labels it returns, verified against ``model.config.decoder_start_token_id``
+(never a guessed ``bos_token_id``), so the decoder input ends up with exactly
+one start token instead of two (see ``build_labels`` and
+docs/reviews/ADNAN_0437631_GPU.json "P1 - Whisper decoder başlangıcı iki kez
+ekleniyor"). Only genuine padding positions (via the tokenizer's attention
+mask, not a token-id guess) are set to -100; the real EOS token is therefore
+never masked. References are tokenized with ``truncation=False``: a reference
+is never silently cut to fit a length limit (see ``build_labels``).
 
-Long audio: WhisperFeatureExtractor pads/truncates every input to the
-model's fixed 30-second window, matching Serdar's unmodified Whisper baseline
-(greek_asr/pretrained/whisper.py); this is Whisper's own architectural input
-contract, not a strategy chosen here. No dev/train example is dropped for
-being "hard" or long.
+Long audio: WhisperFeatureExtractor silently pads/truncates every input to
+the model's fixed 30-second window -- it does not raise on a longer input,
+it just drops the tail (verified with two synthetic 31-second clips whose
+different final second produced identical extracted features; see
+docs/reviews/ADNAN_0437631_GPU.json "P2 - uzun sesi sessiz kesme"). This
+module does not implement long-audio chunking, so `_require_within_whisper_window`
+raises explicitly instead of letting that silent truncation happen; the
+reference text is never cut either way. The real HParl/HParl+CSS10 train and
+dev manifests this PR ships are already under this 30-second limit after the
+PCM32 decode fix (max 26.4s/15.1s/14.62s -- see docs/SEQUENCE_MODELS.md "Known
+limitations"), so the explicit check is not expected to fire on the current
+data; it exists so a future longer recording fails loudly instead of being
+quietly cut. This is Whisper's own architectural input window (not a
+strategy chosen here), and it is **not** the same as Serdar's unmodified
+Whisper baseline adapter's behaviour (greek_asr/pretrained/whisper.py), which
+takes the extractor's silent-truncation default as-is; see
+docs/SEQUENCE_MODELS.md for the corrected comparison. No dev/train example is
+dropped or re-split for being "hard" or long.
 
 Precision: training here runs in float32 only; no AMP/mixed-precision path is
 implemented in this code yet. If Serdar enables AMP on the ROCm pilot, the
@@ -82,8 +102,26 @@ def _validate_revision(project_root: Path, model_id: str, revision: str) -> None
         raise ValueError(f"{model_id}@{revision} does not match the pinned configs/model_sources.lock.json entry")
 
 
-def build_labels(processor: Any, texts: list[str], *, language: str, task: str) -> "torch.Tensor":  # noqa: F821
+def build_labels(processor: Any, texts: list[str], *, language: str, task: str,
+                 decoder_start_token_id: int) -> "torch.Tensor":  # noqa: F821
     """Tokenize with the pinned (language, task) prefix; mask only real padding with -100.
+
+    The tokenizer's own encoding already starts every sequence with the real
+    ``decoder_start_token_id`` (Whisper's ``<|startoftranscript|>``). Whisper's
+    ``forward()`` then calls ``shift_tokens_right(labels, pad_token_id,
+    decoder_start_token_id)`` internally to build the actual decoder input,
+    which *prepends* that same start token again. Left alone, the decoder
+    input ends up with the start token twice --
+    ``[50258, 50258, 50281, 50359, 50363, ...]`` instead of
+    ``[50258, 50281, 50359, 50363, ...]`` -- verified against the real pinned
+    tokenizer/config (docs/reviews/ADNAN_0437631_GPU.json "P1 - Whisper
+    decoder başlangıcı iki kez ekleniyor"). The fix is the same one used by
+    Hugging Face's own Whisper fine-tuning recipe: drop the leading start
+    token from the *labels* before the internal shift re-adds it, using the
+    caller's real ``model.config.decoder_start_token_id`` (never a guessed
+    ``bos_token_id``, which can differ) -- see
+    ``tests/test_whisper_finetune.py::BuildLabelsTests`` for the regression
+    test that fails on the old (pre-fix) behaviour.
 
     Masking is driven by the tokenizer's attention mask, not by comparing token
     IDs to the pad/eos ID: Whisper's pad and eos tokens are frequently the same
@@ -95,8 +133,13 @@ def build_labels(processor: Any, texts: list[str], *, language: str, task: str) 
     # model/tokenizer length limit. If a real utterance ever needs more tokens than
     # the model supports, this must surface as a loud error, not a dropped suffix.
     encoded = processor.tokenizer(list(texts), padding=True, truncation=False, return_tensors="pt")
-    labels = encoded["input_ids"].clone()
-    labels[encoded["attention_mask"] == 0] = -100
+    token_ids, attention_mask = encoded["input_ids"], encoded["attention_mask"]
+    if not bool((token_ids[:, 0] == decoder_start_token_id).all()):
+        raise ValueError("expected every tokenized sequence to start with the real "
+                         f"decoder_start_token_id ({decoder_start_token_id}); got {token_ids[:, 0].tolist()}")
+    labels = token_ids[:, 1:].clone()  # drop the leading start token; the model's own
+    attention_mask = attention_mask[:, 1:]  # internal decoder shift re-adds exactly one
+    labels[attention_mask == 0] = -100
     return labels
 
 
@@ -137,8 +180,24 @@ def _load_checkpoint(path: Path) -> dict:
     return checkpoint
 
 
+_MAX_WHISPER_SECONDS = 30.0
+
+
+def _require_within_whisper_window(waveform, sample_rate: int, identifier: str) -> None:
+    """Raise instead of letting WhisperFeatureExtractor silently truncate a
+    too-long clip (see the module docstring's "Long audio" section). This
+    code does not implement chunking for longer audio; the caller must either
+    stay within this window or extend this function to chunk/reject upstream.
+    """
+    duration_seconds = waveform.shape[0] / sample_rate
+    if duration_seconds > _MAX_WHISPER_SECONDS:
+        raise ValueError(f"{identifier}: {duration_seconds:.2f}s exceeds Whisper's "
+                         f"{_MAX_WHISPER_SECONDS:.0f}-second input window and would otherwise be silently "
+                         "truncated by the feature extractor; long-audio chunking is not implemented here")
+
+
 def _dataset_and_collate(utterances: list[common.Utterance], processor: Any, *, sample_rate: int,
-                         language: str, task: str):
+                         language: str, task: str, decoder_start_token_id: int):
     import numpy as np
     from torch.utils.data import Dataset
 
@@ -149,12 +208,14 @@ def _dataset_and_collate(utterances: list[common.Utterance], processor: Any, *, 
         def __getitem__(self, index: int):
             utterance = utterances[index]
             waveform = common.load_waveform(utterance.audio_path, target_sample_rate=sample_rate).numpy()
+            _require_within_whisper_window(waveform, sample_rate, utterance.id)
             return utterance.id, waveform, utterance.reference
 
     def collate(batch):
         ids, waveforms, references = zip(*batch)
         features = processor.feature_extractor(list(waveforms), sampling_rate=sample_rate, return_tensors="pt")
-        labels = build_labels(processor, list(references), language=language, task=task)
+        labels = build_labels(processor, list(references), language=language, task=task,
+                              decoder_start_token_id=decoder_start_token_id)
         return {"ids": list(ids), "input_features": features["input_features"], "labels": labels}
 
     return SequenceDataset(), collate
@@ -178,6 +239,7 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
     if config.get("max_steps") is None:
         raise ValueError("config.max_steps (optimizer updates) must be set equal for both Whisper conditions "
                          "from a measured pilot run before training (see docs/SEQUENCE_MODELS.md)")
+    resolved_device = common.resolve_device(device)
     _validate_revision(project_root, config["model_id"], config["revision"])
     seed = int(config["seed"])
     torch.manual_seed(seed)
@@ -201,9 +263,11 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
 
     sample_rate = int(config.get("sample_rate", 16000))
     train_dataset, collate = _dataset_and_collate(train_utterances, processor, sample_rate=sample_rate,
-                                                   language=language, task=task)
+                                                   language=language, task=task,
+                                                   decoder_start_token_id=model.config.decoder_start_token_id)
     dev_dataset, _ = _dataset_and_collate(dev_utterances, processor, sample_rate=sample_rate,
-                                          language=language, task=task)
+                                          language=language, task=task,
+                                          decoder_start_token_id=model.config.decoder_start_token_id)
     micro_batch = int(config["micro_batch_size"])
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=micro_batch, shuffle=True, collate_fn=collate)
     dev_loader = torch.utils.data.DataLoader(dev_dataset, batch_size=micro_batch, shuffle=False, collate_fn=collate)
@@ -222,6 +286,7 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
         "dev_references_sha256": common.hash_file(project_root / config["dev_references"]),
         "trainable_parameters": sum(p.numel() for p in model.parameters() if p.requires_grad),
         "effective_batch_size": micro_batch * grad_accum, "max_steps": max_steps, "precision": "float32",
+        "device_requested": device, "device_used": str(resolved_device),
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "train_utterances": len(train_utterances), "dev_utterances": len(dev_utterances),
         "train_audio_seconds": sum(u.duration_seconds for u in train_utterances),
@@ -293,6 +358,7 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
            model_loader: Callable[..., tuple[Any, Any]] | None = None) -> dict[str, Any]:
     import torch
 
+    resolved_device = common.resolve_device(device)
     if split == "test" and not allow_test:
         raise ValueError("test prediction requires --allow-test after the final protocol commit")
     if split == "test":
@@ -300,7 +366,7 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
     from greek_asr.infer import load_manifest
     records = load_manifest(manifest_path, project_root, split)
 
-    checkpoint = _load_checkpoint(checkpoint_path)
+    checkpoint = _load_checkpoint(checkpoint_path)  # map_location="cpu": loads regardless of training device
     config = checkpoint["config"]
     loader = model_loader or _default_model_loader
     processor, model = loader(config["model_id"], config["revision"], device=device)
@@ -316,6 +382,7 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
         "split": split, "model_id": config["model_id"], "revision": config["revision"], "num_beams": num_beams,
         "records": len(records), "completed_records": 0, "inference_seconds": None,
         "references_used_as_model_input": False, "created_utc": datetime.now(timezone.utc).isoformat(),
+        "device_requested": device, "device_used": str(resolved_device),
         "environment": {"python": platform.python_version()},
     }
     writer = common.PartialPredictionWriter(output_dir, ids)
@@ -324,6 +391,7 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
         with torch.no_grad():
             for row in records:
                 waveform = common.load_waveform(row["audio"], target_sample_rate=sample_rate).numpy()
+                _require_within_whisper_window(waveform, sample_rate, row["id"])
                 features = processor.feature_extractor([waveform], sampling_rate=sample_rate, return_tensors="pt")
                 generated = model.generate(input_features=features["input_features"].to(device), language=language,
                                            task=task, num_beams=num_beams, do_sample=False)

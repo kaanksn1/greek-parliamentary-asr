@@ -108,7 +108,8 @@ def pilot_whisper(utterances: list[common.Utterance], device: str) -> dict:
         "openai/whisper-small", "973afd24965f72e36ca33b3055d56a652f456b4d", device=device)
     model.generation_config.language, model.generation_config.task = "el", "transcribe"
     dataset, collate = whisper_finetune._dataset_and_collate(
-        utterances, processor, sample_rate=16000, language="el", task="transcribe")
+        utterances, processor, sample_rate=16000, language="el", task="transcribe",
+        decoder_start_token_id=model.config.decoder_start_token_id)
     batch = collate([dataset[i] for i in range(len(dataset))])
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-5)
     if device.startswith("cuda"):

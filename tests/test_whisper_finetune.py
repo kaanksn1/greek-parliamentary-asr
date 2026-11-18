@@ -112,25 +112,89 @@ def _tiny_model_loader(model_id: str, revision: str, *, device: str):
 
 @unittest.skipUnless(_DEPS_AVAILABLE, _SKIP_REASON)
 class BuildLabelsTests(unittest.TestCase):
+    def _decoder_start_token_id(self, processor):
+        return processor.tokenizer.convert_tokens_to_ids("<|startoftranscript|>")
+
     def test_prefix_tokens_are_real_content_and_only_padding_is_masked(self):
         processor = _real_processor()
+        decoder_start_token_id = self._decoder_start_token_id(processor)
         labels = whisper_finetune.build_labels(
-            processor, ["εμείς μπορούμε σήμερα", "σε"], language="el", task="transcribe")
+            processor, ["εμείς μπορούμε σήμερα", "σε"], language="el", task="transcribe",
+            decoder_start_token_id=decoder_start_token_id)
         tokenizer = processor.tokenizer
-        prefix_ids = tokenizer.convert_tokens_to_ids(["<|startoftranscript|>", "<|el|>", "<|transcribe|>", "<|notimestamps|>"])
+        # The leading decoder_start_token_id is stripped from the returned labels
+        # (the model's own shift_tokens_right re-adds exactly one); so row[0] is
+        # now the language token, not <|startoftranscript|> again.
+        prefix_ids = tokenizer.convert_tokens_to_ids(["<|el|>", "<|transcribe|>", "<|notimestamps|>"])
         for row in labels.tolist():
-            self.assertEqual(row[:4], prefix_ids)  # BOS/language/task tokens are real, never masked
+            self.assertEqual(row[:3], prefix_ids)
+            self.assertNotEqual(row[0], decoder_start_token_id)
             # Exactly one real EOS survives per row; only true padding is -100.
             kept = [token for token in row if token != -100]
             self.assertEqual(kept.count(tokenizer.eos_token_id), 1)
         shorter, longer = labels.tolist()
         self.assertGreater(longer.count(-100), shorter.count(-100))  # the shorter "σε" row is padded more
 
+    def test_decoder_input_has_the_start_token_exactly_once_after_the_models_own_shift(self):
+        """Regression for docs/reviews/ADNAN_0437631_GPU.json "P1 - Whisper
+        decoder başlangıcı iki kez ekleniyor": applying tokenization AND the
+        model's real decoder shift together must produce the start token
+        exactly once. Run against the pre-fix build_labels (which kept the
+        leading start token), this assertion fails with the start token
+        appearing twice -- that is the regression this test guards.
+        """
+        from transformers import WhisperConfig
+        from transformers.models.whisper.modeling_whisper import shift_tokens_right
+
+        processor = _real_processor()
+        config = WhisperConfig.from_pretrained(
+            _snapshot("openai/whisper-small", REVISION, ["*.json", "*.txt"]), local_files_only=True)
+        decoder_start_token_id = config.decoder_start_token_id
+        labels = whisper_finetune.build_labels(
+            processor, ["καλημέρα"], language="el", task="transcribe",
+            decoder_start_token_id=decoder_start_token_id)
+        decoder_inputs = shift_tokens_right(labels, config.pad_token_id, decoder_start_token_id)
+        for row in decoder_inputs.tolist():
+            self.assertEqual(row.count(decoder_start_token_id), 1)
+        self.assertEqual(decoder_inputs[0, 0].item(), decoder_start_token_id)
+        self.assertNotEqual(decoder_inputs[0, 1].item(), decoder_start_token_id)
+
+    def test_mismatched_decoder_start_token_id_is_rejected(self):
+        processor = _real_processor()
+        with self.assertRaisesRegex(ValueError, "decoder_start_token_id"):
+            whisper_finetune.build_labels(processor, ["καλημέρα"], language="el", task="transcribe",
+                                          decoder_start_token_id=0)
+
     def test_vocabulary_is_shared_with_pinned_revision_lock(self):
         with open(ROOT / "configs/model_sources.lock.json", encoding="utf-8-sig") as handle:
             lock = json.load(handle)
         whisper_entry = next(row for row in lock["models"] if row["model_id"] == "openai/whisper-small")
         self.assertEqual(whisper_entry["revision"], REVISION)
+
+
+@unittest.skipUnless(_DEPS_AVAILABLE, _SKIP_REASON)
+class LongAudioGuardTests(unittest.TestCase):
+    """docs/reviews/ADNAN_0437631_GPU.json "P2 - uzun sesi sessiz kesme": the
+    feature extractor silently truncates anything longer than 30 seconds
+    instead of raising. These use synthetic arrays (the same approach the
+    review itself used -- "iki sentetik 31 saniyelik girdi"), not fabricated
+    corpus audio, since no real HParl/CSS10 recording in the shipped
+    manifests is anywhere near this long (max 26.4s; see
+    docs/SEQUENCE_MODELS.md "Known limitations").
+    """
+
+    def test_exactly_30_seconds_is_accepted(self):
+        import numpy as np
+
+        whisper_finetune._require_within_whisper_window(
+            np.zeros(30 * 16000, dtype=np.float32), 16000, "synthetic:30s")
+
+    def test_just_over_30_seconds_raises_instead_of_silently_truncating(self):
+        import numpy as np
+
+        with self.assertRaisesRegex(ValueError, "exceeds Whisper"):
+            whisper_finetune._require_within_whisper_window(
+                np.zeros(30 * 16000 + 1, dtype=np.float32), 16000, "synthetic:30s_plus_one_sample")
 
 
 class MatchedConditionConfigTests(unittest.TestCase):
@@ -328,13 +392,16 @@ class TrainAndPredictWithTinyModelTests(unittest.TestCase):
 
     def test_long_reference_is_never_silently_truncated(self):
         processor = _real_processor()
+        decoder_start_token_id = processor.tokenizer.convert_tokens_to_ids("<|startoftranscript|>")
         long_text = "αβγδεζηθικλμνξοπρστυφχψω " * 60  # far longer than a real HParl utterance
-        labels = whisper_finetune.build_labels(processor, [long_text], language="el", task="transcribe")
+        labels = whisper_finetune.build_labels(processor, [long_text], language="el", task="transcribe",
+                                                decoder_start_token_id=decoder_start_token_id)
         tokenizer = processor.tokenizer
         full_ids = tokenizer(long_text, padding=False, truncation=False)["input_ids"]
-        # Every real (non -100) label id must come from the untruncated encoding.
+        # Every real (non -100) label id must come from the untruncated encoding
+        # (minus the leading start token, which build_labels strips -- see above).
         kept = [token for token in labels[0].tolist() if token != -100]
-        self.assertEqual(kept, full_ids)
+        self.assertEqual(kept, full_ids[1:])
 
 
 if __name__ == "__main__":
