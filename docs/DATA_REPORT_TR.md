@@ -199,13 +199,14 @@ Boyutlar kaydedilmiş arşiv listelerinden (`archive_members.tsv`) hesaplanır; 
 
 | Grup | Dosya | GiB | Yöntem | Durum |
 |---|---|---|---|---|
-| `css10_source_metadata` | 2 | 0.002 | plain Git, `-text` | in_repo |
+| `css10_source_metadata` | 1 | 0.001 | plain Git, `-text` | in_repo |
+| `css10_unreferenced_metadata` | 1 | 0.001 | — | teslim edilmez (manifestte yok) |
 | `css10_unreferenced_wav` | 1844 | 1.224 | — | teslim edilmez (manifestte yok) |
-| `css10_used_wav` | 1844 | 1.224 | Git LFS (proposed) | pending |
-| `hparl_dev_wav` | 7113 | 0.972 | Git LFS (proposed) | pending |
+| `css10_used_wav` | 1844 | 1.224 | Git LFS | in_repo |
+| `hparl_dev_wav` | 7113 | 0.972 | Git LFS | in_repo |
 | `hparl_source_metadata` | 15 | 0.038 | plain Git, `-text` so bytes are never converted | in_repo |
-| `hparl_test_wav` | 8679 | 1.203 | Git LFS (proposed) | pending |
-| `hparl_train_wav` | 76341 | 10.681 | undecided | blocked |
+| `hparl_test_wav` | 8679 | 1.203 | Git LFS | in_repo |
+| `hparl_train_wav` | 76341 | 10.681 | Git LFS, subset actually used | pending |
 
 Ücretsiz Git LFS depolama: 10 GiB. Test + dev + CSS10 sesi kümülatif 3.399 GiB (sığıyor); tam train eklenince 14.080 GiB (sığmıyor). `pending`/`blocked` durumundaki gruplar teslim edilmiş sayılmaz. Kaynak metin dosyalarının bayt eşitliği temiz clone'da `python -m greek_asr.data verify-source-metadata` ile kontrol edilir.
 

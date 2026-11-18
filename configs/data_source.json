@@ -62,5 +62,11 @@
   "test_data_frozen": false,
   "test_freeze_manifest": null,
   "test_changes_permitted": false,
-  "deadline_confirmed": false
+  "deadline_confirmed": true,
+  "deadline_date": "2026-11-21",
+  "deadline_period": "evening",
+  "deadline_timezone": "Europe/Istanbul",
+  "deadline_exact_time": null,
+  "deadline_exact_time_confirmed": false,
+  "deadline_source": "User reply shared on 2026-11-18: cumartesi akşam"
 }

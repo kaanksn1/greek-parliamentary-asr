@@ -163,12 +163,17 @@ def delivery_plan(root: Path = ROOT) -> dict:
         used = set()
         if css_manifest.exists():
             used = {row["audio_path"].removeprefix("data/raw/css10_el/release/") for row in read_jsonl(css_manifest)}
+        inventory = root / "data/manifests/raw/css10_el_inventory.json"
+        transcript = (read_json(inventory)["transcript"].removeprefix("data/raw/css10_el/release/")
+                      if inventory.exists() else None)
         for member in _members(css_listing):
             path, size = member["path"], int(member["bytes"])
             if path.lower().endswith(".wav"):
                 add("css10_used_wav" if path in used else "css10_unreferenced_wav", size)
-            else:
+            elif transcript is None or path == transcript:
                 add("css10_source_metadata", size)
+            else:
+                add("css10_unreferenced_metadata", size)
     for group in groups.values():
         group["gib"] = round(group["bytes"] / GIB, 3)
     decisions_path = root / "configs/data_delivery.json"

@@ -75,7 +75,8 @@ def review(root: Path) -> dict:
     }
     log_path = root / "data/clean/cleaning_log.jsonl"
     log = read_rows(log_path)
-    cps_drops = [r for r in log if r.get("action") == "drop" and r.get("rule") == "cps_implausible"]
+    cps_drops = [r for r in log if r.get("action") == "drop" and
+                 r.get("rule") in ("cps_implausible", "cps_extreme")]
     clean_summary_path = root / "data/clean/clean_summary.json"
     summary = json.loads(clean_summary_path.read_text(encoding="utf-8-sig"))
     first_freeze_commit = subprocess.check_output(

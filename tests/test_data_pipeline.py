@@ -331,6 +331,17 @@ class ContractAndCliTests(PipelineFixture):
         with contextlib.redirect_stdout(io.StringIO()) as output:
             self.assertEqual(data_cli(["--root", str(self.root), "verify"]), 0)
         self.assertEqual(json.loads(output.getvalue())["test_freeze"]["status"], "ok")
+        partial = self.copy_project()
+        for row in read_jsonl(partial / "data/manifests/train.jsonl"):  # train audio not delivered
+            (partial / row["audio_path"]).unlink()
+        with contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(data_cli(["--root", str(partial), "verify", "--only", "dev.jsonl", "test.jsonl",
+                                       "css10_el_train.jsonl"]), 0)
+        checked = json.loads(output.getvalue())
+        self.assertIn("scope", checked)
+        self.assertNotIn("train.jsonl", checked)
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(data_cli(["--root", str(partial), "verify"]), 2)  # full verify still needs train audio
         root = self.copy_project()
         first = clean.select_subset(root, hours=0.001, seed=7)
         second = clean.select_subset(root, hours=0.001, seed=7)

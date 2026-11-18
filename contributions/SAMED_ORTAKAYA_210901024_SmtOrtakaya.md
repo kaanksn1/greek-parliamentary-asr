@@ -89,13 +89,20 @@ freeze, train/dev audit and cleaning, training-condition manifests).
 - Added `delivery-plan` (real sizes from the archive listings) and the
   decision record `configs/data_delivery.json`.
 
+## Audio delivery (19 November 2026)
+
+- After the repository owner approved it, added the test, dev and CSS10 audio
+  (the copy the manifests reference) through Git LFS, with
+  `verify --only` for checking a partial delivery.
+
 ## Not yet done
 
-- **Audio delivery:** test/dev/CSS10 audio waits for the repository owner's LFS
-  quota confirmation. The method for train audio is undecided because it
-  exceeds the free LFS storage together with the rest.
-- **Clean-clone verification:** independent full-byte verification is
-  therefore pending.
+- **Train audio:** only the subset actually used for training will be
+  delivered. It is chosen after Serdar's measured GPU budget, because full
+  train together with the rest exceeds the free LFS storage.
+- **Clean-clone verification:** full verification is therefore pending. The
+  delivered test/dev/CSS10 audio is checked separately (see the PR #2
+  description for the actual result).
 - **Listening review and data slides:** also pending.
 
 No bonus or model result is claimed.

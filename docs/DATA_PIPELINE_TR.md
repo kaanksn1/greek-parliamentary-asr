@@ -14,8 +14,10 @@ Durum (18 Kasım 2026):
 - **Repoda olanlar:** kod, testler, bütün manifestler, temiz referanslar,
   temizlik günlüğü, denetim çıktıları ve kaynak kayıtları. Özgün Kaldi ve CSS10
   metin dosyaları da bu sürümden itibaren repoda.
-- **Henüz olmayanlar:** ses dosyalarının repoya teslimi (bölüm 7). Bu yüzden
-  ses baytlarıyla yapılacak bağımsız `verify` / `verify-freeze` kontrolü bekliyor.
+- **Ses:** test, dev ve CSS10 sesi Git LFS ile repoda (repo sahibinin 18 Kasım
+  onayıyla). Train sesi bekliyor (bölüm 7). Bu yüzden temiz clone'da tam
+  `verify` yapılamaz; teslim edilen kısım `verify-freeze` ve
+  `verify --only dev.jsonl test.jsonl css10_el_train.jsonl` ile denetlenir.
 
 ## 1. Samed'in bilgisayarında çalıştırma
 
@@ -272,9 +274,11 @@ gerçekten doğruysa değiştirilir.
   **Ücretli paket alınmaz.**
   - Test + dev + kullanılan CSS10 kopyası kotaya sığar.
   - Tam train eklenince kota aşılır.
-  - Bu yüzden train sesi, gerçekten eğitimde kullanılacak alt küme veya repo
-    sahibiyle kararlaştırılan başka bir ücretsiz depo-içi yol netleşene kadar
-    `blocked` durumunda.
+  - Bu yüzden train sesinden yalnız eğitimde gerçekten kullanılacak alt küme
+    teslim edilecek. Alt küme Serdar'ın ölçtüğü GPU bütçesine göre
+    `python -m greek_asr.data subset --hours <saat> --seed <seed>` ile, bütün
+    oturumlar halinde ve kayıtlı seed ile seçilir. O zamana kadar durum
+    `pending`.
 - **Ses değişmediği için** ham ve temiz manifestler aynı baytları paylaşır;
   ikinci bir ses kopyası üretilmez. CSS10 arşivindeki bayt bayt aynı ikinci
   kopya teslim edilmez, `archive_members.tsv` içinde listelidir.
@@ -285,7 +289,8 @@ LFS sesi eklendikten sonra temiz bir clone'da gerçek dosyalarla doğrulama:
 git lfs pull
 python -m greek_asr.data verify-source-metadata
 python -m greek_asr.data verify-freeze
-python -m greek_asr.data verify          # train sesi de repodaysa
+python -m greek_asr.data verify --only dev.jsonl test.jsonl css10_el_train.jsonl
+python -m greek_asr.data verify          # yalnız train sesi de repodaysa
 ```
 
 LFS pointer dosyası ses sanılmaz, pipeline pointer görünce "Git LFS pointer"
@@ -326,9 +331,9 @@ Sınananlar:
 
 ## 9. Açık konular
 
-- **Ses teslimi:** test/dev/CSS10 sesi için LFS kotası repo sahibinden onay
-  bekliyor. Train sesi için yöntem belirsiz (bölüm 7). Teslim tamamlanana kadar
-  temiz clone'da tam `verify` yapılamaz.
+- **Train sesi:** kullanılacak alt küme Serdar'ın GPU bütçe ölçümünden sonra
+  seçilip LFS ile teslim edilecek (bölüm 7). O zamana kadar temiz clone'da tam
+  `verify` yapılamaz.
 - **İnceleme kuyruğu:** hiçbir kayıt dinlenmedi, insan inceleme kararı sıfır.
   Dinlenen her karar `configs/review_decisions.jsonl` dosyasına yazılır.
 - **Eğitim bütçesi:** alt küme ihtiyacı Serdar'ın donanım ölçümüne bağlı.

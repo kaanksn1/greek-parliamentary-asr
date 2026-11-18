@@ -15,12 +15,22 @@ unseen-speaker evaluation. Each split needs speaker/utterance/hour counts and
 literal test-sentence matches in the actual training targets. All supported
 baselines share one dev-selected normalization/scoring policy.
 
-Samed's [data PR #2](https://github.com/kaanksn1/greek-parliamentary-asr/pull/2)
-has been reviewed at `4e4a80d`: its 73 tests pass and generated report/freeze
-metadata are consistent, but full audio delivery and review corrections remain
-pending. It has not been merged. Findings, exact overlap diagnostics and a
-copyable follow-up prompt are in
-[SAMED_PR2_REVIEW_TR.md](docs/reviews/SAMED_PR2_REVIEW_TR.md).
+Latest review: Samed's [PR #2](https://github.com/kaanksn1/greek-parliamentary-asr/pull/2)
+at `e5aa488` passes 76 tests; its original source metadata, reporting corrections
+and unchanged early test-freeze metadata are verified. Full audio delivery and
+independent audio-byte verification remain pending. Adnan's
+[PR #5](https://github.com/kaanksn1/greek-parliamentary-asr/pull/5) at `0437631`
+passes 93 tests, and a temporary merge of both PRs passes 125 tests. Real GPU
+checks nevertheless expose PCM32 decoding, device, RNN-T loss-backend and
+Whisper decoder-prefix defects. Neither PR was merged in this review.
+See [the follow-up report, evidence and Adnan correction prompt](docs/reviews/PR2_PR5_FOLLOWUP_TR.md).
+The [first Samed review](docs/reviews/SAMED_PR2_REVIEW_TR.md) is historical.
+
+Adnan has submitted attention ASR, RNN-T and the two controlled Whisper
+fine-tuning recipes; corrections are required before full runs. The original
+assignment remains in [HANDOFF_ADNAN_TR.md](docs/HANDOFF_ADNAN_TR.md).
+Full runs remain central on Serdar's machine. The user reported the deadline
+as **21 November 2026, Saturday evening (Europe/Istanbul)**; the exact hour is unknown.
 
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports
@@ -38,10 +48,12 @@ acquired and audited; common scoring code and baseline inventory created;
 Whisper, Qwen3-ASR, Canary and Parakeet completed GPU inference on those WAVs
 in two new isolated runtimes. Owner adapters and their common audio-only
 runner are implemented and exercised on this training fixture.
-No full benchmark result or
-training improvement is claimed. The full corpus was acquired, the original
-test frozen and train/dev/CSS10 cleaned on Samed's machine (PR #2); delivery of
-the audio into this repository and independent byte verification are pending.
+No full benchmark result or training improvement is claimed. PR #2 contains
+full-corpus metadata, cleaning logs and an early test freeze, but the referenced
+full audio is absent from its checkout. Owner verification therefore covers
+metadata, code and the existing three training WAVs, not the full audio corpus.
+After that review, the test, dev and CSS10 audio are delivered through Git LFS.
+The train audio is still pending (see *Data status* below).
 The five-member ownership plan is now assigned in `docs/TEAM.md`. Full runs
 will be central on Serdar's PC and Ozan will present. The user authorized
 owner implementation on 18 November. Write collaborator invitations were sent
@@ -126,9 +138,9 @@ records are counted as unknown, not invented.
 | Acquisition, test freeze (`d28c97f`), audit and cleaning | Run on Samed's machine with the full corpus |
 | Code, tests, manifests, clean references, cleaning log, audit, source records | In this repository |
 | Original Kaldi metadata and CSS10 transcript | In this repository, byte-checked by `verify-source-metadata` |
-| Source audio (test/dev/CSS10) | Pending: Git LFS quota confirmation by the repository owner |
-| Source audio (train) | Blocked: exceeds the free LFS storage together with the rest; method undecided |
-| Independent full-byte `verify` on a clean clone | Pending until the audio is delivered |
+| Source audio (test/dev/CSS10, ~3.4 GiB) | In this repository via Git LFS (owner approved on 18 Nov 2026) |
+| Source audio (train, 10.68 GiB) | Pending: full train plus the rest exceeds the free LFS storage; only the training subset actually used (`subset`, fixed seed, whole sessions) will be delivered once Serdar's GPU budget is measured |
+| Clean-clone check of delivered audio | `git lfs pull`, then `verify-freeze` (with audio) and `verify --only dev.jsonl test.jsonl css10_el_train.jsonl`; full `verify` needs the train audio |
 
 `docs/DATA_REPORT_TR.md` is the generated data report (sources, freeze, raw
 inventory, audit flags, cleaning results with examples, split/speaker and
@@ -225,6 +237,7 @@ settled. No paid storage or cloud compute is assumed.
 | `docs/SECONDARY_SOURCE_TR.md` | Selected CSS10 Greek source, version, reported hours, license evidence and limits |
 | `docs/DATA_CONTRACT.md` | Shared audio/reference/prediction schema and two freeze stages |
 | `docs/HANDOFF_SAMED_TR.md` | Detailed data-owner task prompt, deliverables and acceptance checks |
+| `docs/HANDOFF_ADNAN_TR.md` | Next model-owner prompt after accepted data delivery; training code, controls, tests and central-run package |
 | `docs/PRETRAINED_TRANSFORMERS.md` | Whisper/Qwen APIs, standard settings and primary sources |
 | `docs/NEMO_RUNTIME.md` | Canary/Parakeet APIs, separate dependencies and actual runtime status |
 | `docs/RUNTIME_ENVIRONMENT.md` | Tested isolated Whisper/Qwen installation, lock replay and training-pilot commands |
@@ -233,7 +246,7 @@ settled. No paid storage or cloud compute is assumed.
 | `docs/INITIAL_WORK_TR.md` | Completed startup work, observed reference issue and remaining work |
 | `docs/TEACHER_CLARIFICATION_TR.md` | Professor approval, immutable test requirement and data-budget rule |
 | `docs/TEACHER_UPDATES_2026-11-18_TR.md` | New speaker/group split rule, official-split exception and exact baseline/scoring requirements |
-| `docs/reviews/` | Samed PR #2 review, reproducible metadata diagnostics and follow-up instructions; no model benchmark |
+| `docs/reviews/` | Versioned PR #2/#5 reviews, metadata and GPU diagnostic JSON evidence, and correction prompts; no model benchmark |
 | `results/runtime_smoke/` | Real train-pilot predictions and runtime record; no benchmark scores |
 | `greek_asr/data/` | Samed's data pipeline: acquisition, test freeze, audit, cleaning, report, delivery shards |
 | `configs/data_cleaning.json` | Versioned train/dev/CSS10 cleaning policy and flag thresholds |
@@ -247,6 +260,7 @@ settled. No paid storage or cloud compute is assumed.
 | `AGENTS.md` | Scope and test instructions for coding assistants |
 | `requirements.txt` | Dependency scope of the initial implementation |
 | `scripts/review_data_submission.py` | Read-only integration review of submitted manifests, literal repeated test sentences and freeze history |
+| `scripts/probe_sequence_submission.py` | Independent PCM32/token-prefix probes and one-step submitted model checks on three train clips; no dev/test inference |
 | `requirements-verification.txt` | Exact optional JiWER oracle-check dependencies |
 | `requirements-rocm.lock.txt` | Actual isolated Whisper/Qwen environment pins, including AMD wheel identities |
 | `requirements-nemo.lock.txt` | Actual separate NeMo environment pins; runtime validation status in its documentation |
@@ -261,11 +275,12 @@ small-matrix forward/backward and three-clip Whisper inference. That historical
 record remains in `results/runtime_smoke/whisper_small_train/run.json`.
 The owner now has separate new Transformers and NeMo inference environments;
 their actual pins and current runtime evidence are recorded separately.
-The teammates' full training implementations/environments remain pending.
+Adnan's submitted training implementations still need the corrections documented
+in the latest review; all full training and benchmark runs remain pending.
 
 Before full runs: obtain the official data release, freeze the original test,
 inspect real train/dev quality, acquire and audit the selected CSS10 release, measure
-the feasible data budget, confirm class reservation/deadline, and reconcile
+the feasible data budget, confirm class reservation and the exact deadline hour, and reconcile
 the full Week 9 slides with the baseline inventory. Do not substitute a mirror's
 random split for the official session split.
 

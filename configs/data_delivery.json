@@ -13,24 +13,24 @@
       "detail": "The producer transcript.txt that the manifests use (el/transcript.txt). The second top-level copy is byte-identical (hash-checked) and listed in archive_members.tsv."
     },
     "hparl_test_wav": {
-      "method": "Git LFS (proposed)",
-      "status": "pending",
-      "detail": "Waiting for the repository owner to confirm the available LFS storage and bandwidth."
+      "method": "Git LFS",
+      "status": "in_repo",
+      "detail": "Repository owner approved the upload on 18 November 2026. Clean-clone check: `git lfs pull`, then `verify-freeze` with audio."
     },
     "hparl_dev_wav": {
-      "method": "Git LFS (proposed)",
-      "status": "pending",
-      "detail": "Same decision as the test audio."
+      "method": "Git LFS",
+      "status": "in_repo",
+      "detail": "Same upload as the test audio. Clean-clone check: `verify --only dev.jsonl`."
     },
     "css10_used_wav": {
-      "method": "Git LFS (proposed)",
-      "status": "pending",
-      "detail": "Only the copy referenced by the manifests; the identical second copy is not duplicated."
+      "method": "Git LFS",
+      "status": "in_repo",
+      "detail": "Only the copy the manifests reference (el/); the byte-identical second copy is not duplicated. Clean-clone check: `verify --only css10_el_train.jsonl`."
     },
     "hparl_train_wav": {
-      "method": "undecided",
-      "status": "blocked",
-      "detail": "Together with test/dev/CSS10 the audio exceeds the free LFS storage. Options for the team: deliver the subset that is actually used for training, or another free in-repository method agreed with the owner. A release link or download script alone is not counted as delivery."
+      "method": "Git LFS, subset actually used",
+      "status": "pending",
+      "detail": "Full train (10.68 GiB) plus the delivered audio exceeds the free LFS storage. Only the training subset that is actually used will be delivered: chosen with `python -m greek_asr.data subset` (fixed seed, whole sessions) after Serdar's measured GPU budget. Not delivered yet."
     }
   }
 }

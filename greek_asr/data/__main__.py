@@ -93,6 +93,12 @@ def cmd_verify(args) -> dict:
     root = args.root
     result = {"test_freeze": freeze.verify_freeze(root)}
     files = ["train.jsonl", "dev.jsonl", "train_hparl_css10.jsonl", "css10_el_train.jsonl", "test.jsonl"]
+    if getattr(args, "only", None):
+        unknown = sorted(set(args.only) - set(files))
+        if unknown:
+            raise DataError(f"unknown manifest(s) for --only: {unknown}")
+        files = [name for name in files if name in args.only]
+        result["scope"] = f"only {files}; other manifests were not checked"
     for name in files:
         path = root / "data/manifests" / name
         if not path.exists():
@@ -110,7 +116,7 @@ def cmd_verify(args) -> dict:
             validate_manifest_row(row, root, check_audio=not args.skip_audio)
         result[name] = {"records": len(rows), "hours": round(sum(r["duration_seconds"] for r in rows) / 3600, 3)}
     test_ids = {r["id"] for r in read_jsonl(root / "data/manifests/test.jsonl")}
-    for name in files[:-1]:
+    for name in [f for f in files if f != "test.jsonl"]:
         path = root / "data/manifests" / name
         if path.exists() and test_ids & {r["id"] for r in read_jsonl(path)}:
             raise DataError(f"{name} shares IDs with the frozen test")
@@ -157,7 +163,7 @@ def cmd_prepare_clean(args) -> dict:
     steps["audit"] = cmd_audit(args)
     steps["clean"] = cmd_clean(args)
     steps["report"] = cmd_report(args)
-    args.skip_audio = False
+    args.skip_audio, args.only = False, None
     steps["verify"] = cmd_verify(args)
     return steps
 
@@ -196,8 +202,10 @@ def build_parser() -> argparse.ArgumentParser:
     subset.add_argument("--seed", type=int, default=42)
     subset.add_argument("--no-css10", action="store_true")
     add("report", cmd_report, "generate docs/DATA_REPORT_TR.md from the recorded outputs")
-    add("verify", cmd_verify, "validate all delivered manifests against the contract and audio") \
-        .add_argument("--skip-audio", action="store_true")
+    verify = add("verify", cmd_verify, "validate delivered manifests against the contract and audio")
+    verify.add_argument("--skip-audio", action="store_true")
+    verify.add_argument("--only", nargs="+", metavar="MANIFEST",
+                        help="check only these manifests, e.g. dev.jsonl test.jsonl css10_el_train.jsonl")
     add("publish-plan", cmd_publish_plan, "sizes of raw/clean deliverables vs a Git LFS quota") \
         .add_argument("--quota-gib", type=float, default=10.0)
     add("split-summary", cmd_split_summary,
