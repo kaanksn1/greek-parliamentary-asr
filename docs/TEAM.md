@@ -26,7 +26,7 @@ değiştirilmedi; yüzdeler toplamı %100'dür.
 | 1 — Serdar Kaan Kesen | `kaanksn1` | %25 | GitHub/entegrasyon, ortam, merkezî koşular; Whisper, Canary, Parakeet, Qwen3-ASR standart çıkarımı | `feature/p3-integration` |
 | 2 — Samed Ortakaya | `SmtOrtakaya` | %17 | HParl + CSS10 Greek, veri denetimi, gerçek temizlik ve split/manifestler | `feature/p3-data` |
 | 3 — Kemal Arif Karabacıoğlu | `kemalarif` | %23 | MFCC + GMM-HMM, plain CTC; wav2vec 2.0 ve HuBERT ASR | `feature/p3-ctc-hmm` |
-| 4 — Adnan Demir | `adnan-demir` | %23 | Attention encoder–decoder, transducer; kendi Whisper fine-tuning deneyimiz | `feature/p3-sequence-models` |
+| 4 — Adnan Demir | `adnan-demir` | %23 | Attention encoder–decoder (hybrid CTC/attention dahil), RNN-T; kendi Whisper fine-tuning deneyimiz | `feature/p3-sequence-models` |
 | 5 — Ozan Serhan Denizhan | `serhandenizhan` | %12 | Ortak değerlendirme, karşılaştırma, grafikler ve sunum | `feature/p3-evaluation` |
 
 Serdar'ın payı farklı ASR ortamları ve entegrasyondan; Kemal ve Adnan'ın payı
@@ -92,7 +92,8 @@ dosyalarına yapılmış iş gibi aktarılmaz.
 
 ## 4 — Adnan: sıralı modeller ve fine-tuning katkısı
 
-- Standart attention encoder–decoder ile transducer için ayrı, belgeli
+- Standart attention encoder–decoder (hybrid CTC/attention bu aileye dahil)
+  ile RNN-T transducer için ayrı, belgeli
   eğitim/tahmin reçeteleri ve konfigürasyonlar hazırlar. Kaynağı belirtilmiş
   standart toolkit kullanabilir; özel mimari geliştirme zorunluluğu yoktur.
 - Ayrı katkı deneyinde Whisper'ın seçilen başlangıç checkpoint'ini fine-tune
@@ -111,9 +112,10 @@ dosyalarına yapılmış iş gibi aktarılmaz.
   gerekçelerini veri/görev üzerinden açıklar. Yunanca, boş çıktı, ID eksikliği
   ve toplu edit sayıları kontrollerini sürdürür. Mevcut kodu kendi sıfırdan
   yazdığı katkı olarak göstermeden kendi gerçek değişikliklerini kaydeder.
-- Nihai scoring politikasını train/dev ile kararlaştırır. Hocanın testte işlem
-  yapılmaması talimatıyla çelişen bir normalizasyon varsaymaz; kaynak test
-  dosyaları ve referansları değişmez. Testten ayar/model seçmez.
+- Nihai scoring politikasını train/dev ile kararlaştırır. Yeni Mail 2'nin
+  istediği tek metin normalizasyonunu her modelin referans/hipotezine aynı
+  uygular; kaynak test dosyaları ve referansları değişmez. Testten ayar/model
+  veya normalizasyon seçmez.
 - Bütün modellerin aynı test ID/hash listesinde eksiksiz tahmin verdiğini
   kontrol eder. Boş tahminleri hata olarak puanlar; başarısız örnekleri düşürüp
   modeli daha başarılı göstermez.
@@ -155,8 +157,15 @@ göreli ses yolu, hash, süre ve varsa özgün kayıt/konuşmacı kimliğini ta�
 | 4 | Dev ile seçim; model/decoder/scoring ayarlarının commit ile sabitlenmesi; ardından aynı test üzerinde son karşılaştırma |
 | 5 | Koddan üretilen tablolar, ham/temiz veri teslimi, README/katkı/lisans kontrolü ve sunum |
 
-Teslim tarihi henüz verilmediği için gün/tarih uydurulmadı. Tam Week 9
-slaytlarıyla [baseline envanteri](BASELINES.md) son kez eşleştirilecek; duyuruda
-geçen hiçbir aile opsiyonel olarak gizlenmez. Hoca onayı +5'in kazanıldığı
+Teslim tarihi henüz verilmediği için gün/tarih uydurulmadı. Yeni Mail 2 kesin
+[baseline envanterini](BASELINES.md) netleştirdi; Yunancayı destekleyen hiçbir
+aile opsiyonel olarak gizlenmez. Hoca onayı +5'in kazanıldığı
 anlamına gelmez: gerçek temizleme ve yeniden üretilebilir deney gerekir.
 Sunum dışında ek uygulama/backend/demo işi planlanmadı.
+
+18 Kasım veri PR incelemesi: Samed'in kendi kodu/katkısı değiştirilmeden 73 test,
+rapor üretimi ve freeze geçmişi kontrol edildi. Tam ses teslimi ile yeni
+speaker/literal cümle raporu ve diğer düzeltmeler
+[inceleme raporunda](reviews/SAMED_PR2_REVIEW_TR.md). PR #2 henüz birleştirilmedi.
+Resmî HParl bölümünün speaker-disjoint olmadığı README'de açıklanmalı; yeni
+kendi split'imiz yapılırsa speaker/recording grupları sabit seed ile atanır.

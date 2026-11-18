@@ -1,0 +1,470 @@
+{
+  "schema": "p3-data-review-v1",
+  "reviewed_commit": "4e4a80d638a5e9fb177ead6d75f46112ef4e165e",
+  "scope": "Metadata/committed-code review; file presence is checked but full audio bytes are not rehashed",
+  "raw_splits": {
+    "train": {
+      "utterances": 76341,
+      "hours": 99.52815000000001,
+      "speakers_with_ids": 376,
+      "utterances_without_speaker_id": 0,
+      "recordings_or_sessions_with_ids": 43,
+      "utterances_without_recording_id": 0,
+      "audio_paths_present_in_checkout": 0
+    },
+    "dev": {
+      "utterances": 7113,
+      "hours": 9.059188888888889,
+      "speakers_with_ids": 64,
+      "utterances_without_speaker_id": 0,
+      "recordings_or_sessions_with_ids": 3,
+      "utterances_without_recording_id": 0,
+      "audio_paths_present_in_checkout": 0
+    },
+    "test": {
+      "utterances": 8679,
+      "hours": 11.20788888888889,
+      "speakers_with_ids": 82,
+      "utterances_without_speaker_id": 0,
+      "recordings_or_sessions_with_ids": 3,
+      "utterances_without_recording_id": 0,
+      "audio_paths_present_in_checkout": 0
+    },
+    "css10_el": {
+      "utterances": 1844,
+      "hours": 4.137269337364575,
+      "speakers_with_ids": 0,
+      "utterances_without_speaker_id": 1844,
+      "recordings_or_sessions_with_ids": 0,
+      "utterances_without_recording_id": 1844,
+      "audio_paths_present_in_checkout": 0
+    }
+  },
+  "clean_conditions": {
+    "train": {
+      "utterances": 76296,
+      "hours": 99.48043611111112,
+      "speakers_with_ids": 376,
+      "utterances_without_speaker_id": 0,
+      "recordings_or_sessions_with_ids": 43,
+      "utterances_without_recording_id": 0,
+      "audio_paths_present_in_checkout": 0
+    },
+    "dev": {
+      "utterances": 7113,
+      "hours": 9.059188888888889,
+      "speakers_with_ids": 64,
+      "utterances_without_speaker_id": 0,
+      "recordings_or_sessions_with_ids": 3,
+      "utterances_without_recording_id": 0,
+      "audio_paths_present_in_checkout": 0
+    },
+    "test": {
+      "utterances": 8679,
+      "hours": 11.20788888888889,
+      "speakers_with_ids": 82,
+      "utterances_without_speaker_id": 0,
+      "recordings_or_sessions_with_ids": 3,
+      "utterances_without_recording_id": 0,
+      "audio_paths_present_in_checkout": 0
+    },
+    "css10_el_train": {
+      "utterances": 1843,
+      "hours": 4.136324263038548,
+      "speakers_with_ids": 0,
+      "utterances_without_speaker_id": 1843,
+      "recordings_or_sessions_with_ids": 0,
+      "utterances_without_recording_id": 1843,
+      "audio_paths_present_in_checkout": 0
+    },
+    "train_hparl_css10": {
+      "utterances": 78139,
+      "hours": 103.61676037414966,
+      "speakers_with_ids": 376,
+      "utterances_without_speaker_id": 1843,
+      "recordings_or_sessions_with_ids": 43,
+      "utterances_without_recording_id": 1843,
+      "audio_paths_present_in_checkout": 0
+    }
+  },
+  "speaker_overlaps": {
+    "train&dev": 59,
+    "train&test": 76,
+    "dev&test": 16
+  },
+  "session_overlaps": {
+    "train&dev": 0,
+    "train&test": 0,
+    "dev&test": 0
+  },
+  "test_utterances_with_training_speaker": 7777,
+  "literal_sentence_overlap": {
+    "raw_hparl_train_vs_original_test": {
+      "policy": "exact Unicode string equality; no casefold, tag removal or whitespace change",
+      "test_utterances_repeated_in_training": 14,
+      "distinct_repeated_test_sentences": 14,
+      "test_utterances_total": 8679,
+      "matching_test_ids": [
+        "hparl:alekshs_tsipras-olomeleia_1_00402500_00405500_2_1",
+        "hparl:alekshs_tsipras-olomeleia_1_01440000_01443000_2_1",
+        "hparl:athanasios_papaxristopoulos-olomeleia_11_00842500_00845500_2_1",
+        "hparl:dhmhtrios_koutsoumpas-olomeleia_1_00635000_00638000_1_3",
+        "hparl:gewrgios_lamproylhs-olomeleia_11_00005000_00008000_1_1",
+        "hparl:gewrgios_lamproylhs-olomeleia_11_00100000_00103000_1_1",
+        "hparl:gewrgios_lazaridhs-olomeleia_22_01222500_01225500_1_1",
+        "hparl:kwnstantinos_katsikhs-olomeleia_11_02790000_02793000_2_2",
+        "hparl:kwnstantinos_tzavaras-olomeleia_22_00830000_00833000_2_1",
+        "hparl:kwnstantinos_tzavaras-olomeleia_22_00972500_00975500_4_3",
+        "hparl:marios_gewrgiadhs-olomeleia_11_03380000_03383000_1_1",
+        "hparl:marios_gewrgiadhs-olomeleia_11_03380000_03383000_2_1",
+        "hparl:marios_gewrgiadhs-olomeleia_22_00610000_00613000_1_1",
+        "hparl:marios_gewrgiadhs-olomeleia_22_02187500_02190500_2_1"
+      ]
+    },
+    "train": {
+      "policy": "exact Unicode string equality; no casefold, tag removal or whitespace change",
+      "test_utterances_repeated_in_training": 6,
+      "distinct_repeated_test_sentences": 6,
+      "test_utterances_total": 8679,
+      "matching_test_ids": [
+        "hparl:alekshs_tsipras-olomeleia_1_00402500_00405500_2_1",
+        "hparl:alekshs_tsipras-olomeleia_1_01440000_01443000_2_1",
+        "hparl:aristeidhs_fwkas-olomeleia_22_00535000_00538000_1_1",
+        "hparl:athanasios_papaxristopoulos-olomeleia_11_00842500_00845500_2_1",
+        "hparl:iwannhs_maniaths-olomeleia_11_02607500_02610500_2_1",
+        "hparl:kwnstantinos_tzavaras-olomeleia_22_00830000_00833000_2_1"
+      ]
+    },
+    "train_hparl_css10": {
+      "policy": "exact Unicode string equality; no casefold, tag removal or whitespace change",
+      "test_utterances_repeated_in_training": 6,
+      "distinct_repeated_test_sentences": 6,
+      "test_utterances_total": 8679,
+      "matching_test_ids": [
+        "hparl:alekshs_tsipras-olomeleia_1_00402500_00405500_2_1",
+        "hparl:alekshs_tsipras-olomeleia_1_01440000_01443000_2_1",
+        "hparl:aristeidhs_fwkas-olomeleia_22_00535000_00538000_1_1",
+        "hparl:athanasios_papaxristopoulos-olomeleia_11_00842500_00845500_2_1",
+        "hparl:iwannhs_maniaths-olomeleia_11_02607500_02610500_2_1",
+        "hparl:kwnstantinos_tzavaras-olomeleia_22_00830000_00833000_2_1"
+      ]
+    }
+  },
+  "freeze_metadata_checks": {
+    "manifest_matches_freeze": true,
+    "references_match_freeze": true,
+    "frozen_manifest_equals_raw_manifest": true,
+    "frozen_references_equal_raw_references": true,
+    "ids_match_freeze": true
+  },
+  "first_freeze_commit": "d28c97febe6593807e1f7b6771b679561d4cce3f",
+  "unchanged_since_initial_freeze_commit": {
+    "data/manifests/test.freeze.json": true,
+    "data/manifests/test.jsonl": true,
+    "data/manifests/references/test.jsonl": true
+  },
+  "generated_data_report_equals_committed": true,
+  "generated_data_report_sha256": "5846cdad9051e43ac45cfa44981fbcebe225680894fbbbcde9a6ea212c047bad",
+  "full_audio_freeze_independently_verified": false,
+  "missing_original_test_metadata": [
+    "hparl_segmented_test/spk2gender",
+    "hparl_segmented_test/spk2utt",
+    "hparl_segmented_test/text",
+    "hparl_segmented_test/utt2spk",
+    "hparl_segmented_test/wav.scp"
+  ],
+  "cleaning_log_hash_matches_summary": true,
+  "drop_rules": {
+    "cps_implausible": 29,
+    "duplicate_audio": 17
+  },
+  "cps_drops": [
+    {
+      "id": "hparl:aleksandros_flampourarhs-olomeleia_42_01207500_01210500_3_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 4619,
+        "chars_per_second": 549.881,
+        "duration_seconds": 8.4
+      }
+    },
+    {
+      "id": "hparl:anastasia_xristodoulopoylou-olomeleia_45_00012500_00015500_1_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 4071,
+        "chars_per_second": 1109.2643,
+        "duration_seconds": 3.67
+      }
+    },
+    {
+      "id": "hparl:anastasia_xristodoulopoylou-olomeleia_45_00142500_00145500_1_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 500,
+        "chars_per_second": 136.9863,
+        "duration_seconds": 3.65
+      }
+    },
+    {
+      "id": "hparl:apostolos_karanastashs-olomeleia_10_04697500_04700500_4_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 256,
+        "chars_per_second": 58.1818,
+        "duration_seconds": 4.4
+      }
+    },
+    {
+      "id": "hparl:effrosynh_frosw_karasarlidou-olomeleia_12_01647500_01650500_1_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 1399,
+        "chars_per_second": 150.4301,
+        "duration_seconds": 9.3
+      }
+    },
+    {
+      "id": "hparl:efh_axtsioglou-olomeleia_27_01555000_01558000_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 188,
+        "chars_per_second": 62.6667,
+        "duration_seconds": 3.0
+      }
+    },
+    {
+      "id": "hparl:efh_axtsioglou-olomeleia_42_01817500_01820500_3_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 282,
+        "chars_per_second": 60.0,
+        "duration_seconds": 4.7
+      }
+    },
+    {
+      "id": "hparl:elenh_avlwnitou-olomeleia_29_05205000_05208000_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 794,
+        "chars_per_second": 116.7647,
+        "duration_seconds": 6.8
+      }
+    },
+    {
+      "id": "hparl:elenh_avlwnitou-olomeleia_39_01640000_01643000_3_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 2030,
+        "chars_per_second": 307.5758,
+        "duration_seconds": 6.6
+      }
+    },
+    {
+      "id": "hparl:elenh_stamatakh-olomeleia_27_05582500_05585500_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 131,
+        "chars_per_second": 48.5185,
+        "duration_seconds": 2.7
+      }
+    },
+    {
+      "id": "hparl:evaggelia_valia_vagiwnakh-olomeleia_39_02190000_02193000_1_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 1255,
+        "chars_per_second": 306.0976,
+        "duration_seconds": 4.1
+      }
+    },
+    {
+      "id": "hparl:fwteinh_fwfh_gennhmata-olomeleia_15_03065000_03068000_5_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 265,
+        "chars_per_second": 115.2174,
+        "duration_seconds": 2.3
+      }
+    },
+    {
+      "id": "hparl:gewrgios_amyras-olomeleia_29_03320000_03323000_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 438,
+        "chars_per_second": 65.3731,
+        "duration_seconds": 6.7
+      }
+    },
+    {
+      "id": "hparl:gewrgios_gewrgantas-olomeleia_8_00920000_00923000_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 575,
+        "chars_per_second": 116.1616,
+        "duration_seconds": 4.95
+      }
+    },
+    {
+      "id": "hparl:gewrgios_stylios-olomeleia_12_02260000_02263000_1_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 1797,
+        "chars_per_second": 561.5625,
+        "duration_seconds": 3.2
+      }
+    },
+    {
+      "id": "hparl:gewrgios_stylios-olomeleia_48_00375000_00378000_3_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 310,
+        "chars_per_second": 75.6098,
+        "duration_seconds": 4.1
+      }
+    },
+    {
+      "id": "hparl:gewrgios_tsipras-olomeleia_9_00187500_00190500_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 206,
+        "chars_per_second": 47.4654,
+        "duration_seconds": 4.34
+      }
+    },
+    {
+      "id": "hparl:kwnstantinos_xatzhdakhs-olomeleia_12_01315000_01318000_2_2",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 935,
+        "chars_per_second": 110.0,
+        "duration_seconds": 8.5
+      }
+    },
+    {
+      "id": "hparl:maria_thelerith-olomeleia_16_00747500_00750500_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 677,
+        "chars_per_second": 71.1134,
+        "duration_seconds": 9.52
+      }
+    },
+    {
+      "id": "hparl:mixahl_kaloghrou-olomeleia_13_00102500_00105500_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 2158,
+        "chars_per_second": 303.0899,
+        "duration_seconds": 7.12
+      }
+    },
+    {
+      "id": "hparl:nikolaos_pappas-olomeleia_21_00102500_00105500_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 304,
+        "chars_per_second": 86.119,
+        "duration_seconds": 3.53
+      }
+    },
+    {
+      "id": "hparl:nikolaos_pappas-olomeleia_5_02042500_02045500_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 602,
+        "chars_per_second": 158.4211,
+        "duration_seconds": 3.8
+      }
+    },
+    {
+      "id": "hparl:panos_kammenos_ellhnwn-olomeleia_27_04762500_04765500_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 276,
+        "chars_per_second": 46.0,
+        "duration_seconds": 6.0
+      }
+    },
+    {
+      "id": "hparl:spyridwnas_pnevmatikos-olomeleia_6_01872500_01875500_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 1273,
+        "chars_per_second": 223.3333,
+        "duration_seconds": 5.7
+      }
+    },
+    {
+      "id": "hparl:xrhstos_karagiannidhs-olomeleia_10_01330000_01333000_3_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 622,
+        "chars_per_second": 194.375,
+        "duration_seconds": 3.2
+      }
+    },
+    {
+      "id": "hparl:xrhstos_kellas-olomeleia_10_02040000_02043000_2_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 301,
+        "chars_per_second": 94.0625,
+        "duration_seconds": 3.2
+      }
+    },
+    {
+      "id": "hparl:xrhstos_xatzhsavvas-olomeleia_10_03515000_03518000_1_2",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 140,
+        "chars_per_second": 56.0,
+        "duration_seconds": 2.5
+      }
+    },
+    {
+      "id": "hparl:xrhstos_xatzhsavvas-olomeleia_18_01382500_01385500_3_1",
+      "subset": "hparl_train",
+      "evidence": {
+        "chars": 1011,
+        "chars_per_second": 108.7097,
+        "duration_seconds": 9.3
+      }
+    },
+    {
+      "id": "css10_el:Paramythi_horis_onoma_0856",
+      "subset": "css10_el",
+      "evidence": {
+        "chars": 138,
+        "chars_per_second": 40.5612,
+        "duration_seconds": 3.402267573696145
+      }
+    }
+  ],
+  "human_review_decisions_applied": 0,
+  "inputs_sha256": {
+    "configs/data_cleaning.json": "75a924bb05fa0c46adbebc31f0f5ea0d508ff37e2ec7048ee1cf3c29e3163d23",
+    "data/clean/clean_summary.json": "1ea683a43992717dd160070dab8ff85f163eae3624e3a75b6c64ace003ca7483",
+    "data/clean/cleaning_log.jsonl": "5bd3d438eef36e774eb8aabc81ec2cc58081e053e8004a1daef1a7832c8f242a",
+    "data/manifests/css10_el_train.jsonl": "ca376caf547d18397f62791f1fc8ad1eee2c7ff0c1dce9fa7a88a01c26f86e5b",
+    "data/manifests/dev.jsonl": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+    "data/manifests/raw/css10_el.jsonl": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855",
+    "data/manifests/raw/css10_el_texts.jsonl": "cde114e709266309c274a67630d668ed372bf31c0d6823250343aa2eebde209c",
+    "data/manifests/raw/hparl_dev.jsonl": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+    "data/manifests/raw/hparl_test.jsonl": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+    "data/manifests/raw/hparl_train.jsonl": "0f63095de728867d089b194292604edf83c3e0751f00489474365bb006fc2257",
+    "data/manifests/raw/references/css10_el.jsonl": "6d09ee69ea3ba276f22dc93eb0dda07588b8693e067fe825dc5702cbe925bffa",
+    "data/manifests/raw/references/hparl_dev.jsonl": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+    "data/manifests/raw/references/hparl_test.jsonl": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "data/manifests/raw/references/hparl_train.jsonl": "d897e088f73b500d34910e3abbca3f947a1828e3a9d3cb55afb0782da62c5d18",
+    "data/manifests/references/css10_el_train.jsonl": "d70388c73a67c9b38e93e2ab5d89df7890c24707d0a8484521e2b9809616fe48",
+    "data/manifests/references/dev.jsonl": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+    "data/manifests/references/test.jsonl": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "data/manifests/references/train.jsonl": "7a12618c426b358a0307bdc428ca29442b81fa32ec8269bcc34ef4ed8d1b43e9",
+    "data/manifests/references/train_hparl_css10.jsonl": "0d13f1732dfd35b69ff9e34364dc9329bb8a244e1ebddb34fb15acae4d509918",
+    "data/manifests/test.freeze.json": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "data/manifests/test.jsonl": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+    "data/manifests/train.jsonl": "6b9e7ad74f09a7e059b3b7c5616563d73088fa91183bacf0fde4825e90be5e45",
+    "data/manifests/train_hparl_css10.jsonl": "be04630140de184a13b5ff3d5a0bc2700ae8563d39e064e56c7e84cea2d80342"
+  }
+}

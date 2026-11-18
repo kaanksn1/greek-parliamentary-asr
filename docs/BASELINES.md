@@ -1,16 +1,19 @@
 # Baseline inventory — draft, not completed runs
 
-Every standard Week 9 method is a baseline. This inventory comes from the
-professor's announcement; the full Week 9 slides still need reconciliation.
+Every standard Week 9 method is a baseline. This inventory now follows the
+professor's exact baseline email shared on 18 November; the required family
+list is clear. Slides can further specify standard recipes. Run every listed
+baseline that supports Greek. Unsupported language/head cases need a producer
+model-card link and explanation in the README; never use a wrong language.
 No row is silently satisfied by merely naming an architecture.
 Owners are assigned in `TEAM.md`; assignment is not evidence of completed work.
 
 | Family | Candidate / implementation | Owner | Current status |
 |---|---|---|---|
-| MFCC + GMM-HMM | Train a conventional system with a documented lexicon/decoder recipe | Kemal | Recipe and environment pending |
+| MFCC (or log-mel) + GMM-HMM | Train a conventional system with a documented lexicon/decoder recipe | Kemal | Recipe and environment pending |
 | Plain CTC system | Small supervised encoder + CTC trained on the selected train split | Kemal | Implementation/training pending |
-| Attention encoder-decoder | Standard supervised attention ASR baseline | Adnan | Architecture/recipe pending |
-| Transducer | Standard supervised transducer; keep distinct from pretrained Parakeet | Adnan | Architecture/recipe pending |
+| Attention encoder-decoder, including hybrid CTC/attention | Standard supervised attention ASR baseline | Adnan | Architecture/recipe pending |
+| RNN-T transducer | Standard supervised RNN-T; keep distinct from pretrained Parakeet TDT | Adnan | Architecture/recipe pending |
 | wav2vec 2.0 ASR | `lighteternal/wav2vec2-large-xlsr-53-greek` | Kemal | Greek CTC ASR card verified; runtime pending |
 | HuBERT ASR | Must have a Greek-compatible ASR head, not emotion classification or a bare encoder | Kemal | Suitable checkpoint or own standard HuBERT-CTC training pending |
 | Whisper | `openai/whisper-small` multilingual baseline | Serdar | New isolated ROCm runtime verified on three train-pilot clips; full benchmark pending |
@@ -33,6 +36,20 @@ owner Whisper/Qwen/Canary/Parakeet records). See `RUNTIME_ENVIRONMENT.md` and
 `NEMO_RUNTIME.md` for the tested environments and execution settings.
 Pinning a revision does not certify inference, training compatibility or absence
 of pretraining overlap. Model cards' declared training data must be reviewed.
+
+Whisper must be multilingual (`openai/whisper-small`, not a `.en` model);
+Parakeet must be multilingual v3, not English-only v2. The professor permits
+Qwen3-ASR 0.6B or 1.7B; our selected 0.6B is one of those exact choices.
+Greek HuBERT ASR applicability is still unverified. Absence from our current
+inventory is not proof that no suitable checkpoint exists; Kemal must research
+and document it. A bare HuBERT/wav2vec encoder cannot supply a transcription.
+
+A checkpoint fine-tuned and published by someone else is still an off-the-shelf
+baseline. If we train GMM-HMM/CTC or an ASR head ourselves, the standard method
+remains a baseline while the group receives credit for its actual training
+work. Label this provenance separately; do not claim a new architecture.
+Any own fine-tuned version and its off-the-shelf starting model use the same
+frozen test/reference/scoring policy and clearly separate result rows.
 
 Primary sources:
 
