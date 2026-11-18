@@ -18,6 +18,20 @@ Labels: the processor's tokenizer prefix is pinned to (language, task) before
 encoding, so BOS/language/task tokens are real target content, not padding.
 Only genuine padding positions (via the tokenizer's attention mask, not a
 token-id guess) are set to -100; the real EOS token is therefore never masked.
+References are tokenized with ``truncation=False``: a reference is never
+silently cut to fit a length limit (see ``build_labels``).
+
+Long audio: WhisperFeatureExtractor pads/truncates every input to the
+model's fixed 30-second window, matching Serdar's unmodified Whisper baseline
+(greek_asr/pretrained/whisper.py); this is Whisper's own architectural input
+contract, not a strategy chosen here. No dev/train example is dropped for
+being "hard" or long.
+
+Precision: training here runs in float32 only; no AMP/mixed-precision path is
+implemented in this code yet. If Serdar enables AMP on the ROCm pilot, the
+overflow/NaN check already present in the training loop (``nonfinite_losses_skipped``)
+must be watched, and the actual precision used must be recorded in the run
+report instead of this module's current fixed ``"precision": "float32"``.
 """
 from __future__ import annotations
 
@@ -77,7 +91,10 @@ def build_labels(processor: Any, texts: list[str], *, language: str, task: str) 
     token together with padding.
     """
     processor.tokenizer.set_prefix_tokens(language=language, task=task)
-    encoded = processor.tokenizer(list(texts), padding=True, return_tensors="pt")
+    # truncation=False is explicit: a reference must never be silently cut to fit a
+    # model/tokenizer length limit. If a real utterance ever needs more tokens than
+    # the model supports, this must surface as a loud error, not a dropped suffix.
+    encoded = processor.tokenizer(list(texts), padding=True, truncation=False, return_tensors="pt")
     labels = encoded["input_ids"].clone()
     labels[encoded["attention_mask"] == 0] = -100
     return labels
@@ -197,14 +214,26 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
     report: dict[str, Any] = {
         "schema": "greek-asr-whisper-finetune-train-v1", "config": config,
         "model_id": config["model_id"], "revision": config["revision"], "seed": seed,
-        "effective_batch_size": micro_batch * grad_accum, "max_steps": max_steps,
+        "code_commit": common.git_commit_hash(project_root),
+        "code_sha256": common.code_file_hashes(Path(__file__), ROOT / "greek_asr/models/common.py"),
+        "train_manifest_sha256": common.hash_file(project_root / config["train_manifest"]),
+        "train_references_sha256": common.hash_file(project_root / config["train_references"]),
+        "dev_manifest_sha256": common.hash_file(project_root / config["dev_manifest"]),
+        "dev_references_sha256": common.hash_file(project_root / config["dev_references"]),
+        "trainable_parameters": sum(p.numel() for p in model.parameters() if p.requires_grad),
+        "effective_batch_size": micro_batch * grad_accum, "max_steps": max_steps, "precision": "float32",
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "train_utterances": len(train_utterances), "dev_utterances": len(dev_utterances),
         "train_audio_seconds": sum(u.duration_seconds for u in train_utterances),
+        # Actual source mix (e.g. hparl vs css10_el) in this training condition's manifest,
+        # so the CSS10 sampling ratio is a recorded number, not a derived assumption.
+        "train_source_breakdown": common.manifest_source_breakdown(project_root / config["train_manifest"]),
         "optimizer_updates_completed": 0, "micro_steps_completed": 0,
         "best_dev_loss": None, "best_optimizer_update": None, "nonfinite_losses_skipped": 0,
+        "training_seconds": None,
     }
     micro_step, optimizer_updates, best_dev_loss = 0, 0, None
+    started = time.perf_counter()
     while optimizer_updates < max_steps:
         for batch in train_loader:
             outputs = model(input_features=batch["input_features"].to(device), labels=batch["labels"].to(device))
@@ -235,6 +264,7 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
                     model.train()
             if optimizer_updates >= max_steps:
                 break
+    report["training_seconds"] = time.perf_counter() - started
     report["micro_steps_completed"], report["optimizer_updates_completed"] = micro_step, optimizer_updates
     report["best_dev_loss"] = best_dev_loss
     _save_checkpoint(output_dir / "checkpoint.last.pt", model=model, optimizer=optimizer,
@@ -279,30 +309,38 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
     language, task = config.get("language", "el"), config.get("task", "transcribe")
     sample_rate = int(config.get("sample_rate", 16000))
 
-    texts: dict[str, str] = {}
-    started = time.perf_counter()
-    with torch.no_grad():
-        for row in records:
-            waveform = common.load_waveform(row["audio"], target_sample_rate=sample_rate).numpy()
-            features = processor.feature_extractor([waveform], sampling_rate=sample_rate, return_tensors="pt")
-            generated = model.generate(input_features=features["input_features"].to(device), language=language,
-                                       task=task, num_beams=num_beams, do_sample=False)
-            decoded = processor.batch_decode(generated, skip_special_tokens=True)
-            if len(decoded) != 1 or not isinstance(decoded[0], str):
-                raise ValueError(f"{row['id']}: expected a single-record transcription")
-            texts[row["id"]] = decoded[0]
-    elapsed = time.perf_counter() - started
     output_dir.mkdir(parents=True, exist_ok=False)
     ids = [row["id"] for row in records]
-    common.write_predictions(output_dir / "predictions.jsonl", ids, texts)
     report = {
-        "schema": "greek-asr-whisper-finetune-predict-v1", "checkpoint": str(checkpoint_path), "split": split,
-        "model_id": config["model_id"], "revision": config["revision"], "num_beams": num_beams,
-        "records": len(records), "inference_seconds": elapsed, "references_used_as_model_input": False,
-        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "schema": "greek-asr-whisper-finetune-predict-v1", "status": "running", "checkpoint": str(checkpoint_path),
+        "split": split, "model_id": config["model_id"], "revision": config["revision"], "num_beams": num_beams,
+        "records": len(records), "completed_records": 0, "inference_seconds": None,
+        "references_used_as_model_input": False, "created_utc": datetime.now(timezone.utc).isoformat(),
         "environment": {"python": platform.python_version()},
     }
-    (output_dir / "run.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    writer = common.PartialPredictionWriter(output_dir, ids)
+    started = time.perf_counter()
+    try:
+        with torch.no_grad():
+            for row in records:
+                waveform = common.load_waveform(row["audio"], target_sample_rate=sample_rate).numpy()
+                features = processor.feature_extractor([waveform], sampling_rate=sample_rate, return_tensors="pt")
+                generated = model.generate(input_features=features["input_features"].to(device), language=language,
+                                           task=task, num_beams=num_beams, do_sample=False)
+                decoded = processor.batch_decode(generated, skip_special_tokens=True)
+                if len(decoded) != 1 or not isinstance(decoded[0], str):
+                    raise ValueError(f"{row['id']}: expected a single-record transcription")
+                writer.write(row["id"], decoded[0])
+                report["completed_records"] += 1
+        writer.finish()
+        report["status"] = "complete"
+    except Exception as error:
+        writer.abandon()
+        report.update(status="failed", error_type=type(error).__name__, error=str(error))
+        raise
+    finally:
+        report["inference_seconds"] = time.perf_counter() - started
+        (output_dir / "run.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return report
 
 

@@ -16,9 +16,10 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
-from greek_asr.models import whisper_finetune
+from greek_asr.models import common, whisper_finetune
 
 try:
     import torch  # noqa: F401
@@ -201,6 +202,139 @@ class TrainAndPredictWithTinyModelTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "--allow-test"):
                 whisper_finetune.predict(Path("unused.pt"), manifest, project_root=ROOT, split="test",
                                          output_dir=directory / "out", model_loader=_tiny_model_loader)
+
+    def _base_config(self, directory: Path, train_manifest: Path, train_references: Path,
+                     dev_manifest: Path, dev_references: Path) -> dict:
+        return {
+            "model_id": "openai/whisper-small", "revision": REVISION,
+            "train_manifest": str(train_manifest), "train_references": str(train_references),
+            "dev_manifest": str(dev_manifest), "dev_references": str(dev_references),
+            "seed": 42, "learning_rate": 1e-3, "micro_batch_size": 1,
+            "gradient_accumulation_steps": 2, "max_steps": 2, "warmup_steps": 1, "dev_eval_every": 1,
+        }
+
+    def _train_small_model(self, directory: Path):
+        train_manifest, train_references = _write_manifest_and_references(directory, PILOT[:2], "train")
+        dev_manifest, dev_references = _write_manifest_and_references(directory, PILOT[2:], "dev")
+        config = self._base_config(directory, train_manifest, train_references, dev_manifest, dev_references)
+        report = whisper_finetune.train(config, project_root=ROOT, output_dir=directory / "run",
+                                         model_loader=_tiny_model_loader)
+        return report, directory / "run", dev_manifest
+
+    def test_train_report_records_full_provenance_and_source_breakdown(self):
+        with tempfile.TemporaryDirectory() as directory:
+            report, _, _ = self._train_small_model(Path(directory))
+        self.assertEqual(report["code_commit"], common.git_commit_hash(ROOT))
+        self.assertIn("whisper_finetune.py", report["code_sha256"])
+        self.assertIn("common.py", report["code_sha256"])
+        for field in ("train_manifest_sha256", "train_references_sha256", "dev_manifest_sha256",
+                      "dev_references_sha256"):
+            self.assertRegex(report[field], r"^[0-9a-f]{64}$")
+        self.assertEqual(report["precision"], "float32")
+        self.assertGreater(report["trainable_parameters"], 0)
+        self.assertGreaterEqual(report["training_seconds"], 0)
+        # HParl-only condition: the breakdown must show only hparl, no css10_el.
+        self.assertEqual(set(report["train_source_breakdown"]), {"hparl"})
+        self.assertEqual(report["train_source_breakdown"]["hparl"]["utterances"], 2)
+
+    def test_mixed_condition_records_the_actual_css10_fraction(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            css10_row = dict(PILOT[2])
+            css10_row["id"] = "css10_el:fixture-1"
+            css10_row["original_id"] = "fixture-1"
+            mixed_rows = PILOT[:2] + [css10_row]
+            manifest_path = directory / "train_manifest.jsonl"
+            references_path = directory / "train_references.jsonl"
+            with manifest_path.open("w", encoding="utf-8") as stream:
+                for row in PILOT[:2]:
+                    stream.write(json.dumps({
+                        "id": row["id"], "source": "hparl", "original_id": row["original_id"],
+                        "source_split": "train", "split": "train", "audio_path": row["audio_path"],
+                        "audio_sha256": row["audio_sha256"], "sampling_rate": 16000, "channels": 1,
+                        "num_frames": row["num_frames"], "duration_seconds": row["duration_seconds"],
+                    }, ensure_ascii=False) + "\n")
+                stream.write(json.dumps({
+                    "id": css10_row["id"], "source": "css10_el", "original_id": css10_row["original_id"],
+                    "source_split": "unsplit", "split": "train", "audio_path": css10_row["audio_path"],
+                    "audio_sha256": css10_row["audio_sha256"], "sampling_rate": 16000, "channels": 1,
+                    "num_frames": css10_row["num_frames"], "duration_seconds": css10_row["duration_seconds"],
+                }, ensure_ascii=False) + "\n")
+            with references_path.open("w", encoding="utf-8") as stream:
+                for row in mixed_rows:
+                    stream.write(json.dumps({"id": row["id"], "reference": row["reference"]}, ensure_ascii=False) + "\n")
+            dev_manifest, dev_references = _write_manifest_and_references(directory, PILOT[2:], "dev")
+            config = self._base_config(directory, manifest_path, references_path, dev_manifest, dev_references)
+            report = whisper_finetune.train(config, project_root=ROOT, output_dir=directory / "run",
+                                             model_loader=_tiny_model_loader)
+        self.assertEqual(set(report["train_source_breakdown"]), {"hparl", "css10_el"})
+        self.assertEqual(report["train_source_breakdown"]["css10_el"]["utterances"], 1)
+        self.assertEqual(report["train_source_breakdown"]["hparl"]["utterances"], 2)
+
+    def test_checkpoint_save_then_load_gives_identical_predictions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            _, run_dir, dev_manifest = self._train_small_model(directory)
+            checkpoint_path = run_dir / "checkpoint.best.pt"
+
+            def predict_texts(output_name: str) -> list[str]:
+                whisper_finetune.predict(checkpoint_path, dev_manifest, project_root=ROOT, split="dev",
+                                         output_dir=run_dir / output_name, model_loader=_tiny_model_loader)
+                lines = [json.loads(line) for line in (run_dir / output_name / "predictions.jsonl").read_text("utf-8").splitlines()]
+                return [row["text"] for row in sorted(lines, key=lambda row: row["id"])]
+
+            first = predict_texts("predict_first")
+            second = predict_texts("predict_second")
+        self.assertEqual(first, second)
+
+    def test_rerunning_into_an_existing_output_dir_is_refused_not_overwritten(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            train_manifest, train_references = _write_manifest_and_references(directory, PILOT[:2], "train")
+            dev_manifest, dev_references = _write_manifest_and_references(directory, PILOT[2:], "dev")
+            config = self._base_config(directory, train_manifest, train_references, dev_manifest, dev_references)
+            output_dir = directory / "run"
+            whisper_finetune.train(config, project_root=ROOT, output_dir=output_dir, model_loader=_tiny_model_loader)
+            before = (output_dir / "checkpoint.last.pt").read_bytes()
+            with self.assertRaises(FileExistsError):
+                whisper_finetune.train(config, project_root=ROOT, output_dir=output_dir,
+                                       model_loader=_tiny_model_loader)
+            self.assertEqual((output_dir / "checkpoint.last.pt").read_bytes(), before)
+
+    def test_a_failure_mid_prediction_leaves_a_partial_file_and_a_failed_run_json(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            _, run_dir, dev_manifest = self._train_small_model(directory)
+            predict_dir = run_dir / "predict_failure"
+            original = common.load_waveform
+            calls = {"count": 0}
+
+            def flaky_load_waveform(*args, **kwargs):
+                calls["count"] += 1
+                if calls["count"] > 1:
+                    raise RuntimeError("simulated decode failure")
+                return original(*args, **kwargs)
+
+            train_manifest, _ = _write_manifest_and_references(directory, PILOT[:2], "train")
+            with unittest.mock.patch.object(common, "load_waveform", side_effect=flaky_load_waveform):
+                with self.assertRaises(RuntimeError):
+                    whisper_finetune.predict(run_dir / "checkpoint.best.pt", train_manifest, project_root=ROOT,
+                                             split="train", output_dir=predict_dir, model_loader=_tiny_model_loader)
+            self.assertTrue((predict_dir / "predictions.partial.jsonl").is_file())
+            self.assertFalse((predict_dir / "predictions.jsonl").exists())
+            run_report = json.loads((predict_dir / "run.json").read_text("utf-8"))
+            self.assertEqual(run_report["status"], "failed")
+            self.assertEqual(run_report["completed_records"], 1)
+
+    def test_long_reference_is_never_silently_truncated(self):
+        processor = _real_processor()
+        long_text = "αβγδεζηθικλμνξοπρστυφχψω " * 60  # far longer than a real HParl utterance
+        labels = whisper_finetune.build_labels(processor, [long_text], language="el", task="transcribe")
+        tokenizer = processor.tokenizer
+        full_ids = tokenizer(long_text, padding=False, truncation=False)["input_ids"]
+        # Every real (non -100) label id must come from the untruncated encoding.
+        kept = [token for token in labels[0].tolist() if token != -100]
+        self.assertEqual(kept, full_ids)
 
 
 if __name__ == "__main__":
