@@ -15,6 +15,22 @@ Run `python scripts/audit_train_pilot.py --output outputs/train_pilot_audit.json
 One reference contains `<spoken_noise>`; the audit flags it without rewriting
 the source. Its treatment in any final reference/scoring policy is unresolved.
 
+The full-corpus pipeline is `python -m greek_asr.data` (see
+`../docs/DATA_PIPELINE_TR.md`). After a real run the layout is:
+
+- `raw/hparl/release/`: CRC-checked extraction of the official ZIP, original
+  paths below the archive's top-level folder; `ACQUISITION.json`,
+  `EXTRACTION.json`, `LAYOUT.json`, `archive_members.tsv` record provenance.
+- `raw/css10_el/release/`: extracted Kaggle CSS10 Greek archive with the same records.
+- `manifests/raw/`: uncleaned contract manifests, verbatim references and inventories.
+- `manifests/test.jsonl`, `references/test.jsonl`, `test.freeze.json`: frozen test.
+- `manifests/{train,dev,css10_el_train,train_hparl_css10}.jsonl` and references:
+  clean outputs; `conditions.json` describes the two training conditions.
+- `audit/`: per-record measurements and flags; `clean/`: cleaning log, review
+  queue and summary.
+
+The original planning layout follows.
+
 Expected layout for the full selected corpus after acquisition:
 
 - `raw/`: acquired source release, original audio/transcripts, license and a

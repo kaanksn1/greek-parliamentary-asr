@@ -68,6 +68,27 @@ The next data owner is Samed. His detailed, copyable task prompt is
 schema is [DATA_CONTRACT.md](docs/DATA_CONTRACT.md). Data/model work remains
 with the assigned members; the integration starter is not their completed work.
 
+## Data pipeline (Samed)
+
+`python -m greek_asr.data` acquires HParl 1.0.0 and CSS10 Greek, freezes the
+original HParl test **before** any train/dev cleaning, audits train/dev/CSS10,
+applies the versioned cleaning policy with a per-record log and writes the
+HParl-only and HParl + CSS10 training manifests. Design, rules and the run
+order are in [DATA_PIPELINE_TR.md](docs/DATA_PIPELINE_TR.md); the numbers are
+generated into `docs/DATA_REPORT_TR.md` after a real run.
+
+```bash
+pip install -r requirements-data.txt
+python -m greek_asr.data hparl-download   # resumable, ~11.9 GB
+python -m greek_asr.data prepare-freeze   # extract, raw manifests, test freeze (commit separately)
+python -m greek_asr.data prepare-clean --css10-archive <kaggle zip>
+python -m greek_asr.data verify
+```
+
+Status: code and synthetic end-to-end tests are implemented (the suite now has
+73 tests: the earlier 44 plus 29 data tests); the full corpus has not yet been
+downloaded, frozen or cleaned.
+
 The scorer accepts JSONL references (`id`, `reference`) and predictions (`id`,
 `text`). Full ID equality is required. It reports corpus WER/CER from edit
 counts, not the unweighted mean of sentence error rates. Its initial
@@ -166,6 +187,11 @@ settled. No paid storage or cloud compute is assumed.
 | `docs/INITIAL_WORK_TR.md` | Completed startup work, observed reference issue and remaining work |
 | `docs/TEACHER_CLARIFICATION_TR.md` | Professor approval, immutable test requirement and data-budget rule |
 | `results/runtime_smoke/` | Real train-pilot predictions and runtime record; no benchmark scores |
+| `greek_asr/data/` | Samed's data pipeline: acquisition, test freeze, audit, cleaning, report, delivery shards |
+| `configs/data_cleaning.json` | Versioned train/dev/CSS10 cleaning policy and flag thresholds |
+| `docs/DATA_PIPELINE_TR.md` | Data pipeline design, rule justifications and run order |
+| `requirements-data.txt` | Exact data-pipeline dependency (`numpy`) |
+| `tests/test_data_pipeline.py`, `tests/data_fixtures.py` | Synthetic end-to-end data tests with known problems |
 | `contributions/` | Actual individual reports and required filename/status inventory |
 | `AGENTS.md` | Scope and test instructions for coding assistants |
 | `requirements.txt` | Dependency scope of the initial implementation |
