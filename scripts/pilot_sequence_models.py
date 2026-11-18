@@ -10,10 +10,13 @@ Usage (on Serdar's ROCm machine, inside the isolated sequence environment):
     HSA_ENABLE_DXG_DETECTION=1 python scripts/pilot_sequence_models.py \
         --device cuda --output outputs/sequence_gpu_pilot
 
-Combine the reported ``step_seconds`` and ``peak_gpu_memory_allocated_bytes``
-with the real train manifest's total hours (once delivered) to estimate a
-non-arbitrary ``max_steps``/``batch_size`` for configs/sequence/*.json; this
-script does not choose that budget itself.
+Combine the reported ``step_seconds``, ``estimated_training_seconds_per_audio_hour``
+and ``peak_gpu_memory_allocated_bytes`` with the real train manifest's total
+hours (once delivered) to estimate a non-arbitrary ``max_steps``/``batch_size``
+for configs/sequence/*.json; this script does not choose that budget itself,
+and ``estimated_training_seconds_per_audio_hour`` is only a throughput ratio
+from the 6.61-second pilot batch, not a validated per-hour cost at full batch
+size/sequence lengths.
 """
 from __future__ import annotations
 
@@ -138,9 +141,16 @@ def main() -> None:
         measurement = pilot_fn(utterances, args.device)
         if args.device.startswith("cuda"):
             measurement["peak_gpu_memory_allocated_bytes"] = torch.cuda.max_memory_allocated()
+        pilot_audio_seconds = sum(u.duration_seconds for u in utterances)
+        # Rough throughput ratio from this one tiny step; NOT an epoch-cost estimate by
+        # itself. Multiply by the real train manifest's total hours (once delivered) to
+        # get an estimated epoch wall-clock cost -- this script does not know that
+        # number yet, so it reports the ratio rather than guessing a total.
+        measurement["estimated_training_seconds_per_audio_hour"] = (
+            measurement["step_seconds"] / (pilot_audio_seconds / 3600.0))
         report = {
             "schema": "greek-asr-sequence-gpu-pilot-v1", "model": name,
-            "pilot_utterances": len(utterances), "pilot_audio_seconds": sum(u.duration_seconds for u in utterances),
+            "pilot_utterances": len(utterances), "pilot_audio_seconds": pilot_audio_seconds,
             "measurement": measurement, "environment": _environment(args.device),
             "note": "Forward/backward/optimizer-step smoke on 3 pilot clips only; not a training-length decision.",
         }

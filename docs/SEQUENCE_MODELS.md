@@ -124,6 +124,11 @@ pruned RNN-T, NeMo, or a referenced custom implementation.
   (matches `configs/model_sources.lock.json`; `train()`/`predict()` call
   `_validate_revision` and refuse to run on any other model/revision before
   any download happens — see `tests/test_whisper_finetune.py::RevisionValidationTests`).
+  Model card: https://huggingface.co/openai/whisper-small (multilingual;
+  Greek is one of the Whisper paper's supported languages). Serdar's
+  unmodified-checkpoint baseline row owns this same verification for the
+  baseline inventory (`docs/BASELINES.md`); this is the same checkpoint, not
+  a separately-checked one.
   Serdar's unmodified baseline run on this same checkpoint stays a separate,
   untouched baseline row (`docs/BASELINES.md`); this is additional training.
 - Two conditions, **one training code path**
@@ -242,6 +247,41 @@ the environment Whisper/Qwen inference already depends on.
   counts and literal (unnormalized) train/test text-overlap counts, for the
   per-split reporting required in section 0.2 and the PR description. Never
   runs a model on test audio; a pure text/metadata comparison.
+- `hash_file` / `git_commit_hash` / `code_file_hashes` / `manifest_source_breakdown`:
+  run-provenance helpers wired into all three `train()` reports (code commit,
+  per-file code hash, train/dev manifest+reference hashes, trainable parameter
+  count, effective batch size, precision, training wall-clock seconds, and --
+  for Whisper -- the actual per-source utterance/hour breakdown of the train
+  manifest, so the CSS10 mixing ratio is a recorded number, not assumed).
+- `PartialPredictionWriter`: all three `predict()` functions now stream to
+  `predictions.partial.jsonl` and only rename to `predictions.jsonl` on a full,
+  exact-ID-set run, mirroring `greek_asr.infer.run`'s existing contract. A
+  failure partway leaves the partial file and a `run.json` with `status:
+  "failed"` plus `completed_records`; it is never left looking like a
+  complete benchmark file.
+
+## Checkpoint selection depends on an unset normalization policy
+
+Dev-based checkpoint/beam selection for all three models will be run against
+whatever text the common scorer (`greek_asr/score.py`, owned by Ozan) and
+normalization policy produce. That policy -- handling of `<spoken_noise>`,
+punctuation, case, accents -- is explicitly **not yet finalized**
+(`docs/PROTOCOL_DRAFT.md` step 5, `docs/TEACHER_UPDATES_2026-11-18_TR.md`
+section 3). None of this PR's checkpoint-selection code invents its own
+normalization rule or rewrites `greek_asr/scoring.py`; once Ozan's policy is
+committed, the *same* dev loss/WER numbers this code already logs must be
+recomputed under that policy before a real checkpoint is chosen -- the
+current selection-by-dev-loss code path itself does not change.
+
+## Subset selection requires Serdar/Samed sign-off before use
+
+`common.select_grouped_subset` exists and is tested (synthetic multi-speaker
+fixture only), but it must not be invoked against real data on its own
+authority: per section 7 of the main prompt, any training-budget subset has
+to use "Serdar'ın kabul ettiği seed'li grup/oturum seçimi" coordinated with
+the data owner (Samed). If a bounded subset turns out to be necessary once
+real data lands, that coordination happens first, in the PR/issue thread, not
+silently inside a config change.
 
 ## Known limitations / open risks
 
@@ -256,3 +296,10 @@ the environment Whisper/Qwen inference already depends on.
 - Official HParl split speaker overlap (not speaker-disjoint) applies to
   these models exactly as it does to every other baseline; see
   `docs/TEACHER_UPDATES_2026-11-18_TR.md` and the PR description.
+- No AMP/mixed-precision path is implemented for any of the three models;
+  all training/report code currently assumes/reports `"precision": "float32"`.
+  If Serdar enables AMP on the ROCm pilot, that is a code change (not just a
+  runtime flag) and the reported precision field must change with it.
+- `scripts/pilot_sequence_models.py` reports raw step time/VRAM, not a
+  ready-made "epoch cost in hours" number -- see its own docstring/output for
+  the throughput ratio Serdar combines with the real train manifest's hours.
