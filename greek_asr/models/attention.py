@@ -289,11 +289,12 @@ def compute_loss(torch_module, functional, model, batch, pad_id: int, ctc_weight
 # --------------------------------------------------------------------------- #
 
 
-def train(config: dict[str, Any], *, project_root: Path, output_dir: Path) -> dict[str, Any]:
+def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, device: str = "cpu") -> dict[str, Any]:
     if config.get("max_steps") is None:
-        raise ValueError("config.max_steps must be set from a measured pilot run before training "
-                         "(see docs/SEQUENCE_MODELS.md); no arbitrary step budget is assumed")
+        raise ValueError("config.max_steps (optimizer updates) must be set from a measured pilot run "
+                         "before training (see docs/SEQUENCE_MODELS.md); no arbitrary step budget is assumed")
     torch, nn, F, AttentionASRModel = _build_torch()
+    resolved_device = common.resolve_device(device)
     seed = int(config["seed"])
     torch.manual_seed(seed)
     random.seed(seed)
@@ -311,7 +312,7 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path) -> di
 
     model_config = AttentionConfig(vocab_size=vocab.size, ctc_weight=float(config.get("ctc_weight", 0.3)),
                                    max_decode_length=int(config.get("max_decode_length", 400)))
-    model = AttentionASRModel(model_config, pad_id)
+    model = AttentionASRModel(model_config, pad_id).to(resolved_device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=float(config["learning_rate"]))
 
     frontend = common.LogMelFrontend(sample_rate=int(config.get("sample_rate", 16000)))
@@ -323,6 +324,12 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path) -> di
         dev_dataset, batch_size=int(config["batch_size"]), shuffle=False, collate_fn=collate)
 
     output_dir.mkdir(parents=True, exist_ok=False)
+    # max_steps counts optimizer updates (not microbatches); gradient_accumulation_steps
+    # microbatches make up one update. The loop below only ever stops right after a
+    # completed accumulation cycle (never mid-cycle), so an accumulation count that
+    # doesn't evenly divide one epoch's worth of data carries the partial gradient
+    # over into the next epoch instead of dropping it -- see
+    # tests/test_models_attention.py::test_trailing_partial_accumulation_is_never_dropped.
     max_steps, grad_accum = int(config["max_steps"]), int(config.get("gradient_accumulation_steps", 1))
     report: dict[str, Any] = {
         "schema": "greek-asr-attention-train-v1", "config": config, "model_config": asdict(model_config),
@@ -336,38 +343,43 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path) -> di
         "trainable_parameters": sum(p.numel() for p in model.parameters() if p.requires_grad),
         "effective_batch_size": int(config["batch_size"]) * grad_accum, "precision": "float32",
         "train_utterances": len(train_utterances), "dev_utterances": len(dev_utterances),
-        "max_steps": max_steps, "steps_completed": 0, "best_dev_loss": None, "best_step": None,
-        "training_seconds": None,
+        "device_requested": device, "device_used": str(resolved_device),
+        "max_steps": max_steps, "optimizer_updates_completed": 0, "micro_steps_completed": 0,
+        "best_dev_loss": None, "best_optimizer_update": None, "training_seconds": None,
     }
-    step, best_dev_loss = 0, None
+    micro_step, optimizer_updates, best_dev_loss = 0, 0, None
     started = time.perf_counter()
     model.train()
-    while step < max_steps:
+    while optimizer_updates < max_steps:
         for batch in train_loader:
+            batch = common.move_batch_to_device(batch, resolved_device)
             loss, components = compute_loss(torch, F, model, batch, pad_id, model_config.ctc_weight, blank_id)
             (loss / grad_accum).backward()
-            if (step + 1) % grad_accum == 0:
+            micro_step += 1
+            if micro_step % grad_accum == 0:
                 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
                 optimizer.step()
                 optimizer.zero_grad()
-            step += 1
-            if step % max(int(config.get("dev_eval_every", 1)), 1) == 0 or step >= max_steps:
-                model.eval()
-                with torch.no_grad():
-                    dev_losses = [compute_loss(torch, F, model, dev_batch, pad_id, model_config.ctc_weight,
-                                               blank_id)[0].item() for dev_batch in dev_loader]
-                dev_loss = sum(dev_losses) / len(dev_losses)
-                if best_dev_loss is None or dev_loss < best_dev_loss:
-                    best_dev_loss, report["best_step"] = dev_loss, step
-                    common.save_checkpoint(output_dir / "checkpoint.best.pt", model=model, optimizer=optimizer,
-                                           scheduler=None, step=step, config=config, vocab=vocab)
-                model.train()
-            if step >= max_steps:
+                optimizer_updates += 1
+                if optimizer_updates % max(int(config.get("dev_eval_every", 1)), 1) == 0 or optimizer_updates >= max_steps:
+                    model.eval()
+                    with torch.no_grad():
+                        dev_losses = [compute_loss(torch, F, model, common.move_batch_to_device(dev_batch, resolved_device),
+                                                   pad_id, model_config.ctc_weight, blank_id)[0].item()
+                                     for dev_batch in dev_loader]
+                    dev_loss = sum(dev_losses) / len(dev_losses)
+                    if best_dev_loss is None or dev_loss < best_dev_loss:
+                        best_dev_loss, report["best_optimizer_update"] = dev_loss, optimizer_updates
+                        common.save_checkpoint(output_dir / "checkpoint.best.pt", model=model, optimizer=optimizer,
+                                               scheduler=None, step=optimizer_updates, config=config, vocab=vocab)
+                    model.train()
+            if optimizer_updates >= max_steps:
                 break
     report["training_seconds"] = time.perf_counter() - started
-    report["steps_completed"], report["best_dev_loss"] = step, best_dev_loss
+    report["micro_steps_completed"], report["optimizer_updates_completed"] = micro_step, optimizer_updates
+    report["best_dev_loss"] = best_dev_loss
     common.save_checkpoint(output_dir / "checkpoint.last.pt", model=model, optimizer=optimizer,
-                           scheduler=None, step=step, config=config, vocab=vocab)
+                           scheduler=None, step=optimizer_updates, config=config, vocab=vocab)
     (output_dir / "run.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return report
 
@@ -388,9 +400,10 @@ def _require_test_protocol(path: Path | None, manifest: Path, project_root: Path
 
 
 def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, split: str, output_dir: Path,
-           decode: str = "greedy", beam_size: int = 5, allow_test: bool = False,
+           decode: str = "greedy", beam_size: int = 5, device: str = "cpu", allow_test: bool = False,
            test_protocol: Path | None = None) -> dict[str, Any]:
     torch, nn, F, AttentionASRModel = _build_torch()
+    resolved_device = common.resolve_device(device)
     if split == "test" and not allow_test:
         raise ValueError("test prediction requires --allow-test after the final protocol commit")
     if split == "test":
@@ -398,12 +411,12 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
     from greek_asr.infer import load_manifest
     records = load_manifest(manifest_path, project_root, split)
 
-    checkpoint = common.load_checkpoint(checkpoint_path)
+    checkpoint = common.load_checkpoint(checkpoint_path)  # map_location="cpu": loads regardless of training device
     vocab = common.Vocabulary.from_json(checkpoint["vocab"])
     train_config = checkpoint["config"]
     model_config = AttentionConfig(vocab_size=vocab.size, ctc_weight=float(train_config.get("ctc_weight", 0.3)),
                                    max_decode_length=int(train_config.get("max_decode_length", 400)))
-    model = AttentionASRModel(model_config, vocab.stoi[common.PAD])
+    model = AttentionASRModel(model_config, vocab.stoi[common.PAD]).to(resolved_device)
     model.load_state_dict(checkpoint["model_state"])
     model.eval()
 
@@ -416,6 +429,7 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
         "split": split, "decode": decode, "beam_size": beam_size if decode == "beam" else None,
         "records": len(records), "completed_records": 0, "inference_seconds": None,
         "references_used_as_model_input": False, "created_utc": datetime.now(timezone.utc).isoformat(),
+        "device_requested": device, "device_used": str(resolved_device),
         "environment": {"python": platform.python_version()},
     }
     writer = common.PartialPredictionWriter(output_dir, ids)
@@ -424,8 +438,8 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
         with torch.no_grad():
             for row in records:
                 waveform = common.load_waveform(row["audio"], target_sample_rate=frontend.sample_rate)
-                features = frontend(waveform).unsqueeze(0)
-                lengths = torch.tensor([features.shape[1]], dtype=torch.long)
+                features = frontend(waveform).unsqueeze(0).to(resolved_device)
+                lengths = torch.tensor([features.shape[1]], dtype=torch.long, device=resolved_device)
                 encoded, _, mask = model.encode(features, lengths)
                 if decode == "greedy":
                     tokens = model.speller.greedy_decode(
@@ -457,6 +471,7 @@ def main(argv: list[str] | None = None) -> int:
     train_parser.add_argument("--config", type=Path, required=True)
     train_parser.add_argument("--output", type=Path, required=True)
     train_parser.add_argument("--project-root", type=Path, default=ROOT)
+    train_parser.add_argument("--device", default="cpu")
 
     predict_parser = subparsers.add_parser("predict")
     predict_parser.add_argument("--checkpoint", type=Path, required=True)
@@ -466,6 +481,7 @@ def main(argv: list[str] | None = None) -> int:
     predict_parser.add_argument("--project-root", type=Path, default=ROOT)
     predict_parser.add_argument("--decode", choices=("greedy", "beam"), default="greedy")
     predict_parser.add_argument("--beam-size", type=int, default=5)
+    predict_parser.add_argument("--device", default="cpu")
     predict_parser.add_argument("--allow-test", action="store_true")
     predict_parser.add_argument("--test-protocol", type=Path)
 
@@ -473,10 +489,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "train":
             config = json.loads(args.config.read_text(encoding="utf-8"))
-            train(config, project_root=args.project_root, output_dir=args.output)
+            train(config, project_root=args.project_root, output_dir=args.output, device=args.device)
         else:
             predict(args.checkpoint, args.manifest, project_root=args.project_root, split=args.split,
-                    output_dir=args.output, decode=args.decode, beam_size=args.beam_size,
+                    output_dir=args.output, decode=args.decode, beam_size=args.beam_size, device=args.device,
                     allow_test=args.allow_test, test_protocol=args.test_protocol)
     except (ValueError, OSError, RuntimeError) as error:
         parser.exit(1, f"attention model {args.command} failed: {error}\n")

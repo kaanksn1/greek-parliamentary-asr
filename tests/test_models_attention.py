@@ -120,7 +120,8 @@ class TrainAndPredictOnRealPilotAudioTests(unittest.TestCase):
                 "dev_eval_every": 1, "ctc_weight": 0.3, "max_decode_length": 12, "sample_rate": 16000,
             }
             report = attention.train(config, project_root=ROOT, output_dir=output_dir)
-            self.assertEqual(report["steps_completed"], 2)
+            self.assertEqual(report["optimizer_updates_completed"], 2)
+            self.assertEqual(report["micro_steps_completed"], 2)
             self.assertIsNotNone(report["best_dev_loss"])
             self.assertTrue((output_dir / "checkpoint.best.pt").is_file())
             self.assertTrue((output_dir / "checkpoint.last.pt").is_file())
@@ -142,6 +143,30 @@ class TrainAndPredictOnRealPilotAudioTests(unittest.TestCase):
             attention.predict(output_dir / "checkpoint.best.pt", dev_manifest, project_root=ROOT, split="dev",
                               output_dir=beam_dir, decode="beam", beam_size=3)
             self.assertTrue((beam_dir / "predictions.jsonl").is_file())
+
+    def test_trailing_partial_accumulation_is_never_dropped(self):
+        """gradient_accumulation_steps=3 does not evenly divide one epoch's worth
+        of data (2 train utterances, batch_size=1 => 2 microbatches/epoch); the
+        3rd microbatch that completes the first optimizer update only arrives in
+        the second epoch. Before this fix, max_steps counted microbatches and the
+        loop broke as soon as that count was reached even mid-accumulation-cycle,
+        silently losing whichever gradient had not yet triggered optimizer.step().
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            train_manifest, train_references = _write_manifest_and_references(directory, PILOT[:2], "train")
+            dev_manifest, dev_references = _write_manifest_and_references(directory, PILOT[2:], "dev")
+            config = {
+                "train_manifest": str(train_manifest), "train_references": str(train_references),
+                "dev_manifest": str(dev_manifest), "dev_references": str(dev_references),
+                "seed": 42, "learning_rate": 0.01, "batch_size": 1, "max_steps": 1,
+                "gradient_accumulation_steps": 3, "dev_eval_every": 1, "ctc_weight": 0.3,
+                "max_decode_length": 12, "sample_rate": 16000,
+            }
+            report = attention.train(config, project_root=ROOT, output_dir=directory / "run")
+        self.assertEqual(report["optimizer_updates_completed"], 1)
+        self.assertEqual(report["micro_steps_completed"], 3)  # the cross-epoch 3rd microbatch was not dropped
+        self.assertIsNotNone(report["best_dev_loss"])
 
     def test_shipped_config_refuses_an_unmeasured_step_budget(self):
         config = json.loads((ROOT / "configs/sequence/attention.json").read_text("utf-8"))
