@@ -31,7 +31,11 @@ early, before train/dev cleaning or mixed-corpus experiments. Do not clean,
 filter, add/drop, resplit or relabel test data. Keep the second corpus out of
 the parliamentary test. Samed submitted freeze metadata in PR #2; the review
 verified that it has not changed since its initial commit. Full source audio
-and Kaldi metadata delivery/independent byte verification are still pending.
+delivery/independent audio-byte verification are still pending. Review at
+`e5aa488` verified the committed original Kaldi/CSS10 text metadata and the
+earlier reporting corrections. PR #5 at `0437631` has verified PCM32, GPU and
+Whisper-prefix defects; do not treat passing CPU tests as full-training readiness.
+See `docs/reviews/PR2_PR5_FOLLOWUP_TR.md`. Model corrections remain Adnan's work.
 
 Freeze and commit the final model/settings/scoring protocol separately, before
 test inference/scoring. Do not tune from test. The two further professor
@@ -53,8 +57,13 @@ principle; that is not a completed bonus award. There is no professor-specified
 fixed minimum hour count. Justify the largest feasible, statistically useful
 dataset using actual hardware/time/cost measurements, not the three-clip smoke.
 The planned second source is CSS10 Greek v1, only for training. Its producer
-reports 04:08:14; this is not a locally audited or cleaned/used duration.
+reports 04:08:14; the data submission records its audit, but owner-independent
+verification of the full audio bytes is pending.
 See `docs/SECONDARY_SOURCE_TR.md` for provenance and limitations.
+
+The user's 18 November reply sets the deadline to 21 November 2026, Saturday
+evening, Europe/Istanbul. Exact hour remains unknown; do not invent one or
+choose an unmeasured training budget from it.
 
 The draft normalization is not the final Greek scoring rule. Keep references
 and predictions under one common, versioned policy. Report corpus edit counts,

@@ -35,14 +35,22 @@
   overlaps. Recorded remaining audio-delivery and documentation issues.
 - Updated owner integration requirements to the two new professor emails,
   preserving the official-test freeze and teammates' work ownership.
+- Rechecked Samed's corrected `e5aa488` submission (76 tests) and Adnan's
+  `0437631` submission (93 tests), and tested their temporary merge (125 tests).
+  Verified original metadata/report/freeze consistency without claiming full
+  audio delivery. Added independent train-pilot GPU and synthetic PCM32/token
+  probes, recorded actual failures and prepared an actionable correction prompt.
+  The unchanged submitted Whisper pilot completed one GPU optimizer step;
+  attention and RNN-T failed. No full training or official dev/test inference.
 
 ## Limits and pending dependent work
 
 Samed submitted early test-freeze metadata and his data pipeline in PR #2;
-full audio delivery, independent byte verification and review corrections
-are pending. His pipeline and cleaning authorship remain his. Kemal's and Adnan's
-model training implementations, Ozan's final evaluation and all full benchmark
-runs remain pending. No custom-data bonus, trained-model improvement or new
+full audio delivery and independent audio-byte verification are pending; the
+reporting/source-metadata corrections were verified. His pipeline and cleaning
+authorship remain his. Adnan's submitted implementation needs the documented
+model/GPU corrections. Kemal's model work, Ozan's final evaluation and all full
+benchmark runs remain pending. No custom-data bonus, trained-model improvement or new
 human annotation is claimed. Personal contribution percentages are not results.
 
 Commits made under `kaanksn1` in this repository provide the version history.
