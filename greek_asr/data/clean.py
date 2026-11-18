@@ -23,7 +23,7 @@ from .freeze import verify_freeze
 STRUCTURAL = {"missing_audio", "audio_unreadable", "zero_frames", "ambiguous_audio", "duplicate_id",
               "malformed_transcript_line", "audio_path_escapes_release"}
 NOT_LABELLED = {"audio_without_transcript"}
-REVIEW_FLAGS = {"digital_silence", "duration_short", "duration_long", "low_level", "clipping", "silence_heavy", "long_edge_silence",
+REVIEW_FLAGS = {"cps_implausible", "digital_silence", "duration_short", "duration_long", "low_level", "clipping", "silence_heavy", "long_edge_silence",
                 "cps_high", "cps_low", "duplicate_suspect", "non_greek_characters", "format_nonstandard",
                 "reported_duration_mismatch", "annotation_only", "empty_reference"}
 OUTPUTS = {"hparl_train": "train", "hparl_dev": "dev", "css10_el": "css10_el_train"}

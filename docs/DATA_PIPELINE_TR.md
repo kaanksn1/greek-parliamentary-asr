@@ -131,6 +131,7 @@ kaydedilir.
 | `overlap_hparl_audio` | CSS10 | çıkarma | İki kaynak arasında aynı ses. |
 | `duplicate_audio` / `duplicate_pcm` | bölüm içinde | ID sırasında ilki kalır, diğerleri çıkar | Aynı ses iki kez öğrenilmesin. `duplicate_pcm` yalnız WAV başlığı farklı kopyadır. |
 | `digital_silence` | train, CSS10 | çıkarma | Bütün örnekler sıfır; metni içeremez. |
+| `cps_implausible` (>40 karakter/sn) | train, CSS10 | çıkarma (dev'de yalnız işaret) | Fiziksel olarak imkânsız konuşma hızı: transkript sesin çok ötesinde (birkaç saniyelik sese yüzlerce–binlerce karakter). Eşik train p99'unun (20 kar/sn) iki katı. CTC'de etiket çerçeveden uzun olunca kayıp tanımsızdır. |
 | `duration_long` (>30 sn) | train, CSS10 | çıkarma (dev'de yalnız işaret) | Yaygın fine-tuning pencereleri (ör. Whisper 30 sn) uzun parçayı kırpar ve hedef metinle uyumu bozar. |
 | `empty_reference`, `annotation_only` | train, CSS10 | çıkarma (dev'de korunur) | Konuşulmuş kelime içermeyen hedef. |
 | `strip_annotation_tags` | yalnız train hedef metni | metin değişikliği | `<spoken_noise>` bir kelime değildir; modelin bunu yazı olarak üretmesi istenmez. |

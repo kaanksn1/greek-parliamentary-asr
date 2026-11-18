@@ -75,6 +75,8 @@ TRAIN = {
     "clip": (uid("spkj", 6, 99000), "ακούστε με", "clipped", 1.2, 0),
     "corrupt": (uid("spkk", 6, 99500), "κάτι χάλασε", "corrupt", 0, 0),
     "missing": (uid("spkl", 7, 99700), "δεν υπάρχει ήχος", "missing", 0, 0),
+    "misaligned": (uid("spkr", 8, 99800), " ".join(["η κυβέρνηση φέρνει σήμερα στη βουλή το νομοσχέδιο"] * 6),
+                   "speech", 1.0, 13),
 }
 UNLABELLED_TRAIN = uid("spkz", 9, 12345)
 DEV = {

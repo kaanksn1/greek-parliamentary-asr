@@ -45,12 +45,31 @@ freeze, train/dev audit and cleaning, training-condition manifests).
   shard integrity. The full suite (73 tests) passes on Python 3.12 with
   numpy 1.26.4 and on Python 3.13.
 
+## Real-data runs (18 November 2026)
+
+- Downloaded the official HParl 1.0.0 archive (11,887,118,613 bytes, SHA-256
+  recorded) and CSS10 Greek Kaggle v1 (CC0 metadata recorded). Extracted and
+  measured every file: 92,133 HParl WAVs. Local durations match the producer's
+  split durations; there were no source problems.
+- Froze the original test (8,679 records, 11:12:28) before any cleaning and
+  committed it separately (`d28c97f`). The freeze verified `ok` before and
+  after cleaning.
+- Ran the audit and cleaning (`bdaf2f8`): 17 byte-identical train duplicates
+  and annotation-tag removal in train targets. CSS10 was harmonised to the
+  HParl transcription style.
+- From the real audit, found train segments whose transcripts are far longer
+  than their audio (hundreds to thousands of characters in a few seconds).
+  Added the `cps_implausible` rule (policy v2) and re-ran the cleaning. The
+  current counts are generated in `docs/DATA_REPORT_TR.md`.
+- Reported for the scoring owner that `<spoken_noise>` appears in a large
+  share of dev/test references, so it must be handled the same way in
+  references and hypotheses.
+
 ## Not yet done
 
-The full HParl download, the real test-freeze commit, the real audit/cleaning
-numbers, listening review, raw/clean data delivery and the data slides are
-pending. They will be added here with commit links after they are actually
-run. No cleaning result, used training hours, bonus or model result is
-claimed yet.
+Listening review of the review queue, raw/clean audio delivery (Git LFS /
+release shards, agreed with the repository owner) and the data slides are
+pending. No used training hours beyond the generated report, bonus or model
+result is claimed.
 
 Coding-agent assistance was used for implementation, tests and checks.

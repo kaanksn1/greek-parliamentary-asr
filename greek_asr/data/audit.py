@@ -206,6 +206,9 @@ def run_audit(root: Path = ROOT, config_path: Path | None = None, workers: int =
             flag(identity, "silence_heavy", item["speech_fraction"])
         if max(item["leading_silence_seconds"], item["trailing_silence_seconds"]) > flags_cfg["long_edge_silence_seconds"]:
             flag(identity, "long_edge_silence", [item["leading_silence_seconds"], item["trailing_silence_seconds"]])
+        if text.strip() and item["chars_per_second"] > flags_cfg["cps_implausible_max"]:
+            flag(identity, "cps_implausible", {"chars_per_second": item["chars_per_second"], "chars": item["n_chars"],
+                                               "duration_seconds": item["duration_seconds"]})
         median, mad = cps_reference[item["source"]]
         if mad > 0 and text.strip():
             z = (item["chars_per_second"] - median) / (1.4826 * mad)

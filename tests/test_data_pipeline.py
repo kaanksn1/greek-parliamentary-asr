@@ -203,13 +203,14 @@ class CleaningTests(PipelineFixture):
         logged = self.log()
         expected = {"dup": "duplicate_audio", "pcmdup": "duplicate_pcm", "testcopy": "overlap_test_audio",
                     "devcopy": "overlap_dev_audio", "long": "duration_long", "annot": "annotation_only",
-                    "silent": "digital_silence"}
+                    "silent": "digital_silence", "misaligned": "cps_implausible"}
         for key, rule in expected.items():
             entries = logged[hid(key)]
             self.assertEqual([(e["action"], e["rule"]) for e in entries], [("drop", rule)], key)
-            self.assertEqual(entries[0]["rule_version"], "p3-data-clean-v1")
+            self.assertEqual(entries[0]["rule_version"], "p3-data-clean-v2")
             self.assertIsNotNone(entries[0]["before"]["audio_sha256"])
         self.assertEqual(logged[hid("dup")][0]["evidence"], {"duplicate_of": hid("good1")})
+        self.assertGreater(logged[hid("misaligned")][0]["evidence"]["chars_per_second"], 40)
 
     def test_annotation_tag_is_removed_only_from_train_targets_and_logged(self):
         modified = self.log()[hid("noise")][0]
@@ -360,6 +361,7 @@ class ContractAndCliTests(PipelineFixture):
         self.assertIn(freeze_record["test_manifest_sha256"], report)
         self.assertIn("`duration_long`", report)
         self.assertIn("τους ξεφεύγει η αντικατάσταση της", report)
+        self.assertIn("test: 1/3 referans", report)
 
 
 class DownloadTests(unittest.TestCase):

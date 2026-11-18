@@ -9,7 +9,7 @@ from __future__ import annotations
 from collections import defaultdict
 from pathlib import Path
 
-from .common import ROOT, DataError, hms, read_json, read_jsonl, sha256_file, write_output
+from .common import ROOT, TAG_PATTERN, DataError, hms, read_json, read_jsonl, sha256_file, write_output
 
 REPORTED = {"train": "99:31:41", "dev": "09:03:33", "test": "11:12:28"}
 CSS10_REPORTED = "04:08:14"
@@ -130,6 +130,17 @@ def build_report(root: Path = ROOT) -> str:
             "tekrarları ve yalnız WAV başlığı farklı kopyaları yakalar; yeniden kodlanmış, kesilmiş veya ses düzeyi "
             "değişmiş tekrarları yakalamaz. Bunlar için aynı konuşmacı + aynı metin + ±tolerans süre eşleşmesi "
             "`duplicate_suspect` olarak işaretlenir ve dinlemeye bırakılır.", ""]
+    tag_rows = []
+    for split in ("dev", "test"):
+        refs = [r["reference"] for r in read_jsonl(root / f"data/manifests/references/{split}.jsonl")]
+        tagged = sum(1 for r in refs if TAG_PATTERN.search(r))
+        tags = sum(len(TAG_PATTERN.findall(r)) for r in refs)
+        tag_rows.append(f"{split}: {tagged}/{len(refs)} referans (%{100 * tagged / max(1, len(refs)):.1f}), {tags} işaret")
+    out += ["**Puanlama için önemli:** kaynak referanslarında `<spoken_noise>` gibi işaretler sık geçiyor (yalnız okundu, "
+            "değiştirilmedi): " + "; ".join(tag_rows) + ". Train hedeflerinden çıkarıldıkları için modeller bu işaretleri "
+            "üretmeyecek. İşaretler puanlamada referansta bırakılırsa her biri silme hatası sayılır ve WER yapay olarak "
+            "yükselir. Bu işaretlerin referans ve hipotezde aynı kuralla ele alınması Ozan'ın puanlama politikasında, "
+            "dev üzerinde ve test dosyalarına yazılmadan kararlaştırılmalıdır.", ""]
     rows = [[name, *(audit_summary["overlaps"][name].get(pair, "—") for pair in
                      ("hparl_train&hparl_dev", "hparl_train&hparl_test", "hparl_dev&hparl_test"))]
             for name in ("original_ids", "speakers", "recordings_or_sessions", "distinct_texts_exact_after_casefold")]
@@ -221,7 +232,10 @@ def build_report(root: Path = ROOT) -> str:
     out += ["## 8. Sınırlamalar ve bilinen eksikler", "",
             "- Otomatik bayraklar (sessizlik, kırpılma, konuşma hızı aykırılığı, şüpheli tekrar) dinlenmeden hatalı "
             "sayılmadı; kayıtlar korunup inceleme kuyruğuna yazıldı.",
-            "- Ses–metin hizası ASR modeliyle kontrol edilmedi; model çıktısı doğrulanmış gold sayılmaz.",
+            "- Ses–metin hizası ASR modeliyle kontrol edilmedi; model çıktısı doğrulanmış gold sayılmaz. Yalnız fiziksel "
+            "olarak imkânsız konuşma hızı (`cps_implausible`, saniyede 40 karakterin üstü; train p99 değerinin iki katından "
+            "fazla) train/CSS10'dan çıkarıldı. Bu kayıtlarda transkript sesten çok daha uzundur; CTC kaybı etiket "
+            "uzunluğu çerçeve sayısını aştığında tanımsızdır ve sıralı modellerde hedef metin kesilir.",
             "- Yeniden kodlanmış/kesilmiş tekrarlar SHA-256 ile yakalanamaz; yalnız şüphe sezgiseli vardır.",
             "- CSS10 tek konuşmacılı sesli kitap okumasıdır; parlamento konuşmasını temsil etmez ve yararı henüz "
             "gösterilmedi. Sadece train'e girdi.",
