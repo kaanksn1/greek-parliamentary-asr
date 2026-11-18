@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "metadata_dir": "hparl_segmented_dev",
+    "wav_dirs": [
+      "dev_wavs"
+    ]
+  },
+  "test": {
+    "metadata_dir": "hparl_segmented_test",
+    "wav_dirs": [
+      "test_wavs"
+    ]
+  },
+  "train": {
+    "metadata_dir": "hparl_segmented_train",
+    "wav_dirs": [
+      "train_wavs"
+    ]
+  }
+}
