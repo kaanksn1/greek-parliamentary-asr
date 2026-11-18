@@ -1,5 +1,5 @@
 {
-  "config_sha256": "75a924bb05fa0c46adbebc31f0f5ea0d508ff37e2ec7048ee1cf3c29e3163d23",
+  "config_sha256": "48adc3de9ab725a03d442e6778d2e46cff2e86a40d88c684d93d95bbefcc5792",
   "cps_reference": {
     "css10_el": {
       "mad": 1.1568,
@@ -31,7 +31,7 @@
   },
   "note": "Flags are candidates, not proven errors. Test audio was only hashed.",
   "overlaps": {
-    "distinct_texts_exact_after_casefold": {
+    "distinct_texts_after_tag_strip_nfc_casefold_space": {
       "hparl_dev&hparl_test": 2,
       "hparl_train&hparl_dev": 15,
       "hparl_train&hparl_test": 21
@@ -52,7 +52,7 @@
       "hparl_train&hparl_test": 76
     }
   },
-  "policy_version": "p3-data-clean-v2",
+  "policy_version": "p3-data-clean-v3",
   "schema": "p3-data-audit-v1",
   "subsets": {
     "css10_el": {
@@ -152,14 +152,14 @@
         "p99": 16.6721
       },
       "flag_counts": {
+        "cps_boundary": 1,
         "cps_high": 1,
-        "cps_implausible": 1,
         "cps_low": 22,
         "non_greek_characters": 1839
       },
       "flag_seconds": {
+        "cps_boundary": 3.402,
         "cps_high": 3.402,
-        "cps_implausible": 3.402,
         "cps_low": 212.836,
         "non_greek_characters": 14871.78
       },
@@ -395,8 +395,9 @@
       },
       "flag_counts": {
         "annotation_tag": 44487,
+        "cps_boundary": 6,
+        "cps_extreme": 22,
         "cps_high": 62,
-        "cps_implausible": 28,
         "duplicate_audio": 17,
         "duplicate_suspect": 14,
         "long_edge_silence": 7,
@@ -405,8 +406,9 @@
       },
       "flag_seconds": {
         "annotation_tag": 197386.71,
+        "cps_boundary": 24.64,
+        "cps_extreme": 120.64,
         "cps_high": 203.47,
-        "cps_implausible": 145.28,
         "duplicate_audio": 26.49,
         "duplicate_suspect": 21.87,
         "long_edge_silence": 48.35,
