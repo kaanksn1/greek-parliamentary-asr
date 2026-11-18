@@ -63,11 +63,17 @@ authorized by the existence of this draft.
     directory, data/code licenses, real member contributions and actual limits.
 
 The professor reply shared on 17 November is in `TEACHER_CLARIFICATION_TR.md`.
-Open before full runs: full data acquisition; class reservation; deadline;
+The user reported the deadline as 21 November 2026, Saturday evening,
+Europe/Istanbul; the exact hour is unknown.
+Open before full runs: full data acquisition/delivery; class reservation;
 working standard recipes; full audio delivery/independent freeze verification;
-the PR #2 data-review corrections; measured data budget;
+the PR #5 model-review corrections; measured data budget;
 Greek scoring policy; each baseline's working recipe. These are pending facts,
 not completed tasks. The minimum-hour question is resolved: no fixed number.
 The required baseline list and official-split exception are clarified in
 `TEACHER_UPDATES_2026-11-18_TR.md`; PR #2 already contains source/clean metadata
-and an early freeze, while its full audio delivery remains incomplete.
+and an early freeze, while its full audio delivery remains incomplete. PR #2
+reporting/source-metadata corrections were verified at `e5aa488`. Adnan's
+PR #5 at `0437631` passes CPU tests but fails GPU/audio/label checks; see
+`reviews/PR2_PR5_FOLLOWUP_TR.md`. Neither passing tests nor a successful
+one-step Whisper smoke establishes full training or benchmark readiness.

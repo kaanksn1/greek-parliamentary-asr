@@ -68,7 +68,8 @@ dosyalarına yapılmış iş gibi aktarılmaz.
 - **Train/dev temizliği ve kaynak karıştırmadan önce** özgün HParl test
   üyelerini, ses ve referanslarını hash'leriyle sabitler. Testten kayıt
   çıkarmaz, eklemez, temizlemez, yeniden bölmez veya yeniden etiketlemez.
-  Bu dondurma henüz yapılmış değildir.
+  PR #2'deki erken freeze metadata'sı doğrulandı; tam sesle bağımsız byte
+  doğrulaması ve veri kabulü bekliyor.
 - Train/dev üzerinde bozuk/boş ses, tekrarlar, hizalama, metin–ses uyumsuzluğu
   ve `<spoken_noise>` gibi gerçek sorunları araştırır. Bulunmayan bir sorunu
   varmış gibi yazmaz. Her değişikliğin önce/sonra halini, gerekçesini, kayıt
@@ -164,7 +165,8 @@ göreli ses yolu, hash, süre ve varsa özgün kayıt/konuşmacı kimliğini ta�
 | 4 | Dev ile seçim; model/decoder/scoring ayarlarının commit ile sabitlenmesi; ardından aynı test üzerinde son karşılaştırma |
 | 5 | Koddan üretilen tablolar, ham/temiz veri teslimi, README/katkı/lisans kontrolü ve sunum |
 
-Teslim tarihi henüz verilmediği için gün/tarih uydurulmadı. Yeni Mail 2 kesin
+Kullanıcının 18 Kasım yanıtına göre teslim **21 Kasım 2026 Cumartesi akşamı**,
+Europe/Istanbul; kesin saat bilinmiyor. Yeni Mail 2 kesin
 [baseline envanterini](BASELINES.md) netleştirdi; Yunancayı destekleyen hiçbir
 aile opsiyonel olarak gizlenmez. Hoca onayı +5'in kazanıldığı
 anlamına gelmez: gerçek temizleme ve yeniden üretilebilir deney gerekir.
@@ -176,3 +178,10 @@ speaker/literal cümle raporu ve diğer düzeltmeler
 [inceleme raporunda](reviews/SAMED_PR2_REVIEW_TR.md). PR #2 henüz birleştirilmedi.
 Resmî HParl bölümünün speaker-disjoint olmadığı README'de açıklanmalı; yeni
 kendi split'imiz yapılırsa speaker/recording grupları sabit seed ile atanır.
+
+Sonraki inceleme: Samed'in `e5aa488` düzeltmeleri ve 76 testi doğrulandı;
+seslerin repo içi teslimi açık. Adnan `0437631` ile PR #5'i sundu, 93 testi
+ve iki dalın geçici birleşimindeki 125 test geçti. Gerçek GPU/PCM32/Whisper
+hedef kontrolleri tam eğitim engelleri buldu. İlgili sahipler düzeltirken
+Serdar veri teslimi/kota ve merkezî koşum hazırlığını ilerletir. Bu iki PR
+henüz kabul edilmedi. [Kanıt ve Adnan düzeltme promptu](reviews/PR2_PR5_FOLLOWUP_TR.md).
