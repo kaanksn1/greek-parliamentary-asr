@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 from greek_asr.models import attention, common
@@ -154,6 +155,93 @@ class TrainAndPredictOnRealPilotAudioTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "--allow-test"):
                 attention.predict(Path("unused.pt"), manifest, project_root=ROOT, split="test",
                                   output_dir=directory / "out")
+
+    def _train_small_model(self, directory: Path):
+        train_manifest, train_references = _write_manifest_and_references(directory, PILOT[:2], "train")
+        dev_manifest, dev_references = _write_manifest_and_references(directory, PILOT[2:], "dev")
+        config = {
+            "train_manifest": str(train_manifest), "train_references": str(train_references),
+            "dev_manifest": str(dev_manifest), "dev_references": str(dev_references),
+            "seed": 42, "learning_rate": 0.01, "batch_size": 2, "max_steps": 2,
+            "dev_eval_every": 1, "ctc_weight": 0.3, "max_decode_length": 12, "sample_rate": 16000,
+        }
+        report = attention.train(config, project_root=ROOT, output_dir=directory / "run")
+        return report, directory / "run", dev_manifest
+
+    def test_train_report_records_full_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            report, _, _ = self._train_small_model(Path(directory))
+        self.assertEqual(report["code_commit"], common.git_commit_hash(ROOT))
+        self.assertIn("attention.py", report["code_sha256"])
+        self.assertIn("common.py", report["code_sha256"])
+        for field in ("train_manifest_sha256", "train_references_sha256", "dev_manifest_sha256",
+                      "dev_references_sha256"):
+            self.assertRegex(report[field], r"^[0-9a-f]{64}$")
+        self.assertEqual(report["effective_batch_size"], 2)
+        self.assertEqual(report["precision"], "float32")
+        self.assertGreater(report["trainable_parameters"], 0)
+        self.assertGreaterEqual(report["training_seconds"], 0)
+
+    def test_checkpoint_save_then_load_gives_identical_predictions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            _, run_dir, dev_manifest = self._train_small_model(directory)
+            checkpoint_path = run_dir / "checkpoint.best.pt"
+
+            def predict_texts(output_name: str) -> list[str]:
+                attention.predict(checkpoint_path, dev_manifest, project_root=ROOT, split="dev",
+                                  output_dir=run_dir / output_name, decode="greedy")
+                lines = [json.loads(line) for line in (run_dir / output_name / "predictions.jsonl").read_text("utf-8").splitlines()]
+                return [row["text"] for row in sorted(lines, key=lambda row: row["id"])]
+
+            first = predict_texts("predict_first")
+            second = predict_texts("predict_second")  # fresh model instance, loaded from the same checkpoint file
+        self.assertEqual(first, second)
+
+    def test_rerunning_into_an_existing_output_dir_is_refused_not_overwritten(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            train_manifest, train_references = _write_manifest_and_references(directory, PILOT[:2], "train")
+            dev_manifest, dev_references = _write_manifest_and_references(directory, PILOT[2:], "dev")
+            config = {
+                "train_manifest": str(train_manifest), "train_references": str(train_references),
+                "dev_manifest": str(dev_manifest), "dev_references": str(dev_references),
+                "seed": 42, "learning_rate": 0.01, "batch_size": 2, "max_steps": 1,
+                "dev_eval_every": 1, "ctc_weight": 0.3, "max_decode_length": 12, "sample_rate": 16000,
+            }
+            output_dir = directory / "run"
+            attention.train(config, project_root=ROOT, output_dir=output_dir)
+            before = (output_dir / "checkpoint.last.pt").read_bytes()
+            with self.assertRaises(FileExistsError):
+                attention.train(config, project_root=ROOT, output_dir=output_dir)
+            self.assertEqual((output_dir / "checkpoint.last.pt").read_bytes(), before)
+
+    def test_a_failure_mid_prediction_leaves_a_partial_file_and_a_failed_run_json(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            _, run_dir, dev_manifest = self._train_small_model(directory)
+            predict_dir = run_dir / "predict_failure"
+            original = common.load_waveform
+            calls = {"count": 0}
+
+            def flaky_load_waveform(*args, **kwargs):
+                calls["count"] += 1
+                if calls["count"] > 1:
+                    raise RuntimeError("simulated decode failure")
+                return original(*args, **kwargs)
+
+            # dev_manifest here only has one record (PILOT[2:]); use the 2-record train
+            # manifest instead so a failure on the second record is actually exercised.
+            train_manifest, _ = _write_manifest_and_references(directory, PILOT[:2], "train")
+            with unittest.mock.patch.object(common, "load_waveform", side_effect=flaky_load_waveform):
+                with self.assertRaises(RuntimeError):
+                    attention.predict(run_dir / "checkpoint.best.pt", train_manifest, project_root=ROOT,
+                                      split="train", output_dir=predict_dir, decode="greedy")
+            self.assertTrue((predict_dir / "predictions.partial.jsonl").is_file())
+            self.assertFalse((predict_dir / "predictions.jsonl").exists())
+            run_report = json.loads((predict_dir / "run.json").read_text("utf-8"))
+            self.assertEqual(run_report["status"], "failed")
+            self.assertEqual(run_report["completed_records"], 1)
 
 
 if __name__ == "__main__":

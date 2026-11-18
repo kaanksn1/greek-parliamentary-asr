@@ -17,6 +17,16 @@ Architecture (Listen, Attend and Spell -- Chan et al., 2016, arXiv:1508.01211):
 This is a vanilla baseline-family architecture (see docs/SEQUENCE_MODELS.md and
 docs/BASELINES.md); our own implementation/training labour is credited in
 contributions/ADNAN_DEMIR_220911784_adnan-demir.md, not as a new architecture.
+The auxiliary CTC head above is part of *this* hybrid CTC/attention baseline
+row, not a substitute for Kemal's separate plain-CTC-encoder baseline
+(docs/BASELINES.md "Plain CTC system"); training this model does not complete
+that deliverable.
+
+Long audio: no truncation is applied to either features or references at any
+stage here. An utterance's full length is encoded/decoded as-is; only the
+padding introduced by batching is masked out (see common.padding_mask and the
+CTC/attention loss masking in compute_loss). There is currently no maximum
+utterance-length cap.
 """
 from __future__ import annotations
 
@@ -317,10 +327,20 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path) -> di
     report: dict[str, Any] = {
         "schema": "greek-asr-attention-train-v1", "config": config, "model_config": asdict(model_config),
         "vocab_size": vocab.size, "seed": seed, "created_utc": datetime.now(timezone.utc).isoformat(),
+        "code_commit": common.git_commit_hash(project_root),
+        "code_sha256": common.code_file_hashes(Path(__file__), ROOT / "greek_asr/models/common.py"),
+        "train_manifest_sha256": common.hash_file(project_root / config["train_manifest"]),
+        "train_references_sha256": common.hash_file(project_root / config["train_references"]),
+        "dev_manifest_sha256": common.hash_file(project_root / config["dev_manifest"]),
+        "dev_references_sha256": common.hash_file(project_root / config["dev_references"]),
+        "trainable_parameters": sum(p.numel() for p in model.parameters() if p.requires_grad),
+        "effective_batch_size": int(config["batch_size"]) * grad_accum, "precision": "float32",
         "train_utterances": len(train_utterances), "dev_utterances": len(dev_utterances),
         "max_steps": max_steps, "steps_completed": 0, "best_dev_loss": None, "best_step": None,
+        "training_seconds": None,
     }
     step, best_dev_loss = 0, None
+    started = time.perf_counter()
     model.train()
     while step < max_steps:
         for batch in train_loader:
@@ -344,6 +364,7 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path) -> di
                 model.train()
             if step >= max_steps:
                 break
+    report["training_seconds"] = time.perf_counter() - started
     report["steps_completed"], report["best_dev_loss"] = step, best_dev_loss
     common.save_checkpoint(output_dir / "checkpoint.last.pt", model=model, optimizer=optimizer,
                            scheduler=None, step=step, config=config, vocab=vocab)
@@ -388,35 +409,43 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
 
     frontend = common.LogMelFrontend(sample_rate=int(train_config.get("sample_rate", 16000)))
     sos_id, eos_id = vocab.stoi[common.SOS], vocab.stoi[common.EOS]
-    texts: dict[str, str] = {}
-    started = time.perf_counter()
-    with torch.no_grad():
-        for row in records:
-            waveform = common.load_waveform(row["audio"], target_sample_rate=frontend.sample_rate)
-            features = frontend(waveform).unsqueeze(0)
-            lengths = torch.tensor([features.shape[1]], dtype=torch.long)
-            encoded, _, mask = model.encode(features, lengths)
-            if decode == "greedy":
-                tokens = model.speller.greedy_decode(
-                    encoded, mask, sos_id, eos_id, model_config.max_decode_length)[0].tolist()
-            elif decode == "beam":
-                tokens = model.speller.beam_search_decode(
-                    encoded, mask, sos_id, eos_id, model_config.max_decode_length, beam_size)
-            else:
-                raise ValueError("decode must be 'greedy' or 'beam'")
-            texts[row["id"]] = vocab.decode(tokens, stop_tokens=(common.EOS,))
-    elapsed = time.perf_counter() - started
     output_dir.mkdir(parents=True, exist_ok=False)
     ids = [row["id"] for row in records]
-    common.write_predictions(output_dir / "predictions.jsonl", ids, texts)
     report = {
-        "schema": "greek-asr-attention-predict-v1", "checkpoint": str(checkpoint_path), "split": split,
-        "decode": decode, "beam_size": beam_size if decode == "beam" else None,
-        "records": len(records), "inference_seconds": elapsed,
+        "schema": "greek-asr-attention-predict-v1", "status": "running", "checkpoint": str(checkpoint_path),
+        "split": split, "decode": decode, "beam_size": beam_size if decode == "beam" else None,
+        "records": len(records), "completed_records": 0, "inference_seconds": None,
         "references_used_as_model_input": False, "created_utc": datetime.now(timezone.utc).isoformat(),
         "environment": {"python": platform.python_version()},
     }
-    (output_dir / "run.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    writer = common.PartialPredictionWriter(output_dir, ids)
+    started = time.perf_counter()
+    try:
+        with torch.no_grad():
+            for row in records:
+                waveform = common.load_waveform(row["audio"], target_sample_rate=frontend.sample_rate)
+                features = frontend(waveform).unsqueeze(0)
+                lengths = torch.tensor([features.shape[1]], dtype=torch.long)
+                encoded, _, mask = model.encode(features, lengths)
+                if decode == "greedy":
+                    tokens = model.speller.greedy_decode(
+                        encoded, mask, sos_id, eos_id, model_config.max_decode_length)[0].tolist()
+                elif decode == "beam":
+                    tokens = model.speller.beam_search_decode(
+                        encoded, mask, sos_id, eos_id, model_config.max_decode_length, beam_size)
+                else:
+                    raise ValueError("decode must be 'greedy' or 'beam'")
+                writer.write(row["id"], vocab.decode(tokens, stop_tokens=(common.EOS,)))
+                report["completed_records"] += 1
+        writer.finish()
+        report["status"] = "complete"
+    except Exception as error:
+        writer.abandon()
+        report.update(status="failed", error_type=type(error).__name__, error=str(error))
+        raise
+    finally:
+        report["inference_seconds"] = time.perf_counter() - started
+        (output_dir / "run.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return report
 
 
