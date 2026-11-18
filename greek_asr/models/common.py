@@ -10,8 +10,10 @@ the prediction JSONL writer.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import random
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Mapping, Sequence
@@ -226,6 +228,43 @@ def write_predictions(output_path: Path, ids: Sequence[str], texts: Mapping[str,
             stream.write(json.dumps({"id": identity, "text": text}, ensure_ascii=False) + "\n")
 
 
+class PartialPredictionWriter:
+    """Streams predictions to ``predictions.partial.jsonl``; only a full, exact-ID-set
+    run is renamed to ``predictions.jsonl``. A run that fails partway leaves the
+    partial file in place and must never be mistaken for a complete benchmark file
+    (same contract as greek_asr.infer.run's ``predictions.partial.jsonl`` handling).
+    """
+
+    def __init__(self, output_dir: Path, ids: Sequence[str]):
+        self.partial_path = output_dir / "predictions.partial.jsonl"
+        self.final_path = output_dir / "predictions.jsonl"
+        self._expected = list(ids)
+        self._written: set[str] = set()
+        self._stream = self.partial_path.open("x", encoding="utf-8", newline="\n")
+
+    def write(self, identity: str, text: str) -> None:
+        if not isinstance(text, str):
+            raise ValueError(f"{identity}: prediction text must be a string, including genuinely empty output")
+        if identity in self._written:
+            raise ValueError(f"duplicate prediction for {identity!r}")
+        self._stream.write(json.dumps({"id": identity, "text": text}, ensure_ascii=False) + "\n")
+        self._stream.flush()
+        self._written.add(identity)
+
+    def finish(self) -> None:
+        """Call only after every expected ID was written; renames partial -> final."""
+        self._stream.close()
+        if self._written != set(self._expected):
+            missing = sorted(set(self._expected) - self._written)
+            raise ValueError(f"cannot finish: missing predictions for {missing!r}")
+        self.partial_path.rename(self.final_path)
+
+    def abandon(self) -> None:
+        """Call on failure; keeps the partial file as the visible failed-run marker."""
+        if not self._stream.closed:
+            self._stream.close()
+
+
 # --------------------------------------------------------------------------- #
 # Grouped, seeded subset selection (speaker/recording groups never split).
 # --------------------------------------------------------------------------- #
@@ -346,3 +385,47 @@ def load_checkpoint(path: Path) -> dict:
     if checkpoint.get("schema") != "greek-asr-sequence-checkpoint-v1":
         raise ValueError(f"{path}: unrecognized checkpoint schema")
     return checkpoint
+
+
+# --------------------------------------------------------------------------- #
+# Run provenance: file hashes, git commit, source-composition breakdown.
+# --------------------------------------------------------------------------- #
+
+
+def hash_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def git_commit_hash(project_root: Path) -> str | None:
+    """The exact commit this code ran from, or None outside a git checkout (never fabricated)."""
+    try:
+        result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=project_root,
+                                capture_output=True, check=True, text=True)
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return result.stdout.strip()
+
+
+def code_file_hashes(*paths: Path) -> dict[str, str]:
+    return {path.name: hash_file(path) for path in paths}
+
+
+def manifest_source_breakdown(manifest_path: Path) -> dict[str, dict[str, float]]:
+    """Per-source (e.g. hparl vs css10_el) utterance/hour counts, read directly from
+    the raw manifest rows -- used to record the actual CSS10 mixing ratio in a
+    training run, since greek_asr.models.common.Utterance itself drops the source
+    field (it is irrelevant to the audio/reference contract elsewhere in this module).
+    """
+    counts: dict[str, dict[str, float]] = {}
+    for line in manifest_path.read_text(encoding="utf-8-sig").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        bucket = counts.setdefault(row["source"], {"utterances": 0, "hours": 0.0})
+        bucket["utterances"] += 1
+        bucket["hours"] += row["duration_seconds"] / 3600.0
+    return counts

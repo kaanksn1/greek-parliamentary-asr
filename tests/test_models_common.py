@@ -183,5 +183,72 @@ class SplitStatisticsTests(unittest.TestCase):
         self.assertEqual(overlap, {"test_examples": 3, "literal_matches": 2, "unique_matched_texts": 1})
 
 
+class ProvenanceTests(unittest.TestCase):
+    def test_hash_file_is_deterministic_and_matches_hashlib(self):
+        import hashlib
+
+        path = ROOT / "data/raw/pilot/audio/train-pilot-0001.wav"
+        expected = hashlib.sha256(path.read_bytes()).hexdigest()
+        self.assertEqual(common.hash_file(path), expected)
+        self.assertEqual(common.hash_file(path), common.hash_file(path))
+
+    def test_git_commit_hash_returns_the_actual_checked_out_commit(self):
+        import subprocess
+
+        expected = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True,
+                                  check=True, text=True).stdout.strip()
+        self.assertEqual(common.git_commit_hash(ROOT), expected)
+
+    def test_git_commit_hash_is_none_outside_a_git_checkout(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertIsNone(common.git_commit_hash(Path(directory)))
+
+    def test_manifest_source_breakdown_separates_hparl_from_css10(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest_path = Path(directory) / "train.jsonl"
+            rows = [
+                {"source": "hparl", "duration_seconds": 3600.0},
+                {"source": "hparl", "duration_seconds": 1800.0},
+                {"source": "css10_el", "duration_seconds": 900.0},
+            ]
+            manifest_path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
+            breakdown = common.manifest_source_breakdown(manifest_path)
+        self.assertEqual(breakdown["hparl"], {"utterances": 2, "hours": 1.5})
+        self.assertEqual(breakdown["css10_el"]["utterances"], 1)
+        self.assertAlmostEqual(breakdown["css10_el"]["hours"], 0.25)
+
+
+@unittest.skipUnless(_TORCH_AVAILABLE, _SKIP_REASON)
+class PartialPredictionWriterTests(unittest.TestCase):
+    def test_full_run_renames_partial_to_final(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            writer = common.PartialPredictionWriter(output_dir, ["a", "b"])
+            writer.write("a", "")
+            writer.write("b", "γεια")
+            writer.finish()
+            self.assertFalse((output_dir / "predictions.partial.jsonl").exists())
+            lines = [json.loads(line) for line in (output_dir / "predictions.jsonl").read_text("utf-8").splitlines()]
+            self.assertEqual(lines, [{"id": "a", "text": ""}, {"id": "b", "text": "γεια"}])
+
+    def test_abandoned_run_leaves_partial_file_and_no_final_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            writer = common.PartialPredictionWriter(output_dir, ["a", "b"])
+            writer.write("a", "only-this-one")
+            writer.abandon()
+            self.assertTrue((output_dir / "predictions.partial.jsonl").is_file())
+            self.assertFalse((output_dir / "predictions.jsonl").exists())
+            lines = [json.loads(line) for line in (output_dir / "predictions.partial.jsonl").read_text("utf-8").splitlines()]
+            self.assertEqual(lines, [{"id": "a", "text": "only-this-one"}])
+
+    def test_finishing_with_a_missing_id_raises_instead_of_silently_completing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            writer = common.PartialPredictionWriter(Path(directory), ["a", "b"])
+            writer.write("a", "x")
+            with self.assertRaisesRegex(ValueError, "missing"):
+                writer.finish()
+
+
 if __name__ == "__main__":
     unittest.main()
