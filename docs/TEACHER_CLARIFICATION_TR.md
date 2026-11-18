@@ -21,16 +21,18 @@ Buna göre iki ayrı aşama var:
    ses ve referans dosyalarının hash'leri kaydedilecek. Testte temizleme,
    filtreleme, kayıt ekleme/çıkarma, yeniden bölümleme ve referans düzeltme
    yapılmayacak. İkinci kaynak test kümesine karıştırılmayacak. Bu aşama
-   henüz fiilen tamamlanmış değildir.
+   Samed'in PR #2'sinde metadata olarak mevcut; tam kaynak ses teslimi ve
+   Serdar'ın bağımsız byte doğrulaması henüz tamamlanmış değildir.
 2. **Sonra son deney protokolü sabitlenecek:** model/checkpoint, eğitim ayarları,
    seçim kararı ve puanlama kuralı train/dev üzerinden belirlenip test
    çıkarımı/puanlamasından önce commit edilecek. Testten yeni karar üretilmeyecek.
 
-Veri temizliği ile sonuçların puanlanması farklı işlemlerdir. Mevcut geçici
-NFC/casefold/boşluk normalizer'ı, hocanın test dönüşümlerine ayrıca izin verdiği
-anlamına gelmez. Test sesine veya kaynak referansına değişiklik yazılmayacak;
-nihai scoring tanımı train/dev üzerinde kesinleştirilirken bu kısıt korunacak.
-Teste ek dönüşüm uygulama konusunda bir istisna varsayılmayacak.
+Veri temizliği ile sonuçların puanlanması farklı işlemlerdir. Test sesine veya
+kaynak referansına değişiklik yazılmayacak. Sonradan paylaşılan ikinci yeni
+mail, bütün sistemler için tek normalizasyon/scoring kuralını açıkça istiyor.
+Bu kural train/dev ile belirlenip puanlama sırasında referans/hipoteze aynı
+şekilde bellekte uygulanır; frozen kaynak dosyaları yeniden yazılmaz.
+Mevcut geçici NFC/casefold/boşluk normalizer'ı nihai politika değildir.
 
 Üçüncü soru minimum ses süresiydi. Hoca sabit bir saat sayısı vermiyor;
 uygulamaya göre istatistiksel sonuca yetecek ve grubun donanım/maliyet bütçesinde
@@ -48,6 +50,13 @@ katalog kaydıyla ikinci eğitim kaynağı seçildi; yerel edinme/denetim bekliy
 Bu seçim hocanın mailinde isim verilerek onaylanmış bir kaynak gibi sunulmaz.
 [Kaynak kararı](SECONDARY_SOURCE_TR.md) ve [görev dağılımı](TEAM.md).
 
-Hâlâ açık işler: iki kaynağın tam edinme/denetimi, sınıf rezervasyonu, teslim
-tarihi, Week 9 slaytlarının tam kapsamı, testin gerçek dondurma kaydı ve
-donanım ölçümlerine dayalı nihai veri/eğitim bütçesi.
+Yeni veri tesliminde PR #2 kaynak/temiz manifestler ve bir erken freeze
+getiriyor; bağımsız inceleme hash/commit tutarlılığını doğruladı. Tam ses ve
+Kaldi dosyaları henüz public teslimde yok. Ayrıntı
+[inceleme raporunda](reviews/SAMED_PR2_REVIEW_TR.md).
+
+Hâlâ açık işler: tam ses teslimi ve bağımsız byte doğrulaması, veri incelemesinin
+düzeltmeleri, sınıf rezervasyonu, teslim tarihi, çalışan standart reçeteler ve
+donanım ölçümlerine dayalı nihai veri/eğitim bütçesi. Kesin baseline listesi,
+resmî split istisnası ve speaker raporu gereği
+[iki yeni mail özetinde](TEACHER_UPDATES_2026-11-18_TR.md) kayıtlı.
