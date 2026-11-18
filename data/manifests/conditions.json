@@ -1,0 +1,66 @@
+{
+  "conditions": {
+    "hparl_css10": {
+      "manifest_sha256": "4f4a0916afe5697757644be71fae21166791ebaea8fd28d10470611e87b2978a",
+      "records": {
+        "css10_el": 1844,
+        "hparl": 76324
+      },
+      "references_sha256": "306af766c43659fb33e8da643f967771c9a1ddf2fdb94df9fd4fe80f0f866145",
+      "sampling_rates": {
+        "16000": 76324,
+        "22050": 1844
+      },
+      "seconds": {
+        "css10_el": 14894.17,
+        "hparl": 358274.85
+      },
+      "total_seconds": 373169.02,
+      "train_manifest": "data/manifests/train_hparl_css10.jsonl",
+      "train_references": "data/manifests/references/train_hparl_css10.jsonl"
+    },
+    "hparl_only": {
+      "manifest_sha256": "8e2f3c5db229e33b3e86393178c67e6cf9214cfe0d34ee6746ba7cc7f06c143f",
+      "records": {
+        "hparl": 76324
+      },
+      "references_sha256": "b7cb320e59eec41f214985244001bfb0131c255d64e199cb772822f037410233",
+      "sampling_rates": {
+        "16000": 76324
+      },
+      "seconds": {
+        "hparl": 358274.85
+      },
+      "total_seconds": 358274.85,
+      "train_manifest": "data/manifests/train.jsonl",
+      "train_references": "data/manifests/references/train.jsonl"
+    }
+  },
+  "frozen_test": {
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "manifest": "data/manifests/test.jsonl",
+    "manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+    "records": 8679,
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9"
+  },
+  "mixing_policy": "Not set by the data owner. Mixing ratio, sampling, steps/epochs and the matched optimisation budget are chosen by Adnan/Serdar on HParl dev and recorded in their runs.",
+  "note": "CSS10 audio keeps its original sampling rate; model input pipelines resample at load time.",
+  "policy_version": "p3-data-clean-v1",
+  "schema": "p3-training-conditions-v1",
+  "shared_dev": {
+    "manifest": "data/manifests/dev.jsonl",
+    "manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+    "records": {
+      "hparl": 7113
+    },
+    "references": "data/manifests/references/dev.jsonl",
+    "references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+    "sampling_rates": {
+      "16000": 7113
+    },
+    "seconds": {
+      "hparl": 32613.08
+    },
+    "total_seconds": 32613.08
+  }
+}
