@@ -188,9 +188,11 @@ settled. No paid storage or cloud compute is assumed.
 Full details, architecture citations, toolkit/loss-backend license
 verification and the GPU pilot package are in
 [SEQUENCE_MODELS.md](docs/SEQUENCE_MODELS.md). Build the isolated CPU
-development environment and run the unit tests (28 tests; 11 run without any
-ASR toolkit, the other 17 need this environment and are skipped, not failed,
-without it):
+development environment and run the unit tests (70 tests across
+`tests/test_models_common.py`, `tests/test_models_attention.py`,
+`tests/test_models_transducer.py`, `tests/test_whisper_finetune.py` and
+`tests/test_rnnt_loss.py`; 15 run without any ASR toolkit, the other 55 need
+this environment and are skipped, not failed, without it):
 
 ```powershell
 py -3.12 -m venv .venv-sequence
@@ -203,15 +205,19 @@ Serdar's GPU pilot measurement for `max_steps`; `configs/sequence/*.json`
 currently refuse to run with `max_steps: null`):
 
 ```bash
-python -m greek_asr.models.attention train --config configs/sequence/attention.json --output outputs/attention_run
-python -m greek_asr.models.transducer train --config configs/sequence/transducer.json --output outputs/transducer_run
+python -m greek_asr.models.attention train --config configs/sequence/attention.json --output outputs/attention_run --device cuda
+python -m greek_asr.models.transducer train --config configs/sequence/transducer.json --output outputs/transducer_run --device cuda
 python -m greek_asr.models.whisper_finetune train --config configs/sequence/whisper_hparl_only.json --output outputs/whisper_hparl_only_run --device cuda
 python -m greek_asr.models.whisper_finetune train --config configs/sequence/whisper_hparl_css10.json --output outputs/whisper_hparl_css10_run --device cuda
 ```
 
-Each module also provides a `predict` subcommand with the same audio-only,
-no-gold-leak contract as `greek_asr.infer`, and the same `--split test`
-refusal without `--allow-test`/a committed `--test-protocol`.
+All three `train`/`predict` CLIs now take `--device {cpu,cuda}` explicitly
+(default `cpu`; use `cuda` on Serdar's ROCm machine, which reports its
+accelerator through the same `"cuda"` device string). Requesting an
+unavailable device raises instead of silently training on CPU. Each module
+also provides a `predict` subcommand with the same audio-only, no-gold-leak
+contract as `greek_asr.infer`, and the same `--split test` refusal without
+`--allow-test`/a committed `--test-protocol`.
 
 ## Files and status
 
@@ -310,8 +316,10 @@ Current lightweight verification: 44 unit tests passed (including the original
 matched WER/CER on 500 deterministic fixture corpora. The latter are synthetic
 verification cases, not audio data or model results.
 
-Adnan's sequence-model tests add 49 more (93 total): 15 run with no ASR
-toolkit installed, the other 34 (tiny synthetic + real-train-pilot-audio
-forward/backward/checkpoint/predict checks for all three models) need
-`requirements-sequence.txt` and are skipped, not failed, without it. All 93
+Adnan's sequence-model tests add 70 more (114 total): 15 run with no ASR
+toolkit installed, the other 55 (tiny synthetic + real-train-pilot-audio
+forward/backward/checkpoint/predict checks for all three models, the RNN-T
+loss backend's value/gradient correctness, PCM16/32 decoding, device
+selection, and the Whisper decoder-start-token/long-audio regressions) need
+`requirements-sequence.txt` and are skipped, not failed, without it. All 114
 pass inside that environment. See `docs/SEQUENCE_MODELS.md`.

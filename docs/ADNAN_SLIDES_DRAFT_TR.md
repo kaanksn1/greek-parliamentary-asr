@@ -15,7 +15,10 @@ scoring'i tamamlanana kadar doldurulmamalı.
   (2017) hybrid CTC/attention yardımcı kaybı. Düz PyTorch/torchaudio.
 - RNN-T: Graves (2012) transducer; unidirectional pyramidal LSTM encoder,
   LSTM prediction network, feed-forward joint network. Kayıp:
-  `torchaudio.functional.rnnt_loss`.
+  `greek_asr.models.rnnt_loss` (saf PyTorch/autograd, log-uzayda forward
+  algoritması) -- `torchaudio.functional.rnnt_loss`'un derlenmiş CUDA/ROCm
+  kernel'i Serdar'ın RX 7800 XT'sinde bulunamadığı için değiştirildi (bkz.
+  `docs/reviews/ADNAN_0437631_GPU.json`, bulgu 3).
 - İkisi de **baseline ailesi**dir (bkz. `docs/BASELINES.md`); kredi kendi
   uygulama/eğitim emeğimiz içindir.
 
@@ -29,9 +32,10 @@ scoring'i tamamlanana kadar doldurulmamalı.
 
 **Konuşmacı notu:** Bu iki model "baseline" sayılır çünkü mimarileri standart;
 kredi aldığımız kısım sıfırdan kendi yazıp eğitmemiz. Şu an hiçbir sayı yok
-çünkü hem veri (Samed) hem merkezî GPU koşumu (Serdar) bekliyor. torchaudio'nun
-RNN-T loss'unun ROCm'de doğru çalıştığı da henüz doğrulanmadı; sadece CPU'da
-doğrulandı.
+çünkü hem veri (Samed) hem merkezî GPU koşumu (Serdar) bekliyor. Yeni RNN-T
+loss backend'i (saf PyTorch) CPU'da torchaudio'nun kendi kaybına karşı
+değer+gradyan eşitliğiyle doğrulandı, ama gerçek GPU/ROCm hızı hâlâ
+ölçülmedi -- bu ayrı bir açık madde.
 
 ---
 

@@ -5,9 +5,13 @@ and `docs/HANDOFF_ADNAN_TR.md`: a standard attention encoder-decoder (hybrid
 CTC/attention included), a standard RNN-T transducer, and our own fine-tuning
 of the pinned `openai/whisper-small` checkpoint under two training conditions.
 
-**Status as of 18 November 2026: code, configs and tests are complete and
-passing on CPU with synthetic/real-pilot-audio fixtures. No full training,
-dev selection or benchmark run has happened.** Samed's data PR #2 is not
+**Status as of 19 November 2026: code, configs and tests are complete and
+passing on CPU with synthetic/real-pilot-audio fixtures, including the fixes
+from Serdar's real RX 7800 XT review of commit `0437631`
+(`docs/reviews/PR2_PR5_FOLLOWUP_TR.md`, `docs/reviews/ADNAN_0437631_GPU.json`)
+-- none of those fixes have themselves been re-verified on real GPU/ROCm
+hardware yet; see "Known limitations" below. No full training, dev
+selection or benchmark run has happened.** Samed's data PR #2 is not
 merged (`docs/reviews/SAMED_PR2_REVIEW_TR.md`); `data/manifests/*.jsonl` do
 not exist yet. The configs in `configs/sequence/` are prepared for when they
 land, with `max_steps` deliberately left `null` (see "Training budget" below).
@@ -42,29 +46,52 @@ torchaudio** instead, for three concrete reasons:
 Candidates from `docs/HANDOFF_ADNAN_TR.md`: `torchaudio` RNN-T loss, k2/icefall
 pruned RNN-T, NeMo, or a referenced custom implementation.
 
-**Chosen: `torchaudio.functional.rnnt_loss`.**
+**Originally chosen `torchaudio.functional.rnnt_loss` ran on Serdar's real RX
+7800 XT (ROCm) and failed**: `NotImplementedError: Could not run
+'torchaudio::rnnt_loss' ... 'CUDA' backend` (see
+`docs/reviews/ADNAN_0437631_GPU.json`, finding 3). The op is a custom
+compiled kernel, and the project's AMD wheel (`requirements-rocm.lock.txt`:
+`torchaudio==2.9.0+rocm7.2.1...`) only has a CPU build of it. The CPU
+forward/backward check that previously passed
+(`tests/test_models_transducer.py::SyntheticLossBackwardTests`) was never
+evidence this ran during real GPU training — it just happened to run on the
+one device the kernel supports.
 
-- License: **BSD-2-Clause**, verified from the official source
-  (`https://raw.githubusercontent.com/pytorch/audio/main/LICENSE`, fetched 18
-  November 2026; states "BSD 2-Clause License").
-- CPU forward+backward verified locally (not assumed): `torch==2.15.0+cpu`,
-  `torchaudio==2.11.1+cpu` (this repo's own `.venv-sequence`, see
-  `requirements-sequence.txt`) produces a finite loss and finite, nonzero
-  gradients on a tiny synthetic batch — see
-  `tests/test_models_transducer.py::SyntheticLossBackwardTests`.
-- `torchaudio` (with its RNN-T loss compiled in) is **already** part of
-  Serdar's locked ROCm environment (`requirements-rocm.lock.txt`:
-  `torchaudio==2.9.0+rocm7.2.1...`), so no new dependency is added there.
-- **Not yet verified**: that the HIP/ROCm-compiled kernel behind
-  `rnnt_loss` is numerically correct and fast enough on the RX 7800 XT (CPU
-  and CUDA kernels can diverge from a ROCm port). `scripts/pilot_sequence_models.py`
-  must be run once on Serdar's machine to confirm a finite loss/gradient and
-  record VRAM/step time before any real training; do not assume ROCm
-  correctness from the CPU result alone. If the ROCm kernel is broken, the
-  documented fallback is k2/icefall's pruned RNN-T loss (also BSD-licensed,
-  CPU+CUDA) — re-verify its license/ROCm support from its own repository
-  before switching, and document the switch in the PR rather than silently
-  downgrading to CTC.
+**Now chosen: option (a) from the review's three candidates — a pure
+PyTorch/autograd RNN-T loss, `greek_asr/models/rnnt_loss.py`.**
+
+- Rationale for (a) over (b) GPU-encoder/CPU-loss or (c) a separately
+  documented environment: it is built entirely from ordinary
+  `torch.autograd` primitives (`log_softmax`, `gather`, `logaddexp`,
+  elementwise add/compare) that every backend torch itself ships has a
+  kernel for — CUDA or ROCm — so there is no backend-specific compiled op to
+  be missing, by construction, rather than by a verification step that
+  could later fail on different hardware.
+- Correctness evidence (`tests/test_rnnt_loss.py`): value **and** gradient
+  match `torchaudio.functional.rnnt_loss` on CPU across a hand-enumerated
+  two-path lattice (solved independently, no library call) and several
+  random variable-length batches (`torch==2.15.0+cpu`,
+  `torchaudio==2.11.1+cpu`, this repo's `.venv-sequence`).
+- `transducer.py`'s report now records `"rnnt_loss_backend":
+  "pure_pytorch_logspace"` so the backend in use is explicit, not implied.
+- **Not yet measured**: real throughput on an actual GPU/ROCm device. This
+  implementation is a straightforward O(time × label) sequential-over-time,
+  batch-vectorized forward pass — not the anti-diagonal/compiled-kernel
+  optimization torchaudio's own op uses — and has only been timed on CPU
+  with the repo's short pilot/test clips. `scripts/pilot_sequence_models.py`
+  must be run once on Serdar's RX 7800 XT to record real step time/VRAM
+  before any training-budget decision:
+
+  ```bash
+  HSA_ENABLE_DXG_DETECTION=1 "$P3_PYTHON" scripts/pilot_sequence_models.py \
+    --device cuda --output outputs/sequence_gpu_pilot
+  ```
+
+  If this backend turns out to be too slow on real training-length audio,
+  the documented fallback is still k2/icefall's pruned RNN-T loss (BSD-
+  licensed, CPU+CUDA) — re-verify its license/ROCm support from its own
+  repository before switching, and document the switch in the PR rather
+  than silently downgrading to CTC.
 
 ## Architectures
 
@@ -90,8 +117,19 @@ pruned RNN-T, NeMo, or a referenced custom implementation.
   (`configs/sequence/attention.json`).
 - Vocabulary: character-level, learned only from the given train references
   (`common.build_char_vocabulary`); `<pad> <sos> <eos> <unk> <blank>` specials.
-- CLI: `python -m greek_asr.models.attention train --config configs/sequence/attention.json --output <dir>`
-  and `... predict --checkpoint <dir>/checkpoint.best.pt --manifest <manifest> --split {train,dev,test} --output <dir>`.
+- `max_steps` means **optimizer updates**, not microbatches (same convention
+  as Whisper's `optimizer_updates_completed`/`micro_steps_completed`); see
+  "Training budget" below.
+- Device: `--device {cpu,cuda}` on both `train` and `predict` (ROCm PyTorch
+  reports its accelerator as `"cuda"` too; this is not an NVIDIA-only flag).
+  Requesting an unavailable device raises instead of silently falling back
+  to CPU (`common.resolve_device`); checkpoints load via `map_location="cpu"`
+  so they can always be loaded regardless of which device trained them, then
+  moved to whatever device `predict --device` requests. The run report
+  records both `device_requested` and `device_used`.
+- CLI: `python -m greek_asr.models.attention train --config configs/sequence/attention.json --output <dir> --device cpu`
+  and `... predict --checkpoint <dir>/checkpoint.best.pt --manifest <manifest> --split {train,dev,test} --output <dir> --device cpu`
+  (use `--device cuda` on Serdar's ROCm machine).
   `--split test` is refused unless `--allow-test --test-protocol <committed path>` matches the
   exact frozen test manifest hash and is itself the committed version (mirrors `greek_asr/infer.py`'s gate).
 
@@ -115,8 +153,11 @@ pruned RNN-T, NeMo, or a referenced custom implementation.
   as the predictor's start token; `<blank> = 0` also serves as the pad-fill value).
 - This is explicitly **not** CTC and **not** NeMo/Parakeet TDT inference — see
   the module docstring and `docs/BASELINES.md`.
-- CLI: `python -m greek_asr.models.transducer train --config configs/sequence/transducer.json --output <dir>`
-  and `... predict ...` with the same `--split test` gate as the attention model.
+- `max_steps` means **optimizer updates**, not microbatches; same `--device`
+  contract (and `device_requested`/`device_used` report fields) as the
+  attention model above.
+- CLI: `python -m greek_asr.models.transducer train --config configs/sequence/transducer.json --output <dir> --device cpu`
+  and `... predict ...` with the same `--split test` gate and `--device` flag as the attention model.
 
 ### C) Whisper fine-tuning contribution, `greek_asr/models/whisper_finetune.py`
 
@@ -156,8 +197,17 @@ pruned RNN-T, NeMo, or a referenced custom implementation.
 - `model.generate(..., language="el", task="transcribe", do_sample=False)` is
   used for prediction, never fed the reference text.
 - Checkpointing: best (by dev loss) and last are separate files; each stores
-  model/optimizer/scheduler state, the optimizer-update step and RNG state
-  (`_save_checkpoint`/`_load_checkpoint`).
+  model/optimizer/scheduler state, the optimizer-update step and
+  `common.capture_rng_state()` (torch CPU + Python `random` state only --
+  **not** NumPy's or any GPU/CUDA-generator RNG state).
+- Resume (continuing a stopped run from a saved checkpoint): **not
+  implemented**. `train()` always starts a fresh model/optimizer/scheduler;
+  no CLI flag loads a checkpoint to continue training, and the stored RNG
+  state is never re-applied anywhere. This is deliberately reported as
+  absent rather than implied: a real resume claim would additionally need
+  the NumPy/GPU RNG state captured and a real continuation exercised and
+  checked, neither of which this PR does (see
+  `docs/reviews/PR2_PR5_FOLLOWUP_TR.md`, "Resume iddiası varsa...").
 - CLI: `python -m greek_asr.models.whisper_finetune train --config configs/sequence/whisper_hparl_only.json --output <dir> --device cuda`
   (repeat with `whisper_hparl_css10.json`), and `... predict ...` with the
   same `--allow-test`/`--test-protocol` gate as the other two models.
@@ -289,7 +339,15 @@ silently inside a config change.
   Everything above is implementation + synthetic/real-pilot-audio testing.
 - `max_steps`/`batch_size` for all three configs need Serdar's GPU pilot
   measurement combined with the real train manifest's hours.
-- The RNN-T loss's ROCm/HIP kernel is unverified (CPU-only verified so far).
+- The RNN-T loss (`greek_asr.models.rnnt_loss`, pure PyTorch/autograd) has
+  only been timed on CPU; real GPU/ROCm throughput is unmeasured (see "RNN-T
+  loss backend" above).
+- The `--device cuda` plumbing added to attention/RNN-T train+predict (and
+  the `padding_mask`/PCM32/Whisper-decoder-prefix fixes from Serdar's
+  review) has only been exercised on CPU and with torch's "meta" device in
+  this PR's own tests -- there is no GPU on this development machine. All of
+  it needs the single pilot command in "GPU pilot package" re-run on
+  Serdar's RX 7800 XT before it counts as verified.
 - CSS10 subset selection and the two Whisper conditions' matched-budget
   training have not been exercised on real multi-speaker data; only the
   config-level matching and the grouping logic itself are tested so far.
