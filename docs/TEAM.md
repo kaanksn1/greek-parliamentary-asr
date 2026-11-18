@@ -14,6 +14,13 @@ temizliği ve diğer üyelerin modelleri kendi sahiplerinde kalır.
 Mevcut ortak scorer, üç eğitim klibi ve runtime kontrolü başlangıç altyapısıdır;
 üyelerin henüz yapmadığı kişisel çalışma olarak yazılmaz.
 
+Sonraki kullanıcı kararı: Samed düzeltilmiş veri teslimini pushlayıp Serdar'ın
+incelemesiyle kullanılabilir hale getirdikten sonra sıradaki model geliştiricisi
+Adnan olacak. [Ayrıntılı Adnan promptu](HANDOFF_ADNAN_TR.md). Adnan kendi kodunu
+hazırlamak için Kemal'in modellerinin bitmesini beklemez; bütün tam koşular
+Serdar'da ve ortak son test aşaması bütün gereklilikler tamamlandıktan sonradır.
+Bu sıra değişikliği Kemal/Ozan'ın sahipliğini veya iş yükü paylarını değiştirmez.
+
 18 Kasım 2026 iş yükü tahmini: aşağıdaki yüzdeler planlanan **aktif insan
 emeğinin yaklaşık dağılımıdır**; gerçekleşmiş kişisel katkı veya not ağırlığı
 değildir. Kodlama, hata düzeltme, veri inceleme, analiz, entegrasyon ve sunum

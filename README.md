@@ -22,6 +22,12 @@ pending. It has not been merged. Findings, exact overlap diagnostics and a
 copyable follow-up prompt are in
 [SAMED_PR2_REVIEW_TR.md](docs/reviews/SAMED_PR2_REVIEW_TR.md).
 
+After the corrected data delivery is accepted, Adnan is the next model owner
+to proceed. His complete task prompt is
+[HANDOFF_ADNAN_TR.md](docs/HANDOFF_ADNAN_TR.md): standard attention ASR, RNN-T
+and the two controlled Whisper fine-tuning conditions. Full runs remain central
+on Serdar's machine; this handoff does not claim data acceptance or model training.
+
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports
 about 120 hours, with an official session-based train/development/test split.
@@ -174,6 +180,7 @@ settled. No paid storage or cloud compute is assumed.
 | `docs/SECONDARY_SOURCE_TR.md` | Selected CSS10 Greek source, version, reported hours, license evidence and limits |
 | `docs/DATA_CONTRACT.md` | Shared audio/reference/prediction schema and two freeze stages |
 | `docs/HANDOFF_SAMED_TR.md` | Detailed data-owner task prompt, deliverables and acceptance checks |
+| `docs/HANDOFF_ADNAN_TR.md` | Next model-owner prompt after accepted data delivery; training code, controls, tests and central-run package |
 | `docs/PRETRAINED_TRANSFORMERS.md` | Whisper/Qwen APIs, standard settings and primary sources |
 | `docs/NEMO_RUNTIME.md` | Canary/Parakeet APIs, separate dependencies and actual runtime status |
 | `docs/RUNTIME_ENVIRONMENT.md` | Tested isolated Whisper/Qwen installation, lock replay and training-pilot commands |
