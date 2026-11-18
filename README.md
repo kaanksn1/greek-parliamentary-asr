@@ -303,8 +303,8 @@ Current lightweight verification: 44 unit tests passed (including the original
 matched WER/CER on 500 deterministic fixture corpora. The latter are synthetic
 verification cases, not audio data or model results.
 
-Adnan's sequence-model tests add 28 more (72 total): 11 run with no ASR
-toolkit installed, the other 17 (tiny synthetic + real-train-pilot-audio
+Adnan's sequence-model tests add 49 more (93 total): 15 run with no ASR
+toolkit installed, the other 34 (tiny synthetic + real-train-pilot-audio
 forward/backward/checkpoint/predict checks for all three models) need
-`requirements-sequence.txt` and are skipped, not failed, without it. All 72
+`requirements-sequence.txt` and are skipped, not failed, without it. All 93
 pass inside that environment. See `docs/SEQUENCE_MODELS.md`.
