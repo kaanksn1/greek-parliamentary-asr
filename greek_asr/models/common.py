@@ -76,27 +76,47 @@ def load_utterances(manifest_path: Path, references_path: Path, *,
 
 
 def load_waveform(path: Path, *, target_sample_rate: int) -> "torch.Tensor":
-    """Decode original PCM16 WAV bytes and resample only in memory; the source file is never rewritten.
+    """Decode original PCM16/PCM32 WAV bytes and resample only in memory; the source file is never rewritten.
 
     Reads via the stdlib ``wave`` module (matching greek_asr.pretrained.whisper's
-    ``_read_pcm16``) instead of ``torchaudio.load``, which requires the separate
-    ``torchcodec`` package in this torchaudio version.
+    ``_read_pcm16`` for the 16-bit case) instead of ``torchaudio.load``, which
+    requires the separate ``torchcodec`` package in this torchaudio version.
+
+    Both 16-bit (HParl) and 32-bit (CSS10) integer PCM payloads are decoded at
+    their real sample width -- a 32-bit file is never misread as int16 (that
+    bug doubled CSS10's apparent frame count and corrupted its amplitude; see
+    docs/reviews/ADNAN_0437631_GPU.json "P1 - CSS10 PCM32 yanlış çözülüyor").
+    No new dependency is added: the stdlib ``wave`` module already covers both
+    widths present in the corpus. Any other format (compressed WAV, IEEE-float
+    PCM, or an unsupported sample width) raises a clear error instead of being
+    silently misread.
     """
     import wave
 
     import torch
     import torchaudio
 
-    with wave.open(str(path), "rb") as handle:
-        if handle.getcomptype() != "NONE":
-            raise ValueError(f"{path}: expected uncompressed PCM WAV")
-        if handle.getnchannels() != 1:
-            raise ValueError(f"{path}: expected mono audio, found {handle.getnchannels()} channels")
-        sample_rate, frames = handle.getframerate(), handle.getnframes()
-        pcm = handle.readframes(frames)
-    if len(pcm) != frames * handle.getsampwidth():
+    try:
+        with wave.open(str(path), "rb") as handle:
+            if handle.getcomptype() != "NONE":
+                raise ValueError(f"{path}: expected uncompressed PCM WAV, found compression {handle.getcomptype()!r}")
+            if handle.getnchannels() != 1:
+                raise ValueError(f"{path}: expected mono audio, found {handle.getnchannels()} channels")
+            sample_width = handle.getsampwidth()
+            sample_rate, frames = handle.getframerate(), handle.getnframes()
+            pcm = handle.readframes(frames)
+    except wave.Error as error:
+        raise ValueError(f"{path}: unsupported or malformed WAV file: {error}") from error
+    if len(pcm) != frames * sample_width:
         raise ValueError(f"{path}: truncated WAV payload")
-    waveform = torch.frombuffer(bytearray(pcm), dtype=torch.int16).to(torch.float32) / 32768.0
+    if sample_width == 2:
+        dtype, full_scale = torch.int16, 32768.0
+    elif sample_width == 4:
+        dtype, full_scale = torch.int32, 2147483648.0
+    else:
+        raise ValueError(f"{path}: unsupported PCM sample width ({sample_width * 8}-bit); "
+                         "only 16-bit and 32-bit integer PCM are decoded")
+    waveform = torch.frombuffer(bytearray(pcm), dtype=dtype).to(torch.float32) / full_scale
     if sample_rate != target_sample_rate:
         waveform = torchaudio.functional.resample(waveform, sample_rate, target_sample_rate)
     return waveform
@@ -201,11 +221,54 @@ def pad_sequences(sequences: Sequence["torch.Tensor"]) -> tuple["torch.Tensor", 
 
 
 def padding_mask(lengths: "torch.Tensor", max_length: int) -> "torch.Tensor":
-    """True at real (non-padding) positions, shape (batch, max_length)."""
+    """True at real (non-padding) positions, shape (batch, max_length).
+
+    Built on ``lengths.device`` (not an implicit CPU default) so this composes
+    safely once ``lengths`` has been moved to a non-CPU device; a CPU-only
+    ``torch.arange`` here previously crashed with "Expected all tensors to be
+    on the same device" against GPU-resident lengths (see
+    docs/reviews/ADNAN_0437631_GPU.json "P1 - attention GPU pilotu cihaz
+    uyuşmazlığında duruyor").
+    """
     import torch
 
-    positions = torch.arange(max_length)
+    positions = torch.arange(max_length, device=lengths.device)
     return positions.unsqueeze(0) < lengths.unsqueeze(1)
+
+
+# --------------------------------------------------------------------------- #
+# Device selection (shared by attention/transducer/whisper train+predict).
+# --------------------------------------------------------------------------- #
+
+
+def resolve_device(requested: str) -> "torch.device":
+    """Validate the requested device; never silently fall back to CPU.
+
+    ROCm PyTorch builds report their accelerator through the same
+    ``torch.cuda`` namespace and ``"cuda"`` device string as NVIDIA CUDA
+    builds (see docs/SEQUENCE_MODELS.md "RNN-T loss backend"); this check
+    does not assume NVIDIA hardware, and it never downgrades a requested GPU
+    to CPU when the GPU is unavailable -- that must be a loud error instead
+    (docs/reviews/ADNAN_0437631_GPU.json "P1 - tam attention/RNN-T train ve
+    predict komutları CPU'da kalıyor").
+    """
+    import torch
+
+    device = torch.device(requested)
+    if device.type == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError(f"requested device {requested!r} is unavailable "
+                           "(torch.cuda.is_available() is False); there is no silent CPU fallback")
+    return device
+
+
+def move_batch_to_device(batch: Mapping, device: "torch.device") -> dict:
+    """Move every tensor value in a collated batch dict onto ``device``; non-tensor
+    values (e.g. the ``"ids"`` list) pass through unchanged.
+    """
+    import torch
+
+    return {key: (value.to(device) if isinstance(value, torch.Tensor) else value)
+            for key, value in batch.items()}
 
 
 # --------------------------------------------------------------------------- #

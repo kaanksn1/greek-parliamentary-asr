@@ -99,6 +99,83 @@ class WaveformTests(unittest.TestCase):
         self.assertLess(resampled.shape[0], waveform.shape[0])
         self.assertEqual(path.read_bytes(), before)
 
+    @staticmethod
+    def _write_wav(path: Path, *, sample_width: int, sample_rate: int, samples: list[int]) -> None:
+        import struct
+        import wave
+
+        codes = {2: "h", 4: "i"}
+        with wave.open(str(path), "wb") as handle:
+            handle.setnchannels(1)
+            handle.setsampwidth(sample_width)
+            handle.setframerate(sample_rate)
+            handle.writeframes(struct.pack(f"<{len(samples)}{codes[sample_width]}", *samples))
+
+    def test_pcm32_is_decoded_at_its_real_32_bit_width_not_misread_as_int16(self):
+        """Regression for the CSS10 bug: a 32-bit PCM WAV was previously decoded
+        as int16, doubling the apparent frame count and corrupting the amplitude
+        (docs/reviews/ADNAN_0437631_GPU.json "P1 - CSS10 PCM32 yanlış çözülüyor").
+        """
+        import torch
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "pcm32.wav"
+            samples = [0, 2 ** 30, -(2 ** 30), 2 ** 31 - 1]
+            self._write_wav(path, sample_width=4, sample_rate=16000, samples=samples)
+            before = path.read_bytes()
+            waveform = common.load_waveform(path, target_sample_rate=16000)
+            self.assertEqual(path.read_bytes(), before)  # source bytes never rewritten
+        self.assertEqual(waveform.numel(), len(samples))  # not 2x from a wrong 16-bit read
+        expected = torch.tensor([x / 2 ** 31 for x in samples], dtype=torch.float32)
+        self.assertTrue(torch.allclose(waveform, expected, atol=1e-6))
+
+    def test_pcm32_resamples_in_memory_without_touching_the_source_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "pcm32.wav"
+            self._write_wav(path, sample_width=4, sample_rate=16000,
+                            samples=[0, 2 ** 29, -(2 ** 29), 2 ** 28, -(2 ** 28), 100, -100, 2 ** 30])
+            before = path.read_bytes()
+            full_rate = common.load_waveform(path, target_sample_rate=16000)
+            resampled = common.load_waveform(path, target_sample_rate=8000)
+            self.assertEqual(path.read_bytes(), before)
+        self.assertLess(resampled.shape[0], full_rate.shape[0])
+
+    def test_unsupported_sample_width_raises_a_clear_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "pcm24.wav"
+            # 24-bit PCM: stdlib `wave` will happily write this width, but
+            # load_waveform must refuse to guess a scale for it.
+            with __import__("wave").open(str(path), "wb") as handle:
+                handle.setnchannels(1)
+                handle.setsampwidth(3)
+                handle.setframerate(16000)
+                handle.writeframes(b"\x00\x00\x00" * 4)
+            with self.assertRaisesRegex(ValueError, "unsupported PCM sample width"):
+                common.load_waveform(path, target_sample_rate=16000)
+
+    def test_non_pcm_wav_raises_a_clear_error_instead_of_silent_misdecoding(self):
+        import struct
+        import wave
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "float.wav"
+            # Hand-build a minimal WAVE_FORMAT_IEEE_FLOAT (format tag 3) header,
+            # since the stdlib `wave` module cannot write this format itself.
+            data = struct.pack("<4f", 0.0, 0.5, -0.5, 1.0)
+            fmt_chunk = struct.pack("<HHIIHH", 3, 1, 16000, 16000 * 4, 4, 32)
+            with path.open("wb") as stream:
+                stream.write(b"RIFF")
+                stream.write(struct.pack("<I", 4 + 8 + len(fmt_chunk) + 8 + len(data)))
+                stream.write(b"WAVE")
+                stream.write(b"fmt ")
+                stream.write(struct.pack("<I", len(fmt_chunk)))
+                stream.write(fmt_chunk)
+                stream.write(b"data")
+                stream.write(struct.pack("<I", len(data)))
+                stream.write(data)
+            with self.assertRaisesRegex(ValueError, "unsupported or malformed WAV|expected uncompressed PCM"):
+                common.load_waveform(path, target_sample_rate=16000)
+
 
 class VocabularyTests(unittest.TestCase):
     def test_vocab_is_learned_only_from_given_references_and_round_trips(self):
@@ -129,6 +206,62 @@ class PaddingTests(unittest.TestCase):
         self.assertTrue(torch.all(padded[2, 1:] == 0))
         mask = common.padding_mask(lengths, 5)
         self.assertEqual(mask[2].tolist(), [True, False, False, False, False])
+
+    def test_padding_mask_is_built_on_the_lengths_tensor_device_not_cpu_by_default(self):
+        """Regression for the GPU pilot crash: a CPU-only torch.arange compared
+        against a GPU-resident lengths tensor raised "Expected all tensors to be
+        on the same device" (docs/reviews/ADNAN_0437631_GPU.json finding 2). No
+        real GPU is required to test the device *contract*: torch's "meta" device
+        (shape-only, no data) exercises the exact same device-mismatch code path.
+        """
+        import torch
+
+        meta_lengths = torch.tensor([2, 4], device="meta")
+        mask = common.padding_mask(meta_lengths, 4)
+        self.assertEqual(mask.device.type, "meta")
+        self.assertEqual(mask.shape, (2, 4))
+
+
+@unittest.skipUnless(_TORCH_AVAILABLE, _SKIP_REASON)
+class DeviceSelectionTests(unittest.TestCase):
+    def test_cpu_is_always_accepted(self):
+        device = common.resolve_device("cpu")
+        self.assertEqual(device.type, "cpu")
+
+    def test_requesting_an_unavailable_cuda_device_raises_instead_of_falling_back(self):
+        import torch
+
+        if torch.cuda.is_available():
+            raise unittest.SkipTest("this machine has a real CUDA/ROCm device; "
+                                    "the no-GPU error path cannot be exercised here")
+        with self.assertRaisesRegex(RuntimeError, "unavailable"):
+            common.resolve_device("cuda")
+
+    def test_move_batch_to_device_only_touches_tensor_values(self):
+        import torch
+
+        batch = {"ids": ["a", "b"], "features": torch.zeros(2, 3), "feature_lengths": torch.tensor([3, 3])}
+        moved = common.move_batch_to_device(batch, torch.device("meta"))
+        self.assertEqual(moved["ids"], ["a", "b"])
+        self.assertEqual(moved["features"].device.type, "meta")
+        self.assertEqual(moved["feature_lengths"].device.type, "meta")
+
+    def test_checkpoint_loads_with_map_location_regardless_of_training_device(self):
+        """The checkpoint itself must not pin a training-time device: saving
+        a model's state and loading it back must work even when the simulated
+        'training device' differs from the load-time device.
+        """
+        import torch
+        import torch.nn as nn
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "checkpoint.pt"
+            model = nn.Linear(4, 2)
+            vocab = common.build_char_vocabulary(["αβ"], specials=[common.PAD])
+            common.save_checkpoint(path, model=model, optimizer=None, scheduler=None,
+                                   step=1, config={"device": "meta"}, vocab=vocab)
+            checkpoint = common.load_checkpoint(path)
+        self.assertTrue(all(tensor.device.type == "cpu" for tensor in checkpoint["model_state"].values()))
 
 
 class PredictionWriterTests(unittest.TestCase):
