@@ -3,5 +3,5 @@ __pycache__/
 .venv*/
 outputs/
 .cache/
-models/
+/models/
 *.partial.jsonl
