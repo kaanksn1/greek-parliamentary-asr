@@ -11,7 +11,6 @@ import platform
 import re
 import subprocess
 import time
-import wave
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -89,15 +88,15 @@ def load_manifest(path: Path, project_root: Path, split: str) -> list[dict[str, 
         if (type(duration) not in (float, int) or not math.isfinite(duration) or duration <= 0
                 or abs(duration - row["num_frames"] / row["sampling_rate"]) > 0.001):
             raise ValueError(f"invalid duration: {identifier}")
-        with wave.open(str(audio), "rb") as wav:
-            if ((wav.getframerate(), wav.getnchannels(), wav.getnframes()) !=
-                    (row["sampling_rate"], row["channels"], row["num_frames"])):
-                raise ValueError(f"WAV header disagrees with manifest: {identifier}")
-            if wav.getcomptype() != "NONE":
-                raise ValueError(f"manifest expects uncompressed WAV: {identifier}")
-            payload = wav.readframes(wav.getnframes())
-            if len(payload) != wav.getnframes() * wav.getnchannels() * wav.getsampwidth():
-                raise ValueError(f"truncated WAV payload: {identifier}")
+        from greek_asr.audio import read_wav
+        wav = read_wav(audio)
+        if ((wav.sampling_rate, wav.channels, wav.num_frames) !=
+                (row["sampling_rate"], row["channels"], row["num_frames"])):
+            raise ValueError(f"WAV header disagrees with manifest: {identifier}")
+        # Header/hash validation is shared by all model input pipelines. Float
+        # recordings also need a finite-amplitude check before any model load.
+        if wav.format_tag == 3:
+            wav.mono_float32()
         # Whitelist inputs; even an accidental reference field is never passed to a backend.
         records.append({"id": identifier, "audio": audio, "audio_sha256": expected_hash,
                         "duration_seconds": float(duration)})
@@ -175,7 +174,8 @@ def run(*, manifest: Path, backend_name: str, split: str, output: Path,
         "training_performed": False, "references_used_as_model_input": False,
         "wer_cer": None, "completed_records": 0,
         "code_sha256": {str(p.relative_to(ROOT)).replace("\\", "/"): sha256(p)
-                        for p in (Path(__file__), *sorted((ROOT / "greek_asr/pretrained").glob("*.py")))},
+                        for p in (Path(__file__), ROOT / "greek_asr/audio.py",
+                                  *sorted((ROOT / "greek_asr/pretrained").glob("*.py")))},
     }
     if not module_path.startswith("greek_asr.pretrained."):
         backend_files = [ROOT / (module_path.replace(".", "/") + ".py"),

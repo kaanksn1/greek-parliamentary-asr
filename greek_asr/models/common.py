@@ -76,49 +76,19 @@ def load_utterances(manifest_path: Path, references_path: Path, *,
 
 
 def load_waveform(path: Path, *, target_sample_rate: int) -> "torch.Tensor":
-    """Decode original PCM16/PCM32 WAV bytes and resample only in memory; the source file is never rewritten.
+    """Decode original PCM16/PCM32/IEEE float32; resample only in memory.
 
-    Reads via the stdlib ``wave`` module (matching greek_asr.pretrained.whisper's
-    ``_read_pcm16`` for the 16-bit case) instead of ``torchaudio.load``, which
-    requires the separate ``torchcodec`` package in this torchaudio version.
-
-    Both 16-bit (HParl) and 32-bit (CSS10) integer PCM payloads are decoded at
-    their real sample width -- a 32-bit file is never misread as int16 (that
-    bug doubled CSS10's apparent frame count and corrupted its amplitude; see
-    docs/reviews/ADNAN_0437631_GPU.json "P1 - CSS10 PCM32 yanlış çözülüyor").
-    No new dependency is added: the stdlib ``wave`` module already covers both
-    widths present in the corpus. Any other format (compressed WAV, IEEE-float
-    PCM, or an unsupported sample width) raises a clear error instead of being
-    silently misread.
+    The owner's shared input-contract fix distinguishes the actual CSS10
+    format tag 3 from integer PCM32. No model architecture is changed.
     """
-    import wave
-
     import torch
     import torchaudio
+    from greek_asr.audio import read_wav
 
-    try:
-        with wave.open(str(path), "rb") as handle:
-            if handle.getcomptype() != "NONE":
-                raise ValueError(f"{path}: expected uncompressed PCM WAV, found compression {handle.getcomptype()!r}")
-            if handle.getnchannels() != 1:
-                raise ValueError(f"{path}: expected mono audio, found {handle.getnchannels()} channels")
-            sample_width = handle.getsampwidth()
-            sample_rate, frames = handle.getframerate(), handle.getnframes()
-            pcm = handle.readframes(frames)
-    except wave.Error as error:
-        raise ValueError(f"{path}: unsupported or malformed WAV file: {error}") from error
-    if len(pcm) != frames * sample_width:
-        raise ValueError(f"{path}: truncated WAV payload")
-    if sample_width == 2:
-        dtype, full_scale = torch.int16, 32768.0
-    elif sample_width == 4:
-        dtype, full_scale = torch.int32, 2147483648.0
-    else:
-        raise ValueError(f"{path}: unsupported PCM sample width ({sample_width * 8}-bit); "
-                         "only 16-bit and 32-bit integer PCM are decoded")
-    waveform = torch.frombuffer(bytearray(pcm), dtype=dtype).to(torch.float32) / full_scale
-    if sample_rate != target_sample_rate:
-        waveform = torchaudio.functional.resample(waveform, sample_rate, target_sample_rate)
+    audio = read_wav(path)
+    waveform = torch.from_numpy(audio.mono_float32())
+    if audio.sampling_rate != target_sample_rate:
+        waveform = torchaudio.functional.resample(waveform, audio.sampling_rate, target_sample_rate)
     return waveform
 
 
@@ -474,7 +444,8 @@ def git_commit_hash(project_root: Path) -> str | None:
 
 
 def code_file_hashes(*paths: Path) -> dict[str, str]:
-    return {path.name: hash_file(path) for path in paths}
+    shared_audio = Path(__file__).resolve().parents[1] / "audio.py"
+    return {path.name: hash_file(path) for path in (*paths, shared_audio)}
 
 
 def manifest_source_breakdown(manifest_path: Path) -> dict[str, dict[str, float]]:
