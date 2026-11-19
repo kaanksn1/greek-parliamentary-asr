@@ -33,9 +33,12 @@ the parliamentary test. Samed submitted freeze metadata in PR #2; the review
 verified that it has not changed since its initial commit. Full source audio
 delivery/independent audio-byte verification are still pending. Review at
 `e5aa488` verified the committed original Kaldi/CSS10 text metadata and the
-earlier reporting corrections. PR #5 at `0437631` has verified PCM32, GPU and
-Whisper-prefix defects; do not treat passing CPU tests as full-training readiness.
-See `docs/reviews/PR2_PR5_FOLLOWUP_TR.md`. Model corrections remain Adnan's work.
+earlier reporting corrections. PR #5's former PCM32, GPU and Whisper-prefix
+blockers at `0437631` were fixed in `0c13ce1`: 114 tests and all three real
+train-pilot GPU checks passed; attention/RNN-T actual CLI checks also passed.
+P2 edge handling and config/documentation corrections remain in
+`docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md`. Model corrections remain Adnan's work.
+Passing these fixtures does not establish full-data training feasibility.
 
 Freeze and commit the final model/settings/scoring protocol separately, before
 test inference/scoring. Do not tune from test. The two further professor
