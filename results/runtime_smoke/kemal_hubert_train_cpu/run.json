@@ -2,7 +2,7 @@
   "schema": "greek-asr-inference-v1",
   "status": "complete",
   "purpose": "runtime-smoke",
-  "created_utc": "2026-11-19T19:42:08.849322+00:00",
+  "created_utc": "2026-11-19T19:54:00.337543+00:00",
   "backend": "hubert",
   "model": {
     "model_id": "ntinouldinho/hubert_greek_6gram",
@@ -34,11 +34,11 @@
     "greek_asr/pretrained/nemo.py": "84a7f453ac89214e35f73ba264c2d12a4ddea1ad0882c5e4fc4f80597cb4b519",
     "greek_asr/pretrained/qwen.py": "865c57e27b9b41acbcc693458cb15bfc9c354c03d8bf050b4a8a0a42814c74ad",
     "greek_asr/pretrained/whisper.py": "98c7df74f088102b8cba6d2ae5b16f7c08e9d4007bc71de61aeeb49770d91cfa",
-    "greek_asr/models/hubert.py": "d4886f33b7f400496c06964692fb2b27712d0b309aa7e145b2b40acae2352217",
+    "greek_asr/models/hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
     "greek_asr/models/common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
     "greek_asr/models/ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
   },
-  "download_and_load_seconds": 2.2842682087793946,
+  "download_and_load_seconds": 1.8636219161562622,
   "settings": {
     "model_class": "HubertForCTC",
     "model": "ntinouldinho/hubert_greek_6gram@e89272763ec7320f5cf57638dfdedc3ecaa1ce86",
@@ -55,7 +55,7 @@
     "long_audio": "whole utterance in one forward pass, no truncation",
     "reference_or_context_prompt": false
   },
-  "inference_seconds_including_output_io": 0.8138504577800632,
+  "inference_seconds_including_output_io": 0.7721019168384373,
   "predictions_sha256": "7baf908f4d590a57a0ac730065e6305715eaa0c02681d51ff2bab616f32d4a66",
   "environment": {
     "python": "3.14.2",

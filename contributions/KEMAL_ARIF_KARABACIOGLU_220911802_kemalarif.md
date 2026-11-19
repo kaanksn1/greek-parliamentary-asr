@@ -50,11 +50,11 @@ inference has been run yet, so there are no WER/CER results.
 
 ## Configs, tests and documentation
 
-- `configs/kemal/` (GMM-HMM full and measurement configs, CTC, HuBERT-CTC); CTC and
-  HuBERT budgets stay `null` until measured.
-- 40 new tests in `tests/test_models_gmm_hmm.py`, `tests/test_models_ctc.py` and
+- `configs/kemal/`: full and small-budget measurement configs for GMM-HMM, CTC and
+  HuBERT-CTC; the full CTC and HuBERT budgets stay `null` until measured.
+- 45 new tests in `tests/test_models_gmm_hmm.py`, `tests/test_models_ctc.py` and
   `tests/test_models_wav2vec_hubert.py`. Locally (macOS, CPU Torch 2.9.0) the full
-  suite ran 159 tests, all passed, none skipped. No GPU check was possible locally.
+  suite ran 164 tests, all passed, none skipped. No GPU check was possible locally.
 - Ran the real wav2vec and published HuBERT checkpoints on the three train-pilot
   clips on my CPU through the shared runner: `results/runtime_smoke/kemal_*_train_cpu/`.
 - `docs/KEMAL_BASELINES.md`, plus the related rows in `README.md` and `docs/BASELINES.md`.

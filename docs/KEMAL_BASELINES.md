@@ -8,8 +8,8 @@ are central on Serdar's RX 7800 XT / 32 GB machine.
 
 | Family | Implementation | Provenance | Ready | Pending (central) |
 |---|---|---|---|---|
-| MFCC + GMM-HMM | `greek_asr/models/gmm_hmm.py` | our implementation + training of a standard method | train, dev tuning, predict, 12 tests, pilot train→predict | budget measurement, full train, dev tuning, dev/test predictions |
-| Plain CTC | `greek_asr/models/ctc.py` | our implementation + training from scratch | train, predict, 17 tests (shared CTC helpers included), pilot train→predict | `max_steps` from a measured pilot, full train, predictions |
+| MFCC + GMM-HMM | `greek_asr/models/gmm_hmm.py` | our implementation + training of a standard method | train, dev tuning, predict, 13 tests, pilot train→predict | budget measurement, full train, dev tuning, dev/test predictions |
+| Plain CTC | `greek_asr/models/ctc.py` | our implementation + training from scratch | train, predict, 20 tests (shared CTC helpers and config checks included), pilot train→predict | `max_steps` from a measured pilot, full train, predictions |
 | wav2vec 2.0 + CTC head | `greek_asr/models/wav2vec.py` via `greek_asr.infer --backend wav2vec` | published Greek checkpoint, no training by us | real checkpoint transcribed the 3 train-pilot clips (CPU) | GPU dev/test inference |
 | HuBERT + CTC head (published) | `greek_asr/models/hubert.py` via `greek_asr.infer --backend hubert` | published checkpoint, no training by us | real checkpoint transcribed the 3 train-pilot clips (CPU) | licensing decision (no license/model card), then GPU inference |
 | HuBERT + CTC head (own training) | `greek_asr/models/hubert.py train/predict` | our CTC fine-tuning of `utter-project/mHuBERT-147` | train, predict, tests with a tiny local encoder | budget measurement, full train, predictions; report as our training |
@@ -126,7 +126,7 @@ SpecAugment, Park et al., 2019). No pretrained weights; separate from wav2vec/Hu
   is given in the config or with `--max-steps` (recorded as `max_steps_source`).
 
 ```bash
-"$P3_PYTHON" -m greek_asr.models.ctc train --config configs/kemal/ctc.json --output outputs/kemal_ctc_measure --device cuda --max-steps 200
+"$P3_PYTHON" -m greek_asr.models.ctc train --config configs/kemal/ctc_measure.json --output outputs/kemal_ctc_measure --device cuda
 "$P3_PYTHON" -m greek_asr.models.ctc train --config configs/kemal/ctc.json --output outputs/kemal_ctc_hparl --device cuda --max-steps <measured>
 "$P3_PYTHON" -m greek_asr.models.ctc predict --checkpoint outputs/kemal_ctc_hparl/checkpoint.best.pt --manifest data/manifests/dev.jsonl --split dev --output outputs/kemal_ctc_dev --device cuda --batch-size 16
 ```
@@ -191,7 +191,7 @@ and budget rules as plain CTC. Checkpoints are Hugging Face directories
 The encoder license is non-commercial (course use).
 
 ```bash
-"$P3_PYTHON" -m greek_asr.models.hubert train --config configs/kemal/hubert_ctc.json --output outputs/kemal_hubert_ctc_measure --device cuda --max-steps 50
+"$P3_PYTHON" -m greek_asr.models.hubert train --config configs/kemal/hubert_ctc_measure.json --output outputs/kemal_hubert_ctc_measure --device cuda
 "$P3_PYTHON" -m greek_asr.models.hubert train --config configs/kemal/hubert_ctc.json --output outputs/kemal_hubert_ctc_hparl --device cuda --max-steps <measured>
 "$P3_PYTHON" -m greek_asr.models.hubert predict --checkpoint outputs/kemal_hubert_ctc_hparl/checkpoint-best --manifest data/manifests/dev.jsonl --split dev --output outputs/kemal_hubert_ctc_dev --device cuda --batch-size 8
 ```
@@ -207,9 +207,11 @@ point refuses before writing outputs.
 
 - GMM-HMM: feature extraction time and peak RAM, seconds per iteration
   (`run.json` → `iterations`), tuning and per-utterance decode time; CPU vs `cuda`.
-- CTC: seconds per update and peak VRAM at batch 32; one epoch is about 2,380
-  updates at batch 32. Choose `max_steps` from this.
-- HuBERT own training: seconds per update and VRAM at batch 8 × 4.
+- CTC (`configs/kemal/ctc_measure.json`, 200 updates): `seconds_per_update_excluding_dev`,
+  `dev_eval_seconds` and peak VRAM in `run.json`; one epoch is about 2,380 updates at
+  batch 32. Choose `max_steps` for `ctc.json` from this.
+- HuBERT own training (`configs/kemal/hubert_ctc_measure.json`, 50 full fine-tuning
+  updates at batch 8 × 4): the same `run.json` fields.
 - wav2vec / published HuBERT: dev inference time and peak VRAM (both large models).
 
 Local indicative timings (macOS CPU, synthetic tensors, not the central machine):
@@ -219,13 +221,14 @@ batched forced alignment of 160 utterances × 470 frames took 0.21 s.
 
 ## Checks actually run (local)
 
-- `python -m unittest discover -s tests -v`: 159 tests, all passed, 0 skipped
-  (local CPU environment above). Without torch installed, 64 pass and 95 skip.
-  New tests: `tests/test_models_gmm_hmm.py` (12), `tests/test_models_ctc.py` (17),
-  `tests/test_models_wav2vec_hubert.py` (11). They cover CTC blank/repeat collapse,
+- `python -m unittest discover -s tests -v`: 164 tests, all passed, 0 skipped
+  (local CPU environment above). Without torch installed, 65 pass and 99 skip.
+  New tests: `tests/test_models_gmm_hmm.py` (13), `tests/test_models_ctc.py` (20),
+  `tests/test_models_wav2vec_hubert.py` (12). They cover CTC blank/repeat collapse,
   valid-length decoding, feasibility policies, padding invariance, finite gradients
   and real parameter updates, nonfinite-loss failure, checkpoint reload, missing
-  budget, empty outputs, failed-run partial files, test-split refusal, exact
+  budget, missing/extra reference IDs, a dropped prediction failing the run, empty
+  outputs, failed-run partial files, test-split refusal, measurement-config budgets, exact
   synthetic forced alignment/decoding, LM normalization, mixture EM/splitting,
   backend lock selection and frozen CNN parameters.
 - Real published checkpoints through the shared runner on the three train-pilot

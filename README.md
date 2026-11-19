@@ -270,7 +270,7 @@ no WER/CER and no dev/test inference.
 | `greek_asr/models/` | Adnan's attention (hybrid CTC/attention), RNN-T and Whisper fine-tuning code; see `docs/SEQUENCE_MODELS.md` |
 | `greek_asr/models/gmm_hmm.py`, `ctc.py`, `wav2vec.py`, `hubert.py`, `ctc_utils.py` | Kemal's GMM-HMM, plain CTC, published wav2vec/HuBERT CTC inference, HuBERT-CTC training and shared CTC helpers; see `docs/KEMAL_BASELINES.md` |
 | `configs/sequence/` | Adnan's method/Whisper-condition configs; `max_steps` is `null` pending Serdar's GPU pilot measurement |
-| `configs/kemal/` | Kemal's GMM-HMM (full and measurement), plain CTC and HuBERT-CTC configs; CTC/HuBERT `max_steps` is `null` until measured |
+| `configs/kemal/` | Kemal's GMM-HMM, plain CTC and HuBERT-CTC configs, each with a separate small-budget `*_measure.json`; full CTC/HuBERT `max_steps` is `null` until measured |
 | `configs/kemal_model_sources.json` | Pins and model-card findings for checkpoints found after the historical lock (Greek HuBERT CTC candidate, mHuBERT-147) and rejected candidates |
 | `docs/KEMAL_BASELINES.md` | Kemal's methods, HuBERT checkpoint search, commands, data/test boundary, measurements needed and checks run |
 | `tests/` | Scoring, real-pilot lineage, audio/manifest/cohort, adapter-contract, sequence-model and Kemal's GMM-HMM/CTC/wav2vec/HuBERT tests |

@@ -2,7 +2,7 @@
   "schema": "greek-asr-inference-v1",
   "status": "complete",
   "purpose": "runtime-smoke",
-  "created_utc": "2026-11-19T19:42:01.485156+00:00",
+  "created_utc": "2026-11-19T19:53:56.333628+00:00",
   "backend": "wav2vec",
   "model": {
     "model_id": "lighteternal/wav2vec2-large-xlsr-53-greek",
@@ -34,7 +34,7 @@
     "greek_asr/models/common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
     "greek_asr/models/ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
   },
-  "download_and_load_seconds": 5.48069137474522,
+  "download_and_load_seconds": 2.1202509589493275,
   "settings": {
     "model_class": "Wav2Vec2ForCTC",
     "model": "lighteternal/wav2vec2-large-xlsr-53-greek@c5c82840b689b827a2029deefe82670c7c5809a0",
@@ -51,7 +51,7 @@
     "long_audio": "whole utterance in one forward pass, no truncation",
     "reference_or_context_prompt": false
   },
-  "inference_seconds_including_output_io": 0.8175940420478582,
+  "inference_seconds_including_output_io": 0.7933898749761283,
   "predictions_sha256": "6047360b6e3795419765fad1374f51f68f8487949ad385959243adbb77887ae8",
   "environment": {
     "python": "3.14.2",
