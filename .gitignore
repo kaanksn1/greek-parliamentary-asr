@@ -5,3 +5,9 @@ outputs/
 .cache/
 /models/
 *.partial.jsonl
+
+# Data pipeline: the 11.9 GB source archive and partial downloads stay local;
+# extracted raw/clean data under data/raw and data/manifests are NOT ignored.
+data/downloads/
+data/raw/**/*.partial
+data/**/*.tmp

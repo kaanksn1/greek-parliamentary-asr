@@ -1,0 +1,36 @@
+{
+  "note": "Decision record for putting raw/clean data into this repository. Sizes are computed by `python -m greek_asr.data delivery-plan` from the recorded archive listings. Update a status only when it is true in the pushed repository; never buy storage.",
+  "free_lfs_storage_gib": 10.0,
+  "groups": {
+    "hparl_source_metadata": {
+      "method": "plain Git, `-text` so bytes are never converted",
+      "status": "in_repo",
+      "detail": "Original Kaldi text, utt2spk, spk2utt, wav.scp and spk2gender of all three official splits; `verify-source-metadata` checks every byte hash on a clean clone."
+    },
+    "css10_source_metadata": {
+      "method": "plain Git, `-text`",
+      "status": "in_repo",
+      "detail": "The producer transcript.txt that the manifests use (el/transcript.txt). The second top-level copy is byte-identical (hash-checked) and listed in archive_members.tsv."
+    },
+    "hparl_test_wav": {
+      "method": "Git LFS",
+      "status": "in_repo",
+      "detail": "Repository owner approved the upload on 18 November 2026. Clean-clone check: `git lfs pull`, then `verify-freeze` with audio."
+    },
+    "hparl_dev_wav": {
+      "method": "Git LFS",
+      "status": "in_repo",
+      "detail": "Same upload as the test audio. Clean-clone check: `verify --only dev.jsonl`."
+    },
+    "css10_used_wav": {
+      "method": "Git LFS",
+      "status": "in_repo",
+      "detail": "Only the copy the manifests reference (el/); the byte-identical second copy is not duplicated. Clean-clone check: `verify --only css10_el_train.jsonl`."
+    },
+    "hparl_train_wav": {
+      "method": "Git LFS, subset actually used",
+      "status": "pending",
+      "detail": "Full train (10.68 GiB) plus the delivered audio exceeds the free LFS storage. Only the training subset that is actually used will be delivered: chosen with `python -m greek_asr.data subset` (fixed seed, whole sessions) after Serdar's measured GPU budget. Not delivered yet."
+    }
+  }
+}

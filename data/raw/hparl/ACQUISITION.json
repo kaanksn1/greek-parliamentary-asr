@@ -1,0 +1,21 @@
+{
+  "archive_bytes": 11887118613,
+  "archive_file": "hparl.zip",
+  "archive_sha256": "676ba16a70c44001d364ba190610c477e900df9356cb86f081df6da19b8b1108",
+  "archive_url": "https://inventory.clarin.gr/storage/",
+  "catalog_record_sha256": "32821ba47c91a4c6a6005e5dd4a2c61a3f893806f5dc1c9543ff1da5dd01c0c1",
+  "dataset": {
+    "license": "CC-BY-NC-4.0",
+    "name": "HParl: Hellenic Parliamentary Speech Corpus",
+    "persistent_identifier": "http://hdl.handle.net/11500/CLARIN-EL-0000-0000-7665-A",
+    "record": "https://inventory.clarin.gr/corpus/1602",
+    "version": "1.0.0"
+  },
+  "downloaded_utc": "2026-11-18T09:13:45+00:00",
+  "request_headers": {
+    "ELG-RESOURCE-DISTRIBUTION-ID": "1024",
+    "ELG-RESOURCE-ID": "1602",
+    "filename": "1b1c180978d84429b8f0df18895d946c/2e192bae4738437a8e22519f9fc25817/hparl.zip",
+    "scope": "private"
+  }
+}

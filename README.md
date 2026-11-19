@@ -68,7 +68,8 @@ result exists yet; representative real-data measurements remain necessary.
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports
 about 120 hours, with an official session-based train/development/test split.
-Those are source-reported sizes, not measurements from a completed local download.
+Samed's local run measured exactly these split durations; the generated
+numbers are in [DATA_REPORT_TR.md](docs/DATA_REPORT_TR.md).
 The planned additional training source is CSS10 Greek v1, a single-speaker
 audiobook corpus. The producer reports `04:08:14`; its distribution metadata
 lists CC0. Combined source availability is `123:55:56` (about 124 hours), not
@@ -84,6 +85,8 @@ No full benchmark result or training improvement is claimed. PR #2 contains
 full-corpus metadata, cleaning logs and an early test freeze, but the referenced
 full audio is absent from its checkout. Owner verification therefore covers
 metadata, code and the existing three training WAVs, not the full audio corpus.
+After that review, the test, dev and CSS10 audio are delivered through Git LFS.
+The train audio is still pending (see *Data status* below).
 The five-member ownership plan is now assigned in `docs/TEAM.md`. Full runs
 will be central on Serdar's PC and Ozan will present. The user authorized
 owner implementation on 18 November. Write collaborator invitations were sent
@@ -127,6 +130,55 @@ The next data owner is Samed. His detailed, copyable task prompt is
 [HANDOFF_SAMED_TR.md](docs/HANDOFF_SAMED_TR.md); the exact audio/reference/output
 schema is [DATA_CONTRACT.md](docs/DATA_CONTRACT.md). Data/model work remains
 with the assigned members; the integration starter is not their completed work.
+
+## Data pipeline (Samed)
+
+`python -m greek_asr.data` acquires HParl 1.0.0 and CSS10 Greek, freezes the
+original HParl test **before** any train/dev cleaning, audits train/dev/CSS10,
+applies the versioned cleaning policy with a per-record log and writes the
+HParl-only and HParl + CSS10 training manifests. Design, rules and the run
+order are in [DATA_PIPELINE_TR.md](docs/DATA_PIPELINE_TR.md); the numbers are
+generated into `docs/DATA_REPORT_TR.md` after a real run.
+
+```bash
+pip install -r requirements-data.txt
+python -m greek_asr.data hparl-download   # resumable, ~11.9 GB
+python -m greek_asr.data prepare-freeze   # extract, raw manifests, test freeze (commit separately)
+python -m greek_asr.data prepare-clean --css10-archive <kaggle zip>
+python -m greek_asr.data verify
+```
+
+### Split used and speaker overlap
+
+We use the **official HParl 1.0.0 session-based train/dev/test split**. It is
+**not speaker-disjoint**: most test speakers also speak in train (other
+sessions); session overlap between splits is zero. The professor's email
+(How 1) permits a documented official split, so the frozen test is kept and not
+resplit. Results are therefore **not** presented as generalization to unseen
+speakers. Speakers, utterances, hours and sessions per split and per training
+condition, test examples whose speaker occurs in training, and literal
+(untransformed) test-sentence matches in each actual training target are
+generated in `docs/DATA_REPORT_TR.md` (section 4b) and
+`data/clean/cohort_summary.json`; `python -m greek_asr.data split-summary`
+recomputes them from the manifests without audio. CSS10 has no per-utterance
+speaker/recording IDs (one reader and one book per its producer); those
+records are counted as unknown, not invented.
+
+### Data status
+
+| Part | Status |
+|---|---|
+| Acquisition, test freeze (`d28c97f`), audit and cleaning | Run on Samed's machine with the full corpus |
+| Code, tests, manifests, clean references, cleaning log, audit, source records | In this repository |
+| Original Kaldi metadata and CSS10 transcript | In this repository, byte-checked by `verify-source-metadata` |
+| Source audio (test/dev/CSS10, ~3.4 GiB) | In this repository via Git LFS (owner approved on 18 Nov 2026) |
+| Source audio (train, 10.68 GiB) | Pending: full train plus the rest exceeds the free LFS storage; only the training subset actually used (`subset`, fixed seed, whole sessions) will be delivered once Serdar's GPU budget is measured |
+| Clean-clone check of delivered audio | `git lfs pull`, then `verify-freeze` (with audio) and `verify --only dev.jsonl test.jsonl css10_el_train.jsonl`; full `verify` needs the train audio |
+
+`docs/DATA_REPORT_TR.md` is the generated data report (sources, freeze, raw
+inventory, audit flags, cleaning results with examples, split/speaker and
+literal overlap, delivery sizes). It is produced by
+`python -m greek_asr.data report` and must not be edited by hand.
 
 The scorer accepts JSONL references (`id`, `reference`) and predictions (`id`,
 `text`). Full ID equality is required. It reports corpus WER/CER from edit
@@ -305,6 +357,14 @@ no WER/CER and no dev/test inference.
 | `docs/TEACHER_UPDATES_2026-11-18_TR.md` | New speaker/group split rule, official-split exception and exact baseline/scoring requirements |
 | `docs/reviews/` | Versioned PR #2/#5/#9 reviews, source/licensing decisions and metadata/GPU/CLI/math evidence; no model benchmark |
 | `results/runtime_smoke/` | Real train-pilot predictions and runtime record; no benchmark scores |
+| `greek_asr/data/` | Samed's data pipeline: acquisition, test freeze, audit, cleaning, report, delivery shards |
+| `configs/data_cleaning.json` | Versioned train/dev/CSS10 cleaning policy and flag thresholds |
+| `docs/DATA_PIPELINE_TR.md` | Data pipeline design, rule justifications and run order |
+| `docs/DATA_REPORT_TR.md` | Generated data report (numbers only from pipeline outputs; regenerate, never hand-edit) |
+| `configs/data_delivery.json` | Decision record for how/whether each data group is delivered in the repository |
+| `data/` | Raw source records, frozen test, raw/clean manifests and references, audit and cleaning outputs (see `data/README.md`) |
+| `requirements-data.txt` | Exact data-pipeline dependency (`numpy`) |
+| `tests/test_data_pipeline.py`, `tests/data_fixtures.py` | Synthetic end-to-end data tests with known problems |
 | `contributions/` | Actual individual reports and required filename/status inventory |
 | `AGENTS.md` | Scope and test instructions for coding assistants |
 | `requirements.txt` | Dependency scope of the initial implementation |

@@ -1,0 +1,53 @@
+{
+  "archive_sha256": "cb2a923fa2d5092cab7e2509be4724b38a86fb5b8a18a519299865bc91411f17",
+  "audio_seconds": 14894.169614512472,
+  "channels": {
+    "1": 1844
+  },
+  "dataset": {
+    "audiobook": "https://librivox.org/paramythi-horis-onoma-by-penelope-delta/",
+    "kaggle_dataset_id": 30096,
+    "kaggle_ref": "bryanpark/greek-single-speaker-speech-dataset",
+    "license_declared_by_distributor": "CC0: Public Domain",
+    "name": "CSS10 Greek (Greek Single Speaker Speech Dataset)",
+    "paper": "https://arxiv.org/abs/1903.11269",
+    "planned_version": 1,
+    "producer_repository": "https://github.com/Kyubyong/css10"
+  },
+  "issue_counts": {},
+  "issues": [],
+  "manifest_records": 1844,
+  "manifest_sha256": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855",
+  "references_sha256": "6d09ee69ea3ba276f22dc93eb0dda07588b8693e067fe825dc5702cbe925bffa",
+  "sampling_rates": {
+    "22050": 1844
+  },
+  "speaker_note": "Producer reports one reader (Rapunzelina); no per-utterance speaker field is supplied, so speaker_id stays null.",
+  "texts_sha256": "cde114e709266309c274a67630d668ed372bf31c0d6823250343aa2eebde209c",
+  "transcript": "data/raw/css10_el/release/el/transcript.txt",
+  "transcript_lines": 1844,
+  "transcript_sha256": "f7fa56ae87cb55ed97ca2db5fecfa1aacce665f951939746db0a10d72d99d873",
+  "unreferenced_wav_examples": [
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0000.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0001.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0002.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0003.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0004.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0005.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0006.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0007.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0008.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0009.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0010.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0011.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0012.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0013.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0014.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0015.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0016.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0017.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0018.wav",
+    "data/raw/css10_el/release/Paramythi_horis_onoma/Paramythi_horis_onoma_0019.wav"
+  ],
+  "unreferenced_wav_files": 1844
+}
