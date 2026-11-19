@@ -74,6 +74,7 @@ The required baseline list and official-split exception are clarified in
 `TEACHER_UPDATES_2026-11-18_TR.md`; PR #2 already contains source/clean metadata
 and an early freeze, while its full audio delivery remains incomplete. PR #2
 reporting/source-metadata corrections were verified at `e5aa488`. Adnan's
-PR #5 at `0437631` passes CPU tests but fails GPU/audio/label checks; see
-`reviews/PR2_PR5_FOLLOWUP_TR.md`. Neither passing tests nor a successful
-one-step Whisper smoke establishes full training or benchmark readiness.
+PR #5's former GPU/audio/label blockers at `0437631` are fixed at `0c13ce1`;
+114 tests, three train-pilot GPU checks and attention/RNN-T CLI checks passed.
+See `reviews/ADNAN_0c13ce1_REVIEW_TR.md` for remaining P2 corrections. These
+checks do not establish full-data training feasibility or benchmark readiness.
