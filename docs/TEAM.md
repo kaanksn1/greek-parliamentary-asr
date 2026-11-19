@@ -191,3 +191,8 @@ henüz kabul edilmedi. [Kanıt ve Adnan düzeltme promptu](reviews/PR2_PR5_FOLLO
 RNN-T gerçek CLI yolları başarılı. P2 hata-yolu ve belge/config düzeltmeleri
 [yeni incelemede](reviews/ADNAN_0c13ce1_REVIEW_TR.md). Tam veri bütçesi ve bütün
 tam koşular Serdar'da kalır; pilot başarısı tam eğitim sonucu değildir.
+
+Kullanıcının sonraki açık atamasıyla Serdar kalan P2 NaN/padding/source-lock
+ve belge/config düzeltmelerini kendi commit'lerinde tamamladı; 119 test geçti.
+Adnan'ın özgün model commit'leri ve kişisel katkı dosyası korundu. Bu sınırlı
+tamamlama diğer üyelerin görevlerini veya planlanan iş yükü yüzdelerini değiştirmez.

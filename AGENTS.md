@@ -20,6 +20,14 @@ does not authorize completing teammates' implementations or personal reports.
 Do not fabricate contribution files, claim other members' work, or invent
 completed runs. Retain genuine member authorship when work is later integrated.
 
+On 19 November the user explicitly assigned the remaining PR #5 review fixes
+to the owner: Whisper nonfinite-loss handling and prediction source-lock check,
+RNN-T ignored-padding handling, and related config/documentation corrections.
+Implement these limited fixes under the owner's own commits, retaining Adnan's
+original commits and personal contribution report. Other model/data ownership
+is unchanged. This extension does not authorize full-data training or final
+test inference before the existing data/budget/protocol requirements are met.
+
 Use the professor announcements in this conversation. All standard Week 9
 methods are baselines, including advanced pretrained ASR. Own training or
 fine-tuning is reported separately from standard baseline results.
@@ -36,8 +44,10 @@ delivery/independent audio-byte verification are still pending. Review at
 earlier reporting corrections. PR #5's former PCM32, GPU and Whisper-prefix
 blockers at `0437631` were fixed in `0c13ce1`: 114 tests and all three real
 train-pilot GPU checks passed; attention/RNN-T actual CLI checks also passed.
-P2 edge handling and config/documentation corrections remain in
-`docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md`. Model corrections remain Adnan's work.
+The remaining P2 corrections in `docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md` were
+subsequently assigned to and implemented by the owner as scoped above: fail-fast
+nonfinite loss, safe ignored padding, predict source-lock and matching docs/configs.
+The final local suite passes 119 tests. Original model authorship remains Adnan's.
 Passing these fixtures does not establish full-data training feasibility.
 
 Freeze and commit the final model/settings/scoring protocol separately, before

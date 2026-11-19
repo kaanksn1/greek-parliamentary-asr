@@ -35,23 +35,22 @@ different final second produced identical extracted features; see
 docs/reviews/ADNAN_0437631_GPU.json "P2 - uzun sesi sessiz kesme"). This
 module does not implement long-audio chunking, so `_require_within_whisper_window`
 raises explicitly instead of letting that silent truncation happen; the
-reference text is never cut either way. The real HParl/HParl+CSS10 train and
-dev manifests this PR ships are already under this 30-second limit after the
+reference text is never cut either way. The HParl/HParl+CSS10 train and
+dev manifests supplied in data PR #2 are under this 30-second limit after the
 PCM32 decode fix (max 26.4s/15.1s/14.62s -- see docs/SEQUENCE_MODELS.md "Known
 limitations"), so the explicit check is not expected to fire on the current
 data; it exists so a future longer recording fails loudly instead of being
 quietly cut. This is Whisper's own architectural input window (not a
 strategy chosen here), and it is **not** the same as Serdar's unmodified
 Whisper baseline adapter's behaviour (greek_asr/pretrained/whisper.py), which
-takes the extractor's silent-truncation default as-is; see
-docs/SEQUENCE_MODELS.md for the corrected comparison. No dev/train example is
-dropped or re-split for being "hard" or long.
+disables truncation and passes an attention mask for long-form generation.
+No dev/train example is dropped or re-split for being "hard" or long.
 
 Precision: training here runs in float32 only; no AMP/mixed-precision path is
-implemented in this code yet. If Serdar enables AMP on the ROCm pilot, the
-overflow/NaN check already present in the training loop (``nonfinite_losses_skipped``)
-must be watched, and the actual precision used must be recorded in the run
-report instead of this module's current fixed ``"precision": "float32"``.
+implemented in this code yet. A nonfinite train or development loss stops
+training immediately and writes a failed run record, rather than skipping
+microbatches or selecting a nonfinite checkpoint. Any future AMP path must
+record its actual precision instead of the current fixed ``"precision": "float32"``.
 """
 from __future__ import annotations
 
@@ -70,6 +69,7 @@ from typing import Any, Callable
 from greek_asr.models import common
 
 ROOT = Path(__file__).resolve().parents[2]
+_STARTING_MODEL_ID = "openai/whisper-small"
 
 
 @dataclass(frozen=True)
@@ -97,8 +97,8 @@ class WhisperFinetuneConfig:
 
 def _validate_revision(project_root: Path, model_id: str, revision: str) -> None:
     lock = json.loads((project_root / "configs/model_sources.lock.json").read_text(encoding="utf-8-sig"))
-    matches = [row for row in lock["models"] if row["model_id"] == model_id]
-    if len(matches) != 1 or matches[0]["revision"] != revision:
+    matches = [row for row in lock["models"] if row["model_id"] == _STARTING_MODEL_ID]
+    if model_id != _STARTING_MODEL_ID or len(matches) != 1 or matches[0]["revision"] != revision:
         raise ValueError(f"{model_id}@{revision} does not match the pinned configs/model_sources.lock.json entry")
 
 
@@ -276,7 +276,7 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
     max_steps = int(config["max_steps"])
     grad_accum = int(config["gradient_accumulation_steps"])
     report: dict[str, Any] = {
-        "schema": "greek-asr-whisper-finetune-train-v1", "config": config,
+        "schema": "greek-asr-whisper-finetune-train-v1", "status": "running", "config": config,
         "model_id": config["model_id"], "revision": config["revision"], "seed": seed,
         "code_commit": common.git_commit_hash(project_root),
         "code_sha256": common.code_file_hashes(Path(__file__), ROOT / "greek_asr/models/common.py"),
@@ -294,19 +294,34 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
         # so the CSS10 sampling ratio is a recorded number, not a derived assumption.
         "train_source_breakdown": common.manifest_source_breakdown(project_root / config["train_manifest"]),
         "optimizer_updates_completed": 0, "micro_steps_completed": 0,
-        "best_dev_loss": None, "best_optimizer_update": None, "nonfinite_losses_skipped": 0,
+        "best_dev_loss": None, "best_optimizer_update": None, "nonfinite_losses_detected": 0,
         "training_seconds": None,
     }
     micro_step, optimizer_updates, best_dev_loss = 0, 0, None
     started = time.perf_counter()
+
+    def write_report(status: str, **details) -> None:
+        report.update(status=status, micro_steps_completed=micro_step,
+                      optimizer_updates_completed=optimizer_updates, best_dev_loss=best_dev_loss,
+                      training_seconds=time.perf_counter() - started, **details)
+        (output_dir / "run.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    def reject_nonfinite(loss, phase: str, ids: list[str]) -> None:
+        if bool(torch.isfinite(loss)):
+            return
+        optimizer.zero_grad(set_to_none=True)
+        report["nonfinite_losses_detected"] += 1
+        message = f"non-finite {phase} loss; training stopped at optimizer update {optimizer_updates}"
+        write_report("failed", error_type="FloatingPointError", error=message,
+                     failed_phase=phase, failed_batch_ids=list(ids))
+        raise FloatingPointError(message)
+
+    write_report("running")
     while optimizer_updates < max_steps:
         for batch in train_loader:
             outputs = model(input_features=batch["input_features"].to(device), labels=batch["labels"].to(device))
             loss = outputs.loss
-            if not torch.isfinite(loss):
-                report["nonfinite_losses_skipped"] += 1
-                optimizer.zero_grad()
-                continue
+            reject_nonfinite(loss, "train", batch["ids"])
             (loss / grad_accum).backward()
             micro_step += 1
             if micro_step % grad_accum == 0:
@@ -318,9 +333,12 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
                 if optimizer_updates % max(int(config.get("dev_eval_every", 1)), 1) == 0 or optimizer_updates >= max_steps:
                     model.eval()
                     with torch.no_grad():
-                        dev_losses = [model(input_features=dev_batch["input_features"].to(device),
-                                            labels=dev_batch["labels"].to(device)).loss.item()
-                                     for dev_batch in dev_loader]
+                        dev_losses = []
+                        for dev_batch in dev_loader:
+                            dev_loss_tensor = model(input_features=dev_batch["input_features"].to(device),
+                                                    labels=dev_batch["labels"].to(device)).loss
+                            reject_nonfinite(dev_loss_tensor, "dev", dev_batch["ids"])
+                            dev_losses.append(dev_loss_tensor.item())
                     dev_loss = sum(dev_losses) / len(dev_losses)
                     if best_dev_loss is None or dev_loss < best_dev_loss:
                         best_dev_loss, report["best_optimizer_update"] = dev_loss, optimizer_updates
@@ -329,12 +347,9 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
                     model.train()
             if optimizer_updates >= max_steps:
                 break
-    report["training_seconds"] = time.perf_counter() - started
-    report["micro_steps_completed"], report["optimizer_updates_completed"] = micro_step, optimizer_updates
-    report["best_dev_loss"] = best_dev_loss
     _save_checkpoint(output_dir / "checkpoint.last.pt", model=model, optimizer=optimizer,
                      scheduler=scheduler, step=optimizer_updates, config=config)
-    (output_dir / "run.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    write_report("complete")
     return report
 
 
@@ -368,6 +383,7 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
 
     checkpoint = _load_checkpoint(checkpoint_path)  # map_location="cpu": loads regardless of training device
     config = checkpoint["config"]
+    _validate_revision(project_root, config["model_id"], config["revision"])
     loader = model_loader or _default_model_loader
     processor, model = loader(config["model_id"], config["revision"], device=device)
     model.load_state_dict(checkpoint["model_state"])
@@ -442,7 +458,7 @@ def main(argv: list[str] | None = None) -> int:
             predict(args.checkpoint, args.manifest, project_root=args.project_root, split=args.split,
                     output_dir=args.output, device=args.device, num_beams=args.num_beams,
                     allow_test=args.allow_test, test_protocol=args.test_protocol)
-    except (ValueError, OSError, RuntimeError) as error:
+    except (ValueError, OSError, RuntimeError, FloatingPointError) as error:
         parser.exit(1, f"whisper fine-tuning {args.command} failed: {error}\n")
     return 0
 

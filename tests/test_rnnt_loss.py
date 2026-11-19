@@ -89,13 +89,55 @@ class MatchesTorchaudioCpuTests(unittest.TestCase):
 
 
 @unittest.skipUnless(_DEPS_AVAILABLE, _SKIP_REASON)
+class IgnoredPaddingTests(unittest.TestCase):
+    def test_out_of_vocabulary_padding_preserves_loss_and_gradients(self):
+        """Ignored sentinels must behave exactly like ordinary zero padding,
+        including for a sample with an empty target sequence.
+        """
+        torch.manual_seed(1911)
+        logits = torch.randn(3, 4, 4, 5, dtype=torch.float64)
+        logit_lengths = torch.tensor([4, 2, 3])
+        target_lengths = torch.tensor([3, 1, 0])
+        baseline_logits = logits.clone().requires_grad_(True)
+        baseline = pure.rnnt_loss(
+            baseline_logits, torch.tensor([[1, 2, 3], [2, 0, 0], [0, 0, 0]]),
+            logit_lengths, target_lengths, blank=0, reduction="none")
+        baseline.sum().backward()
+        self.assertTrue(torch.isfinite(baseline).all())
+        self.assertTrue(torch.isfinite(baseline_logits.grad).all())
+
+        for sentinel in (-100, 5, 2 ** 31 - 1):
+            with self.subTest(padding=sentinel):
+                padded_logits = logits.clone().requires_grad_(True)
+                targets = torch.tensor([[1, 2, 3], [2, sentinel, sentinel],
+                                        [sentinel, sentinel, sentinel]])
+                actual = pure.rnnt_loss(padded_logits, targets, logit_lengths,
+                                        target_lengths, blank=0, reduction="none")
+                actual.sum().backward()
+                self.assertTrue(torch.isfinite(actual).all())
+                self.assertTrue(torch.isfinite(padded_logits.grad).all())
+                self.assertTrue(torch.allclose(actual, baseline, atol=1e-12, rtol=0))
+                self.assertTrue(torch.allclose(padded_logits.grad, baseline_logits.grad,
+                                               atol=1e-12, rtol=0))
+
+    def test_out_of_vocabulary_real_targets_are_not_hidden_as_padding(self):
+        logits = torch.randn(2, 4, 4, 5)
+        for invalid_label in (-100, 5):
+            with self.subTest(label=invalid_label):
+                targets = torch.tensor([[1, 2, 3], [invalid_label, 0, 0]])
+                with self.assertRaises(RuntimeError):
+                    pure.rnnt_loss(logits, targets, torch.tensor([4, 2]),
+                                   torch.tensor([3, 1]), blank=0)
+
+
+@unittest.skipUnless(_DEPS_AVAILABLE, _SKIP_REASON)
 class DeviceAgnosticConstructionTests(unittest.TestCase):
     def test_runs_entirely_from_ops_available_on_meta_device(self):
         """No part of this loss depends on a backend-specific compiled kernel:
         every op it uses (log_softmax, gather, logaddexp, elementwise add/compare,
         torch.where) has a 'meta' (shape-only, backend-free) implementation.
-        This does not substitute for a real ROCm/CUDA run, but it does confirm
-        the implementation never touches a CPU-only or CUDA-only compiled op.
+        This checks shape-only execution, not real device availability,
+        backward correctness or training throughput on ROCm/CUDA hardware.
         """
         logits = torch.randn(2, 4, 3, 5, device="meta", requires_grad=True)
         targets = torch.randint(1, 5, (2, 2), device="meta")

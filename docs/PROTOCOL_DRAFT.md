@@ -67,7 +67,7 @@ The user reported the deadline as 21 November 2026, Saturday evening,
 Europe/Istanbul; the exact hour is unknown.
 Open before full runs: full data acquisition/delivery; class reservation;
 working standard recipes; full audio delivery/independent freeze verification;
-the PR #5 model-review corrections; measured data budget;
+measured data budget;
 Greek scoring policy; each baseline's working recipe. These are pending facts,
 not completed tasks. The minimum-hour question is resolved: no fixed number.
 The required baseline list and official-split exception are clarified in
@@ -76,5 +76,6 @@ and an early freeze, while its full audio delivery remains incomplete. PR #2
 reporting/source-metadata corrections were verified at `e5aa488`. Adnan's
 PR #5's former GPU/audio/label blockers at `0437631` are fixed at `0c13ce1`;
 114 tests, three train-pilot GPU checks and attention/RNN-T CLI checks passed.
-See `reviews/ADNAN_0c13ce1_REVIEW_TR.md` for remaining P2 corrections. These
-checks do not establish full-data training feasibility or benchmark readiness.
+The owner completed the subsequent P2 loss/padding/source-lock and documentation
+corrections after the user's explicit assignment; all 119 local tests pass.
+These checks do not establish full-data training feasibility or benchmark readiness.

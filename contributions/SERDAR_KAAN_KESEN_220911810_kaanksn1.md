@@ -51,14 +51,20 @@
   official dev/test inference or full-data training were performed.
   Temporary integration with Samed's `4db1a4a` passed 146 tests; LFS audio
   blobs were not downloaded or independently rehashed in this code check.
+- After the user's explicit 19 November assignment, completed the remaining
+  sequence review fixes in owner-authored commits: nonfinite Whisper train/dev
+  loss abort/reporting, prediction source-lock validation, safe ignored RNN-T
+  padding, meaningful regression tests, and matching model/config documentation.
+  All 119 local tests passed. Adnan's original model commits and personal
+  contribution report remain intact; these limited fixes are attributed here.
 
 ## Limits and pending dependent work
 
 Samed submitted early test-freeze metadata and his data pipeline in PR #2;
 full audio delivery and independent audio-byte verification are pending; the
 reporting/source-metadata corrections were verified. His pipeline and cleaning
-authorship remain his. Adnan's submitted implementation needs the documented
-model/GPU corrections. Kemal's model work, Ozan's final evaluation and all full
+authorship remain his. Adnan's submitted implementation and the owner's final
+review corrections have passed code/pilot checks. Kemal's model work, Ozan's final evaluation and all full
 benchmark runs remain pending. No custom-data bonus, trained-model improvement or new
 human annotation is claimed. Personal contribution percentages are not results.
 

@@ -31,9 +31,11 @@ blockers are resolved: all three train-pilot GPU checks show finite loss/gradien
 and parameter updates. Attention/RNN-T actual train/checkpoint/predict CLIs also
 pass GPU checks; a temporary merge with Samed's `4db1a4a` passes 146 tests
 (large LFS audio not downloaded for this code integration check).
-Remaining P2 edge handling and documentation/config corrections
-are listed in [the new review and short correction prompt](docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md).
-Neither teammate PR was merged by this review. Full-data training budgets and
+The user subsequently assigned the final P2 fixes to the owner: nonfinite
+Whisper losses now fail with an explicit run record, prediction validates the
+source lock, ignored RNN-T padding is safe before gather, and docs/configs match
+the code. All 119 tests pass. The earlier findings remain versioned in
+[the review](docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md). Full-data training budgets and
 benchmark runs are still pending. The original
 assignment remains in [HANDOFF_ADNAN_TR.md](docs/HANDOFF_ADNAN_TR.md).
 Full runs remain central on Serdar's machine. The user reported the deadline
@@ -45,12 +47,11 @@ Adnan's model code, configs and tests are now implemented on
 [the contribution file](contributions/ADNAN_DEMIR_220911784_adnan-demir.md)):
 a standard attention encoder-decoder with an optional hybrid CTC head, a
 standard RNN-T transducer, and the two-condition Whisper fine-tuning
-contribution. Data PR #2 is still unmerged (`data/manifests/*.jsonl` do not
-exist), so none of this has run on real HParl/CSS10 audio; everything is
-verified with tiny synthetic tensors and the three real train-pilot clips
-only, on CPU. No training length (`max_steps`), dev selection or benchmark
-result exists yet -- that needs Serdar's GPU pilot measurement
-(`scripts/pilot_sequence_models.py`) plus the real data.
+contribution. Data PR #2 is still unmerged, so its full manifests/audio are
+not yet integrated into main. Model verification uses synthetic tensors and
+three real HParl train-pilot clips, including the recorded GPU checks above.
+No full training budget (`max_steps`), official dev selection or benchmark
+result exists yet; representative real-data measurements remain necessary.
 
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports

@@ -5,41 +5,29 @@ and `docs/HANDOFF_ADNAN_TR.md`: a standard attention encoder-decoder (hybrid
 CTC/attention included), a standard RNN-T transducer, and our own fine-tuning
 of the pinned `openai/whisper-small` checkpoint under two training conditions.
 
-**Status as of 19 November 2026: code, configs and tests are complete and
-passing on CPU with synthetic/real-pilot-audio fixtures, including the fixes
-from Serdar's real RX 7800 XT review of commit `0437631`
-(`docs/reviews/PR2_PR5_FOLLOWUP_TR.md`, `docs/reviews/ADNAN_0437631_GPU.json`)
--- none of those fixes have themselves been re-verified on real GPU/ROCm
-hardware yet; see "Known limitations" below. No full training, dev
-selection or benchmark run has happened.** Samed's data PR #2 is not
-merged (`docs/reviews/SAMED_PR2_REVIEW_TR.md`); `data/manifests/*.jsonl` do
-not exist yet. The configs in `configs/sequence/` are prepared for when they
-land, with `max_steps` deliberately left `null` (see "Training budget" below).
-All full training/inference runs centrally on Serdar's RX 7800 XT/ROCm
-machine, same as every other baseline (`docs/TEAM.md`).
+**Verification at submitted commit `0c13ce1`, 19 November 2026:** 114 tests
+passed; attention, RNN-T and Whisper completed real GPU forward/backward and
+optimizer checks on Serdar's RX 7800 XT. Attention/RNN-T train, checkpoint
+reload and predict CLI paths also passed. Evidence is recorded in
+[ADNAN_0c13ce1_REVIEW_TR.md](reviews/ADNAN_0c13ce1_REVIEW_TR.md),
+[GPU diagnostics](reviews/ADNAN_0c13ce1_GPU.json) and
+[CLI diagnostics](reviews/ADNAN_0c13ce1_ENTRYPOINTS.json).
+These checks used only the three original training-pilot clips, not the
+official dev/test sets. No full-data training or benchmark result is claimed.
+
+Full data delivery and byte verification follow Samed's separate data PR #2.
+The model configs expect its shared manifests; `max_steps` remains `null`
+until representative full-data measurements justify the training budget.
+All full training/inference runs centrally on Serdar's machine (`docs/TEAM.md`).
 
 ## Toolkit choice
 
-`ESPnet`, `SpeechBrain` and `WeNet` were the documented toolkit candidates in
-`docs/HANDOFF_ADNAN_TR.md`. This implementation uses **plain PyTorch +
-torchaudio** instead, for three concrete reasons:
-
-1. All three heavy toolkits would need their own separate ROCm compatibility
-   verification (the project already carries two such separate, hard-won
-   environments for Transformers/NeMo; see `docs/RUNTIME_ENVIRONMENT.md` and
-   `docs/NEMO_RUNTIME.md`). Adding a fourth large framework before any of
-   them is verified on Serdar's AMD GPU is a real risk this project does not
-   need, when the architectures themselves are simple enough to implement
-   directly.
-2. `torch`/`torchaudio` are already locked dependencies of Serdar's working
-   ROCm environment (`requirements-rocm.lock.txt`: `torch==2.9.1+rocm7.2.1`,
-   `torchaudio==2.9.0+rocm7.2.1`), so no new runtime has to be built for these
-   two models.
-3. A direct implementation keeps the full forward/backward math auditable by
-   teammates (Kemal, Ozan) without needing to learn a third-party framework's
-   abstractions, while still being a standard, citable recipe (see below) —
-   "standard toolkit kullanılabilir... düz PyTorch/torchaudio ile belgeli
-   reçete" is explicitly listed as an acceptable option.
+The implementation uses **PyTorch + torchaudio**, with Transformers for
+Whisper, in the existing isolated ROCm runtime. The standard architecture
+recipes below are implemented directly and remain inspectable in the repo.
+ESPnet, SpeechBrain and WeNet were alternatives listed in the handoff; they
+are not dependencies of this implementation. Compatibility was checked on
+the actual target machine rather than inferred from the framework choice.
 
 ### RNN-T loss backend
 
@@ -57,16 +45,13 @@ forward/backward check that previously passed
 evidence this ran during real GPU training — it just happened to run on the
 one device the kernel supports.
 
-**Now chosen: option (a) from the review's three candidates — a pure
-PyTorch/autograd RNN-T loss, `greek_asr/models/rnnt_loss.py`.**
+**Current backend: `greek_asr/models/rnnt_loss.py`, recorded as
+`pure_pytorch_logspace` in the config and run report.**
 
-- Rationale for (a) over (b) GPU-encoder/CPU-loss or (c) a separately
-  documented environment: it is built entirely from ordinary
-  `torch.autograd` primitives (`log_softmax`, `gather`, `logaddexp`,
-  elementwise add/compare) that every backend torch itself ships has a
-  kernel for — CUDA or ROCm — so there is no backend-specific compiled op to
-  be missing, by construction, rather than by a verification step that
-  could later fail on different hardware.
+- The log-space forward algorithm uses PyTorch/autograd operations rather
+  than the unavailable compiled TorchAudio RNN-T op. This avoids that specific
+  dependency; it does not remove the need to check numerical behavior,
+  device execution, gradients, memory and speed on the target hardware.
 - Correctness evidence (`tests/test_rnnt_loss.py`): value **and** gradient
   match `torchaudio.functional.rnnt_loss` on CPU across a hand-enumerated
   two-path lattice (solved independently, no library call) and several
@@ -74,24 +59,25 @@ PyTorch/autograd RNN-T loss, `greek_asr/models/rnnt_loss.py`.**
   `torchaudio==2.11.1+cpu`, this repo's `.venv-sequence`).
 - `transducer.py`'s report now records `"rnnt_loss_backend":
   "pure_pytorch_logspace"` so the backend in use is explicit, not implied.
-- **Not yet measured**: real throughput on an actual GPU/ROCm device. This
-  implementation is a straightforward O(time × label) sequential-over-time,
-  batch-vectorized forward pass — not the anti-diagonal/compiled-kernel
-  optimization torchaudio's own op uses — and has only been timed on CPU
-  with the repo's short pilot/test clips. `scripts/pilot_sequence_models.py`
-  must be run once on Serdar's RX 7800 XT to record real step time/VRAM
-  before any training-budget decision:
+- Independent alignment enumeration also checked loss and gradients for
+  variable lengths, empty targets, U>T and a nonzero blank ID;
+  [the recorded mathematical checks](reviews/ADNAN_0c13ce1_RNNT_MATH.json)
+  passed. Real RX 7800 XT checks at `0c13ce1` then confirmed finite GPU
+  loss/gradients, a parameter update and the full train/predict CLI path.
+- Full-data throughput and memory remain unmeasured. The dynamic program
+  has O(time × label) work, and the joint network materializes a dense
+  time/label/vocabulary tensor. Short-pilot success does not establish a
+  feasible full training batch or epoch cost. Repeat measurements on
+  representative training lengths before choosing the budget:
 
   ```bash
   HSA_ENABLE_DXG_DETECTION=1 "$P3_PYTHON" scripts/pilot_sequence_models.py \
     --device cuda --output outputs/sequence_gpu_pilot
   ```
 
-  If this backend turns out to be too slow on real training-length audio,
-  the documented fallback is still k2/icefall's pruned RNN-T loss (BSD-
-  licensed, CPU+CUDA) — re-verify its license/ROCm support from its own
-  repository before switching, and document the switch in the PR rather
-  than silently downgrading to CTC.
+  A different backend would need its own license, numerical and ROCm
+  verification, plus an explicit config/report change. No alternative
+  backend is currently claimed to be verified.
 
 ## Architectures
 
@@ -144,7 +130,8 @@ PyTorch/autograd RNN-T loss, `greek_asr/models/rnnt_loss.py`.**
   fed a dedicated start token (reusing the `<sos>` id) before the first label.
 - Joint network: encoder/predictor linear projections, summed, `tanh`, linear
   to the blank-inclusive vocabulary (`blank` id `0`).
-- Loss: `torchaudio.functional.rnnt_loss` (see above).
+- Loss: `greek_asr.models.rnnt_loss.rnnt_loss`, backend
+  `pure_pytorch_logspace` (see above).
 - Decoding: standard greedy transducer decoding — one encoder time step only
   advances after a blank is emitted, bounded by `max_symbols_per_step` to
   avoid an infinite loop; `TransducerASRModel.greedy_decode` never reads the
@@ -187,15 +174,22 @@ PyTorch/autograd RNN-T loss, `greek_asr/models/rnnt_loss.py`.**
   then tokenize; `-100` is applied from the tokenizer's **attention mask**,
   not from a token-ID comparison, so the real end-of-sequence token is never
   mistaken for padding even when `pad_token_id == eos_token_id` (it is, for
-  Whisper) — see `build_labels` and
-  `tests/test_whisper_finetune.py::BuildLabelsTests`.
-- A benign upstream warning ("attention mask is not set... pad token is same
-  as eos token") appears during `generate()`; it matches the exact call
-  pattern already used by `greek_asr/pretrained/whisper.py` (no explicit
-  `attention_mask` passed either) and does not affect the single-sequence
-  audio-conditioned generation used here.
+  Whisper). The leading actual `decoder_start_token_id` is removed from
+  labels before the model's internal shift adds it once; Greek/task tokens
+  and EOS remain. See `build_labels` and `BuildLabelsTests`.
+- Fine-tuning train/predict rejects audio over 30 seconds before feature
+  extraction, with an explicit error; references are not truncated. The
+  standard owner baseline in `greek_asr/pretrained/whisper.py` supports
+  longer inputs using `truncation=False`, an explicit attention mask and
+  timestamp-based generation. It does not silently cut audio at 30 seconds.
+- Fine-tuned prediction currently passes `input_features` without an explicit
+  attention mask. Its upstream pad/EOS warning is not evidence that this call
+  is identical to the owner baseline, which does pass the mask.
 - `model.generate(..., language="el", task="transcribe", do_sample=False)` is
   used for prediction, never fed the reference text.
+- A nonfinite Whisper training or dev loss raises an error and records a
+  failed `run.json`. It is not skipped while continuing the accumulation
+  cycle or waiting indefinitely for the optimizer-step budget to complete.
 - Checkpointing: best (by dev loss) and last are separate files; each stores
   model/optimizer/scheduler state, the optimizer-update step and
   `common.capture_rng_state()` (torch CPU + Python `random` state only --
@@ -219,10 +213,11 @@ raise immediately (`"max_steps must be set from a measured pilot run..."`)
 rather than silently assuming an arbitrary step count — see
 `tests/test_models_attention.py`/`test_models_transducer.py::test_shipped_config_refuses_an_unmeasured_step_budget`
 and `test_whisper_finetune.py::MatchedConditionConfigTests::test_shipped_configs_require_a_measured_step_budget_before_training`.
-Serdar must run `scripts/pilot_sequence_models.py` (below) and combine the
-measured step time/VRAM with the real train manifest's total hours (once
-Samed's data is accepted) to choose a real, justified `max_steps`/`batch_size`
-— not the three-pilot-clip smoke, and not an arbitrary round number.
+The three-clip GPU checks above establish execution. Serdar must additionally
+measure representative training lengths, batch/label sizes, dev evaluation
+and checkpoint costs using the accepted data before setting a justified
+`max_steps`/batch size. Existing batch and accumulation values are provisional;
+they are not measurements from a completed full-data run.
 
 ## GPU pilot package (for Serdar)
 
@@ -244,21 +239,17 @@ with: `loss_finite`, `step_seconds`, `peak_gpu_memory_allocated_bytes`, the
 pilot audio duration/count, and the environment (Python/Torch/HIP/GPU name).
 It performs no training-length decision, no dev/test access and no scoring.
 
-A CPU smoke of the same script (not a GPU pilot, not committed) already
-confirmed the code path end-to-end on this machine, including a real
-forward/backward/optimizer step on the full real `openai/whisper-small`
-checkpoint (not a stub): finite loss, ~11.4 s/step on CPU. Attention and
-transducer CPU steps completed in under a second each. These CPU numbers are
-not a substitute for the ROCm VRAM/step-time measurement Serdar must record.
+The recorded `0c13ce1` GPU and CLI evidence is linked above. Replays must use
+a fresh output path; the three-clip diagnostic does not choose a full-data
+training budget or produce WER/CER benchmark scores.
 
 ## Environment
 
-`requirements-sequence.txt` pins the exact CPU/Windows/Python 3.12.10
-environment used for all synthetic/real-pilot-audio tests in this PR
-(`torch==2.15.0+cpu`, `torchaudio==2.11.1+cpu`, `numpy==1.26.4`,
-`transformers==4.57.6` — the `numpy`/`transformers` versions were deliberately
-pinned down to match Serdar's already-validated Whisper/Qwen ROCm environment
-in `requirements-rocm.lock.txt`, not left at the newest available release).
+`requirements-sequence.txt` lists the CPU dependency pins reported for Adnan's
+Windows/Python 3.12.10 development environment (`torch==2.15.0+cpu`,
+`torchaudio==2.11.1+cpu`, `numpy==1.26.4`, `transformers==4.57.6`). These are
+not the ROCm Torch/TorchAudio versions with the wheel suffix swapped. Build
+the CPU development environment with:
 Build it with:
 
 ```powershell
@@ -266,13 +257,14 @@ py -3.12 -m venv .venv-sequence
 .venv-sequence\Scripts\python -m pip install -r requirements-sequence.txt
 ```
 
-For Serdar: no new environment is required for these three models beyond the
-existing `project3-greek-asr-transformers` ROCm environment
-(`docs/RUNTIME_ENVIRONMENT.md`) — `torch`, `torchaudio` and `transformers` are
-already locked there at compatible versions. Do not install a CUDA wheel over
-the ROCm build, and do not downgrade/upgrade that shared environment for this
-PR; if a version conflict appears, report it in the PR rather than changing
-the environment Whisper/Qwen inference already depends on.
+Serdar's tests and GPU checks at `0c13ce1` used the existing
+`project3-greek-asr-transformers` runtime: PyTorch
+`2.9.1+rocm7.2.1.gitff65f5bc`, TorchAudio
+`2.9.0+rocm7.2.1.gite3c6ee2b`, NumPy `1.26.4`, Transformers `4.57.6`.
+Its exact installation pins are in `requirements-rocm.lock.txt`; see
+`docs/RUNTIME_ENVIRONMENT.md`. Use that lock for ROCm replay, not the CPU
+requirements file. No package change was needed for those checks. A new
+conflict requires separate investigation rather than replacing that runtime.
 
 ## Shared utilities (`greek_asr/models/common.py`)
 
@@ -281,18 +273,17 @@ the environment Whisper/Qwen inference already depends on.
   validation instead of duplicating it. Raises (never silently drops) on any
   missing/extra ID, and refuses the `test` split outright (`load_utterances`
   is only ever called for `train`/`dev`).
-- `load_waveform`: decodes original PCM16 WAV bytes via the stdlib `wave`
-  module (matching `greek_asr/pretrained/whisper.py`'s `_read_pcm16`, since
-  this `torchaudio` version's `torchaudio.load` requires the separate
-  `torchcodec` package) and resamples only in memory via
-  `torchaudio.functional.resample`; the source file is never rewritten.
+- `load_waveform`: decodes mono integer PCM16 (HParl) and PCM32 (CSS10) WAV
+  at the actual sample width, then resamples only in memory via
+  `torchaudio.functional.resample`. Unsupported formats fail explicitly;
+  the source file is never rewritten.
 - `select_grouped_subset`: speaker/recording-grouped, seeded subset selection
   for a bounded training budget (section 0.2/7 of the main prompt) — a group
   is never split across the selection boundary; utterances with neither a
   speaker nor a recording ID fall back to utterance-level grouping, and the
   count of that fallback is reported in the returned diagnostics for the
-  README. **Not yet run on real data** (no manifests exist yet); tested on a
-  synthetic multi-speaker fixture in `tests/test_models_common.py`.
+  README. Tested on a synthetic multi-speaker fixture in
+  `tests/test_models_common.py`; a final training subset has not been chosen.
 - `split_statistics` / `literal_overlap`: read-only speaker/utterance/hour
   counts and literal (unnormalized) train/test text-overlap counts, for the
   per-split reporting required in section 0.2 and the PR description. Never
@@ -301,8 +292,9 @@ the environment Whisper/Qwen inference already depends on.
   run-provenance helpers wired into all three `train()` reports (code commit,
   per-file code hash, train/dev manifest+reference hashes, trainable parameter
   count, effective batch size, precision, training wall-clock seconds, and --
-  for Whisper -- the actual per-source utterance/hour breakdown of the train
-  manifest, so the CSS10 mixing ratio is a recorded number, not assumed).
+  for Whisper -- the per-source utterance/hour composition of the train
+  manifest). This manifest composition is not a count of which samples have
+  been drawn by a bounded training run.
 - `PartialPredictionWriter`: all three `predict()` functions now stream to
   `predictions.partial.jsonl` and only rename to `predictions.jsonl` on a full,
   exact-ID-set run, mirroring `greek_asr.infer.run`'s existing contract. A
@@ -310,18 +302,21 @@ the environment Whisper/Qwen inference already depends on.
   "failed"` plus `completed_records`; it is never left looking like a
   complete benchmark file.
 
-## Checkpoint selection depends on an unset normalization policy
+## Dev loss selection and common ASR scoring
 
-Dev-based checkpoint/beam selection for all three models will be run against
-whatever text the common scorer (`greek_asr/score.py`, owned by Ozan) and
-normalization policy produce. That policy -- handling of `<spoken_noise>`,
-punctuation, case, accents -- is explicitly **not yet finalized**
-(`docs/PROTOCOL_DRAFT.md` step 5, `docs/TEACHER_UPDATES_2026-11-18_TR.md`
-section 3). None of this PR's checkpoint-selection code invents its own
-normalization rule or rewrites `greek_asr/scoring.py`; once Ozan's policy is
-committed, the *same* dev loss/WER numbers this code already logs must be
-recomputed under that policy before a real checkpoint is chosen -- the
-current selection-by-dev-loss code path itself does not change.
+The training loops save the best checkpoint using the mean of their
+per-batch **teacher-forced dev losses**, computed from the supplied reference
+targets. They do not generate dev predictions or log dev WER/CER during that
+selection. Scoring normalization is not applied to this loss, and changing
+the later scorer does not recompute or redefine a recorded dev loss.
+
+Ozan owns the common WER/CER scoring policy for generated predictions,
+including annotation tags, punctuation, case and accents. The final policy
+must apply equally to every system's references and hypotheses while the
+source files remain unchanged. If dev WER/CER or beam search is used for an
+additional selection stage, produce real dev predictions and use that common
+scorer; record the selection rule before the final test phase. See
+`docs/PROTOCOL_DRAFT.md` and `docs/TEACHER_UPDATES_2026-11-18_TR.md`.
 
 ## Subset selection requires Serdar/Samed sign-off before use
 
@@ -335,19 +330,15 @@ silently inside a config change.
 
 ## Known limitations / open risks
 
-- No real training, dev-based checkpoint/beam selection or benchmark exists.
-  Everything above is implementation + synthetic/real-pilot-audio testing.
-- `max_steps`/`batch_size` for all three configs need Serdar's GPU pilot
-  measurement combined with the real train manifest's hours.
-- The RNN-T loss (`greek_asr.models.rnnt_loss`, pure PyTorch/autograd) has
-  only been timed on CPU; real GPU/ROCm throughput is unmeasured (see "RNN-T
-  loss backend" above).
-- The `--device cuda` plumbing added to attention/RNN-T train+predict (and
-  the `padding_mask`/PCM32/Whisper-decoder-prefix fixes from Serdar's
-  review) has only been exercised on CPU and with torch's "meta" device in
-  this PR's own tests -- there is no GPU on this development machine. All of
-  it needs the single pilot command in "GPU pilot package" re-run on
-  Serdar's RX 7800 XT before it counts as verified.
+- No full-data training, real dev-based selection or final benchmark exists.
+  GPU optimizer steps and train-pilot CLI checks at `0c13ce1` are recorded
+  diagnostics, not a selected production checkpoint or accuracy result.
+- The final training budget and batch sizes need measurements at accepted
+  training-data lengths. RNN-T GPU execution is verified on the short pilot;
+  its dense lattice memory and full-data throughput still need measurement.
+- Different hardware, dependency changes or materially different sequence
+  lengths require their own checks; the successful RX 7800 XT evidence is
+  specific to its recorded code and runtime.
 - CSS10 subset selection and the two Whisper conditions' matched-budget
   training have not been exercised on real multi-speaker data; only the
   config-level matching and the grouping logic itself are tested so far.
