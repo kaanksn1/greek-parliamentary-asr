@@ -46,6 +46,9 @@ kodla üretip açıkça raporla. Aynı 18 HParl kaynak oturumunu koru.
 Depolama kararı: seçili **ham** HParl sesleri 3.31564 GiB civarı; mevcut
 test/dev/CSS10 ile bütün sesler **6.714255 GiB**. Kendi checkpointlerimiz ve
 pay için 2.6 GiB ayrıldı; toplam yaklaşık **9.314255 GiB**.
+Checkpoint payı, Kaan'ın dev ile seçeceği son inference ağırlıklarının bir kez
+yüklenmesi içindir; bütün ara best/last sürümlerini veya optimizer state'lerini
+LFS'ye eklemek bu hesaba sığmaz. Bu model teslimini Kaan yapacak.
 Sıradaki tam oturumu eklemek ses+bu payı 10 GiB üstüne çıkarıyor. Aday öneklerin
 gerçek boyutları `docs/reviews/budget_2026-11-20/training_candidates.json` içindedir.
 Kullanıcı toplam **10 GiB ücretsiz sınırını** onayladı; ücretli alan açma.

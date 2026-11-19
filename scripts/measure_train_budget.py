@@ -200,7 +200,9 @@ def main():
             cfg["training"].update(num_iterations=5, split_iterations=[0, 1, 2, 3], max_gaussians_per_state=16,
                                    max_excluded_fraction=1.)
             run = gmm_hmm.train(cfg, project_root=ROOT, output_dir=args.output.with_suffix(""), device="cpu", progress=True)
-            report.update(status="complete", gmm_train=run)
+            report.update(status="complete", gmm_train=run, checkpoint_saved=True,
+                          checkpoint_scope="local diagnostic model for TRAIN decode timing; not a benchmark checkpoint",
+                          checkpoint_path=str(args.output.with_suffix("") / "model.pt"))
             save()
             return
         optimizer = torch.optim.AdamW(model.parameters(), lr=lr,

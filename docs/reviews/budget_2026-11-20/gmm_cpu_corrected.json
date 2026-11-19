@@ -1,0 +1,296 @@
+{
+  "batch_size": 2,
+  "benchmark_result": false,
+  "checkpoint_path": "outputs/budget/gmm_cpu_corrected/model.pt",
+  "checkpoint_saved": true,
+  "checkpoint_scope": "local diagnostic model for TRAIN decode timing; not a benchmark checkpoint",
+  "condition": "random",
+  "created_utc": "2026-11-19T22:51:50.445914+00:00",
+  "device": "cpu",
+  "environment": {
+    "cuda": null,
+    "gpu_available": false,
+    "hip": "7.2.53211-e1a6bc5663",
+    "packages": {
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4",
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6"
+    },
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc"
+  },
+  "evaluation_batches": [],
+  "gmm_train": {
+    "acoustic_states": 105,
+    "code_commit": null,
+    "code_sha256": {
+      "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+      "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+      "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+      "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc"
+    },
+    "config": {
+      "_comment": "MFCC + GMM-HMM grapheme baseline (greek_asr.models.gmm_hmm). CPU or GPU tensors; the train set is read fully into RAM as 39-dim MFCC (about 5.6 GB for the full HParl-only train). train_subset_hours=null uses the whole manifest; set it only from a measured budget. See docs/KEMAL_BASELINES.md.",
+      "dev_manifest": "data/manifests/dev.jsonl",
+      "dev_references": "data/manifests/references/dev.jsonl",
+      "features": {
+        "cmn": "utterance_mean",
+        "deltas": true,
+        "frame_length_ms": 25.0,
+        "frame_shift_ms": 10.0,
+        "num_ceps": 13,
+        "num_mel_bins": 23,
+        "sample_rate": 16000
+      },
+      "seed": 42,
+      "train_manifest": "/mnt/c/Users/serda/OneDrive/Masaüstü/nlp/output/p3_data_budget/outputs/budget/pilot/train.jsonl",
+      "train_references": "/mnt/c/Users/serda/OneDrive/Masaüstü/nlp/output/p3_data_budget/outputs/budget/pilot/references.jsonl",
+      "train_subset_hours": null,
+      "training": {
+        "align_batch_cells": 20000000,
+        "infeasible_policy": "exclude_and_report",
+        "initial_self_loop": 0.5,
+        "lm_order": 3,
+        "max_excluded_fraction": 1.0,
+        "max_gaussians_per_state": 16,
+        "min_gaussian_occupancy": 20.0,
+        "num_iterations": 5,
+        "self_loop_bounds": [
+          0.05,
+          0.95
+        ],
+        "split_iterations": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "states_per_unit": 3,
+        "variance_floor_fraction": 0.01
+      },
+      "tuning": {
+        "dev_utterances": 200,
+        "insertion_penalties": [
+          -10.0,
+          0.0,
+          10.0
+        ],
+        "lm_weights": [
+          6.0,
+          10.0,
+          14.0
+        ],
+        "space_skip_logprob": 0.0
+      }
+    },
+    "created_utc": "2026-11-19T22:52:06.915130+00:00",
+    "device_requested": "cpu",
+    "device_used": "cpu",
+    "environment": {
+      "cuda": null,
+      "gpu_available": false,
+      "hip": "7.2.53211-e1a6bc5663",
+      "packages": {
+        "huggingface-hub": "0.36.2",
+        "numpy": "1.26.4",
+        "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+        "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+        "transformers": "4.57.6"
+      },
+      "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "python": "3.12.3",
+      "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc"
+    },
+    "excluded": [
+      {
+        "frames": 438,
+        "id": "hparl:apostolos_karanastashs-olomeleia_10_04697500_04700500_4_1",
+        "mandatory_states": 768,
+        "reason": "fewer_frames_than_mandatory_states"
+      },
+      {
+        "frames": 468,
+        "id": "hparl:efh_axtsioglou-olomeleia_42_01817500_01820500_3_1",
+        "mandatory_states": 846,
+        "reason": "fewer_frames_than_mandatory_states"
+      },
+      {
+        "frames": 598,
+        "id": "hparl:panos_kammenos_ellhnwn-olomeleia_27_04762500_04765500_2_1",
+        "mandatory_states": 828,
+        "reason": "fewer_frames_than_mandatory_states"
+      }
+    ],
+    "feature_seconds": 1.2260593059999998,
+    "features": {
+      "cmn": "utterance_mean",
+      "deltas": true,
+      "frame_length_ms": 25.0,
+      "frame_shift_ms": 10.0,
+      "num_ceps": 13,
+      "num_mel_bins": 23,
+      "sample_rate": 16000
+    },
+    "gaussians_per_state_max": 16,
+    "iterations": [
+      {
+        "alignment": "equal",
+        "components": 1,
+        "frames": 79439,
+        "iteration": 0
+      },
+      {
+        "alignment": "viterbi",
+        "avg_loglik_per_frame": -109.90911647567238,
+        "components": 2,
+        "frames": 79439,
+        "iteration": 1,
+        "seconds": 1.3170163870000007,
+        "split_to": 8
+      },
+      {
+        "alignment": "viterbi",
+        "avg_loglik_per_frame": -107.32888671358684,
+        "components": 4,
+        "frames": 79439,
+        "iteration": 2,
+        "seconds": 1.6745826659999992,
+        "split_to": 16
+      },
+      {
+        "alignment": "viterbi",
+        "avg_loglik_per_frame": -106.2022876338291,
+        "components": 8,
+        "frames": 79439,
+        "iteration": 3,
+        "seconds": 2.0634566549999995,
+        "split_to": 32
+      },
+      {
+        "alignment": "viterbi",
+        "avg_loglik_per_frame": -105.22574470466333,
+        "components": 16,
+        "frames": 79439,
+        "iteration": 4,
+        "seconds": 2.7663034420000017
+      },
+      {
+        "alignment": "viterbi",
+        "avg_loglik_per_frame": -103.86962727739602,
+        "components": 16,
+        "frames": 79439,
+        "iteration": 5,
+        "seconds": 2.8375564650000022
+      }
+    ],
+    "lm": {
+      "order": 3,
+      "smoothing": "Witten-Bell interpolation, add-one unigram",
+      "trained_on": "train references only"
+    },
+    "schema": "greek-asr-gmm-hmm-train-v1",
+    "seed": 42,
+    "status": "complete",
+    "train_frames_used": 79439,
+    "train_manifest_sha256": "50a4972d3b67583185e6f3dba196f7319e0c9184371d3b0a5d793da01b8be224",
+    "train_references_sha256": "a7a5104976e109127e8f66ec5ebf1b73d96605275127bb1367306d7ab40e627b",
+    "train_subset": null,
+    "train_utterances_loaded": 144,
+    "train_utterances_used": 141,
+    "training": {
+      "align_batch_cells": 20000000,
+      "infeasible_policy": "exclude_and_report",
+      "initial_self_loop": 0.5,
+      "lm_order": 3,
+      "max_excluded_fraction": 1.0,
+      "max_gaussians_per_state": 16,
+      "min_gaussian_occupancy": 20.0,
+      "num_iterations": 5,
+      "self_loop_bounds": [
+        0.05,
+        0.95
+      ],
+      "split_iterations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "states_per_unit": 3,
+      "variance_floor_fraction": 0.01
+    },
+    "training_seconds": 12.042794697000001,
+    "units": [
+      "c",
+      "o",
+      "ά",
+      "έ",
+      "ή",
+      "ί",
+      "α",
+      "β",
+      "γ",
+      "δ",
+      "ε",
+      "ζ",
+      "η",
+      "θ",
+      "ι",
+      "κ",
+      "λ",
+      "μ",
+      "ν",
+      "ξ",
+      "ο",
+      "π",
+      "ρ",
+      "ς",
+      "σ",
+      "τ",
+      "υ",
+      "φ",
+      "χ",
+      "ψ",
+      "ω",
+      "ό",
+      "ύ",
+      "ώ",
+      "<sil>"
+    ]
+  },
+  "gpu_allocator_fraction_limit": null,
+  "model": "gmm",
+  "model_source_sha256": {
+    "__init__.py": "697d55b06d6deddffab61dca0d8d95e4e08c86fa60305ba7cb02f53b204d8e07",
+    "attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc",
+    "hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "rnnt_loss.py": "50789fc37f78db00487817f129fea6a0a5a21c97f108cd2c9b46da6019b0e60e",
+    "transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db",
+    "wav2vec.py": "08a821c77eff2476a2dab2799061d56d14fe5b52110647001d2f7967f25c4309",
+    "whisper_finetune.py": "989300fbfdf83be6c82fd4acfce5b94c4e0b192cf5e87dcc4cf609f8c1fe5c6b"
+  },
+  "official_dev_or_test_read": false,
+  "optimizer": "AdamW",
+  "precision": "float32",
+  "random_offset": 0,
+  "requested_measured_updates": 3,
+  "runtime_environment": {
+    "HSA_ENABLE_DXG_DETECTION": "0",
+    "MIOPEN_FIND_MODE": null,
+    "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL": null
+  },
+  "schema": "p3-representative-training-budget-v1",
+  "script_sha256": "843ff66c38d8c929765a68d586c0a84c2adbc2a430f0f244f666ffd1abd46406",
+  "seed": 42,
+  "status": "complete",
+  "updates": [],
+  "warmup_updates": 1
+}

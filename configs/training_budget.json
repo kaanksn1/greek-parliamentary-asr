@@ -1,8 +1,9 @@
 {
-  "all_train_and_dev_loss_estimated_hours": 16.442628664324285,
+  "all_train_and_dev_loss_estimated_hours": 16.846167545697966,
+  "checkpoint_storage_policy": "Reserve is for final selected inference weights uploaded once; intermediate best/last/optimizer states remain local, not multiple LFS versions.",
   "final_test_authorized": false,
   "final_test_used_for_measurements": false,
-  "gmm_training_estimated_hours": 2.3401184226422784,
+  "gmm_training_estimated_hours": 2.7436573040159606,
   "paid_storage_authorized": false,
   "pretrained_inference_measurements": [
     {

@@ -13,7 +13,7 @@ Full training waits for Samed's corrected CSS10 audit and selected RAW audio del
 | whisper / hparl_only | 2 × 8 | 1600 | 2.44 | 1.03 |
 | whisper / hparl_plus_css10 | 2 × 8 | 1600 | 2.44 | 1.03 |
 
-GMM-HMM train estimate: 2.34 h; all training + dev-loss estimate: 16.44 h.
+GMM-HMM train estimate: 2.74 h; all training + dev-loss estimate: 16.85 h.
 These are pilot extrapolations, not measured full runs, convergence claims or benchmark scores.
 
 | Standard inference | Batch | Measured TRAIN seconds | Frozen-test hours estimate |
@@ -32,5 +32,7 @@ Whole-session storage decision: see `configs/training_data_selection.json` and `
 Approximate-pass targets allocate compute: 1 matched mixed-pool pass for each Whisper condition; 2 attention, 1 RNN-T, 3 plain CTC, 2 HuBERT. From-scratch models can remain undertrained; assess dev curves and report actual completed updates.
 
 Raw JSON records are retained here with seeds, batch IDs, exact package/device identities, source hashes and failures (Whisper batch-4 OOM). Historic absolute paths identify the measurement checkout; rerun from the repository root with the documented scripts.
+
+The GMM pilot saves a local diagnostic checkpoint to time TRAIN decoding; it is not a benchmark checkpoint. gmm_cpu_corrected.json is the current record. The earlier gmm_random_b1_n1.json had an incorrect top-level checkpoint_saved=false metadata flag; its numeric observations are retained as historical evidence.
 
 The CSS10 diagnosis verifies original audio hashes/headers; its old signal-statistics audit remains invalid until Samed regenerates it with IEEE-float decoding.
