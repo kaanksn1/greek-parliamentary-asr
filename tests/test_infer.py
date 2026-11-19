@@ -179,6 +179,38 @@ class InferenceContractTests(unittest.TestCase):
         self.assertEqual(report["completed_records"], 1)
         self.assertEqual(report["error_type"], "RuntimeError")
 
+    def test_qwen_batches_preserve_order_empty_outputs_and_trailing_partial_batch(self):
+        lock = json.loads((infer.ROOT / "configs/model_sources.lock.json").read_text(encoding="utf-8-sig"))
+        qwen_source = next(row for row in lock["models"] if row["model_id"] == "Qwen/Qwen3-ASR-0.6B")
+        (self.root / "configs/model_sources.lock.json").write_text(json.dumps({"models": [qwen_source]}), encoding="utf-8")
+        second = self.second_record()
+        third = {**second, "id": "hparl:fixture-c", "original_id": "fixture-c", "reference": "NEVER INPUT"}
+        self.write_manifest([self.record, second, third])
+        backend = types.SimpleNamespace(transcribe_batch=Mock(side_effect=[["a", ""], ["c"]]))
+        loader = Mock(return_value=backend)
+        report = infer.run(manifest=self.manifest, backend_name="qwen", split="train", output=self.root / "batch",
+                           project_root=self.root, device="cpu", loader=loader, batch_size=2)
+        rows = [json.loads(line) for line in (self.root / "batch/predictions.jsonl").read_text().splitlines()]
+        self.assertEqual(rows, [{"id": self.record["id"], "text": "a"}, {"id": second["id"], "text": ""},
+                                {"id": third["id"], "text": "c"}])
+        self.assertEqual(report["completed_records"], 3)
+        self.assertEqual(loader.call_args.kwargs["batch_size"], 2)
+        self.assertEqual([len(call.args[0]) for call in backend.transcribe_batch.call_args_list], [2, 1])
+        self.assertTrue(all(isinstance(path, Path) for call in backend.transcribe_batch.call_args_list for path in call.args[0]))
+
+    def test_wrong_qwen_batch_count_fails_without_a_successful_predictions_file(self):
+        lock = json.loads((infer.ROOT / "configs/model_sources.lock.json").read_text(encoding="utf-8-sig"))
+        source = next(row for row in lock["models"] if row["model_id"] == "Qwen/Qwen3-ASR-0.6B")
+        (self.root / "configs/model_sources.lock.json").write_text(json.dumps({"models": [source]}), encoding="utf-8")
+        self.write_manifest([self.record, self.second_record()])
+        backend = types.SimpleNamespace(transcribe_batch=Mock(return_value=["missing second result"]))
+        with self.assertRaisesRegex(ValueError, "invalid count/type"):
+            infer.run(manifest=self.manifest, backend_name="qwen", split="train", output=self.root / "bad_batch",
+                      project_root=self.root, device="cpu", loader=Mock(return_value=backend), batch_size=2)
+        self.assertFalse((self.root / "bad_batch/predictions.jsonl").exists())
+        report = json.loads((self.root / "bad_batch/run.json").read_text())
+        self.assertEqual(report["status"], "failed")
+
     def test_nonstring_prediction_is_failure_instead_of_record_drop(self):
         with self.assertRaisesRegex(ValueError, "prediction must be a string"):
             self.run_fixture(types.SimpleNamespace(transcribe=Mock(return_value=None)))

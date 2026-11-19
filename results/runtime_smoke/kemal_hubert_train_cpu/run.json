@@ -1,0 +1,71 @@
+{
+  "schema": "greek-asr-inference-v1",
+  "status": "complete",
+  "purpose": "runtime-smoke",
+  "created_utc": "2026-11-19T19:54:00.337543+00:00",
+  "backend": "hubert",
+  "model": {
+    "model_id": "ntinouldinho/hubert_greek_6gram",
+    "revision": "e89272763ec7320f5cf57638dfdedc3ecaa1ce86",
+    "pipeline_tag": "automatic-speech-recognition",
+    "license": null,
+    "source": "https://huggingface.co/ntinouldinho/hubert_greek_6gram",
+    "architecture": "HubertForCTC, 24 layers, hidden 1024, stable layer norm; Greek character CTC vocabulary (56 ids, [PAD]=53 blank, '|' word delimiter)",
+    "model_card": "absent: no README.md at this revision; training data, metrics and license are not stated",
+    "files_used": "config.json, preprocessor_config.json, vocab.json, tokenizer_config.json, special_tokens_map.json, added_tokens.json, pytorch_model.bin (bundled language_model/6gram.bin is not used)",
+    "use_decision": "pending integration-owner licensing decision; the only HuBERT checkpoint found with a trained Greek ASR head",
+    "status": "metadata_verified_runtime_pending"
+  },
+  "seed": 42,
+  "device": "cpu",
+  "split": "train",
+  "manifest_sha256": "8e3ab7bde80a9a14065a48a6f8eb3fd995a431130501aa93ca5bcaf59ba58955",
+  "source_lock_sha256": "b089bcdbb6db338aad1c6da3d4ddf6be2d1b784585d0182335843764ed52cf8b",
+  "test_protocol_sha256": null,
+  "expected_records": 3,
+  "total_audio_seconds": 6.609999999999999,
+  "training_performed": false,
+  "references_used_as_model_input": false,
+  "wer_cer": null,
+  "completed_records": 3,
+  "code_sha256": {
+    "greek_asr/infer.py": "27b761afc9a2fcc7507f538948de4f43efd2ccc7ae433e151522e4b97bed387f",
+    "greek_asr/pretrained/__init__.py": "729b49beb875b629929f515457c1fc59680d28e6a56b9e14be1e656af37c7a2f",
+    "greek_asr/pretrained/nemo.py": "84a7f453ac89214e35f73ba264c2d12a4ddea1ad0882c5e4fc4f80597cb4b519",
+    "greek_asr/pretrained/qwen.py": "865c57e27b9b41acbcc693458cb15bfc9c354c03d8bf050b4a8a0a42814c74ad",
+    "greek_asr/pretrained/whisper.py": "98c7df74f088102b8cba6d2ae5b16f7c08e9d4007bc71de61aeeb49770d91cfa",
+    "greek_asr/models/hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "greek_asr/models/common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+    "greek_asr/models/ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
+  },
+  "download_and_load_seconds": 1.8636219161562622,
+  "settings": {
+    "model_class": "HubertForCTC",
+    "model": "ntinouldinho/hubert_greek_6gram@e89272763ec7320f5cf57638dfdedc3ecaa1ce86",
+    "dtype": "float32",
+    "batch_size": 1,
+    "sampling_rate": 16000,
+    "feature_extractor": {
+      "do_normalize": true,
+      "return_attention_mask": true
+    },
+    "decoding": "greedy CTC: per-frame argmax, merge repeats, drop blank; no language model",
+    "word_delimiter": "|",
+    "audio_input": "original audio, resampled in memory only if its rate differs",
+    "long_audio": "whole utterance in one forward pass, no truncation",
+    "reference_or_context_prompt": false
+  },
+  "inference_seconds_including_output_io": 0.7721019168384373,
+  "predictions_sha256": "7baf908f4d590a57a0ac730065e6305715eaa0c02681d51ff2bab616f32d4a66",
+  "environment": {
+    "python": "3.14.2",
+    "packages": {
+      "torch": "2.9.0",
+      "transformers": "4.57.6",
+      "numpy": "2.5.5",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": null,
+    "gpu_available": false
+  }
+}

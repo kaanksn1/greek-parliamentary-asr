@@ -1,0 +1,197 @@
+{
+  "artifacts": {
+    "clean_manifest": {
+      "path": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+      "sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db"
+    },
+    "clean_references": {
+      "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl",
+      "sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198"
+    },
+    "mixed_manifest": {
+      "path": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+      "sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca"
+    },
+    "mixed_references": {
+      "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+      "sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0"
+    },
+    "raw_audio_delivery_list": {
+      "path": "data/manifests/subsets/train_hparl_30.5h_seed42.delivery.jsonl",
+      "sha256": "018f03d2ca1f3fc31a7c134a351daf11df86aad2a3467a2b3a801a8cb0847206"
+    },
+    "raw_manifest": {
+      "path": "data/manifests/subsets/raw/train_hparl_30.5h_seed42.jsonl",
+      "sha256": "3991a65229c95fdf6a9f4451b6cb9888b64f341460a428850237f912d07715da"
+    },
+    "raw_references": {
+      "path": "data/manifests/subsets/raw/references/train_hparl_30.5h_seed42.jsonl",
+      "sha256": "56ac531ff4869c0209b0a06430745e33ca819d5cb961a9de6294d56d9d151539"
+    }
+  },
+  "cohorts": {
+    "clean_selected_train": {
+      "hours": 30.883,
+      "known_sessions_or_recordings": 18,
+      "known_speakers": 208,
+      "records": 23602,
+      "records_by_source": {
+        "hparl": 23602
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0
+    },
+    "mixed_selected_train": {
+      "hours": 35.021,
+      "known_sessions_or_recordings": 18,
+      "known_speakers": 208,
+      "records": 25446,
+      "records_by_source": {
+        "css10_el": 1844,
+        "hparl": 23602
+      },
+      "records_without_session_id": 1844,
+      "records_without_speaker_id": 1844
+    },
+    "raw_selected_train": {
+      "hours": 30.897,
+      "known_sessions_or_recordings": 18,
+      "known_speakers": 208,
+      "records": 23615,
+      "records_by_source": {
+        "hparl": 23615
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0
+    },
+    "unchanged_clean_dev": {
+      "hours": 9.059,
+      "known_sessions_or_recordings": 3,
+      "known_speakers": 64,
+      "records": 7113,
+      "records_by_source": {
+        "hparl": 7113
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0
+    },
+    "unchanged_frozen_test": {
+      "hours": 11.208,
+      "known_sessions_or_recordings": 3,
+      "known_speakers": 82,
+      "records": 8679,
+      "records_by_source": {
+        "hparl": 8679
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0
+    }
+  },
+  "frozen_test": {
+    "audio_checked": false,
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+    "records": 8679,
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "status": "ok",
+    "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+  },
+  "literal_test_overlap_in_actual_selected_targets": {
+    "hparl_css10": {
+      "matched_distinct_test_texts": 3,
+      "matched_test_examples": 3,
+      "matched_test_ids_sha256": "c0a81a0cb4c5e6c531839b9060607ea27147cf29e2d4971d6267174d72881192"
+    },
+    "hparl_only": {
+      "matched_distinct_test_texts": 3,
+      "matched_test_examples": 3,
+      "matched_test_ids_sha256": "c0a81a0cb4c5e6c531839b9060607ea27147cf29e2d4971d6267174d72881192"
+    }
+  },
+  "normalized_overlap_diagnostic_not_final_scoring": {
+    "matched_distinct_normalized_texts": 9,
+    "matched_test_examples": 9,
+    "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+  },
+  "official_split_speaker_overlap": {
+    "session_overlap": 0,
+    "speaker_disjoint": false,
+    "test_speakers_also_in_selected_train": 49,
+    "test_utterances_with_selected_train_speaker": 4782
+  },
+  "raw_audio_policy": "Deliver ALL raw WAVs in selected training sessions, including removed examples. Clean targets reuse original WAVs.",
+  "schema": "p3-selected-training-delivery-v1",
+  "seed": 42,
+  "selection_rule": "Samed's seeded whole-session prefix; no test performance used",
+  "session_ids": [
+    "olomeleia_13",
+    "olomeleia_15",
+    "olomeleia_2",
+    "olomeleia_20",
+    "olomeleia_21",
+    "olomeleia_23",
+    "olomeleia_29",
+    "olomeleia_32",
+    "olomeleia_33",
+    "olomeleia_35",
+    "olomeleia_36",
+    "olomeleia_37",
+    "olomeleia_40",
+    "olomeleia_45",
+    "olomeleia_48",
+    "olomeleia_49",
+    "olomeleia_5",
+    "olomeleia_9"
+  ],
+  "source_data_submission": "4db1a4aa61eb78acbb531b705c45e3bbd090854e",
+  "status": "selected_audio_upload_pending",
+  "storage": {
+    "all_audio_unique_lfs_gib": 6.714254509657621,
+    "authorized_quota_gib": 10.0,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 23602,
+    "hours": 30.883408333333335,
+    "note": "10 GiB conservative account storage cap; bandwidth is separate and must be checked before further LFS downloads",
+    "paid_storage_authorized": false,
+    "raw_records": 23615,
+    "raw_train_unique_lfs_bytes": 3560140964,
+    "remaining_account_quota_verified": false,
+    "sessions": 18,
+    "within_storage_budget": true
+  },
+  "subset_selection": {
+    "group_field": "source_recording_id (fallback speaker_id, then id)",
+    "group_keys": [
+      "olomeleia_13",
+      "olomeleia_15",
+      "olomeleia_2",
+      "olomeleia_20",
+      "olomeleia_21",
+      "olomeleia_23",
+      "olomeleia_29",
+      "olomeleia_32",
+      "olomeleia_33",
+      "olomeleia_35",
+      "olomeleia_36",
+      "olomeleia_37",
+      "olomeleia_40",
+      "olomeleia_45",
+      "olomeleia_48",
+      "olomeleia_49",
+      "olomeleia_5",
+      "olomeleia_9"
+    ],
+    "groups_selected": 18,
+    "ids_sha256": "8820859fefc181488514a4a6dd7b61a785cefe2e1252e66a50b18ef927de4ea6",
+    "manifest_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+    "mixed_manifest_sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca",
+    "mixed_references_sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0",
+    "records": 23602,
+    "references_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
+    "seed": 42,
+    "selected_seconds": 111180.27,
+    "source_manifest_sha256": "85f5482c69323488fe53225553930b0d2dd2baaced737bd654b4bff3ed25a1c2",
+    "target_hours": 30.5
+  },
+  "target_hours": 30.5
+}

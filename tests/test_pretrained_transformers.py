@@ -87,6 +87,23 @@ class WhisperTests(unittest.TestCase):
 
 
 class QwenTests(unittest.TestCase):
+    def test_batch_api_uses_audio_paths_only_and_preserves_empty_results(self):
+        torch, _, _ = dependencies()
+        model = MagicMock()
+        model.model.named_modules.return_value = []
+        model.transcribe.return_value = [types.SimpleNamespace(text=""), types.SimpleNamespace(text="καλημέρα")]
+        with tempfile.TemporaryDirectory() as directory, patch.dict("sys.modules", {"torch": torch}):
+            paths = [Path(directory) / "a.wav", Path(directory) / "b.wav"]
+            for path in paths:
+                path.touch()
+            backend = qwen.QwenBackend(model, batch_size=4)
+            self.assertEqual(backend.transcribe_batch(paths), ["", "καλημέρα"])
+            self.assertEqual(model.transcribe.call_args.kwargs,
+                             {"audio": [str(path) for path in paths], "language": "Greek", "context": "", "return_time_stamps": False})
+            model.transcribe.return_value = [types.SimpleNamespace(text="one")]
+            with self.assertRaisesRegex(ValueError, "count/type"):
+                backend.transcribe_batch(paths)
+
     def test_pinned_greek_audio_only_load_and_transcription(self):
         torch, snapshot, hub = dependencies()
         model = MagicMock()

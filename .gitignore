@@ -3,7 +3,7 @@ __pycache__/
 .venv*/
 outputs/
 .cache/
-models/
+/models/
 *.partial.jsonl
 
 # Data pipeline: the 11.9 GB source archive and partial downloads stay local;

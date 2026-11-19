@@ -1,0 +1,43 @@
+{
+  "code_commit": null,
+  "code_sha256": {
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc"
+  },
+  "completed_records": 4,
+  "created_utc": "2026-11-19T22:34:08.978424+00:00",
+  "decoder": {
+    "insertion_penalty": 0.0,
+    "lm_weight": 10.0,
+    "space_skip_logprob": 0.0
+  },
+  "device_requested": "cpu",
+  "device_used": "cpu",
+  "environment": {
+    "cuda": null,
+    "gpu_available": false,
+    "hip": "7.2.53211-e1a6bc5663",
+    "packages": {
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4",
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6"
+    },
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc"
+  },
+  "inference_seconds": 0.6116655850000257,
+  "manifest_sha256": "8356c4e75022ca31f0a6bd34c331e5e972c29507caa75fdff84f1485497e24cd",
+  "model": "outputs/budget/representative/gmm_random_b1_n1/model.pt",
+  "model_sha256": "b60f4762a838cbda99ed9c4c2c3568638b4327425ebe3c6f23915da0ea99e3ff",
+  "records": 4,
+  "references_used_as_model_input": false,
+  "schema": "greek-asr-gmm-hmm-predict-v1",
+  "split": "train",
+  "status": "complete",
+  "test_protocol_sha256": null,
+  "training_performed": false
+}

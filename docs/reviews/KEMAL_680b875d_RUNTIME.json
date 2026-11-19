@@ -1,0 +1,775 @@
+{
+  "schema": "p3-kemal-submission-review-v1",
+  "submission_commit": "680b875d533b94da378ddf940b66b9a97cf55baa",
+  "diagnostic_sha256": "1b9499a13088f7b4899dae071c959c9c14b25d1033fdc2b1f79640a09f4ff9ea",
+  "source_sha256": {
+    "greek_asr/infer.py": "27b761afc9a2fcc7507f538948de4f43efd2ccc7ae433e151522e4b97bed387f",
+    "greek_asr/models/__init__.py": "697d55b06d6deddffab61dca0d8d95e4e08c86fa60305ba7cb02f53b204d8e07",
+    "greek_asr/models/attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
+    "greek_asr/models/common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+    "greek_asr/models/ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "greek_asr/models/ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "greek_asr/models/gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc",
+    "greek_asr/models/hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "greek_asr/models/rnnt_loss.py": "50789fc37f78db00487817f129fea6a0a5a21c97f108cd2c9b46da6019b0e60e",
+    "greek_asr/models/transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db",
+    "greek_asr/models/wav2vec.py": "08a821c77eff2476a2dab2799061d56d14fe5b52110647001d2f7967f25c4309",
+    "greek_asr/models/whisper_finetune.py": "989300fbfdf83be6c82fd4acfce5b94c4e0b192cf5e87dcc4cf609f8c1fe5c6b"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "huggingface-hub": "0.36.2"
+    },
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+    "hip": "7.2.53211-e1a6bc5663",
+    "cuda": null,
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 0
+  },
+  "device_requested": "cuda",
+  "scope": "Three original TRAIN pilot clips; temporary train/dev code-path fixtures only",
+  "official_dev_or_test_used": false,
+  "full_training_performed": false,
+  "representative_budget_measurement": false,
+  "trained_checkpoints_persisted": false,
+  "unlicensed_published_hubert_loaded": false,
+  "pilot_ids": [
+    "hparl:alekshs_tsipras-olomeleia_37_00240000_00243000_4_1",
+    "hparl:dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1",
+    "hparl:iwannhs_balafas-olomeleia_47_02640000_02643000_1_2"
+  ],
+  "pilot_audio_seconds": 6.609999999999999,
+  "models": {
+    "gmm_hmm_cpu": {
+      "status": "passed",
+      "result": {
+        "train": {
+          "schema": "greek-asr-gmm-hmm-train-v1",
+          "status": "complete",
+          "config": {
+            "_comment": "MFCC + GMM-HMM grapheme baseline (greek_asr.models.gmm_hmm). CPU or GPU tensors; the train set is read fully into RAM as 39-dim MFCC (about 5.6 GB for the full HParl-only train). train_subset_hours=null uses the whole manifest; set it only from a measured budget. See docs/KEMAL_BASELINES.md.",
+            "train_manifest": "/tmp/p3-kemal-review-a3ahecql/train.jsonl",
+            "train_references": "/tmp/p3-kemal-review-a3ahecql/train_refs.jsonl",
+            "dev_manifest": "/tmp/p3-kemal-review-a3ahecql/dev_role_train_fixture.jsonl",
+            "dev_references": "/tmp/p3-kemal-review-a3ahecql/dev_role_train_fixture_refs.jsonl",
+            "seed": 42,
+            "train_subset_hours": null,
+            "features": {
+              "sample_rate": 16000,
+              "num_ceps": 13,
+              "num_mel_bins": 23,
+              "frame_length_ms": 25.0,
+              "frame_shift_ms": 10.0,
+              "deltas": true,
+              "cmn": "utterance_mean"
+            },
+            "training": {
+              "states_per_unit": 3,
+              "num_iterations": 3,
+              "split_iterations": [
+                1
+              ],
+              "max_gaussians_per_state": 2,
+              "variance_floor_fraction": 0.01,
+              "min_gaussian_occupancy": 1.0,
+              "initial_self_loop": 0.5,
+              "self_loop_bounds": [
+                0.05,
+                0.95
+              ],
+              "align_batch_cells": 20000000,
+              "lm_order": 3,
+              "infeasible_policy": "exclude_and_report",
+              "max_excluded_fraction": 0.01
+            },
+            "tuning": {
+              "dev_utterances": 200,
+              "lm_weights": [
+                6.0,
+                10.0,
+                14.0
+              ],
+              "insertion_penalties": [
+                -10.0,
+                0.0,
+                10.0
+              ],
+              "space_skip_logprob": 0.0
+            }
+          },
+          "training": {
+            "states_per_unit": 3,
+            "num_iterations": 3,
+            "split_iterations": [
+              1
+            ],
+            "max_gaussians_per_state": 2,
+            "variance_floor_fraction": 0.01,
+            "min_gaussian_occupancy": 1.0,
+            "initial_self_loop": 0.5,
+            "self_loop_bounds": [
+              0.05,
+              0.95
+            ],
+            "align_batch_cells": 20000000,
+            "lm_order": 3,
+            "infeasible_policy": "exclude_and_report",
+            "max_excluded_fraction": 0.01
+          },
+          "features": {
+            "sample_rate": 16000,
+            "num_ceps": 13,
+            "num_mel_bins": 23,
+            "frame_length_ms": 25.0,
+            "frame_shift_ms": 10.0,
+            "deltas": true,
+            "cmn": "utterance_mean"
+          },
+          "seed": 42,
+          "created_utc": "2026-11-19T20:46:57.388810+00:00",
+          "code_commit": "680b875d533b94da378ddf940b66b9a97cf55baa",
+          "code_sha256": {
+            "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc",
+            "common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+            "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
+          },
+          "train_manifest_sha256": "90d942d78b0ea21e8bb3651c75221f3d133f59ef5d528a6dbc869394e496cf23",
+          "train_references_sha256": "526166607b361e0acbccb201921837b00593aad53411c46ceec05e10d5fc50aa",
+          "train_utterances_loaded": 3,
+          "train_utterances_used": 3,
+          "train_frames_used": 655,
+          "train_subset": null,
+          "excluded": [],
+          "units": [
+            "\u03ac",
+            "\u03ae",
+            "\u03af",
+            "\u03b1",
+            "\u03b3",
+            "\u03b4",
+            "\u03b5",
+            "\u03b7",
+            "\u03b9",
+            "\u03ba",
+            "\u03bc",
+            "\u03bd",
+            "\u03be",
+            "\u03bf",
+            "\u03c0",
+            "\u03c1",
+            "\u03c2",
+            "\u03c3",
+            "\u03c4",
+            "\u03c5",
+            "\u03c6",
+            "\u03cd",
+            "<sil>"
+          ],
+          "acoustic_states": 69,
+          "gaussians_per_state_max": 2,
+          "lm": {
+            "order": 3,
+            "smoothing": "Witten-Bell interpolation, add-one unigram",
+            "trained_on": "train references only"
+          },
+          "device_requested": "cpu",
+          "device_used": "cpu",
+          "feature_seconds": 0.12614792499999972,
+          "training_seconds": 0.18749578099999997,
+          "iterations": [
+            {
+              "iteration": 0,
+              "alignment": "equal",
+              "components": 1,
+              "frames": 655
+            },
+            {
+              "iteration": 1,
+              "alignment": "viterbi",
+              "components": 1,
+              "frames": 655,
+              "avg_loglik_per_frame": -94.93777731393129,
+              "seconds": 0.017829338000000305,
+              "split_to": 4
+            },
+            {
+              "iteration": 2,
+              "alignment": "viterbi",
+              "components": 2,
+              "frames": 655,
+              "avg_loglik_per_frame": -94.76811784351145,
+              "seconds": 0.020530830000000222
+            },
+            {
+              "iteration": 3,
+              "alignment": "viterbi",
+              "components": 2,
+              "frames": 655,
+              "avg_loglik_per_frame": -90.10727874522901,
+              "seconds": 0.016731689000000216
+            }
+          ],
+          "environment": {
+            "python": "3.12.3",
+            "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+            "packages": {
+              "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+              "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+              "transformers": "4.57.6",
+              "numpy": "1.26.4",
+              "huggingface-hub": "0.36.2"
+            },
+            "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+            "hip": "7.2.53211-e1a6bc5663",
+            "cuda": null,
+            "gpu_available": true,
+            "gpu": "AMD Radeon RX 7800 XT",
+            "peak_gpu_memory_allocated_bytes": 0
+          }
+        },
+        "predict": {
+          "schema": "greek-asr-gmm-hmm-predict-v1",
+          "status": "complete",
+          "model": "/tmp/p3-kemal-review-a3ahecql/gmm/model.pt",
+          "model_sha256": "ec404b511430d425e479c612ee7c4bcb01e5b7dee1c5d4e8223f51caa37c8f26",
+          "split": "train",
+          "decoder": {
+            "lm_weight": 10.0,
+            "insertion_penalty": 0.0,
+            "space_skip_logprob": 0.0
+          },
+          "manifest_sha256": "90d942d78b0ea21e8bb3651c75221f3d133f59ef5d528a6dbc869394e496cf23",
+          "test_protocol_sha256": null,
+          "records": 3,
+          "completed_records": 3,
+          "references_used_as_model_input": false,
+          "training_performed": false,
+          "device_requested": "cpu",
+          "device_used": "cpu",
+          "code_commit": "680b875d533b94da378ddf940b66b9a97cf55baa",
+          "code_sha256": {
+            "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc",
+            "common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc"
+          },
+          "created_utc": "2026-11-19T20:46:57.421406+00:00",
+          "inference_seconds": 0.12415336000000021,
+          "environment": {
+            "python": "3.12.3",
+            "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+            "packages": {
+              "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+              "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+              "transformers": "4.57.6",
+              "numpy": "1.26.4",
+              "huggingface-hub": "0.36.2"
+            },
+            "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+            "hip": "7.2.53211-e1a6bc5663",
+            "cuda": null,
+            "gpu_available": true,
+            "gpu": "AMD Radeon RX 7800 XT",
+            "peak_gpu_memory_allocated_bytes": 0
+          }
+        },
+        "predictions": [
+          {
+            "id": "hparl:alekshs_tsipras-olomeleia_37_00240000_00243000_4_1",
+            "text": "\u03b5\u03af\u03c2 \u03bc\u03c0\u03bf\u03c1\u03bf\u03cd\u03b5 \u03c3\u03ae\u03bc\u03b5\u03c1\u03b1"
+          },
+          {
+            "id": "hparl:dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1",
+            "text": "\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7\u03bd \u03bf\u03b9\u03ba\u03bf\u03bd\u03bf\u03bc\u03b9\u03ba\u03ae \u03b4\u03c1\u03ac\u03c3\u03b7"
+          },
+          {
+            "id": "hparl:iwannhs_balafas-olomeleia_47_02640000_02643000_1_2",
+            "text": "\u03c4\u03bf\u03c5\u03c2 \u03be\u03b5\u03c6\u03b5\u03cd\u03b3\u03b5\u03b9 \u03b7 \u03b1\u03bd\u03c4\u03b9\u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7 \u03c4\u03b7\u03c2"
+          }
+        ]
+      },
+      "optimizer_observations": [],
+      "outer_wall_seconds": 0.37327632499999996,
+      "peak_gpu_memory_allocated_bytes": 0
+    },
+    "ctc_gpu": {
+      "status": "passed",
+      "result": {
+        "train": {
+          "schema": "greek-asr-ctc-train-v1",
+          "status": "complete",
+          "config": {
+            "_comment": "Plain supervised CTC (greek_asr.models.ctc): log-mel, 4x conv subsampling, 4-layer BiLSTM, character CTC, trained from scratch. max_steps stays null until a measured pilot fixes the budget; pass --max-steps for measurement runs (recorded as max_steps_source=cli).",
+            "architecture": "conv2d x2 (stride 2) + BiLSTM 4x320 + linear CTC head",
+            "primary_sources": [
+              "Graves et al. (2006), Connectionist Temporal Classification, ICML",
+              "Amodei et al. (2016), Deep Speech 2, ICML",
+              "Park et al. (2019), SpecAugment, Interspeech"
+            ],
+            "train_manifest": "/tmp/p3-kemal-review-a3ahecql/train.jsonl",
+            "train_references": "/tmp/p3-kemal-review-a3ahecql/train_refs.jsonl",
+            "dev_manifest": "/tmp/p3-kemal-review-a3ahecql/dev_role_train_fixture.jsonl",
+            "dev_references": "/tmp/p3-kemal-review-a3ahecql/dev_role_train_fixture_refs.jsonl",
+            "seed": 42,
+            "sample_rate": 16000,
+            "model": {
+              "input_dim": 80,
+              "conv_channels": 32,
+              "model_dim": 320,
+              "lstm_hidden": 320,
+              "lstm_layers": 4,
+              "dropout": 0.1
+            },
+            "spec_augment": {
+              "freq_masks": 2,
+              "freq_width": 27,
+              "time_masks": 2,
+              "time_ratio": 0.05
+            },
+            "cmvn_utterances": 3,
+            "learning_rate": 0.001,
+            "weight_decay": 0.01,
+            "warmup_steps": 0,
+            "batch_size": 3,
+            "gradient_accumulation_steps": 1,
+            "max_grad_norm": 5.0,
+            "max_steps": 2,
+            "dev_eval_every": 1,
+            "num_workers": 0,
+            "infeasible_policy": "exclude_and_report",
+            "max_excluded_fraction": 0.01
+          },
+          "max_steps": 2,
+          "max_steps_source": "config",
+          "model_config": {
+            "vocab_size": 25,
+            "input_dim": 80,
+            "conv_channels": 32,
+            "model_dim": 320,
+            "lstm_hidden": 320,
+            "lstm_layers": 4,
+            "dropout": 0.1
+          },
+          "vocab_size": 25,
+          "seed": 42,
+          "created_utc": "2026-11-19T20:46:59.330887+00:00",
+          "code_commit": "680b875d533b94da378ddf940b66b9a97cf55baa",
+          "code_sha256": {
+            "ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+            "common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+            "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
+          },
+          "train_manifest_sha256": "90d942d78b0ea21e8bb3651c75221f3d133f59ef5d528a6dbc869394e496cf23",
+          "train_references_sha256": "526166607b361e0acbccb201921837b00593aad53411c46ceec05e10d5fc50aa",
+          "dev_manifest_sha256": "ecaa01a486eb22bdcb3d12d53537c3b2a2b82dc9ec13f2a09e8e5e832abf9f9c",
+          "dev_references_sha256": "582cf982d8df57521a007c7875f93162505af982b7beff252b8a99715bb861b1",
+          "train_source_breakdown": {
+            "hparl": {
+              "utterances": 3,
+              "hours": 0.0018361111111111108
+            }
+          },
+          "train_items": 3,
+          "train_excluded_infeasible": [],
+          "dev_loss_items": 3,
+          "dev_loss_excluded": [],
+          "dev_reference_preparation": "annotation tags removed in memory for dev loss only",
+          "cmvn_utterances": 3,
+          "cmvn_seconds": 0.0018898700000002933,
+          "trainable_parameters": 9262393,
+          "effective_batch_size": 3,
+          "precision": "float32",
+          "device_requested": "cuda",
+          "device_used": "cuda",
+          "optimizer_updates_completed": 2,
+          "best_dev_loss": 4.721187591552734,
+          "best_optimizer_update": 2,
+          "dev_history": [
+            {
+              "optimizer_update": 1,
+              "dev_loss": 4.806591033935547,
+              "train_loss": 4.996710300445557,
+              "dev_seconds": 0.03137233400000028
+            },
+            {
+              "optimizer_update": 2,
+              "dev_loss": 4.721187591552734,
+              "train_loss": 4.947597503662109,
+              "dev_seconds": 0.044802242999999464
+            }
+          ],
+          "training_seconds": 8.538659981,
+          "dev_eval_seconds": 0.07617457699999974,
+          "seconds_per_update_excluding_dev": 4.231242702,
+          "micro_steps_completed": 2,
+          "epochs_started": 2,
+          "environment": {
+            "python": "3.12.3",
+            "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+            "packages": {
+              "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+              "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+              "transformers": "4.57.6",
+              "numpy": "1.26.4",
+              "huggingface-hub": "0.36.2"
+            },
+            "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+            "hip": "7.2.53211-e1a6bc5663",
+            "cuda": null,
+            "gpu_available": true,
+            "gpu": "AMD Radeon RX 7800 XT",
+            "peak_gpu_memory_allocated_bytes": 367554560
+          }
+        },
+        "predict": {
+          "schema": "greek-asr-ctc-predict-v1",
+          "status": "complete",
+          "checkpoint": "/tmp/p3-kemal-review-a3ahecql/ctc/checkpoint.best.pt",
+          "checkpoint_sha256": "57f06a8094e18f23e28ae3f0e0dd11bc175214fefe760cd7a6bf9f9feadc851a",
+          "checkpoint_step": 2,
+          "split": "train",
+          "decode": "greedy CTC best path over valid frames",
+          "batch_size": 3,
+          "manifest_sha256": "90d942d78b0ea21e8bb3651c75221f3d133f59ef5d528a6dbc869394e496cf23",
+          "test_protocol_sha256": null,
+          "records": 3,
+          "completed_records": 3,
+          "references_used_as_model_input": false,
+          "device_requested": "cuda",
+          "device_used": "cuda",
+          "code_commit": "680b875d533b94da378ddf940b66b9a97cf55baa",
+          "code_sha256": {
+            "ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+            "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
+          },
+          "created_utc": "2026-11-19T20:47:06.604109+00:00",
+          "inference_seconds": 0.033442261999999445,
+          "environment": {
+            "python": "3.12.3",
+            "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+            "packages": {
+              "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+              "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+              "transformers": "4.57.6",
+              "numpy": "1.26.4",
+              "huggingface-hub": "0.36.2"
+            },
+            "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+            "hip": "7.2.53211-e1a6bc5663",
+            "cuda": null,
+            "gpu_available": true,
+            "gpu": "AMD Radeon RX 7800 XT",
+            "peak_gpu_memory_allocated_bytes": 367554560
+          }
+        },
+        "predictions": [
+          {
+            "id": "hparl:alekshs_tsipras-olomeleia_37_00240000_00243000_4_1",
+            "text": ""
+          },
+          {
+            "id": "hparl:dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1",
+            "text": ""
+          },
+          {
+            "id": "hparl:iwannhs_balafas-olomeleia_47_02640000_02643000_1_2",
+            "text": ""
+          }
+        ]
+      },
+      "optimizer_observations": [
+        {
+          "parameters_with_gradient": 40,
+          "all_gradients_finite": true,
+          "first_parameter_changed": true
+        },
+        {
+          "parameters_with_gradient": 40,
+          "all_gradients_finite": true,
+          "first_parameter_changed": true
+        }
+      ],
+      "outer_wall_seconds": 9.041967796,
+      "peak_gpu_memory_allocated_bytes": 367554560
+    },
+    "mhubert_ctc_gpu": {
+      "status": "passed",
+      "result": {
+        "train": {
+          "schema": "greek-asr-hubert-ctc-train-v1",
+          "status": "complete",
+          "config": {
+            "_comment": "Our own HuBERT + CTC head fine-tuning (greek_asr.models.hubert train). Encoder: utter-project/mHuBERT-147 (pretraining includes Greek; CC-BY-NC-SA-4.0), pinned in configs/kemal_model_sources.json. CNN feature encoder frozen; transformer + new CTC head trained. Report separately from off-the-shelf baselines. max_steps stays null until measured; use --max-steps for measurement runs.",
+            "encoder_model_id": "utter-project/mHuBERT-147",
+            "encoder_revision": "7ad3fc0bc5106c58c9c13526abccad527150d135",
+            "train_manifest": "/tmp/p3-kemal-review-a3ahecql/train.jsonl",
+            "train_references": "/tmp/p3-kemal-review-a3ahecql/train_refs.jsonl",
+            "dev_manifest": "/tmp/p3-kemal-review-a3ahecql/dev_role_train_fixture.jsonl",
+            "dev_references": "/tmp/p3-kemal-review-a3ahecql/dev_role_train_fixture_refs.jsonl",
+            "seed": 42,
+            "learning_rate": 5e-05,
+            "weight_decay": 0.0,
+            "warmup_steps": 0,
+            "freeze_transformer_updates": 0,
+            "mask_time_prob": 0.05,
+            "layerdrop": 0.0,
+            "final_dropout": 0.0,
+            "gradient_checkpointing": false,
+            "batch_size": 2,
+            "gradient_accumulation_steps": 1,
+            "max_grad_norm": 1.0,
+            "max_steps": 2,
+            "dev_eval_every": 1,
+            "infeasible_policy": "exclude_and_report",
+            "max_excluded_fraction": 0.01
+          },
+          "provenance": "own CTC fine-tuning of a pretrained HuBERT encoder (not an off-the-shelf result)",
+          "encoder": {
+            "model_id": "utter-project/mHuBERT-147",
+            "revision": "7ad3fc0bc5106c58c9c13526abccad527150d135",
+            "local_dir": null
+          },
+          "max_steps": 2,
+          "max_steps_source": "config",
+          "vocab_size": 25,
+          "seed": 42,
+          "created_utc": "2026-11-19T20:47:19.923136+00:00",
+          "code_commit": "680b875d533b94da378ddf940b66b9a97cf55baa",
+          "code_sha256": {
+            "hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+            "common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+            "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
+          },
+          "train_manifest_sha256": "90d942d78b0ea21e8bb3651c75221f3d133f59ef5d528a6dbc869394e496cf23",
+          "train_references_sha256": "526166607b361e0acbccb201921837b00593aad53411c46ceec05e10d5fc50aa",
+          "dev_manifest_sha256": "ecaa01a486eb22bdcb3d12d53537c3b2a2b82dc9ec13f2a09e8e5e832abf9f9c",
+          "dev_references_sha256": "582cf982d8df57521a007c7875f93162505af982b7beff252b8a99715bb861b1",
+          "train_source_breakdown": {
+            "hparl": {
+              "utterances": 3,
+              "hours": 0.0018361111111111108
+            }
+          },
+          "train_items": 3,
+          "train_excluded_infeasible": [],
+          "dev_loss_items": 3,
+          "dev_loss_excluded": [],
+          "dev_reference_preparation": "annotation tags removed in memory for dev loss only",
+          "frozen": [
+            "hubert.feature_extractor (CNN)"
+          ],
+          "total_parameters": 94390937,
+          "trainable_parameters_after_warmup": 90190489,
+          "effective_batch_size": 2,
+          "precision": "float32",
+          "device_requested": "cuda",
+          "device_used": "cuda",
+          "optimizer_updates_completed": 2,
+          "best_dev_loss": 9.933887322743734,
+          "best_optimizer_update": 2,
+          "dev_history": [
+            {
+              "optimizer_update": 1,
+              "dev_loss": 10.051882902781168,
+              "train_loss": 15.153770446777344,
+              "dev_seconds": 2.6597300019999963
+            },
+            {
+              "optimizer_update": 2,
+              "dev_loss": 9.933887322743734,
+              "train_loss": 7.708995342254639,
+              "dev_seconds": 0.052550257000000045
+            }
+          ],
+          "training_seconds": 9.838906338000001,
+          "dev_eval_seconds": 2.7122802589999964,
+          "seconds_per_update_excluding_dev": 3.5633130395000023,
+          "micro_steps_completed": 2,
+          "environment": {
+            "python": "3.12.3",
+            "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+            "packages": {
+              "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+              "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+              "transformers": "4.57.6",
+              "numpy": "1.26.4",
+              "huggingface-hub": "0.36.2"
+            },
+            "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+            "hip": "7.2.53211-e1a6bc5663",
+            "cuda": null,
+            "gpu_available": true,
+            "gpu": "AMD Radeon RX 7800 XT",
+            "peak_gpu_memory_allocated_bytes": 1979591168
+          }
+        },
+        "predict": {
+          "schema": "greek-asr-hubert-ctc-predict-v1",
+          "status": "complete",
+          "checkpoint": "/tmp/p3-kemal-review-a3ahecql/mhubert/checkpoint-best",
+          "checkpoint_step": 2,
+          "provenance": "own CTC fine-tuning (not an off-the-shelf result)",
+          "split": "train",
+          "decode": "greedy CTC best path over valid encoder frames",
+          "batch_size": 2,
+          "manifest_sha256": "90d942d78b0ea21e8bb3651c75221f3d133f59ef5d528a6dbc869394e496cf23",
+          "test_protocol_sha256": null,
+          "records": 3,
+          "completed_records": 3,
+          "references_used_as_model_input": false,
+          "device_requested": "cuda",
+          "device_used": "cuda",
+          "code_commit": "680b875d533b94da378ddf940b66b9a97cf55baa",
+          "code_sha256": {
+            "hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+            "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
+          },
+          "created_utc": "2026-11-19T20:47:30.497590+00:00",
+          "inference_seconds": 0.04770285799999385,
+          "environment": {
+            "python": "3.12.3",
+            "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+            "packages": {
+              "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+              "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+              "transformers": "4.57.6",
+              "numpy": "1.26.4",
+              "huggingface-hub": "0.36.2"
+            },
+            "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+            "hip": "7.2.53211-e1a6bc5663",
+            "cuda": null,
+            "gpu_available": true,
+            "gpu": "AMD Radeon RX 7800 XT",
+            "peak_gpu_memory_allocated_bytes": 1979591168
+          }
+        },
+        "predictions": [
+          {
+            "id": "hparl:alekshs_tsipras-olomeleia_37_00240000_00243000_4_1",
+            "text": "\u03ac\u03b1\u03b1\u03b1\u03c1\u03ac\u03c1\u03cd\u03cd\u03b7\u03be\u03b7\u03b5 \u03c1\u03c1\u03c3\u03c3\u03c1\u03c1\u03b9\u03be\u03be\u03be\u03c1\u03ac\u03be\u03ac\u03c1"
+          },
+          {
+            "id": "hparl:dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1",
+            "text": "\u03c5\u03c1\u03b9\u03ac\u03ac\u03ac\u03b9\u03cd\u03cd\u03c5 \u03b3\u03c3\u03ba\u03c5\u03b7\u03c3\u03ac\u03ba\u03c5\u03b7\u03bf \u03cd\u03ac \u03be\u03ac\u03b7 \u03c5\u03b7\u03c1\u03cd\u03c1\u03be\u03c1\u03be\u03ac\u03c1\u03ac\u03c1"
+          },
+          {
+            "id": "hparl:iwannhs_balafas-olomeleia_47_02640000_02643000_1_2",
+            "text": "\u03c1\u03ac\u03c1\u03ac\u03b1\u03b3\u03b3\u03c4\u03c1 \u03b7\u03c3\u03b7\u03be \u03be\u03ac\u03bc\u03b7\u03bc\u03be\u03bc\u03cd\u03c5\u03b7\u03b4\u03c1\u03c0\u03c5\u03b7\u03be \u03ac\u03bf\u03c5\u03b7 \u03ac\u03c5\u03c6\u03be \u03c1\u03c5\u03c1"
+          }
+        ]
+      },
+      "optimizer_observations": [
+        {
+          "parameters_with_gradient": 204,
+          "all_gradients_finite": true,
+          "first_parameter_changed": true
+        },
+        {
+          "parameters_with_gradient": 204,
+          "all_gradients_finite": true,
+          "first_parameter_changed": true
+        }
+      ],
+      "outer_wall_seconds": 23.808613056,
+      "peak_gpu_memory_allocated_bytes": 1979591168
+    },
+    "wav2vec_gpu": {
+      "status": "passed",
+      "result": {
+        "infer": {
+          "schema": "greek-asr-inference-v1",
+          "status": "complete",
+          "purpose": "runtime-smoke",
+          "created_utc": "2026-11-19T20:47:30.730303+00:00",
+          "backend": "wav2vec",
+          "model": {
+            "model_id": "lighteternal/wav2vec2-large-xlsr-53-greek",
+            "revision": "c5c82840b689b827a2029deefe82670c7c5809a0",
+            "pipeline_tag": "automatic-speech-recognition",
+            "license": "apache-2.0",
+            "source": "https://huggingface.co/lighteternal/wav2vec2-large-xlsr-53-greek",
+            "status": "metadata_verified_runtime_pending"
+          },
+          "seed": 42,
+          "device": "cuda",
+          "split": "train",
+          "manifest_sha256": "90d942d78b0ea21e8bb3651c75221f3d133f59ef5d528a6dbc869394e496cf23",
+          "source_lock_sha256": "fd720cd46842ee20f9278d8635f36276d0bd44ccbca985a6c6c84d72c68defaa",
+          "test_protocol_sha256": null,
+          "expected_records": 3,
+          "total_audio_seconds": 6.609999999999999,
+          "training_performed": false,
+          "references_used_as_model_input": false,
+          "wer_cer": null,
+          "completed_records": 3,
+          "code_sha256": {
+            "greek_asr/infer.py": "27b761afc9a2fcc7507f538948de4f43efd2ccc7ae433e151522e4b97bed387f",
+            "greek_asr/pretrained/__init__.py": "729b49beb875b629929f515457c1fc59680d28e6a56b9e14be1e656af37c7a2f",
+            "greek_asr/pretrained/nemo.py": "84a7f453ac89214e35f73ba264c2d12a4ddea1ad0882c5e4fc4f80597cb4b519",
+            "greek_asr/pretrained/qwen.py": "865c57e27b9b41acbcc693458cb15bfc9c354c03d8bf050b4a8a0a42814c74ad",
+            "greek_asr/pretrained/whisper.py": "98c7df74f088102b8cba6d2ae5b16f7c08e9d4007bc71de61aeeb49770d91cfa",
+            "greek_asr/models/wav2vec.py": "08a821c77eff2476a2dab2799061d56d14fe5b52110647001d2f7967f25c4309",
+            "greek_asr/models/common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+            "greek_asr/models/ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3"
+          },
+          "download_and_load_seconds": 16.386285897,
+          "settings": {
+            "model_class": "Wav2Vec2ForCTC",
+            "model": "lighteternal/wav2vec2-large-xlsr-53-greek@c5c82840b689b827a2029deefe82670c7c5809a0",
+            "dtype": "float32",
+            "batch_size": 1,
+            "sampling_rate": 16000,
+            "feature_extractor": {
+              "do_normalize": true,
+              "return_attention_mask": true
+            },
+            "decoding": "greedy CTC: per-frame argmax, merge repeats, drop blank; no language model",
+            "word_delimiter": "|",
+            "audio_input": "original audio, resampled in memory only if its rate differs",
+            "long_audio": "whole utterance in one forward pass, no truncation",
+            "reference_or_context_prompt": false
+          },
+          "inference_seconds_including_output_io": 6.037098440999998,
+          "predictions_sha256": "6047360b6e3795419765fad1374f51f68f8487949ad385959243adbb77887ae8",
+          "environment": {
+            "python": "3.12.3",
+            "packages": {
+              "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+              "transformers": "4.57.6",
+              "numpy": "1.26.4",
+              "qwen-asr": "0.0.6",
+              "huggingface-hub": "0.36.2"
+            },
+            "hip": "7.2.53211-e1a6bc5663",
+            "gpu_available": true,
+            "gpu": "AMD Radeon RX 7800 XT",
+            "peak_gpu_memory_allocated_bytes": 1513001472
+          }
+        },
+        "predictions": [
+          {
+            "id": "hparl:alekshs_tsipras-olomeleia_37_00240000_00243000_4_1",
+            "text": "\u03b5\u03bc\u03b5\u03af\u03c2 \u03bc\u03c0\u03bf\u03c1\u03bf\u03cd\u03bc\u03b5 \u03c3\u03cd\u03bc\u03b2\u03b5\u03c1\u03b1"
+          },
+          {
+            "id": "hparl:dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1",
+            "text": "\u03c3' \u03b1\u03c5\u03c4\u03ae \u03c4\u03b7\u03bd \u03b9\u03ba\u03bf\u03bd\u03bf\u03bc\u03b9\u03ba\u03ae \u03b4\u03c1\u03ac\u03c3\u03b7"
+          },
+          {
+            "id": "hparl:iwannhs_balafas-olomeleia_47_02640000_02643000_1_2",
+            "text": "\u03c4\u03bf\u03c5\u03c2 \u03ba\u03b5\u03c6\u03b5\u03cd\u03b3\u03b9\u03c4\u03b7\u03bd \u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7 \u03c4\u03b7\u03c2"
+          }
+        ]
+      },
+      "optimizer_observations": [],
+      "outer_wall_seconds": 22.456631992,
+      "peak_gpu_memory_allocated_bytes": 1513001472
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "backend": "canary",
+  "code_sha256": {
+    "greek_asr/audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "greek_asr/infer.py": "1f740d403f0169288d1c3c33eb92ff08325edbac25f90d5e81d20338b4495323",
+    "greek_asr/pretrained/__init__.py": "729b49beb875b629929f515457c1fc59680d28e6a56b9e14be1e656af37c7a2f",
+    "greek_asr/pretrained/nemo.py": "84a7f453ac89214e35f73ba264c2d12a4ddea1ad0882c5e4fc4f80597cb4b519",
+    "greek_asr/pretrained/qwen.py": "865c57e27b9b41acbcc693458cb15bfc9c354c03d8bf050b4a8a0a42814c74ad",
+    "greek_asr/pretrained/whisper.py": "98c7df74f088102b8cba6d2ae5b16f7c08e9d4007bc71de61aeeb49770d91cfa"
+  },
+  "completed_records": 32,
+  "created_utc": "2026-11-19T22:37:48.492952+00:00",
+  "device": "cuda",
+  "download_and_load_seconds": 211.653132788,
+  "environment": {
+    "gpu": "AMD Radeon RX 7800 XT",
+    "gpu_available": true,
+    "hip": "7.2.53211-e1a6bc5663",
+    "packages": {
+      "huggingface-hub": "0.36.2",
+      "nemo-toolkit": "3.0.0",
+      "numpy": "2.2.6",
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6"
+    },
+    "peak_gpu_memory_allocated_bytes": 10293393408,
+    "python": "3.12.3"
+  },
+  "expected_records": 32,
+  "inference_seconds_including_output_io": 18.77605904299992,
+  "manifest_sha256": "fb3052862fb080ef77e8bbb8b9d8a9f5d964ecf953559e8dbd35bc2b13330443",
+  "model": {
+    "license": "cc-by-4.0",
+    "model_id": "nvidia/canary-1b-v2",
+    "pipeline_tag": "automatic-speech-recognition",
+    "revision": "d455706339a6b32e1aa40f82c713a482a0c938e2",
+    "source": "https://huggingface.co/nvidia/canary-1b-v2",
+    "status": "metadata_verified_runtime_pending"
+  },
+  "predictions_sha256": "68a137c8018f0adad1cf1ca98ee92d425c116e1a97429d6fa3dfe2914bfb525f",
+  "purpose": "runtime-smoke",
+  "references_used_as_model_input": false,
+  "schema": "greek-asr-inference-v1",
+  "seed": 42,
+  "settings": {
+    "batch_size": 1,
+    "checkpoint_file": "canary-1b-v2.nemo",
+    "decoder": "checkpoint defaults",
+    "runtime": "nemo",
+    "source_lang": "el",
+    "target_lang": "el"
+  },
+  "source_lock_sha256": "fd720cd46842ee20f9278d8635f36276d0bd44ccbca985a6c6c84d72c68defaa",
+  "split": "train",
+  "status": "complete",
+  "test_protocol_sha256": null,
+  "total_audio_seconds": 173.13,
+  "training_performed": false,
+  "wer_cer": null
+}

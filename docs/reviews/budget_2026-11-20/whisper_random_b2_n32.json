@@ -1,0 +1,512 @@
+{
+  "batch_size": 2,
+  "benchmark_result": false,
+  "checkpoint_saved": false,
+  "condition": "random",
+  "created_utc": "2026-11-19T22:14:12.750541+00:00",
+  "device": "cuda",
+  "environment": {
+    "cuda": null,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "gpu_available": true,
+    "hip": "7.2.53211-e1a6bc5663",
+    "packages": {
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4",
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6"
+    },
+    "peak_gpu_memory_allocated_bytes": 0,
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc"
+  },
+  "evaluation_batches": [
+    {
+      "audio_seconds": 6.18,
+      "loss": 0.06908678263425827,
+      "loss_finite": true,
+      "seconds": 0.35851208499997256
+    },
+    {
+      "audio_seconds": 15.5,
+      "loss": 0.1804048866033554,
+      "loss_finite": true,
+      "seconds": 0.3654117000000383
+    },
+    {
+      "audio_seconds": 16.49,
+      "loss": 0.10247789323329926,
+      "loss_finite": true,
+      "seconds": 0.3630787349999878
+    }
+  ],
+  "evaluation_seconds_per_audio_hour": 102.5205415771547,
+  "gpu_allocator_fraction_limit": 0.85,
+  "gpu_name": "AMD Radeon RX 7800 XT",
+  "initialization_seconds": 7.525588955999979,
+  "max_update_seconds": 0.720871858999999,
+  "mean_update_seconds": 0.6870383593750038,
+  "model": "whisper",
+  "model_source_sha256": {
+    "__init__.py": "697d55b06d6deddffab61dca0d8d95e4e08c86fa60305ba7cb02f53b204d8e07",
+    "attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
+    "common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+    "ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc",
+    "hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "rnnt_loss.py": "50789fc37f78db00487817f129fea6a0a5a21c97f108cd2c9b46da6019b0e60e",
+    "transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db",
+    "wav2vec.py": "08a821c77eff2476a2dab2799061d56d14fe5b52110647001d2f7967f25c4309",
+    "whisper_finetune.py": "989300fbfdf83be6c82fd4acfce5b94c4e0b192cf5e87dcc4cf609f8c1fe5c6b"
+  },
+  "official_dev_or_test_read": false,
+  "optimizer": "AdamW",
+  "peak_gpu_allocated_bytes": 8666063872,
+  "peak_gpu_reserved_bytes": 9621733376,
+  "pool_audio_hours": 0.16917222222222222,
+  "pool_duration_max_seconds": 13.3,
+  "pool_utterances": 128,
+  "precision": "float32",
+  "requested_measured_updates": 32,
+  "schema": "p3-representative-training-budget-v1",
+  "script_sha256": "618ef7f1bfcda5aee4ebca11c2139b1d33f282d798c3fd5e56cad806213bb625",
+  "seed": 42,
+  "status": "complete",
+  "trainable_parameters": 240582912,
+  "training_seconds_per_audio_hour": 239.39632497504746,
+  "updates": [
+    {
+      "audio_seconds": 6.18,
+      "gradient_norm": 36.1645393371582,
+      "ids": [
+        "hparl:dhmhtrios_gakhs-olomeleia_15_01515000_01518000_3_1",
+        "hparl:alekshs_tsipras-olomeleia_37_00242500_00245500_1_1"
+      ],
+      "loss": 1.335415244102478,
+      "max_audio_seconds": 3.68,
+      "max_target_characters": 66,
+      "seconds": 2.2574201990000233,
+      "warmup": true
+    },
+    {
+      "audio_seconds": 15.5,
+      "gradient_norm": 21.494653701782227,
+      "ids": [
+        "hparl:iwannhs_bournous-olomeleia_5_03607500_03610500_2_1",
+        "hparl:gewrgios_stathakhs-olomeleia_47_02977500_02980500_2_2"
+      ],
+      "loss": 0.9409220814704895,
+      "max_audio_seconds": 11.5,
+      "max_target_characters": 153,
+      "seconds": 0.7193520250000347,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 16.49,
+      "gradient_norm": 16.434926986694336,
+      "ids": [
+        "hparl:gewrgios_lamproulhs-olomeleia_5_00495000_00498000_2_1",
+        "hparl:dhmhtrios_tzanakopoulos-olomeleia_15_01080000_01083000_3_1"
+      ],
+      "loss": 0.5690701007843018,
+      "max_audio_seconds": 10.19,
+      "max_target_characters": 176,
+      "seconds": 0.6922048569999788,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 9.8,
+      "gradient_norm": 20.598119735717773,
+      "ids": [
+        "hparl:athanasios_theoxaropoulos-olomeleia_17_01215000_01218000_2_1",
+        "hparl:vasileios_viliardos-olomeleia_6_02517500_02520500_1_1"
+      ],
+      "loss": 0.6342766284942627,
+      "max_audio_seconds": 8.5,
+      "max_target_characters": 110,
+      "seconds": 0.6957749119999903,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 5.279999999999999,
+      "gradient_norm": 70.65155029296875,
+      "ids": [
+        "hparl:athanasios_davakhs-olomeleia_29_04642500_04645500_5_1",
+        "hparl:nikhtas_kaklamanhs-olomeleia_48_00057500_00060500_3_1"
+      ],
+      "loss": 1.386673927307129,
+      "max_audio_seconds": 2.98,
+      "max_target_characters": 37,
+      "seconds": 0.6639076260000252,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 9.3,
+      "gradient_norm": 22.466787338256836,
+      "ids": [
+        "hparl:alekshs_xaritshs-olomeleia_15_01617500_01620500_2_1",
+        "hparl:alekshs_tsipras-olomeleia_5_02617500_02620500_1_1"
+      ],
+      "loss": 0.5987445712089539,
+      "max_audio_seconds": 5.2,
+      "max_target_characters": 87,
+      "seconds": 0.6880410230000393,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 14.01,
+      "gradient_norm": 16.99153709411621,
+      "ids": [
+        "hparl:athanasios_pafilhs-olomeleia_12_03795000_03798000_1_1",
+        "hparl:gewrgios_koumoutsakos-olomeleia_42_00112500_00115500_4_1"
+      ],
+      "loss": 0.4762286841869354,
+      "max_audio_seconds": 7.71,
+      "max_target_characters": 98,
+      "seconds": 0.6862100820000023,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 12.690000000000001,
+      "gradient_norm": 24.813997268676758,
+      "ids": [
+        "hparl:gewrgios_moulkiwths-olomeleia_7_00470000_00473000_1_2",
+        "hparl:stavros_kontonhs-olomeleia_10_03410000_03413000_4_1"
+      ],
+      "loss": 0.7713149785995483,
+      "max_audio_seconds": 7.2,
+      "max_target_characters": 99,
+      "seconds": 0.6691626629999519,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 7.38,
+      "gradient_norm": 23.653839111328125,
+      "ids": [
+        "hparl:alekshs_tsipras-olomeleia_37_00802500_00805500_3_1",
+        "hparl:xrhstos_gkokas-olomeleia_5_01085000_01088000_1_2"
+      ],
+      "loss": 0.6615663766860962,
+      "max_audio_seconds": 3.98,
+      "max_target_characters": 44,
+      "seconds": 0.6763575150000065,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 9.5,
+      "gradient_norm": 15.767942428588867,
+      "ids": [
+        "hparl:gewrgios_akriwths-olomeleia_44_02212500_02215500_1_1",
+        "hparl:vasileios_viliardos-olomeleia_6_02467500_02470500_2_1"
+      ],
+      "loss": 0.4218064248561859,
+      "max_audio_seconds": 6.5,
+      "max_target_characters": 78,
+      "seconds": 0.6736494520000065,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 8.690000000000001,
+      "gradient_norm": 23.73963165283203,
+      "ids": [
+        "hparl:nikhtas_kaklamanhs-olomeleia_42_02315000_02318000_1_1",
+        "hparl:gewrgios_kyritshs-olomeleia_42_00550000_00553000_1_1"
+      ],
+      "loss": 0.5605905055999756,
+      "max_audio_seconds": 6.49,
+      "max_target_characters": 104,
+      "seconds": 0.6853680090000012,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 11.27,
+      "gradient_norm": 19.409088134765625,
+      "ids": [
+        "hparl:nikolaos_pappas-olomeleia_21_00090000_00093000_1_1",
+        "hparl:iwannhs_delhs-olomeleia_44_00555000_00558000_3_1"
+      ],
+      "loss": 0.5650817155838013,
+      "max_audio_seconds": 8.32,
+      "max_target_characters": 133,
+      "seconds": 0.6945961549999993,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 9.8,
+      "gradient_norm": 17.5922908782959,
+      "ids": [
+        "hparl:aikaterinh_papakwsta_sidhropoulou-olomeleia_10_02255000_02258000_2_1",
+        "hparl:elenh_avlwnitou-olomeleia_29_05235000_05238000_3_1"
+      ],
+      "loss": 0.5913203954696655,
+      "max_audio_seconds": 5.7,
+      "max_target_characters": 76,
+      "seconds": 0.6784366190000242,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 12.09,
+      "gradient_norm": 21.22562026977539,
+      "ids": [
+        "hparl:nikhtas_kaklamanhs-olomeleia_9_00012500_00015500_2_1",
+        "hparl:kwnstantinos_straths-olomeleia_12_00980000_00983000_1_1"
+      ],
+      "loss": 0.7577957510948181,
+      "max_audio_seconds": 8.26,
+      "max_target_characters": 143,
+      "seconds": 0.6841737269999726,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 12.120000000000001,
+      "gradient_norm": 20.04413414001465,
+      "ids": [
+        "hparl:iwannhs_delhs-olomeleia_44_00525000_00528000_1_1",
+        "hparl:efstathios_panagoulhs-olomeleia_49_00262500_00265500_2_1"
+      ],
+      "loss": 0.5284896492958069,
+      "max_audio_seconds": 8.15,
+      "max_target_characters": 110,
+      "seconds": 0.6868841500000258,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 13.030000000000001,
+      "gradient_norm": 18.705810546875,
+      "ids": [
+        "hparl:gewrgios_katsiantwnhs-olomeleia_10_04135000_04138000_1_1",
+        "hparl:kwnstantinos_skandalidhs-olomeleia_29_00937500_00940500_3_1"
+      ],
+      "loss": 0.48248109221458435,
+      "max_audio_seconds": 6.73,
+      "max_target_characters": 96,
+      "seconds": 0.6836362980000104,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 15.45,
+      "gradient_norm": 15.499981880187988,
+      "ids": [
+        "hparl:athanasios_theoxaropoulos-olomeleia_12_02095000_02098000_2_1",
+        "hparl:athanasios_pafilhs-olomeleia_0_00632500_00635500_2_2"
+      ],
+      "loss": 0.6017773151397705,
+      "max_audio_seconds": 9.0,
+      "max_target_characters": 163,
+      "seconds": 0.6902699759999678,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 9.5,
+      "gradient_norm": 14.082681655883789,
+      "ids": [
+        "hparl:maria_thelerith-olomeleia_37_01642500_01645500_2_1",
+        "hparl:athanasios_pafilhs-olomeleia_39_02102500_02105500_2_1"
+      ],
+      "loss": 0.24653075635433197,
+      "max_audio_seconds": 7.2,
+      "max_target_characters": 109,
+      "seconds": 0.6959915730000148,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 9.5,
+      "gradient_norm": 17.47055435180664,
+      "ids": [
+        "hparl:kyriakos_mhtsotakhs-olomeleia_15_03582500_03585500_2_1",
+        "hparl:kwnstantinos_tsiaras-olomeleia_29_02407500_02410500_3_1"
+      ],
+      "loss": 0.5572980046272278,
+      "max_audio_seconds": 6.1,
+      "max_target_characters": 88,
+      "seconds": 0.6836363200000051,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 4.4,
+      "gradient_norm": 27.58286476135254,
+      "ids": [
+        "hparl:hlias_kasidiarhs-olomeleia_29_01082500_01085500_1_1",
+        "hparl:anastasios_tasos_dhmosxakhs-olomeleia_39_01822500_01825500_3_1"
+      ],
+      "loss": 0.5204150676727295,
+      "max_audio_seconds": 2.2,
+      "max_target_characters": 42,
+      "seconds": 0.6663771320000365,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 7.57,
+      "gradient_norm": 28.896270751953125,
+      "ids": [
+        "hparl:olga_gerovasilh-olomeleia_49_00030000_00033000_2_2",
+        "hparl:vasileios_kegkeroglou-olomeleia_31_00950000_00953000_3_2"
+      ],
+      "loss": 0.8077902793884277,
+      "max_audio_seconds": 5.94,
+      "max_target_characters": 112,
+      "seconds": 0.6805207470000028,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 10.3,
+      "gradient_norm": 21.036727905273438,
+      "ids": [
+        "hparl:dhmhtrios_koutsoumpas-olomeleia_44_02560000_02563000_1_1",
+        "hparl:maria_komnhnaka-olomeleia_8_01090000_01093000_2_1"
+      ],
+      "loss": 0.759570300579071,
+      "max_audio_seconds": 7.3,
+      "max_target_characters": 104,
+      "seconds": 0.6915413300000068,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 8.21,
+      "gradient_norm": 17.39497184753418,
+      "ids": [
+        "hparl:athanasia_sia_anagnwstopoulou-olomeleia_32_00180000_00183000_2_2",
+        "hparl:xaralampos_athanasiou-olomeleia_29_02342500_02345500_3_1"
+      ],
+      "loss": 0.3024044334888458,
+      "max_audio_seconds": 5.3,
+      "max_target_characters": 48,
+      "seconds": 0.6778896160000158,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 7.32,
+      "gradient_norm": 19.5969181060791,
+      "ids": [
+        "hparl:iwannhs_saridhs-olomeleia_10_00557500_00560500_1_1",
+        "hparl:kyriakos_mhtsotakhs-olomeleia_27_04172500_04175500_3_1"
+      ],
+      "loss": 0.30343103408813477,
+      "max_audio_seconds": 4.62,
+      "max_target_characters": 45,
+      "seconds": 0.6720990050000069,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 8.4,
+      "gradient_norm": 26.535062789916992,
+      "ids": [
+        "hparl:xristina_aleksopoulou-olomeleia_5_01002500_01005500_1_1",
+        "hparl:fwteinh_fwfh_gennhmata-olomeleia_42_03262500_03265500_2_2"
+      ],
+      "loss": 0.8934307098388672,
+      "max_audio_seconds": 6.4,
+      "max_target_characters": 89,
+      "seconds": 0.6860004629999708,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 10.02,
+      "gradient_norm": 21.45642852783203,
+      "ids": [
+        "hparl:antwnios_gregos-olomeleia_44_00382500_00385500_4_1",
+        "hparl:anastasios_tasos_pratsolhs-olomeleia_27_00312500_00315500_1_1"
+      ],
+      "loss": 0.6289995312690735,
+      "max_audio_seconds": 7.05,
+      "max_target_characters": 138,
+      "seconds": 0.7095200810000506,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 7.6,
+      "gradient_norm": 9.551417350769043,
+      "ids": [
+        "hparl:gewrgios_lazaridhs-olomeleia_32_00105000_00108000_1_1",
+        "hparl:iwannhs_maniaths-olomeleia_17_00777500_00780500_1_1"
+      ],
+      "loss": 0.11318208277225494,
+      "max_audio_seconds": 5.0,
+      "max_target_characters": 63,
+      "seconds": 0.6991790189999847,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 22.36,
+      "gradient_norm": 18.57048988342285,
+      "ids": [
+        "hparl:athanasia_sia_anagnwstopoulou-olomeleia_42_00715000_00718000_4_1",
+        "hparl:gewrgios_moulkiwths-olomeleia_7_00517500_00520500_1_1"
+      ],
+      "loss": 0.5753123760223389,
+      "max_audio_seconds": 13.3,
+      "max_target_characters": 150,
+      "seconds": 0.6995346510000218,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 8.2,
+      "gradient_norm": 20.30794334411621,
+      "ids": [
+        "hparl:athanasios_papaxristopoulos-olomeleia_15_02017500_02020500_2_1",
+        "hparl:maria_thelerith-olomeleia_44_03655000_03658000_2_1"
+      ],
+      "loss": 0.42232802510261536,
+      "max_audio_seconds": 6.1,
+      "max_target_characters": 65,
+      "seconds": 0.6819019440000034,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 5.630000000000001,
+      "gradient_norm": 22.062395095825195,
+      "ids": [
+        "hparl:iwannhs_delhs-olomeleia_44_00535000_00538000_1_2",
+        "hparl:nikolaos_thhvaios-olomeleia_44_03480000_03483000_2_1"
+      ],
+      "loss": 0.5123425126075745,
+      "max_audio_seconds": 3.2,
+      "max_target_characters": 52,
+      "seconds": 0.6848949980000043,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 4.869999999999999,
+      "gradient_norm": 32.25098419189453,
+      "ids": [
+        "hparl:kyriakos_mhtsotakhs-olomeleia_37_00525000_00528000_1_1",
+        "hparl:elenh_zaroulia-olomeleia_17_00752500_00755500_1_1"
+      ],
+      "loss": 0.9720492959022522,
+      "max_audio_seconds": 2.51,
+      "max_target_characters": 64,
+      "seconds": 0.6792131089999884,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 8.7,
+      "gradient_norm": 25.21976089477539,
+      "ids": [
+        "hparl:liana_kanellh-olomeleia_10_01860000_01863000_2_2",
+        "hparl:kwnstantinos_zaxariadhs-olomeleia_6_02697500_02700500_2_1"
+      ],
+      "loss": 0.8890544772148132,
+      "max_audio_seconds": 5.5,
+      "max_target_characters": 69,
+      "seconds": 0.6880305639999733,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 15.629999999999999,
+      "gradient_norm": 13.797126770019531,
+      "ids": [
+        "hparl:gewrgios_gewrgantas-olomeleia_8_00872500_00875500_2_1",
+        "hparl:iasonas_fwthlas-olomeleia_16_02280000_02283000_4_1"
+      ],
+      "loss": 0.3636028468608856,
+      "max_audio_seconds": 10.93,
+      "max_target_characters": 195,
+      "seconds": 0.720871858999999,
+      "warmup": false
+    }
+  ],
+  "warmup_updates": 1
+}

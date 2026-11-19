@@ -1,0 +1,20 @@
+{
+  "_comment": "Owner train/dev budget generated from configs/training_data_selection.json and docs/reviews/budget_2026-11-20. Seeded approximate passes are a compute allocation, not convergence evidence. Full training waits for corrected CSS10 audit and used-train audio delivery/verification. Final test remains locked until its separate committed protocol.",
+  "condition": "hparl_plus_css10",
+  "dev_eval_every": 500,
+  "dev_manifest": "data/manifests/dev.jsonl",
+  "dev_references": "data/manifests/references/dev.jsonl",
+  "gradient_accumulation_steps": 8,
+  "language": "el",
+  "learning_rate": 1e-05,
+  "max_steps": 1600,
+  "micro_batch_size": 2,
+  "model_id": "openai/whisper-small",
+  "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+  "sample_rate": 16000,
+  "seed": 42,
+  "task": "transcribe",
+  "train_manifest": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+  "train_references": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+  "warmup_steps": 50
+}

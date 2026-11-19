@@ -20,6 +20,14 @@ does not authorize completing teammates' implementations or personal reports.
 Do not fabricate contribution files, claim other members' work, or invent
 completed runs. Retain genuine member authorship when work is later integrated.
 
+On 19 November the user explicitly assigned the remaining PR #5 review fixes
+to the owner: Whisper nonfinite-loss handling and prediction source-lock check,
+RNN-T ignored-padding handling, and related config/documentation corrections.
+Implement these limited fixes under the owner's own commits, retaining Adnan's
+original commits and personal contribution report. Other model/data ownership
+is unchanged. This extension does not authorize full-data training or final
+test inference before the existing data/budget/protocol requirements are met.
+
 Use the professor announcements in this conversation. All standard Week 9
 methods are baselines, including advanced pretrained ASR. Own training or
 fine-tuning is reported separately from standard baseline results.
@@ -33,9 +41,25 @@ the parliamentary test. Samed submitted freeze metadata in PR #2; the review
 verified that it has not changed since its initial commit. Full source audio
 delivery/independent audio-byte verification are still pending. Review at
 `e5aa488` verified the committed original Kaldi/CSS10 text metadata and the
-earlier reporting corrections. PR #5 at `0437631` has verified PCM32, GPU and
-Whisper-prefix defects; do not treat passing CPU tests as full-training readiness.
-See `docs/reviews/PR2_PR5_FOLLOWUP_TR.md`. Model corrections remain Adnan's work.
+earlier reporting corrections. PR #5's former PCM32, GPU and Whisper-prefix
+blockers at `0437631` were fixed in `0c13ce1`: 114 tests and all three real
+train-pilot GPU checks passed; attention/RNN-T actual CLI checks also passed.
+The remaining P2 corrections in `docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md` were
+subsequently assigned to and implemented by the owner as scoped above: fail-fast
+nonfinite loss, safe ignored padding, predict source-lock and matching docs/configs.
+The final local suite passes 119 tests. Original model authorship remains Adnan's.
+Passing these fixtures does not establish full-data training feasibility.
+
+Kemal submitted PR #9 at `680b875d`: 164 tests passed independently; GMM-HMM
+CPU, plain CTC GPU, real mHuBERT-147 + CTC GPU training/checkpoint/predict and
+published wav2vec GPU inference passed train-pilot diagnostics. Model authorship
+remains Kemal's. The owner selected `utter-project/mHuBERT-147` + our Greek CTC
+training, with its documented CC-BY-NC-SA-4.0 model license. The published
+`ntinouldinho/hubert_greek_6gram` candidate has no license/card/training-data
+statement and is not selected for benchmark. Do not label a bare encoder or
+the diagnostic head updates as completed Greek ASR training/benchmark.
+See `docs/reviews/KEMAL_PR9_REVIEW_TR.md`. Full representative measure runs,
+selected train audio delivery and training budgets remain pending.
 
 Freeze and commit the final model/settings/scoring protocol separately, before
 test inference/scoring. Do not tune from test. The two further professor
@@ -76,3 +100,21 @@ is explicitly attributed and reported as our training contribution.
 Verification for common scoring changes:
 `python -m unittest discover -s tests -v` from this directory.
 Model runs and data cleaning require their own appropriate checks once implemented.
+
+20 November owner integration update: all test/dev LFS WAVs passed independent
+audio verification; CSS10's 1844 original audio hashes/RIFF headers also match.
+Actual CSS10 is IEEE float32 (format tag 3), not integer PCM32. The owner repaired
+the shared input contract in greek_asr/audio.py, infer.py and the thin
+models/common.py decoder adapter; no model architecture was changed. All 203
+tests passed after that fix. Samed still owns correcting data/common.py and the
+format-aware signal audit/clean reports, plus selected RAW train audio delivery.
+Current handoff: docs/HANDOFF_SAMED_FINAL_DATA_TR.md. Do not claim that the old
+CSS10 integer-interpreted audit is valid or that full-data training is complete.
+
+The user explicitly selected the 10 GiB free storage cap on 20 November. The
+owner's measured session-cohort decision, raw/clean delivery hashes and training
+allocations are configs/training_data_selection.json and training_budget.json.
+Do not buy storage, alter the frozen test or train on unavailable source-catalog
+paths. Full runs still wait for the handoff's real-audio acceptance checks.
+Qwen's owner adapter supports bounded batch inference; record its batch setting
+and choose it on train/dev before the separate final test protocol.
