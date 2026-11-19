@@ -42,6 +42,15 @@
   probes, recorded actual failures and prepared an actionable correction prompt.
   The unchanged submitted Whisper pilot completed one GPU optimizer step;
   attention and RNN-T failed. No full training or official dev/test inference.
+- Re-reviewed Adnan's `0c13ce1` fixes on 19 November: 114 tests passed; all
+  three unchanged submitted pilots completed real GPU updates with observed
+  finite gradients and changed parameters. Exercised attention/RNN-T actual
+  train/checkpoint/predict CLIs on temporary train-pilot fixtures and recorded
+  an independent exhaustive RNN-T value/gradient oracle. Kept remaining P2
+  issues separate from resolved original blockers. No teammate source edits,
+  official dev/test inference or full-data training were performed.
+  Temporary integration with Samed's `4db1a4a` passed 146 tests; LFS audio
+  blobs were not downloaded or independently rehashed in this code check.
 
 ## Limits and pending dependent work
 

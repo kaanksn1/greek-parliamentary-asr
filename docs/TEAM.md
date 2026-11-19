@@ -185,3 +185,9 @@ ve iki dalın geçici birleşimindeki 125 test geçti. Gerçek GPU/PCM32/Whisper
 hedef kontrolleri tam eğitim engelleri buldu. İlgili sahipler düzeltirken
 Serdar veri teslimi/kota ve merkezî koşum hazırlığını ilerletir. Bu iki PR
 henüz kabul edilmedi. [Kanıt ve Adnan düzeltme promptu](reviews/PR2_PR5_FOLLOWUP_TR.md).
+
+19 Kasım model incelemesi: Adnan `0c13ce1` ile ana engelleri düzeltti. 114 test,
+üç modelin train-pilot GPU gradient/parameter-update kontrolleri ve attention/
+RNN-T gerçek CLI yolları başarılı. P2 hata-yolu ve belge/config düzeltmeleri
+[yeni incelemede](reviews/ADNAN_0c13ce1_REVIEW_TR.md). Tam veri bütçesi ve bütün
+tam koşular Serdar'da kalır; pilot başarısı tam eğitim sonucu değildir.

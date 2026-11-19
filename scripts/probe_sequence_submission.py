@@ -46,11 +46,13 @@ def main() -> None:
         raise FileExistsError("choose a new output path; an earlier review must not be overwritten")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     report = {
-        "schema": "p3-sequence-submission-review-v1",
+        "schema": "p3-sequence-submission-review-v2",
         "submission_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
         "device": args.device, "torch": torch.__version__, "torchaudio": torchaudio.__version__,
         "transformers": importlib.metadata.version("transformers"), "numpy": np.__version__,
         "hip": torch.version.hip,
+        "gpu": torch.cuda.get_device_name() if args.device.startswith("cuda") else None,
+        "review_probe_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "scope": "Synthetic contract probes and unchanged one-step functions on three official train-pilot clips",
         "official_dev_or_test_used": False, "full_training_performed": False,
         "trained_checkpoints_persisted": False,
@@ -84,7 +86,10 @@ def main() -> None:
                               allow_patterns=["*.json", "*.txt"])
     processor = WhisperProcessor.from_pretrained(local, local_files_only=True)
     config = WhisperConfig.from_pretrained(local, local_files_only=True)
-    labels = whisper_finetune.build_labels(processor, ["καλημέρα"], language="el", task="transcribe")
+    label_options = {"language": "el", "task": "transcribe"}
+    if "decoder_start_token_id" in inspect.signature(whisper_finetune.build_labels).parameters:
+        label_options["decoder_start_token_id"] = config.decoder_start_token_id
+    labels = whisper_finetune.build_labels(processor, ["καλημέρα"], **label_options)
     decoder_inputs = shift_tokens_right(labels, config.pad_token_id, config.decoder_start_token_id)
     report["probes"]["whisper_prefix"] = {
         "decoder_start_token_id": config.decoder_start_token_id,
@@ -100,7 +105,16 @@ def main() -> None:
         "feature_shape": list(extracted["input_features"].shape),
         "features_identical": torch.equal(extracted["input_features"][0], extracted["input_features"][1]),
         "input_kind": "two synthetic signals only; not corpus audio",
+        "scope": "feature extractor default only; check the submitted guard separately",
     }
+    guard = getattr(whisper_finetune, "_require_within_whisper_window", None)
+    if guard is not None:
+        try:
+            guard(first, 16000, "synthetic-31-second-review")
+            report["probes"]["submitted_long_audio_guard"] = {"rejects_31_seconds": False}
+        except ValueError as error:
+            report["probes"]["submitted_long_audio_guard"] = {
+                "rejects_31_seconds": True, "error": str(error)}
 
     spec = importlib.util.spec_from_file_location("submitted_pilot", root / "scripts/pilot_sequence_models.py")
     pilot = importlib.util.module_from_spec(spec)
@@ -117,15 +131,37 @@ def main() -> None:
             torch.cuda.synchronize()
             torch.cuda.reset_peak_memory_stats()
         started = time.perf_counter()
+        step_observations = []
+        original_step = torch.optim.AdamW.step
+
+        def observed_step(optimizer, *positional, **keywords):
+            parameters = [p for group in optimizer.param_groups for p in group["params"] if p.grad is not None]
+            gradients_finite = bool(parameters) and bool(torch.stack(
+                [torch.isfinite(p.grad).all() for p in parameters]).all())
+            before = parameters[0].detach().clone() if parameters else None
+            result = original_step(optimizer, *positional, **keywords)
+            step_observations.append({
+                "parameters_with_gradient": len(parameters), "all_gradients_finite": gradients_finite,
+                "first_parameter_changed": bool(parameters) and not torch.equal(before, parameters[0].detach()),
+            })
+            return result
+
+        torch.optim.AdamW.step = observed_step
         try:
             result = function(utterances, args.device)
             if args.device.startswith("cuda"):
                 torch.cuda.synchronize()
-            report["probes"][name] = {"status": "passed", "submitted_measurement": result,
-                                      "optimizer_step_completed": True}
+            validated = bool(result.get("loss_finite")) and bool(step_observations) and all(
+                row["all_gradients_finite"] and row["first_parameter_changed"] for row in step_observations)
+            report["probes"][name] = {"status": "passed" if validated else "failed_validation",
+                                      "submitted_measurement": result,
+                                      "optimizer_step_completed": bool(step_observations),
+                                      "optimizer_observations": step_observations}
         except Exception as error:
             report["probes"][name] = {"status": "failed", "error_type": type(error).__name__,
                                       "error": str(error), "traceback": traceback.format_exc()}
+        finally:
+            torch.optim.AdamW.step = original_step
         report["probes"][name]["outer_wall_seconds"] = time.perf_counter() - started
         if args.device.startswith("cuda"):
             report["probes"][name]["peak_gpu_memory_allocated_bytes"] = torch.cuda.max_memory_allocated()
