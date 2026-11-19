@@ -1,0 +1,30 @@
+{
+  "_comment": "Plain supervised CTC (greek_asr.models.ctc): log-mel, 4x conv subsampling, 4-layer BiLSTM, character CTC, trained from scratch. max_steps stays null until a measured pilot fixes the budget; pass --max-steps for measurement runs (recorded as max_steps_source=cli).",
+  "architecture": "conv2d x2 (stride 2) + BiLSTM 4x320 + linear CTC head",
+  "primary_sources": [
+    "Graves et al. (2006), Connectionist Temporal Classification, ICML",
+    "Amodei et al. (2016), Deep Speech 2, ICML",
+    "Park et al. (2019), SpecAugment, Interspeech"
+  ],
+  "train_manifest": "data/manifests/train.jsonl",
+  "train_references": "data/manifests/references/train.jsonl",
+  "dev_manifest": "data/manifests/dev.jsonl",
+  "dev_references": "data/manifests/references/dev.jsonl",
+  "seed": 42,
+  "sample_rate": 16000,
+  "model": {"input_dim": 80, "conv_channels": 32, "model_dim": 320, "lstm_hidden": 320, "lstm_layers": 4,
+            "dropout": 0.1},
+  "spec_augment": {"freq_masks": 2, "freq_width": 27, "time_masks": 2, "time_ratio": 0.05},
+  "cmvn_utterances": 2000,
+  "learning_rate": 0.001,
+  "weight_decay": 0.01,
+  "warmup_steps": 1000,
+  "batch_size": 32,
+  "gradient_accumulation_steps": 1,
+  "max_grad_norm": 5.0,
+  "max_steps": null,
+  "dev_eval_every": 1000,
+  "num_workers": 4,
+  "infeasible_policy": "exclude_and_report",
+  "max_excluded_fraction": 0.01
+}

@@ -9,7 +9,7 @@ One shared report does not replace the five individual reports.
 |---|---|---|
 | Serdar Kaan Kesen | `SERDAR_KAAN_KESEN_220911810_kaanksn1.md` | Owner's report present; ongoing work |
 | Samed Ortakaya | `SAMED_ORTAKAYA_210901024_SmtOrtakaya.md` | Member must create after doing their work |
-| Kemal Arif Karabacıoğlu | `KEMAL_ARIF_KARABACIOGLU_220911802_kemalarif.md` | Member must create after doing their work |
+| Kemal Arif Karabacıoğlu | `KEMAL_ARIF_KARABACIOGLU_220911802_kemalarif.md` | Member's report present; central runs pending |
 | Adnan Demir | `ADNAN_DEMIR_220911784_adnan-demir.md` | Member must create after doing their work |
 | Ozan Serhan Denizhan | `OZAN_SERHAN_DENIZHAN_220911758_serhandenizhan.md` | Member must create after doing their work |
 

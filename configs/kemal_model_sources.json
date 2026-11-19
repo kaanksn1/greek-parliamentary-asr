@@ -1,0 +1,39 @@
+{
+  "schema": "checkpoint-source-lock-v1",
+  "verified_on": "2026-11-19",
+  "note": "Checkpoints found after the historical configs/model_sources.lock.json snapshot (left byte-identical). Metadata were read from the Hugging Face model API and files at these revisions; pinning does not certify inference quality or training-data independence.",
+  "models": [
+    {
+      "model_id": "ntinouldinho/hubert_greek_6gram",
+      "revision": "e89272763ec7320f5cf57638dfdedc3ecaa1ce86",
+      "pipeline_tag": "automatic-speech-recognition",
+      "license": null,
+      "source": "https://huggingface.co/ntinouldinho/hubert_greek_6gram",
+      "architecture": "HubertForCTC, 24 layers, hidden 1024, stable layer norm; Greek character CTC vocabulary (56 ids, [PAD]=53 blank, '|' word delimiter)",
+      "model_card": "absent: no README.md at this revision; training data, metrics and license are not stated",
+      "files_used": "config.json, preprocessor_config.json, vocab.json, tokenizer_config.json, special_tokens_map.json, added_tokens.json, pytorch_model.bin (bundled language_model/6gram.bin is not used)",
+      "use_decision": "pending integration-owner licensing decision; the only HuBERT checkpoint found with a trained Greek ASR head",
+      "status": "metadata_verified_runtime_pending"
+    },
+    {
+      "model_id": "utter-project/mHuBERT-147",
+      "revision": "7ad3fc0bc5106c58c9c13526abccad527150d135",
+      "pipeline_tag": "feature-extraction",
+      "license": "cc-by-nc-sa-4.0",
+      "source": "https://huggingface.co/utter-project/mHuBERT-147",
+      "architecture": "HubertModel base (12 layers, hidden 768), bare encoder without an ASR head",
+      "model_card": "multilingual HuBERT pretrained on about 90K hours in 147 languages; 'el' is in its language list",
+      "files_used": "config.json, preprocessor_config.json, model.safetensors",
+      "use_decision": "encoder for our own HuBERT + CTC head fine-tuning only; never used as an ASR model by itself",
+      "status": "metadata_verified_training_recipe_prepared"
+    }
+  ],
+  "reviewed_and_rejected": [
+    {"model_id": "m3hrdadfi/hubert-base-greek-speech-emotion-recognition", "reason": "speech emotion classifier, no transcription head"},
+    {"model_id": "m3hrdadfi/hubert-large-greek-speech-emotion-recognition", "reason": "speech emotion classifier, no transcription head"},
+    {"model_id": "ameerazam08/hubert-base-greek-ser", "reason": "speech emotion recognition, no transcription head"},
+    {"model_id": "facebook/hubert-large-ls960-ft", "reason": "English-only LibriSpeech CTC head; wrong language"},
+    {"model_id": "facebook/hubert-large-ll60k", "reason": "English-only pretraining and bare encoder; mHuBERT-147 covers Greek"},
+    {"model_id": "coml/hubert-base-vp20", "reason": "bare encoder without an ASR head"}
+  ]
+}
