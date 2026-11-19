@@ -1,6 +1,9 @@
 * text=auto eol=lf
 # This historical metadata snapshot is byte-hashed by the original smoke run.
 configs/model_sources.lock.json -text whitespace=cr-at-eol
+# Verbatim TRAIN measurement manifests: their raw byte hashes are in run.json.
+docs/reviews/budget_2026-11-20/inference_train*.jsonl -text whitespace=cr-at-eol
+docs/reviews/budget_2026-11-20/pilot_*.jsonl -text whitespace=cr-at-eol
 *.wav -text
 *.flac -text
 *.png -text

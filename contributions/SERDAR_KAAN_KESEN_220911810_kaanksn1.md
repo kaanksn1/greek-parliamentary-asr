@@ -72,12 +72,42 @@
   only the shared contribution-inventory conflict; no personal report or model/
   data implementation changed, and no full LFS audio verification was claimed.
 
+## 20 November: independent audio verification and measured budgets
+
+- Downloaded Samed's actual LFS test/dev/CSS10 audio. Independently verified
+  the unchanged 8,679-record frozen test with audio and the 7,113 dev WAVs;
+  byte-checked 16 original metadata files. Verified all 1,844 original CSS10
+  audio hashes/RIFF headers and detected IEEE float32 rather than integer PCM32.
+- Repaired the shared model input contract (`greek_asr/audio.py`, shared runner
+  validation and the thin `models/common.py` decoding adapter), preserving raw
+  bytes and model architectures. Added semantic float/amplitude/finite/truncation
+  tests; all 203 tests passed after that fix. Samed owns the outstanding
+  data-probe/audit-statistics correction and regeneration.
+- Acquired a deterministic 144-clip official TRAIN timing cohort (128 random
+  plus long audio/text tails) with source hashes, and measured actual attention,
+  RNN-T, CTC, licensed mHuBERT and Whisper GPU steps/VRAM plus GMM-HMM CPU cost.
+  Exercised the longest real CSS10 inputs after the shared decoder correction.
+  Measured ROCm MIOpen FAST on previously unmeasured input shapes.
+- Reused Samed's whole-session selector to generate the 18-session used-data
+  pool, RAW/clean/reference/delivery hashes and conservative 10 GiB storage plan.
+  The RAW delivery includes removed examples; cleaning authorship remains Samed's.
+  Generated central training allocations and both matched Whisper conditions
+  from real measurement JSON, rather than inventing an hour or step limit.
+- Measured all five selected published ASR backends on 32 real TRAIN clips.
+  Added bounded Qwen batching with ID/order/empty-result/failure checks; batch
+  4 produced the same 32 hypotheses as single inference in roughly half the
+  measured time. These are runtime observations, not WER/CER benchmark scores.
+- Prepared the exact Samed handoff, byte-verification evidence, source-aware
+  storage calculations and reproducible budget report. See
+  `docs/HANDOFF_SAMED_FINAL_DATA_TR.md` and `docs/reviews/budget_2026-11-20/`.
+
 ## Limits and pending dependent work
 
 Samed submitted early test-freeze metadata and his data pipeline in PR #2;
-full audio delivery and independent audio-byte verification are pending; the
-reporting/source-metadata corrections were verified. His pipeline and cleaning
-authorship remain his. Adnan's submitted implementation and the owner's final
+test/dev audio passed independent verification and CSS10 original hashes/headers
+matched. Selected RAW train upload, float-aware CSS10 data audit and used-only
+pipeline reproduction are pending. His pipeline and cleaning authorship remain
+his. Adnan's submitted implementation and the owner's final
 review corrections have passed code/pilot checks. Kemal's submitted models passed
 code/pilot review; Ozan's final evaluation and all full
 benchmark runs remain pending. No custom-data bonus, trained-model improvement or new

@@ -1,0 +1,432 @@
+[
+  {
+    "all_audio_unique_lfs_gib": 3.4230705834925175,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 173,
+    "hours": 0.2278777777777778,
+    "raw_records": 174,
+    "raw_train_unique_lfs_bytes": 26259132,
+    "sessions": 1,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 3.448236256837845,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 361,
+    "hours": 0.4603888888888889,
+    "raw_records": 363,
+    "raw_train_unique_lfs_bytes": 53280568,
+    "sessions": 2,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 3.460565321147442,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 459,
+    "hours": 0.5752666666666667,
+    "raw_records": 461,
+    "raw_train_unique_lfs_bytes": 66518800,
+    "sessions": 3,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 3.78238632529974,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 2707,
+    "hours": 3.5739972222222223,
+    "raw_records": 2709,
+    "raw_train_unique_lfs_bytes": 412071472,
+    "sessions": 4,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 4.461011130362749,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 7375,
+    "hours": 9.8964,
+    "raw_records": 7378,
+    "raw_train_unique_lfs_bytes": 1140739308,
+    "sessions": 5,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 5.278969746083021,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 13167,
+    "hours": 17.514363888888887,
+    "raw_records": 13173,
+    "raw_train_unique_lfs_bytes": 2019015684,
+    "sessions": 6,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 5.310960691422224,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 13391,
+    "hours": 17.812455555555555,
+    "raw_records": 13397,
+    "raw_train_unique_lfs_bytes": 2053365700,
+    "sessions": 7,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 5.35291363671422,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 13709,
+    "hours": 18.203363888888887,
+    "raw_records": 13716,
+    "raw_train_unique_lfs_bytes": 2098412332,
+    "sessions": 8,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 5.991841971874237,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 18317,
+    "hours": 24.156208333333336,
+    "raw_records": 18325,
+    "raw_train_unique_lfs_bytes": 2784456408,
+    "sessions": 9,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.0121211893856525,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 18466,
+    "hours": 24.343133333333334,
+    "raw_records": 18476,
+    "raw_train_unique_lfs_bytes": 2806231052,
+    "sessions": 10,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.06620267406106,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 18854,
+    "hours": 24.84706111111111,
+    "raw_records": 18864,
+    "raw_train_unique_lfs_bytes": 2864300604,
+    "sessions": 11,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.1325403936207294,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 19329,
+    "hours": 25.464211111111112,
+    "raw_records": 19340,
+    "raw_train_unique_lfs_bytes": 2935530188,
+    "sessions": 12,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.164911471307278,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 19564,
+    "hours": 25.765841666666667,
+    "raw_records": 19575,
+    "raw_train_unique_lfs_bytes": 2970288368,
+    "sessions": 13,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.368216380476952,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 20990,
+    "hours": 27.660236111111114,
+    "raw_records": 21001,
+    "raw_train_unique_lfs_bytes": 3188585352,
+    "sessions": 14,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.369055334478617,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 21005,
+    "hours": 27.668049999999997,
+    "raw_records": 21016,
+    "raw_train_unique_lfs_bytes": 3189486172,
+    "sessions": 15,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.461156208068132,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 21705,
+    "hours": 28.526225,
+    "raw_records": 21717,
+    "raw_train_unique_lfs_bytes": 3288378732,
+    "sessions": 16,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.656842775642872,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 23167,
+    "hours": 30.348458333333333,
+    "raw_records": 23180,
+    "raw_train_unique_lfs_bytes": 3498495584,
+    "sessions": 17,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 6.714254509657621,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 23602,
+    "hours": 30.883408333333335,
+    "raw_records": 23615,
+    "raw_train_unique_lfs_bytes": 3560140964,
+    "sessions": 18,
+    "within_storage_budget": true
+  },
+  {
+    "all_audio_unique_lfs_gib": 7.484531629830599,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 28912,
+    "hours": 38.06088333333333,
+    "raw_records": 28925,
+    "raw_train_unique_lfs_bytes": 4387219724,
+    "sessions": 19,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 7.570076752454042,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 29536,
+    "hours": 38.85798333333333,
+    "raw_records": 29549,
+    "raw_train_unique_lfs_bytes": 4479073100,
+    "sessions": 20,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 7.572261497378349,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 29549,
+    "hours": 38.878341666666664,
+    "raw_records": 29562,
+    "raw_train_unique_lfs_bytes": 4481418952,
+    "sessions": 21,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 7.680127460509539,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 30408,
+    "hours": 39.88339722222223,
+    "raw_records": 30427,
+    "raw_train_unique_lfs_bytes": 4597239148,
+    "sessions": 22,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 8.064485464245081,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 33122,
+    "hours": 43.461863888888885,
+    "raw_records": 33143,
+    "raw_train_unique_lfs_bytes": 5009940412,
+    "sessions": 23,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 8.637780759483576,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 37105,
+    "hours": 48.802258333333334,
+    "raw_records": 37127,
+    "raw_train_unique_lfs_bytes": 5625511548,
+    "sessions": 24,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 8.924230854958296,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 39207,
+    "hours": 51.47136388888889,
+    "raw_records": 39231,
+    "raw_train_unique_lfs_bytes": 5933084996,
+    "sessions": 25,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 9.005553714931011,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 39856,
+    "hours": 52.2291,
+    "raw_records": 39882,
+    "raw_train_unique_lfs_bytes": 6020404752,
+    "sessions": 26,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 9.94299952313304,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 46518,
+    "hours": 60.96335,
+    "raw_records": 46545,
+    "raw_train_unique_lfs_bytes": 7026979524,
+    "sessions": 27,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 10.02640911564231,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 47129,
+    "hours": 61.739175,
+    "raw_records": 47158,
+    "raw_train_unique_lfs_bytes": 7116539892,
+    "sessions": 28,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 10.762713011354208,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 52321,
+    "hours": 68.60004166666667,
+    "raw_records": 52350,
+    "raw_train_unique_lfs_bytes": 7907140180,
+    "sessions": 29,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 11.36958258971572,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 56592,
+    "hours": 74.2525111111111,
+    "raw_records": 56622,
+    "raw_train_unique_lfs_bytes": 8558761428,
+    "sessions": 30,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 11.525538213551044,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 57721,
+    "hours": 75.70569166666667,
+    "raw_records": 57751,
+    "raw_train_unique_lfs_bytes": 8726217504,
+    "sessions": 31,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 12.338945727795362,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 63585,
+    "hours": 83.279125,
+    "raw_records": 63619,
+    "raw_train_unique_lfs_bytes": 9599607172,
+    "sessions": 32,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 12.345641635358334,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 63634,
+    "hours": 83.34151666666668,
+    "raw_records": 63668,
+    "raw_train_unique_lfs_bytes": 9606796848,
+    "sessions": 33,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 12.707158338278532,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 66264,
+    "hours": 86.70744722222223,
+    "raw_records": 66299,
+    "raw_train_unique_lfs_bytes": 9994972452,
+    "sessions": 34,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 12.784517168998718,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 66847,
+    "hours": 87.42826111111111,
+    "raw_records": 66882,
+    "raw_train_unique_lfs_bytes": 10078035864,
+    "sessions": 35,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 12.976961746811867,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 68235,
+    "hours": 89.22144444444444,
+    "raw_records": 68270,
+    "raw_train_unique_lfs_bytes": 10284671656,
+    "sessions": 36,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 12.97933915629983,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 68266,
+    "hours": 89.24359166666666,
+    "raw_records": 68302,
+    "raw_train_unique_lfs_bytes": 10287224380,
+    "sessions": 37,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 12.981645192950964,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 68308,
+    "hours": 89.26506944444445,
+    "raw_records": 68344,
+    "raw_train_unique_lfs_bytes": 10289700468,
+    "sessions": 38,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 12.987094439566135,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 68349,
+    "hours": 89.31584444444444,
+    "raw_records": 68385,
+    "raw_train_unique_lfs_bytes": 10295551552,
+    "sessions": 39,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 13.009896654635668,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 68542,
+    "hours": 89.52830277777778,
+    "raw_records": 68578,
+    "raw_train_unique_lfs_bytes": 10320035244,
+    "sessions": 40,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 13.78799907118082,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 74187,
+    "hours": 96.77680833333334,
+    "raw_records": 74225,
+    "raw_train_unique_lfs_bytes": 11155516352,
+    "sessions": 41,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 13.983706675469875,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 75646,
+    "hours": 98.59779444444445,
+    "raw_records": 75685,
+    "raw_train_unique_lfs_bytes": 11365655792,
+    "sessions": 42,
+    "within_storage_budget": false
+  },
+  {
+    "all_audio_unique_lfs_gib": 14.079165063798428,
+    "checkpoint_and_headroom_reserve_gib": 2.6,
+    "clean_records": 76302,
+    "hours": 99.48728055555556,
+    "raw_records": 76341,
+    "raw_train_unique_lfs_bytes": 11468153456,
+    "sessions": 43,
+    "within_storage_budget": false
+  }
+]

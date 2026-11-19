@@ -165,8 +165,9 @@ class TrainAndPredictOnRealPilotAudioTests(unittest.TestCase):
         self.assertEqual(report["micro_steps_completed"], 3)  # the cross-epoch 3rd microbatch was not dropped
         self.assertIsNotNone(report["best_dev_loss"])
 
-    def test_shipped_config_refuses_an_unmeasured_step_budget(self):
+    def test_config_refuses_an_unmeasured_step_budget(self):
         config = json.loads((ROOT / "configs/sequence/transducer.json").read_text("utf-8"))
+        config["max_steps"] = None
         with self.assertRaisesRegex(ValueError, "measured pilot run"):
             transducer.train(config, project_root=ROOT, output_dir=ROOT / "__should_not_be_created__")
 

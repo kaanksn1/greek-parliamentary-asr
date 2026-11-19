@@ -100,3 +100,21 @@ is explicitly attributed and reported as our training contribution.
 Verification for common scoring changes:
 `python -m unittest discover -s tests -v` from this directory.
 Model runs and data cleaning require their own appropriate checks once implemented.
+
+20 November owner integration update: all test/dev LFS WAVs passed independent
+audio verification; CSS10's 1844 original audio hashes/RIFF headers also match.
+Actual CSS10 is IEEE float32 (format tag 3), not integer PCM32. The owner repaired
+the shared input contract in greek_asr/audio.py, infer.py and the thin
+models/common.py decoder adapter; no model architecture was changed. All 203
+tests passed after that fix. Samed still owns correcting data/common.py and the
+format-aware signal audit/clean reports, plus selected RAW train audio delivery.
+Current handoff: docs/HANDOFF_SAMED_FINAL_DATA_TR.md. Do not claim that the old
+CSS10 integer-interpreted audit is valid or that full-data training is complete.
+
+The user explicitly selected the 10 GiB free storage cap on 20 November. The
+owner's measured session-cohort decision, raw/clean delivery hashes and training
+allocations are configs/training_data_selection.json and training_budget.json.
+Do not buy storage, alter the frozen test or train on unavailable source-catalog
+paths. Full runs still wait for the handoff's real-audio acceptance checks.
+Qwen's owner adapter supports bounded batch inference; record its batch setting
+and choose it on train/dev before the separate final test protocol.

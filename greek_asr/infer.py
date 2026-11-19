@@ -142,9 +142,13 @@ def _environment() -> dict[str, Any]:
 def run(*, manifest: Path, backend_name: str, split: str, output: Path,
         project_root: Path = ROOT, device: str = "cuda", seed: int = 42,
         purpose: str = "baseline", allow_test: bool = False,
-        test_protocol: Path | None = None, loader=None) -> dict[str, Any]:
+        test_protocol: Path | None = None, loader=None, batch_size: int = 1) -> dict[str, Any]:
     if backend_name not in BACKENDS:
         raise ValueError("unknown backend")
+    if type(batch_size) is not int or not 1 <= batch_size <= 8:
+        raise ValueError("batch_size must be an integer from 1 to 8")
+    if batch_size > 1 and backend_name != "qwen":
+        raise ValueError("batch_size > 1 is currently supported only for Qwen")
     if split not in ("train", "dev", "test"):
         raise ValueError("split must be train, dev or test")
     if purpose == "runtime-smoke" and split != "train":
@@ -167,6 +171,7 @@ def run(*, manifest: Path, backend_name: str, split: str, output: Path,
     report: dict[str, Any] = {
         "schema": "greek-asr-inference-v1", "status": "running", "purpose": purpose,
         "created_utc": datetime.now(timezone.utc).isoformat(), "backend": backend_name,
+        "batch_size": batch_size,
         "model": models[0], "seed": seed, "device": device, "split": split,
         "manifest_sha256": sha256(manifest), "source_lock_sha256": sha256(lock_path),
         "test_protocol_sha256": protocol_hash, "expected_records": len(records),
@@ -196,20 +201,26 @@ def run(*, manifest: Path, backend_name: str, split: str, output: Path,
         if loader is None:
             loader = importlib.import_module(module_path).load_backend
         started = time.perf_counter()
-        backend = loader(model_id=model_id, revision=models[0]["revision"], device=device,
-                         model_dir=project_root / "models" / (backend_name + "-" + models[0]["revision"][:12]))
+        options = dict(model_id=model_id, revision=models[0]["revision"], device=device,
+                       model_dir=project_root / "models" / (backend_name + "-" + models[0]["revision"][:12]))
+        if batch_size > 1:
+            options["batch_size"] = batch_size
+        backend = loader(**options)
         report["download_and_load_seconds"] = time.perf_counter() - started
         report["settings"] = getattr(backend, "settings", {})
         started = time.perf_counter()
         with partial.open("x", encoding="utf-8", newline="\n") as stream:
-            for row in records:
-                text = backend.transcribe(row["audio"])
-                if not isinstance(text, str):
-                    raise ValueError("backend prediction must be a string, including genuinely empty output")
-                stream.write(json.dumps({"id": row["id"], "text": text}, ensure_ascii=False) + "\n")
-                stream.flush()
-                report["completed_records"] += 1
-                print(f"{backend_name}: {report['completed_records']}/{len(records)} {row['id']}", flush=True)
+            for start in range(0, len(records), batch_size):
+                chunk = records[start:start + batch_size]
+                texts = ([backend.transcribe(chunk[0]["audio"])] if batch_size == 1 else
+                         backend.transcribe_batch([row["audio"] for row in chunk]))
+                if len(texts) != len(chunk) or any(not isinstance(text, str) for text in texts):
+                    raise ValueError("backend prediction batch has invalid count/type; every prediction must be a string")
+                for row, text in zip(chunk, texts):
+                    stream.write(json.dumps({"id": row["id"], "text": text}, ensure_ascii=False) + "\n")
+                    stream.flush()
+                    report["completed_records"] += 1
+                    print(f"{backend_name}: {report['completed_records']}/{len(records)} {row['id']}", flush=True)
         if device.startswith("cuda"):
             torch.cuda.synchronize()
         report["inference_seconds_including_output_io"] = time.perf_counter() - started
@@ -238,6 +249,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--batch-size", type=int, default=1, help="Qwen only for batches larger than one")
     parser.add_argument("--purpose", choices=("baseline", "runtime-smoke"), default="baseline")
     parser.add_argument("--allow-test", action="store_true")
     parser.add_argument("--test-protocol", type=Path)
@@ -245,7 +257,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         run(manifest=args.manifest, backend_name=args.backend, split=args.split,
             output=args.output, device=args.device, seed=args.seed, purpose=args.purpose,
-            allow_test=args.allow_test, test_protocol=args.test_protocol)
+            allow_test=args.allow_test, test_protocol=args.test_protocol, batch_size=args.batch_size)
     except (ValueError, OSError, RuntimeError, ImportError, subprocess.CalledProcessError) as error:
         parser.exit(1, f"inference failed: {error}\n")
     return 0

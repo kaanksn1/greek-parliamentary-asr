@@ -6,6 +6,35 @@ in-domain fine-tuning experiment.**
 
 Public repository: https://github.com/kaanksn1/greek-parliamentary-asr
 
+Owner review, 20 November: actual LFS test/dev/CSS10 bytes have been downloaded.
+The frozen 8,679 test WAVs and 7,113 dev WAVs pass the data verifier; all 1,844
+CSS10 audio hashes and headers match the committed source inventory. CSS10 is
+**IEEE float32**, and its old signal-statistics audit incorrectly read it as
+integer PCM32. The shared model input now decodes it correctly; Samed must
+regenerate the float-aware audit/clean reports before full training.
+
+The selected training pool is **18 whole HParl sessions / 30.883408 h**, or
+**35.020678 h with CSS10** before that corrected audit. Its exact RAW/clean IDs,
+references, hashes, overlaps and storage calculation are in
+[`configs/training_data_selection.json`](configs/training_data_selection.json).
+The 23,615 selected RAW train WAVs (including 13 removed records) still need
+upload; the full-source train manifests remain source candidate inventories.
+Active training configs point to the selected subset, rather than undelivered
+99-hour train audio. All estimated audio plus checkpoint/headroom reserve fits
+the user's 10 GiB storage cap; remaining account bandwidth is unverified.
+
+Representative TRAIN measurements, generated compute budgets, package/device
+identities and byte-verification evidence are in
+[the measured budget report](docs/reviews/budget_2026-11-20/README.md).
+Both Whisper conditions use the same measured batch/update budget. The owner
+also ran the five published ASR backends on 32 TRAIN clips; these are timing
+measurements, without WER/CER or test inference.
+[Samed's exact remaining assignment](docs/HANDOFF_SAMED_FINAL_DATA_TR.md)
+covers the encoding audit, used-data reproducibility and selected audio upload.
+No full-data training, official dev selection, final test protocol or benchmark
+result is complete yet. The earlier review records below describe their dated
+checkouts.
+
 The two latest professor emails are summarized in
 [TEACHER_UPDATES_2026-11-18_TR.md](docs/TEACHER_UPDATES_2026-11-18_TR.md).
 New splits must group related recordings by speaker/session. Documented
@@ -31,7 +60,8 @@ and published wav2vec GPU inference passed train-pilot diagnostics. The selected
 HuBERT path is our standard CTC training from the documented licensed mHuBERT-147
 encoder; the published candidate without a license/model card is not selected.
 See [the review, source decision and exact-commit evidence](docs/reviews/KEMAL_PR9_REVIEW_TR.md).
-Representative `*_measure` runs and all full training/benchmarks remain pending.
+That review used three clips. The later representative measurements above set
+the training budgets; all full training/benchmarks remain pending.
 
 Earlier Adnan model review (19 November): Adnan's
 [PR #5](https://github.com/kaanksn1/greek-parliamentary-asr/pull/5) at `0c13ce1`
@@ -59,11 +89,10 @@ Adnan's model implementations and the owner's final review fixes are in
 [the contribution file](contributions/ADNAN_DEMIR_220911784_adnan-demir.md)):
 a standard attention encoder-decoder with an optional hybrid CTC head, a
 standard RNN-T transducer, and the two-condition Whisper fine-tuning
-contribution. Data PR #2 is still unmerged, so its full manifests/audio are
-not yet integrated into main. Model verification uses synthetic tensors and
-three real HParl train-pilot clips, including the recorded GPU checks above.
-No full training budget (`max_steps`), official dev selection or benchmark
-result exists yet; representative real-data measurements remain necessary.
+contribution. Data delivery is under review in PR #2; its selected train upload
+and corrected CSS10 audit are pending. The measured `max_steps` allocations are
+in `configs/training_budget.json`. Official dev selection and benchmark results
+remain pending.
 
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports
@@ -76,17 +105,15 @@ lists CC0. Combined source availability is `123:55:56` (about 124 hours), not
 our final cleaned/used duration. CSS10 will not enter the parliamentary test.
 See `docs/SECONDARY_SOURCE_TR.md` and `DATA_LICENSE.md`.
 
-Current stage (18 November 2026): three original training WAVs and transcripts
+Historical startup (18 November 2026): three original training WAVs and transcripts
 acquired and audited; common scoring code and baseline inventory created;
 Whisper, Qwen3-ASR, Canary and Parakeet completed GPU inference on those WAVs
 in two new isolated runtimes. Owner adapters and their common audio-only
 runner are implemented and exercised on this training fixture.
 No full benchmark result or training improvement is claimed. PR #2 contains
-full-corpus metadata, cleaning logs and an early test freeze, but the referenced
-full audio is absent from its checkout. Owner verification therefore covers
-metadata, code and the existing three training WAVs, not the full audio corpus.
-After that review, the test, dev and CSS10 audio are delivered through Git LFS.
-The train audio is still pending (see *Data status* below).
+source metadata, cleaning logs, an unchanged early test freeze and LFS
+test/dev/CSS10 audio. Independent original-byte verification and the remaining
+train/CSS10-audit blockers are described at the top of this README.
 The five-member ownership plan is now assigned in `docs/TEAM.md`. Full runs
 will be central on Serdar's PC and Ozan will present. The user authorized
 owner implementation on 18 November. Write collaborator invitations were sent
@@ -96,12 +123,11 @@ Greek was absent from the user's current reservation screenshot; the group's
 language/dataset reservation must still be recorded in the class sheet.
 Hungarian/VoxPopuli and Icelandic/Samromur are already taken.
 
-Our planned contribution is our own fine-tuning of an unchanged, documented
-pretrained starting model on parliamentary training audio. Standard model
-results remain separate. Candidate comparison: the same model before fine-tuning,
-after a smaller training budget, and after the selected larger training budget.
-Budgets are selected using training/development data and available compute.
-This is not a claim of a new architecture or guaranteed bonus points.
+Our planned contribution is fine-tuning the documented Whisper-small starting
+checkpoint under matched HParl-only and HParl+CSS10 training budgets, with its
+unchanged published baseline reported separately. Common settings and updates
+are in `configs/training_budget.json`; dev selects checkpoints and scoring.
+The architectures remain standard. No bonus or improvement is claimed yet.
 
 The professor reply shared on 17 November approved the meaningful two-corpus
 cleaning plan and the use of an additional training source with parliamentary
@@ -126,8 +152,9 @@ git clone https://github.com/kaanksn1/greek-parliamentary-asr.git
 cd greek-parliamentary-asr
 ```
 
-The next data owner is Samed. His detailed, copyable task prompt is
-[HANDOFF_SAMED_TR.md](docs/HANDOFF_SAMED_TR.md); the exact audio/reference/output
+The data owner is Samed. His current copyable task prompt is
+[HANDOFF_SAMED_FINAL_DATA_TR.md](docs/HANDOFF_SAMED_FINAL_DATA_TR.md); the initial
+assignment is retained in `docs/HANDOFF_SAMED_TR.md`. The exact audio/reference/output
 schema is [DATA_CONTRACT.md](docs/DATA_CONTRACT.md). Data/model work remains
 with the assigned members; the integration starter is not their completed work.
 
@@ -168,17 +195,19 @@ records are counted as unknown, not invented.
 
 | Part | Status |
 |---|---|
-| Acquisition, test freeze (`d28c97f`), audit and cleaning | Run on Samed's machine with the full corpus |
+| Acquisition, test freeze (`d28c97f`), audit and cleaning | Run on Samed's machine; CSS10 float signal audit must be corrected |
 | Code, tests, manifests, clean references, cleaning log, audit, source records | In this repository |
 | Original Kaldi metadata and CSS10 transcript | In this repository, byte-checked by `verify-source-metadata` |
 | Source audio (test/dev/CSS10, ~3.4 GiB) | In this repository via Git LFS (owner approved on 18 Nov 2026) |
-| Source audio (train, 10.68 GiB) | Pending: full train plus the rest exceeds the free LFS storage; only the training subset actually used (`subset`, fixed seed, whole sessions) will be delivered once Serdar's GPU budget is measured |
-| Clean-clone check of delivered audio | `git lfs pull`, then `verify-freeze` (with audio) and `verify --only dev.jsonl test.jsonl css10_el_train.jsonl`; full `verify` needs the train audio |
+| Source audio (selected train) | Pending 23,615 RAW WAVs from 18 sessions, exact list in `configs/training_data_selection.json`; the complete 99-hour source train will not be used |
+| Independent audio check | Test/dev verifier passed with audio; CSS10 hashes/RIFF headers passed, but its data verifier on Python 3.12 and signal audit need Samed's float-aware correction |
 
 `docs/DATA_REPORT_TR.md` is the generated data report (sources, freeze, raw
 inventory, audit flags, cleaning results with examples, split/speaker and
 literal overlap, delivery sizes). It is produced by
-`python -m greek_asr.data report` and must not be edited by hand.
+`python -m greek_asr.data report` and must not be edited by hand. Its current
+CSS10 signal statistics describe the old integer reinterpretation and need
+regeneration; source durations/hash identities are separately verified.
 
 The scorer accepts JSONL references (`id`, `reference`) and predictions (`id`,
 `text`). Full ID equality is required. It reports corpus WER/CER from edit
@@ -273,9 +302,10 @@ py -3.12 -m venv .venv-sequence
 .venv-sequence\Scripts\python -m unittest discover -s tests -v
 ```
 
-Real training/prediction commands (pending Samed's accepted data delivery and
-Serdar's GPU pilot measurement for `max_steps`; `configs/sequence/*.json`
-currently refuse to run with `max_steps: null`):
+Real training/prediction commands use the measured allocations in
+`configs/training_budget.json`. Start only after Samed's selected raw/clean-used
+audio verification and corrected CSS10 audit pass. On the isolated ROCm runtime,
+use `HSA_ENABLE_DXG_DETECTION=1 MIOPEN_FIND_MODE=FAST`:
 
 ```bash
 python -m greek_asr.models.attention train --config configs/sequence/attention.json --output outputs/attention_run --device cuda
@@ -307,12 +337,12 @@ No full-data training or WER/CER result exists yet; all full runs are central.
 | HuBERT + CTC (our training) | `greek_asr/models/hubert.py` (`train`, `predict`) | Selected standard HuBERT baseline path: our CTC training from CC-BY-NC-SA-4.0 `utter-project/mHuBERT-147`; full training pending |
 
 They use the existing Transformers ROCm runtime; no package or toolkit is added.
-`configs/kemal/ctc.json` and `configs/kemal/hubert_ctc.json` keep `max_steps: null`
-until a measured budget is passed with `--max-steps`. Example:
+`configs/kemal/ctc.json` and `configs/kemal/hubert_ctc.json` now contain measured
+owner allocations and the selected cohort paths. Example after data acceptance:
 
 ```bash
 python -m greek_asr.models.gmm_hmm train --config configs/kemal/gmm_hmm.json --output outputs/kemal_gmm_hparl --device cpu
-python -m greek_asr.models.ctc train --config configs/kemal/ctc.json --output outputs/kemal_ctc_hparl --device cuda --max-steps <measured>
+python -m greek_asr.models.ctc train --config configs/kemal/ctc.json --output outputs/kemal_ctc_hparl --device cuda
 python -m greek_asr.infer --manifest data/manifests/dev.jsonl --backend wav2vec --split dev --output outputs/kemal_wav2vec_dev
 ```
 
@@ -328,14 +358,20 @@ no WER/CER and no dev/test inference.
 |---|---|
 | `greek_asr/` | Initial common WER/CER scorer and explicit JSONL scoring CLI |
 | `greek_asr/infer.py`, `greek_asr/pretrained/` | Owner's pinned standard inference CLI and four backend adapters |
+| `greek_asr/audio.py` | Shared original-byte RIFF input contract for PCM16/PCM32/IEEE float32 in Python 3.12; no on-disk audio conversion |
 | `greek_asr/models/` | Adnan's attention (hybrid CTC/attention), RNN-T and Whisper fine-tuning code; see `docs/SEQUENCE_MODELS.md` |
 | `greek_asr/models/gmm_hmm.py`, `ctc.py`, `wav2vec.py`, `hubert.py`, `ctc_utils.py` | Kemal's GMM-HMM, plain CTC, published wav2vec/HuBERT CTC inference, HuBERT-CTC training and shared CTC helpers; see `docs/KEMAL_BASELINES.md` |
-| `configs/sequence/` | Adnan's method/Whisper-condition configs; `max_steps` is `null` pending Serdar's GPU pilot measurement |
-| `configs/kemal/` | Kemal's GMM-HMM, plain CTC and HuBERT-CTC configs, each with a separate small-budget `*_measure.json`; full CTC/HuBERT `max_steps` is `null` until measured |
+| `configs/sequence/` | Adnan's methods with owner's measured train/dev allocations; matched Whisper conditions |
+| `configs/kemal/` | Kemal's GMM-HMM, plain CTC and HuBERT-CTC recipes with owner's measured allocations and separate diagnostic `*_measure.json` configs |
+| `configs/training_data_selection.json`, `training_budget.json` | Exact selected RAW/clean training cohort, storage bound, measurements and full-run start conditions |
 | `configs/kemal_model_sources.json` | Pins and model-card findings for checkpoints found after the historical lock (Greek HuBERT CTC candidate, mHuBERT-147) and rejected candidates |
 | `docs/KEMAL_BASELINES.md` | Kemal's methods, HuBERT checkpoint search, commands, data/test boundary, measurements needed and checks run |
 | `tests/` | Scoring, real-pilot lineage, audio/manifest/cohort, adapter-contract, sequence-model and Kemal's GMM-HMM/CTC/wav2vec/HuBERT tests |
 | `scripts/` | Scorer/source checks, owner pilot export, isolated runtime bootstrap and Adnan's sequence-model GPU pilot scripts |
+| `scripts/prepare_budget_pilot.py`, `measure_train_budget.py` | Original-byte, TRAIN-only representative acquisition and synchronized isolated-process GPU/CPU timing, memory and finite-gradient checks |
+| `scripts/select_training_delivery.py`, `finalize_training_plan.py` | Reuse Samed's seeded whole-session selection; generate raw/clean delivery lists, measured run configs and the budget report |
+| `scripts/inspect_css10_delivery.py` | Independently verify every delivered CSS10 audio hash/header and demonstrate float-vs-integer signal-statistics error |
+| `docs/HANDOFF_SAMED_FINAL_DATA_TR.md`, `docs/reviews/budget_2026-11-20/` | Current data-owner assignment and reproducible measurement/original-byte verification evidence |
 | `configs/` | Dataset provenance and pinned checkpoint metadata; no model weights |
 | `data/README.md` | Raw/clean data delivery contract and acquisition status |
 | `docs/TOPIC_DECISION_TR.md` | Topic rationale, alternatives and class reservation text |
