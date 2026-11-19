@@ -1,0 +1,11 @@
+{
+  "_comment": "Timing/memory measurement only: a 2-hour speaker-grouped train subset and 4 iterations. Its model is not a baseline result.",
+  "train_manifest": "data/manifests/train.jsonl",
+  "train_references": "data/manifests/references/train.jsonl",
+  "dev_manifest": "data/manifests/dev.jsonl",
+  "dev_references": "data/manifests/references/dev.jsonl",
+  "seed": 42,
+  "train_subset_hours": 2.0,
+  "training": {"num_iterations": 4, "split_iterations": [2], "max_gaussians_per_state": 16, "lm_order": 3},
+  "tuning": {"dev_utterances": 20, "lm_weights": [10.0], "insertion_penalties": [0.0]}
+}

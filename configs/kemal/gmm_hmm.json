@@ -1,0 +1,17 @@
+{
+  "_comment": "MFCC + GMM-HMM grapheme baseline (greek_asr.models.gmm_hmm). CPU or GPU tensors; the train set is read fully into RAM as 39-dim MFCC (about 5.6 GB for the full HParl-only train). train_subset_hours=null uses the whole manifest; set it only from a measured budget. See docs/KEMAL_BASELINES.md.",
+  "train_manifest": "data/manifests/train.jsonl",
+  "train_references": "data/manifests/references/train.jsonl",
+  "dev_manifest": "data/manifests/dev.jsonl",
+  "dev_references": "data/manifests/references/dev.jsonl",
+  "seed": 42,
+  "train_subset_hours": null,
+  "features": {"sample_rate": 16000, "num_ceps": 13, "num_mel_bins": 23, "frame_length_ms": 25.0,
+               "frame_shift_ms": 10.0, "deltas": true, "cmn": "utterance_mean"},
+  "training": {"states_per_unit": 3, "num_iterations": 25, "split_iterations": [2, 4, 6, 8],
+               "max_gaussians_per_state": 16, "variance_floor_fraction": 0.01, "min_gaussian_occupancy": 20.0,
+               "initial_self_loop": 0.5, "self_loop_bounds": [0.05, 0.95], "align_batch_cells": 20000000,
+               "lm_order": 3, "infeasible_policy": "exclude_and_report", "max_excluded_fraction": 0.01},
+  "tuning": {"dev_utterances": 200, "lm_weights": [6.0, 10.0, 14.0], "insertion_penalties": [-10.0, 0.0, 10.0],
+             "space_skip_logprob": 0.0}
+}
