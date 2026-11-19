@@ -275,6 +275,8 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
     started = time.perf_counter()
     mean, std, cmvn_count = estimate_cmvn(train_utterances, frontend, seed=seed,
                                           max_utterances=int(config.get("cmvn_utterances", 2000)))
+    cmvn_seconds = time.perf_counter() - started
+    started = time.perf_counter()  # training time below excludes the CMVN pass
     featurizer = _Featurizer(frontend, mean, std)
     model_config = CTCConfig(vocab_size=vocab.size, **config.get("model", {}))
     model = CTCModel(model_config).to(resolved)
@@ -309,7 +311,7 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
         "train_items": len(train_items), "train_excluded_infeasible": train_problems,
         "dev_loss_items": len(dev_items), "dev_loss_excluded": dev_problems,
         "dev_reference_preparation": "annotation tags removed in memory for dev loss only",
-        "cmvn_utterances": cmvn_count, "trainable_parameters": sum(p.numel() for p in model.parameters()),
+        "cmvn_utterances": cmvn_count, "cmvn_seconds": cmvn_seconds, "trainable_parameters": sum(p.numel() for p in model.parameters()),
         "effective_batch_size": batch_size * grad_accum, "precision": "float32",
         "device_requested": device, "device_used": str(resolved), "optimizer_updates_completed": 0,
         "best_dev_loss": None, "best_optimizer_update": None, "dev_history": [],
@@ -336,9 +338,11 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
                 optimizer.zero_grad()
                 updates += 1
                 if updates % max(int(config.get("dev_eval_every", 1)), 1) == 0 or updates >= max_steps:
+                    dev_started = time.perf_counter()
                     dev_loss = _dev_loss(torch, model, dev_loader, resolved, blank_id)
                     report["dev_history"].append({"optimizer_update": updates, "dev_loss": dev_loss,
-                                                  "train_loss": loss.item()})
+                                                  "train_loss": loss.item(),
+                                                  "dev_seconds": time.perf_counter() - dev_started})
                     if best is None or dev_loss < best:
                         best = dev_loss
                         report["best_dev_loss"], report["best_optimizer_update"] = dev_loss, updates
@@ -356,6 +360,9 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
         raise
     finally:
         report["training_seconds"] = time.perf_counter() - started
+        report["dev_eval_seconds"] = sum(row["dev_seconds"] for row in report["dev_history"])
+        report["seconds_per_update_excluding_dev"] = (
+            (report["training_seconds"] - report["dev_eval_seconds"]) / updates if updates else None)
         report["optimizer_updates_completed"], report["micro_steps_completed"] = updates, micro
         report["epochs_started"] = epoch + (1 if updates < max_steps else 0)
         report["environment"] = ctc_utils.environment_record()

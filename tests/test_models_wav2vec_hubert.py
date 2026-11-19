@@ -205,6 +205,13 @@ class HubertCtcTrainingTests(unittest.TestCase):
         after = {name.removeprefix("hubert."): value for name, value in model.state_dict().items()}
         self.assertTrue(all(torch.equal(before[name], after[name]) for name in before if name in after))
 
+    def test_reference_id_mismatch_is_refused(self):
+        lines = self.dev_refs.read_text(encoding="utf-8").splitlines()
+        self.dev_refs.write_text("\n".join(lines[1:]) + "\n", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            hubert.train(self.config, project_root=ROOT, output_dir=self.dir / "run")
+        self.assertFalse((self.dir / "run").exists())
+
     def test_missing_budget_and_test_split_are_refused(self):
         with self.assertRaises(ValueError):
             hubert.train(dict(self.config, max_steps=None), project_root=ROOT, output_dir=self.dir / "none")

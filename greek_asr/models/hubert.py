@@ -249,9 +249,11 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
                 if freeze_updates and updates == freeze_updates:
                     _set_transformer_trainable(model, True)
                 if updates % max(int(config.get("dev_eval_every", 1)), 1) == 0 or updates >= max_steps:
+                    dev_started = time.perf_counter()
                     value = dev_loss()
                     report["dev_history"].append({"optimizer_update": updates, "dev_loss": value,
-                                                  "train_loss": loss.item()})
+                                                  "train_loss": loss.item(),
+                                                  "dev_seconds": time.perf_counter() - dev_started})
                     if best is None or value < best:
                         best = value
                         report["best_dev_loss"], report["best_optimizer_update"] = value, updates
@@ -267,6 +269,9 @@ def train(config: dict[str, Any], *, project_root: Path, output_dir: Path, devic
         raise
     finally:
         report["training_seconds"] = time.perf_counter() - started
+        report["dev_eval_seconds"] = sum(row["dev_seconds"] for row in report["dev_history"])
+        report["seconds_per_update_excluding_dev"] = (
+            (report["training_seconds"] - report["dev_eval_seconds"]) / updates if updates else None)
         report["optimizer_updates_completed"], report["micro_steps_completed"] = updates, micro
         report["environment"] = ctc_utils.environment_record()
         if report["status"] == "complete":

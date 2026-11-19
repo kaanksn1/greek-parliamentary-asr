@@ -194,6 +194,20 @@ class PipelineTests(unittest.TestCase):
                                 allow_test=allow)
             self.assertFalse((self.dir / f"t{index}").exists())
 
+    def test_missing_or_extra_reference_ids_are_refused(self):
+        lines = self.train_refs.read_text(encoding="utf-8").splitlines()
+        self.train_refs.write_text("\n".join(lines[:2]) + "\n", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            gmm_hmm.train(self.config, project_root=ROOT, output_dir=self.dir / "missing", progress=False)
+        self.assertFalse((self.dir / "missing").exists())
+        self.train_refs.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        gmm_hmm.train(self.config, project_root=ROOT, output_dir=self.dir / "model", progress=False)
+        extra = json.dumps({"id": "hparl:not-in-manifest", "reference": "α"}, ensure_ascii=False)
+        self.dev_refs.write_text(self.dev_refs.read_text(encoding="utf-8") + extra + "\n", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            gmm_hmm.tune(self.dir / "model/model.pt", self.config, project_root=ROOT, output_dir=self.dir / "tune")
+        self.assertFalse((self.dir / "tune").exists())
+
     def test_items_too_short_for_their_transcript_follow_policy(self):
         rows = [dict(PILOT[0], reference=" ".join(["αβγδεζηθ"] * 12))] + [
             dict(row, reference=ctc_utils.strip_annotation_tags(row["reference"])) for row in PILOT[1:]]

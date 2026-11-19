@@ -58,6 +58,16 @@ class CtcHelperTests(unittest.TestCase):
         self.assertEqual(ctc_utils.strip_annotation_tags("της <spoken_noise>  και"), "της και")
         self.assertEqual(ctc_utils.strip_annotation_tags("<spoken_noise>"), "")
 
+    def test_measurement_configs_differ_from_full_configs_only_in_budget(self):
+        budget_keys = {"_comment", "max_steps", "dev_eval_every", "warmup_steps", "freeze_transformer_updates"}
+        for name in ("ctc", "hubert_ctc"):
+            full = json.loads((ROOT / f"configs/kemal/{name}.json").read_text(encoding="utf-8"))
+            measure = json.loads((ROOT / f"configs/kemal/{name}_measure.json").read_text(encoding="utf-8"))
+            self.assertIsNone(full["max_steps"])  # the real budget is still unmeasured
+            self.assertIsInstance(measure["max_steps"], int)
+            self.assertEqual({k: v for k, v in full.items() if k not in budget_keys},
+                             {k: v for k, v in measure.items() if k not in budget_keys})
+
     def test_bucketed_batches_cover_every_index_once(self):
         lengths = [float(i % 7) for i in range(53)]
         batches = ctc_utils.length_bucketed_batches(lengths, 4, seed=3, bucket_batches=2)
@@ -158,6 +168,8 @@ class CtcPipelineTests(unittest.TestCase):
         self.assertEqual(report["optimizer_updates_completed"], 2)
         self.assertEqual(report["train_items"], 3)
         self.assertIsNotNone(report["best_optimizer_update"])
+        self.assertEqual(len(report["dev_history"]), 2)
+        self.assertGreater(report["seconds_per_update_excluding_dev"], 0.0)
         checkpoint = self.dir / "run/checkpoint.best.pt"
         first = ctc.predict(checkpoint, self.dev_manifest, project_root=ROOT, split="dev",
                             output_dir=self.dir / "pred1", batch_size=2)
@@ -216,6 +228,25 @@ class CtcPipelineTests(unittest.TestCase):
         self.assertTrue((self.dir / "failed/predictions.partial.jsonl").exists())
         self.assertFalse((self.dir / "failed/predictions.jsonl").exists())
         self.assertEqual(json.loads((self.dir / "failed/run.json").read_text())["status"], "failed")
+
+    def test_manifest_reference_id_mismatch_is_refused_before_training(self):
+        self.train_refs.write_text("".join(line + "\n" for line in self.train_refs.read_text().splitlines()[:2]),
+                                   encoding="utf-8")
+        with self.assertRaises(ValueError):
+            ctc.train(self.config, project_root=ROOT, output_dir=self.dir / "run")
+        self.assertFalse((self.dir / "run").exists())
+
+    def test_a_dropped_prediction_fails_the_run_instead_of_completing(self):
+        ctc.train(self.config, project_root=ROOT, output_dir=self.dir / "run")
+        checkpoint = self.dir / "run/checkpoint.best.pt"
+        with unittest.mock.patch.object(ctc.ctc_utils, "ctc_greedy_decode",
+                                        side_effect=lambda logits, lengths, blank: [[1]] * (len(lengths) - 1)):
+            with self.assertRaises(ValueError):
+                ctc.predict(checkpoint, self.dev_manifest, project_root=ROOT, split="dev",
+                            output_dir=self.dir / "missing", batch_size=3)
+        self.assertFalse((self.dir / "missing/predictions.jsonl").exists())
+        self.assertEqual(len((self.dir / "missing/predictions.partial.jsonl").read_text().splitlines()), 2)
+        self.assertEqual(json.loads((self.dir / "missing/run.json").read_text())["status"], "failed")
 
     def test_infeasible_training_item_follows_policy(self):
         rows = [dict(CLEAN_PILOT[0], reference="α" * 400)] + CLEAN_PILOT[1:]
