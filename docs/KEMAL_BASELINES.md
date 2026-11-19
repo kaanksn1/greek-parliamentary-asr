@@ -6,12 +6,20 @@ checks that exist in the repository. **No full-data training, dev selection or
 test inference has been run; there are no WER/CER results here.** All full runs
 are central on Serdar's RX 7800 XT / 32 GB machine.
 
+Owner review, 19 November: all 164 tests passed independently in the existing
+ROCm runtime. GMM-HMM CPU, plain CTC GPU, real mHuBERT-147 + CTC GPU training
+and published wav2vec GPU inference passed three-train-clip diagnostics.
+This is not representative budget measurement or full training. The owner
+selected mHuBERT-147 + our CTC training as the benchmark's HuBERT path; the
+published candidate without a license/card is not selected. Exact-commit
+evidence and limits are in `docs/reviews/KEMAL_PR9_REVIEW_TR.md`.
+
 | Family | Implementation | Provenance | Ready | Pending (central) |
 |---|---|---|---|---|
 | MFCC + GMM-HMM | `greek_asr/models/gmm_hmm.py` | our implementation + training of a standard method | train, dev tuning, predict, 13 tests, pilot train→predict | budget measurement, full train, dev tuning, dev/test predictions |
 | Plain CTC | `greek_asr/models/ctc.py` | our implementation + training from scratch | train, predict, 20 tests (shared CTC helpers and config checks included), pilot train→predict | `max_steps` from a measured pilot, full train, predictions |
 | wav2vec 2.0 + CTC head | `greek_asr/models/wav2vec.py` via `greek_asr.infer --backend wav2vec` | published Greek checkpoint, no training by us | real checkpoint transcribed the 3 train-pilot clips (CPU) | GPU dev/test inference |
-| HuBERT + CTC head (published) | `greek_asr/models/hubert.py` via `greek_asr.infer --backend hubert` | published checkpoint, no training by us | real checkpoint transcribed the 3 train-pilot clips (CPU) | licensing decision (no license/model card), then GPU inference |
+| HuBERT + CTC head (published) | `greek_asr/models/hubert.py` via `greek_asr.infer --backend hubert` | published checkpoint, no training by us | historical CPU diagnostics retained | not selected for the benchmark: no license/model card/training-data statement |
 | HuBERT + CTC head (own training) | `greek_asr/models/hubert.py train/predict` | our CTC fine-tuning of `utter-project/mHuBERT-147` | train, predict, tests with a tiny local encoder | budget measurement, full train, predictions; report as our training |
 
 ## Environment
@@ -158,7 +166,7 @@ Hugging Face search on 19 November 2026 (model API: `search=hubert` with
 
 | Candidate | Finding | Use |
 |---|---|---|
-| `ntinouldinho/hubert_greek_6gram` @ `e89272763ec7320f5cf57638dfdedc3ecaa1ce86` | `HubertForCTC` large (24 layers) with a Greek character CTC head; **no README/model card, no license, no stated training data**; bundles a 6-gram KenLM | standard inference prepared; running it needs Serdar's licensing decision |
+| `ntinouldinho/hubert_greek_6gram` @ `e89272763ec7320f5cf57638dfdedc3ecaa1ce86` | `HubertForCTC` large (24 layers) with a Greek character CTC head; **no README/model card, no license, no stated training data**; bundles a 6-gram KenLM | not selected by owner on 19 November; retain historical CPU evidence only |
 | `utter-project/mHuBERT-147` @ `7ad3fc0bc5106c58c9c13526abccad527150d135` | multilingual HuBERT base encoder, `el` in its 147 languages, CC-BY-NC-SA-4.0, **no ASR head** | encoder for our own CTC fine-tuning only |
 | `m3hrdadfi/hubert-{base,large}-greek-speech-emotion-recognition`, `ameerazam08/hubert-base-greek-ser` | Greek emotion classifiers | rejected: not ASR |
 | `facebook/hubert-large-ls960-ft`, `facebook/hubert-large-ll60k` | English ASR head / English bare encoder | rejected: wrong language |
@@ -169,7 +177,10 @@ record; the historical `configs/model_sources.lock.json` bytes are unchanged
 
 ### Published candidate (`--backend hubert`)
 
-Same `HFCTCBackend` path as wav2vec (`HubertForCTC`, greedy CTC, no KenLM).
+Historical research adapter only, **not selected for the benchmark**. It uses
+the same `HFCTCBackend` path as wav2vec (`HubertForCTC`, greedy CTC, no KenLM).
+The example below describes that optional adapter, not a planned benchmark run;
+the selected HuBERT benchmark path is our licensed-encoder training below.
 
 ```bash
 "$P3_PYTHON" -m greek_asr.infer --manifest data/manifests/dev.jsonl --backend hubert --split dev --output outputs/kemal_hubert_published_dev
@@ -188,7 +199,10 @@ mask, as the checkpoint's preprocessor specifies; the CTC loss uses each item's
 true CNN output length (20 ms frames). Same feasibility, dev-loss, checkpoint
 and budget rules as plain CTC. Checkpoints are Hugging Face directories
 (`checkpoint-best/`, `checkpoint-last/`) with `greek_asr_ctc.json` (vocabulary).
-The encoder license is non-commercial (course use).
+The encoder's [model card](https://huggingface.co/utter-project/mHuBERT-147)
+declares CC-BY-NC-SA-4.0. Preserve the source attribution and model-license
+terms when distributing derived weights; the repository's MIT code license
+does not relicense the encoder or its derived weights.
 
 ```bash
 "$P3_PYTHON" -m greek_asr.models.hubert train --config configs/kemal/hubert_ctc_measure.json --output outputs/kemal_hubert_ctc_measure --device cuda

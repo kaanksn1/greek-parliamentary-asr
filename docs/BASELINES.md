@@ -10,12 +10,12 @@ Owners are assigned in `TEAM.md`; assignment is not evidence of completed work.
 
 | Family | Candidate / implementation | Owner | Current status |
 |---|---|---|---|
-| MFCC (or log-mel) + GMM-HMM | Own PyTorch grapheme GMM-HMM: MFCC+Δ+ΔΔ, Viterbi training, char n-gram LM decoder (`greek_asr/models/gmm_hmm.py`) | Kemal | Code, dev tuning and tests ready; train-pilot code path checked; budget measurement and full training pending |
-| Plain CTC system | Conv + BiLSTM encoder + CTC trained from scratch (`greek_asr/models/ctc.py`) | Kemal | Code and tests ready; train-pilot code path checked; measured `max_steps` and full training pending |
+| MFCC (or log-mel) + GMM-HMM | Own PyTorch grapheme GMM-HMM: MFCC+Δ+ΔΔ, Viterbi training, char n-gram LM decoder (`greek_asr/models/gmm_hmm.py`) | Kemal | Owner verified CPU train/checkpoint/predict on real train-pilot fixtures; representative measurement and full training pending |
+| Plain CTC system | Conv + BiLSTM encoder + CTC trained from scratch (`greek_asr/models/ctc.py`) | Kemal | Owner verified GPU loss/gradients, parameter updates and train/checkpoint/predict on real train-pilot fixtures; measured `max_steps` and full training pending |
 | Attention encoder-decoder, including hybrid CTC/attention | Standard supervised attention ASR baseline | Adnan | Code and train-pilot GPU/CLI checks verified; owner completed final review fixes; full training pending |
 | RNN-T transducer | Standard supervised RNN-T; keep distinct from pretrained Parakeet TDT | Adnan | Pure-PyTorch loss mathematically and GPU/CLI verified; owner corrected padding/config; full training pending |
-| wav2vec 2.0 ASR | `lighteternal/wav2vec2-large-xlsr-53-greek` (`greek_asr.infer --backend wav2vec`) | Kemal | Real checkpoint transcribed three train-pilot clips on CPU; GPU dev/test inference pending |
-| HuBERT ASR | Published `ntinouldinho/hubert_greek_6gram` (Greek CTC head, no license/model card) via `--backend hubert`; own CTC fine-tuning of `utter-project/mHuBERT-147` (`greek_asr/models/hubert.py`) | Kemal | Published candidate transcribed three train-pilot clips on CPU, licensing decision pending; own-training recipe and tests ready, budget and full training pending. See `KEMAL_BASELINES.md` |
+| wav2vec 2.0 ASR | `lighteternal/wav2vec2-large-xlsr-53-greek` (`greek_asr.infer --backend wav2vec`) | Kemal | Real pinned checkpoint independently transcribed three train-pilot clips on GPU; full benchmark pending |
+| HuBERT ASR | Selected: our standard HuBERT-CTC training from `utter-project/mHuBERT-147` (`greek_asr/models/hubert.py`); published unlicensed candidate not selected | Kemal | Real licensed encoder verified with GPU CTC training, finite gradients and checkpoint/predict; representative budget and full training pending. A bare encoder is not an ASR result. See `KEMAL_BASELINES.md` |
 | Whisper | `openai/whisper-small` multilingual baseline | Serdar | New isolated ROCm runtime verified on three train-pilot clips; full benchmark pending |
 | Canary | `nvidia/canary-1b-v2` | Serdar | New isolated NeMo/ROCm runtime verified on three train-pilot clips; full benchmark pending |
 | Parakeet | `nvidia/parakeet-tdt-0.6b-v3` | Serdar | New isolated NeMo/ROCm runtime verified on three train-pilot clips; NVIDIA CUDA Graph acceleration disabled, standard greedy TDT retained; full benchmark pending |
@@ -45,6 +45,9 @@ ASR head, without license or model card, and prepared both its standard
 inference and an own HuBERT-CTC training recipe; candidates and reasons are in
 `KEMAL_BASELINES.md` and `configs/kemal_model_sources.json`. A bare
 HuBERT/wav2vec encoder cannot supply a transcription.
+The owner selected the licensed mHuBERT-147 + our CTC training route; the
+published candidate lacking license/card is not selected for benchmark.
+See `reviews/KEMAL_PR9_REVIEW_TR.md` for the source decision and runtime checks.
 
 A checkpoint fine-tuned and published by someone else is still an off-the-shelf
 baseline. If we train GMM-HMM/CTC or an ASR head ourselves, the standard method

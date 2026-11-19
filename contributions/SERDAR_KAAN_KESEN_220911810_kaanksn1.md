@@ -61,6 +61,13 @@
   attention/RNN-T CLI paths), reran the independent RNN-T oracle including
   ignored padding, and passed 151 tests in temporary data-code integration.
   Versioned evidence is in docs/reviews/SEQUENCE_P2_RESOLVED_TR.md.
+- Reviewed Kemal's PR #9 at `680b875d`: independently passed 164 tests and
+  exercised GMM-HMM on CPU, standard-size CTC and real mHuBERT-147 + CTC on
+  GPU (finite gradients/parameter updates/checkpoint/predict), and published
+  wav2vec inference on GPU using the three original train clips. Verified the
+  earlier CPU evidence hashes. Recorded the licensed HuBERT training-source
+  decision and added the reused wav2vec helper to shared HuBERT run code hashes.
+  Kemal's model implementations, original commits and report remain his.
 
 ## Limits and pending dependent work
 
@@ -68,7 +75,8 @@ Samed submitted early test-freeze metadata and his data pipeline in PR #2;
 full audio delivery and independent audio-byte verification are pending; the
 reporting/source-metadata corrections were verified. His pipeline and cleaning
 authorship remain his. Adnan's submitted implementation and the owner's final
-review corrections have passed code/pilot checks. Kemal's model work, Ozan's final evaluation and all full
+review corrections have passed code/pilot checks. Kemal's submitted models passed
+code/pilot review; Ozan's final evaluation and all full
 benchmark runs remain pending. No custom-data bonus, trained-model improvement or new
 human annotation is claimed. Personal contribution percentages are not results.
 

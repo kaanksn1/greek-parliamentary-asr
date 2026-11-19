@@ -180,6 +180,8 @@ def run(*, manifest: Path, backend_name: str, split: str, output: Path,
     if not module_path.startswith("greek_asr.pretrained."):
         backend_files = [ROOT / (module_path.replace(".", "/") + ".py"),
                          ROOT / "greek_asr/models/common.py", ROOT / "greek_asr/models/ctc_utils.py"]
+        if module_path == "greek_asr.models.hubert":
+            backend_files.append(ROOT / "greek_asr/models/wav2vec.py")
         report["code_sha256"].update({str(p.relative_to(ROOT)).replace("\\", "/"): sha256(p)
                                       for p in backend_files if p.is_file()})
     try:

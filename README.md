@@ -24,7 +24,15 @@ were not downloaded/reverified in the model review below.
 See [the 18 November report](docs/reviews/PR2_PR5_FOLLOWUP_TR.md).
 The [first Samed review](docs/reviews/SAMED_PR2_REVIEW_TR.md) is historical.
 
-Latest model review (19 November): Adnan's
+Kemal PR #9 review (19 November, `680b875d`): all 164 tests passed independently.
+GMM-HMM CPU, plain CTC GPU, real mHuBERT-147 + CTC GPU training/checkpoint/predict
+and published wav2vec GPU inference passed train-pilot diagnostics. The selected
+HuBERT path is our standard CTC training from the documented licensed mHuBERT-147
+encoder; the published candidate without a license/model card is not selected.
+See [the review, source decision and exact-commit evidence](docs/reviews/KEMAL_PR9_REVIEW_TR.md).
+Representative `*_measure` runs and all full training/benchmarks remain pending.
+
+Earlier Adnan model review (19 November): Adnan's
 [PR #5](https://github.com/kaanksn1/greek-parliamentary-asr/pull/5) at `0c13ce1`
 passes 114 tests. PCM32, attention-device, RNN-T loss-backend and Whisper-prefix
 blockers are resolved: all three train-pilot GPU checks show finite loss/gradients
@@ -34,7 +42,7 @@ pass GPU checks; a temporary merge with Samed's `4db1a4a` passes 146 tests
 The user subsequently assigned the final P2 fixes to the owner: nonfinite
 Whisper losses now fail with an explicit run record, prediction validates the
 source lock, ignored RNN-T padding is safe before gather, and docs/configs match
-the code. All 119 tests pass; temporary integration with the data branch passes
+the code. That model/common suite passed 119 tests; temporary integration with the data branch passed
 151 tests. All three final GPU checks and the attention/RNN-T CLI checks pass.
 See [the resolution and exact-commit evidence](docs/reviews/SEQUENCE_P2_RESOLVED_TR.md).
 The earlier findings remain versioned in
@@ -242,8 +250,8 @@ No full-data training or WER/CER result exists yet; all full runs are central.
 | MFCC + GMM-HMM | `greek_asr/models/gmm_hmm.py` (`train`, `tune`, `predict`) | standard method, our implementation and training |
 | Plain CTC | `greek_asr/models/ctc.py` (`train`, `predict`) | conv + BiLSTM CTC trained from scratch by us |
 | wav2vec 2.0 + CTC | `greek_asr.infer --backend wav2vec` → `greek_asr/models/wav2vec.py` | published `lighteternal/wav2vec2-large-xlsr-53-greek`, no training by us |
-| HuBERT + CTC (published) | `greek_asr.infer --backend hubert` → `greek_asr/models/hubert.py` | `ntinouldinho/hubert_greek_6gram`; no license/model card, run only after the owner's decision |
-| HuBERT + CTC (our training) | `greek_asr/models/hubert.py` (`train`, `predict`) | our CTC fine-tuning of `utter-project/mHuBERT-147`; reported separately |
+| HuBERT + CTC (published) | `greek_asr.infer --backend hubert` → `greek_asr/models/hubert.py` | Historical research adapter; candidate without license/card is not selected for benchmark |
+| HuBERT + CTC (our training) | `greek_asr/models/hubert.py` (`train`, `predict`) | Selected standard HuBERT baseline path: our CTC training from CC-BY-NC-SA-4.0 `utter-project/mHuBERT-147`; full training pending |
 
 They use the existing Transformers ROCm runtime; no package or toolkit is added.
 `configs/kemal/ctc.json` and `configs/kemal/hubert_ctc.json` keep `max_steps: null`
@@ -294,7 +302,7 @@ no WER/CER and no dev/test inference.
 | `docs/INITIAL_WORK_TR.md` | Completed startup work, observed reference issue and remaining work |
 | `docs/TEACHER_CLARIFICATION_TR.md` | Professor approval, immutable test requirement and data-budget rule |
 | `docs/TEACHER_UPDATES_2026-11-18_TR.md` | New speaker/group split rule, official-split exception and exact baseline/scoring requirements |
-| `docs/reviews/` | Versioned PR #2/#5 reviews, metadata/GPU/CLI/RNN-T-math JSON evidence and correction prompts; no model benchmark |
+| `docs/reviews/` | Versioned PR #2/#5/#9 reviews, source/licensing decisions and metadata/GPU/CLI/math evidence; no model benchmark |
 | `results/runtime_smoke/` | Real train-pilot predictions and runtime record; no benchmark scores |
 | `contributions/` | Actual individual reports and required filename/status inventory |
 | `AGENTS.md` | Scope and test instructions for coding assistants |
@@ -303,6 +311,7 @@ no WER/CER and no dev/test inference.
 | `scripts/probe_sequence_submission.py` | Independent PCM32/token-prefix probes and one-step submitted model checks on three train clips; no dev/test inference |
 | `scripts/probe_sequence_entrypoints.py` | Real attention/RNN-T train/checkpoint/predict CLI diagnostics using temporary train-pilot fixtures; no official dev/test |
 | `scripts/verify_rnnt_submission.py` | CPU exhaustive-alignment oracle for submitted RNN-T values/gradients and ignored-padding contract |
+| `scripts/probe_kemal_submission.py` | Owner's independent GMM-HMM CPU, CTC/mHuBERT GPU training and wav2vec GPU diagnostics on three train clips; no official dev/test |
 | `requirements-verification.txt` | Exact optional JiWER oracle-check dependencies |
 | `requirements-rocm.lock.txt` | Actual isolated Whisper/Qwen environment pins, including AMD wheel identities |
 | `requirements-nemo.lock.txt` | Actual separate NeMo environment pins; runtime validation status in its documentation |
@@ -359,15 +368,16 @@ pip install -r requirements-verification.txt
 python scripts/verify_scoring.py
 ```
 
-Current lightweight verification: 44 unit tests passed (including the original
+Historical startup verification: 44 unit tests passed (including the original
 15 startup tests); the independent startup JiWER check
 matched WER/CER on 500 deterministic fixture corpora. The latter are synthetic
 verification cases, not audio data or model results.
 
-Adnan's sequence-model tests add 70 more (114 total): 15 run with no ASR
-toolkit installed, the other 55 (tiny synthetic + real-train-pilot-audio
-forward/backward/checkpoint/predict checks for all three models, the RNN-T
-loss backend's value/gradient correctness, PCM16/32 decoding, device
-selection, and the Whisper decoder-start-token/long-audio regressions) need
-`requirements-sequence.txt` and are skipped, not failed, without it. All 114
-pass inside that environment. See `docs/SEQUENCE_MODELS.md`.
+Adnan's submitted suite reached 114 tests; the owner's final P2 regressions
+brought it to 119. Kemal added 45 tests, bringing the reviewed model/common
+suite to **164 tests, all passed without skips in the isolated ROCm runtime**.
+They include real-train-pilot code paths, synthetic model/decoder mathematics,
+checkpoint reload, finite gradients, CTC lengths/padding and failure handling.
+Missing optional ASR dependencies cause explicit skips; a partial environment
+is not evidence that the complete suite passed. See `docs/SEQUENCE_MODELS.md`
+and `docs/KEMAL_BASELINES.md` for implementation and environment details.
