@@ -1,0 +1,144 @@
+{
+  "schema": "p3-sequence-submission-review-v2",
+  "submission_commit": "5a8df80f02584652de59618b081bba583028a627",
+  "device": "cuda",
+  "torch": "2.9.1+rocm7.2.1.gitff65f5bc",
+  "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+  "transformers": "4.57.6",
+  "numpy": "1.26.4",
+  "hip": "7.2.53211-e1a6bc5663",
+  "gpu": "AMD Radeon RX 7800 XT",
+  "review_probe_sha256": "7058ad9ea0bb6fd6e58a0f260af03ee238ebf0c41a539ef0f3b26308cbb9936e",
+  "scope": "Synthetic contract probes and unchanged one-step functions on three official train-pilot clips",
+  "official_dev_or_test_used": false,
+  "full_training_performed": false,
+  "trained_checkpoints_persisted": false,
+  "source_sha256": {
+    "scripts/pilot_sequence_models.py": "98925ea8195a34ca297ed3c56567c0b1fcd84f19826ef5ac2de1f9df02a4354f",
+    "greek_asr/models/__init__.py": "697d55b06d6deddffab61dca0d8d95e4e08c86fa60305ba7cb02f53b204d8e07",
+    "greek_asr/models/attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
+    "greek_asr/models/common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+    "greek_asr/models/rnnt_loss.py": "50789fc37f78db00487817f129fea6a0a5a21c97f108cd2c9b46da6019b0e60e",
+    "greek_asr/models/transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db",
+    "greek_asr/models/whisper_finetune.py": "989300fbfdf83be6c82fd4acfce5b94c4e0b192cf5e87dcc4cf609f8c1fe5c6b"
+  },
+  "train_signatures": {
+    "attention": "(config: 'dict[str, Any]', *, project_root: 'Path', output_dir: 'Path', device: 'str' = 'cpu') -> 'dict[str, Any]'",
+    "transducer": "(config: 'dict[str, Any]', *, project_root: 'Path', output_dir: 'Path', device: 'str' = 'cpu') -> 'dict[str, Any]'"
+  },
+  "probes": {
+    "pcm32": {
+      "expected_frames": 4,
+      "actual_frames": 4,
+      "expected_values": [
+        0.0,
+        0.5,
+        -0.5,
+        0.9999999995343387
+      ],
+      "actual_values": [
+        0.0,
+        0.5,
+        -0.5,
+        1.0
+      ],
+      "source_bytes_unchanged": true
+    },
+    "whisper_prefix": {
+      "decoder_start_token_id": 50258,
+      "label_prefix": [
+        50281,
+        50359,
+        50363,
+        31714,
+        26836,
+        27683
+      ],
+      "decoder_input_prefix": [
+        50258,
+        50281,
+        50359,
+        50363,
+        31714,
+        26836
+      ],
+      "duplicated_decoder_start": false
+    },
+    "whisper_31_second_inputs": {
+      "different_last_second": true,
+      "feature_shape": [
+        2,
+        80,
+        3000
+      ],
+      "features_identical": true,
+      "input_kind": "two synthetic signals only; not corpus audio",
+      "scope": "feature extractor default only; check the submitted guard separately"
+    },
+    "submitted_long_audio_guard": {
+      "rejects_31_seconds": true,
+      "error": "synthetic-31-second-review: 31.00s exceeds Whisper's 30-second input window and would otherwise be silently truncated by the feature extractor; long-audio chunking is not implemented here"
+    },
+    "attention": {
+      "status": "passed",
+      "submitted_measurement": {
+        "loss_finite": true,
+        "step_seconds": 1.5210648680000105,
+        "attention_loss": 3.6419360637664795,
+        "ctc_loss": 4.440557479858398
+      },
+      "optimizer_step_completed": true,
+      "optimizer_observations": [
+        {
+          "parameters_with_gradient": 41,
+          "all_gradients_finite": true,
+          "first_parameter_changed": true
+        }
+      ],
+      "outer_wall_seconds": 1.8689382489999957,
+      "peak_gpu_memory_allocated_bytes": 1220322304
+    },
+    "transducer": {
+      "status": "passed",
+      "submitted_measurement": {
+        "loss_finite": true,
+        "step_seconds": 1.4214071950000005,
+        "loss": 262.7525634765625
+      },
+      "optimizer_step_completed": true,
+      "optimizer_observations": [
+        {
+          "parameters_with_gradient": 23,
+          "all_gradients_finite": true,
+          "first_parameter_changed": true
+        }
+      ],
+      "outer_wall_seconds": 1.4492777769999918,
+      "peak_gpu_memory_allocated_bytes": 210677760
+    },
+    "whisper_finetune": {
+      "status": "passed",
+      "submitted_measurement": {
+        "loss_finite": true,
+        "step_seconds": 1.1743108370000073,
+        "loss": 1.7769371271133423
+      },
+      "optimizer_step_completed": true,
+      "optimizer_observations": [
+        {
+          "parameters_with_gradient": 478,
+          "all_gradients_finite": true,
+          "first_parameter_changed": true
+        }
+      ],
+      "outer_wall_seconds": 3.6727443700000038,
+      "peak_gpu_memory_allocated_bytes": 9585038336
+    }
+  },
+  "pilot_ids": [
+    "hparl:alekshs_tsipras-olomeleia_37_00240000_00243000_4_1",
+    "hparl:dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1",
+    "hparl:iwannhs_balafas-olomeleia_47_02640000_02643000_1_2"
+  ],
+  "pilot_audio_seconds": 6.609999999999999
+}

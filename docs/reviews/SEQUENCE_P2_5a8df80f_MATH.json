@@ -1,0 +1,473 @@
+{
+  "schema": "p3-rnnt-submission-math-review-v1",
+  "submission_commit": "5a8df80f02584652de59618b081bba583028a627",
+  "source_sha256": {
+    "greek_asr/models/rnnt_loss.py": "50789fc37f78db00487817f129fea6a0a5a21c97f108cd2c9b46da6019b0e60e",
+    "greek_asr/models/transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db"
+  },
+  "diagnostic_sha256": "ec8f9c963c858fc49173cd28937842cb760dbeb78fc2aac4003127080ddda5aa",
+  "python": "3.12.3",
+  "torch": "2.9.1+rocm7.2.1.gitff65f5bc",
+  "device": "cpu",
+  "dtype": "float64",
+  "seed": 1911,
+  "threads": 2,
+  "scope": "Synthetic exhaustive alignment values/gradients and padded-target contract only",
+  "corpus_audio_or_references_used": false,
+  "model_training_performed": false,
+  "tolerance": 1e-10,
+  "batch_size": 2,
+  "vocab_size": 5,
+  "blank_id": 2,
+  "alignment_cases": [
+    {
+      "max_time": 1,
+      "max_target_length": 0,
+      "real_time_lengths": [
+        1,
+        1
+      ],
+      "real_target_lengths": [
+        0,
+        0
+      ],
+      "enumerated_paths_per_item": [
+        1,
+        1
+      ],
+      "actual_losses": [
+        2.115761008268331,
+        2.9656390898756215
+      ],
+      "oracle_losses": [
+        2.115761008268331,
+        2.9656390898756215
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 0.0,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 1,
+      "max_target_length": 1,
+      "real_time_lengths": [
+        1,
+        1
+      ],
+      "real_target_lengths": [
+        1,
+        0
+      ],
+      "enumerated_paths_per_item": [
+        1,
+        1
+      ],
+      "actual_losses": [
+        4.716274843472834,
+        2.2313215949036858
+      ],
+      "oracle_losses": [
+        4.716274843472834,
+        2.2313215949036858
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 0.0,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 1,
+      "max_target_length": 2,
+      "real_time_lengths": [
+        1,
+        1
+      ],
+      "real_target_lengths": [
+        2,
+        1
+      ],
+      "enumerated_paths_per_item": [
+        1,
+        1
+      ],
+      "actual_losses": [
+        5.482887127009887,
+        2.9565782020447586
+      ],
+      "oracle_losses": [
+        5.482887127009887,
+        2.9565782020447586
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 0.0,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 1,
+      "max_target_length": 3,
+      "real_time_lengths": [
+        1,
+        1
+      ],
+      "real_target_lengths": [
+        3,
+        2
+      ],
+      "enumerated_paths_per_item": [
+        1,
+        1
+      ],
+      "actual_losses": [
+        5.6502091653458475,
+        4.8724671982452765
+      ],
+      "oracle_losses": [
+        5.6502091653458475,
+        4.8724671982452765
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 0.0,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 2,
+      "max_target_length": 0,
+      "real_time_lengths": [
+        2,
+        1
+      ],
+      "real_target_lengths": [
+        0,
+        0
+      ],
+      "enumerated_paths_per_item": [
+        1,
+        1
+      ],
+      "actual_losses": [
+        6.044420266623495,
+        2.098135692736571
+      ],
+      "oracle_losses": [
+        6.044420266623495,
+        2.098135692736571
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 0.0,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 2,
+      "max_target_length": 1,
+      "real_time_lengths": [
+        2,
+        1
+      ],
+      "real_target_lengths": [
+        1,
+        0
+      ],
+      "enumerated_paths_per_item": [
+        2,
+        1
+      ],
+      "actual_losses": [
+        4.722267113294304,
+        3.0503178601885788
+      ],
+      "oracle_losses": [
+        4.722267113294303,
+        3.0503178601885788
+      ],
+      "max_absolute_value_error": 8.881784197001252e-16,
+      "max_absolute_gradient_error": 2.220446049250313e-16,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 2,
+      "max_target_length": 2,
+      "real_time_lengths": [
+        2,
+        1
+      ],
+      "real_target_lengths": [
+        2,
+        1
+      ],
+      "enumerated_paths_per_item": [
+        3,
+        1
+      ],
+      "actual_losses": [
+        8.026094416040515,
+        2.679236345074896
+      ],
+      "oracle_losses": [
+        8.026094416040513,
+        2.679236345074896
+      ],
+      "max_absolute_value_error": 1.7763568394002505e-15,
+      "max_absolute_gradient_error": 4.440892098500626e-16,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 2,
+      "max_target_length": 3,
+      "real_time_lengths": [
+        2,
+        1
+      ],
+      "real_target_lengths": [
+        3,
+        2
+      ],
+      "enumerated_paths_per_item": [
+        4,
+        1
+      ],
+      "actual_losses": [
+        7.918738171267644,
+        8.487397076558235
+      ],
+      "oracle_losses": [
+        7.918738171267645,
+        8.487397076558235
+      ],
+      "max_absolute_value_error": 8.881784197001252e-16,
+      "max_absolute_gradient_error": 2.220446049250313e-16,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 3,
+      "max_target_length": 0,
+      "real_time_lengths": [
+        3,
+        2
+      ],
+      "real_target_lengths": [
+        0,
+        0
+      ],
+      "enumerated_paths_per_item": [
+        1,
+        1
+      ],
+      "actual_losses": [
+        6.455377313592343,
+        3.9717059235891727
+      ],
+      "oracle_losses": [
+        6.455377313592343,
+        3.9717059235891727
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 0.0,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 3,
+      "max_target_length": 1,
+      "real_time_lengths": [
+        3,
+        2
+      ],
+      "real_target_lengths": [
+        1,
+        0
+      ],
+      "enumerated_paths_per_item": [
+        3,
+        1
+      ],
+      "actual_losses": [
+        5.12172331449947,
+        7.164362753794912
+      ],
+      "oracle_losses": [
+        5.12172331449947,
+        7.164362753794912
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 1.1102230246251565e-16,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 3,
+      "max_target_length": 2,
+      "real_time_lengths": [
+        3,
+        2
+      ],
+      "real_target_lengths": [
+        2,
+        1
+      ],
+      "enumerated_paths_per_item": [
+        6,
+        2
+      ],
+      "actual_losses": [
+        7.466057395967132,
+        6.418354508632133
+      ],
+      "oracle_losses": [
+        7.466057395967133,
+        6.418354508632132
+      ],
+      "max_absolute_value_error": 8.881784197001252e-16,
+      "max_absolute_gradient_error": 3.3306690738754696e-16,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 3,
+      "max_target_length": 3,
+      "real_time_lengths": [
+        3,
+        2
+      ],
+      "real_target_lengths": [
+        3,
+        2
+      ],
+      "enumerated_paths_per_item": [
+        10,
+        3
+      ],
+      "actual_losses": [
+        10.613573958755193,
+        8.37175120149222
+      ],
+      "oracle_losses": [
+        10.613573958755195,
+        8.37175120149222
+      ],
+      "max_absolute_value_error": 1.7763568394002505e-15,
+      "max_absolute_gradient_error": 6.661338147750939e-16,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 4,
+      "max_target_length": 0,
+      "real_time_lengths": [
+        4,
+        3
+      ],
+      "real_target_lengths": [
+        0,
+        0
+      ],
+      "enumerated_paths_per_item": [
+        1,
+        1
+      ],
+      "actual_losses": [
+        9.460267354213592,
+        5.711084934085348
+      ],
+      "oracle_losses": [
+        9.460267354213592,
+        5.711084934085348
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 0.0,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 4,
+      "max_target_length": 1,
+      "real_time_lengths": [
+        4,
+        3
+      ],
+      "real_target_lengths": [
+        1,
+        0
+      ],
+      "enumerated_paths_per_item": [
+        4,
+        1
+      ],
+      "actual_losses": [
+        11.421519654523957,
+        5.544127472699665
+      ],
+      "oracle_losses": [
+        11.421519654523957,
+        5.544127472699665
+      ],
+      "max_absolute_value_error": 0.0,
+      "max_absolute_gradient_error": 4.440892098500626e-16,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 4,
+      "max_target_length": 2,
+      "real_time_lengths": [
+        4,
+        3
+      ],
+      "real_target_lengths": [
+        2,
+        1
+      ],
+      "enumerated_paths_per_item": [
+        10,
+        3
+      ],
+      "actual_losses": [
+        8.502858099901097,
+        6.330691314691821
+      ],
+      "oracle_losses": [
+        8.502858099901099,
+        6.33069131469182
+      ],
+      "max_absolute_value_error": 1.7763568394002505e-15,
+      "max_absolute_gradient_error": 5.551115123125783e-16,
+      "finite_values_and_gradients": true
+    },
+    {
+      "max_time": 4,
+      "max_target_length": 3,
+      "real_time_lengths": [
+        4,
+        3
+      ],
+      "real_target_lengths": [
+        3,
+        2
+      ],
+      "enumerated_paths_per_item": [
+        20,
+        6
+      ],
+      "actual_losses": [
+        9.184970756559728,
+        4.601918967477791
+      ],
+      "oracle_losses": [
+        9.184970756559727,
+        4.601918967477791
+      ],
+      "max_absolute_value_error": 1.7763568394002505e-15,
+      "max_absolute_gradient_error": 3.3306690738754696e-16,
+      "finite_values_and_gradients": true
+    }
+  ],
+  "max_absolute_value_error": 1.7763568394002505e-15,
+  "max_absolute_gradient_error": 6.661338147750939e-16,
+  "all_alignment_checks_passed": true,
+  "ignored_padding_contract_probe": {
+    "padding_value": -100,
+    "padded_position_is_outside_real_target_length": true,
+    "baseline_in_range_padding_losses": [
+      6.204466558045627,
+      2.888360643876699
+    ],
+    "status": "returned",
+    "losses": [
+      6.204466558045627,
+      2.888360643876699
+    ],
+    "contract_satisfied": true
+  }
+}

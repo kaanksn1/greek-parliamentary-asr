@@ -34,15 +34,18 @@ pass GPU checks; a temporary merge with Samed's `4db1a4a` passes 146 tests
 The user subsequently assigned the final P2 fixes to the owner: nonfinite
 Whisper losses now fail with an explicit run record, prediction validates the
 source lock, ignored RNN-T padding is safe before gather, and docs/configs match
-the code. All 119 tests pass. The earlier findings remain versioned in
+the code. All 119 tests pass; temporary integration with the data branch passes
+151 tests. All three final GPU checks and the attention/RNN-T CLI checks pass.
+See [the resolution and exact-commit evidence](docs/reviews/SEQUENCE_P2_RESOLVED_TR.md).
+The earlier findings remain versioned in
 [the review](docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md). Full-data training budgets and
 benchmark runs are still pending. The original
 assignment remains in [HANDOFF_ADNAN_TR.md](docs/HANDOFF_ADNAN_TR.md).
 Full runs remain central on Serdar's machine. The user reported the deadline
 as **21 November 2026, Saturday evening (Europe/Istanbul)**; the exact hour is unknown.
 
-Adnan's model code, configs and tests are now implemented on
-`feature/p3-sequence-models` (see
+Adnan's model implementations and the owner's final review fixes are in
+`greek_asr/models/` (see
 [SEQUENCE_MODELS.md](docs/SEQUENCE_MODELS.md) and
 [the contribution file](contributions/ADNAN_DEMIR_220911784_adnan-demir.md)):
 a standard attention encoder-decoder with an optional hybrid CTC head, a

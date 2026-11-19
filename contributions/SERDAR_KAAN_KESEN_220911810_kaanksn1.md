@@ -57,6 +57,10 @@
   padding, meaningful regression tests, and matching model/config documentation.
   All 119 local tests passed. Adnan's original model commits and personal
   contribution report remain intact; these limited fixes are attributed here.
+  Rechecked the committed fixes on GPU (all three model pilots and the actual
+  attention/RNN-T CLI paths), reran the independent RNN-T oracle including
+  ignored padding, and passed 151 tests in temporary data-code integration.
+  Versioned evidence is in docs/reviews/SEQUENCE_P2_RESOLVED_TR.md.
 
 ## Limits and pending dependent work
 
