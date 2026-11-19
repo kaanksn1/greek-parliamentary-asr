@@ -1,11 +1,11 @@
 {
-  "_comment": "Standard RNN-T transducer ASR (greek_asr.models.transducer). max_steps/batch_size/gradient_accumulation_steps are left pending: Serdar's pilot must measure real step time/VRAM before a non-arbitrary training-length decision. See docs/SEQUENCE_MODELS.md.",
+  "_comment": "Standard RNN-T transducer ASR (greek_asr.models.transducer), using the pure_pytorch_logspace loss backend. max_steps remains null until representative training-data measurements justify the budget; batch_size and gradient_accumulation_steps are provisional values to check in those measurements. See docs/SEQUENCE_MODELS.md.",
   "architecture": "RNN-T: unidirectional pyramidal LSTM encoder, LSTM prediction network, feed-forward joint network",
   "primary_sources": [
     "Graves (2012), Sequence Transduction with Recurrent Neural Networks, arXiv:1211.3711",
     "He et al. (2019), Streaming End-to-end Speech Recognition for Mobile Devices"
   ],
-  "loss_backend": "torchaudio.functional.rnnt_loss (BSD-2-Clause; see docs/SEQUENCE_MODELS.md 'RNN-T loss backend')",
+  "loss_backend": "pure_pytorch_logspace",
   "train_manifest": "data/manifests/train.jsonl",
   "train_references": "data/manifests/references/train.jsonl",
   "dev_manifest": "data/manifests/dev.jsonl",

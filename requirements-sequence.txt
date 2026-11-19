@@ -1,10 +1,11 @@
 # Adnan's isolated sequence-model environment (attention, RNN-T, Whisper fine-tuning).
-# This is the actual `pip freeze` of .venv-sequence (CPU, Windows, Python 3.12.10),
-# used for architecture/unit-level development and the synthetic CPU tests in
-# tests/test_models_*.py and tests/test_whisper_finetune.py. It is NOT Serdar's
-# GPU training environment. See docs/SEQUENCE_MODELS.md "Environment" section for
-# the separate ROCm install note (same torch/torchaudio/transformers major/minor
-# versions already locked in requirements-rocm.lock.txt, swapped for the CPU wheel).
+# Direct CPU dependency pins reported for Adnan's .venv-sequence development
+# environment (Windows, Python 3.12.10), including architecture and pilot-fixture
+# tests. This is not Serdar's GPU environment or a full transitive freeze.
+# The CPU torch/torchaudio versions below differ from the verified ROCm versions;
+# they are not the same versions with only the wheel suffix changed. Replay the
+# existing GPU environment from requirements-rocm.lock.txt, not this file.
+# See docs/SEQUENCE_MODELS.md "Environment" for recorded runtime evidence.
 #
 # Build: py -3.12 -m venv .venv-sequence && .venv-sequence\Scripts\python -m pip install -r requirements-sequence.txt
 --index-url https://download.pytorch.org/whl/cpu

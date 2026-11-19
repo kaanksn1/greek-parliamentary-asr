@@ -15,35 +15,46 @@ unseen-speaker evaluation. Each split needs speaker/utterance/hour counts and
 literal test-sentence matches in the actual training targets. All supported
 baselines share one dev-selected normalization/scoring policy.
 
-Latest review: Samed's [PR #2](https://github.com/kaanksn1/greek-parliamentary-asr/pull/2)
+Data review on 18 November: Samed's [PR #2](https://github.com/kaanksn1/greek-parliamentary-asr/pull/2)
 at `e5aa488` passes 76 tests; its original source metadata, reporting corrections
 and unchanged early test-freeze metadata are verified. Full audio delivery and
-independent audio-byte verification remain pending. Adnan's
-[PR #5](https://github.com/kaanksn1/greek-parliamentary-asr/pull/5) at `0437631`
-passes 93 tests, and a temporary merge of both PRs passes 125 tests. Real GPU
-checks nevertheless expose PCM32 decoding, device, RNN-T loss-backend and
-Whisper decoder-prefix defects. Neither PR was merged in this review.
-See [the follow-up report, evidence and Adnan correction prompt](docs/reviews/PR2_PR5_FOLLOWUP_TR.md).
+independent audio-byte verification remained pending in that reviewed checkout.
+The later `4db1a4a` data submission adds LFS audio entries; their actual blobs
+were not downloaded/reverified in the model review below.
+See [the 18 November report](docs/reviews/PR2_PR5_FOLLOWUP_TR.md).
 The [first Samed review](docs/reviews/SAMED_PR2_REVIEW_TR.md) is historical.
 
-Adnan has submitted attention ASR, RNN-T and the two controlled Whisper
-fine-tuning recipes; corrections are required before full runs. The original
+Latest model review (19 November): Adnan's
+[PR #5](https://github.com/kaanksn1/greek-parliamentary-asr/pull/5) at `0c13ce1`
+passes 114 tests. PCM32, attention-device, RNN-T loss-backend and Whisper-prefix
+blockers are resolved: all three train-pilot GPU checks show finite loss/gradients
+and parameter updates. Attention/RNN-T actual train/checkpoint/predict CLIs also
+pass GPU checks; a temporary merge with Samed's `4db1a4a` passes 146 tests
+(large LFS audio not downloaded for this code integration check).
+The user subsequently assigned the final P2 fixes to the owner: nonfinite
+Whisper losses now fail with an explicit run record, prediction validates the
+source lock, ignored RNN-T padding is safe before gather, and docs/configs match
+the code. All 119 tests pass; temporary integration with the data branch passes
+151 tests. All three final GPU checks and the attention/RNN-T CLI checks pass.
+See [the resolution and exact-commit evidence](docs/reviews/SEQUENCE_P2_RESOLVED_TR.md).
+The earlier findings remain versioned in
+[the review](docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md). Full-data training budgets and
+benchmark runs are still pending. The original
 assignment remains in [HANDOFF_ADNAN_TR.md](docs/HANDOFF_ADNAN_TR.md).
 Full runs remain central on Serdar's machine. The user reported the deadline
 as **21 November 2026, Saturday evening (Europe/Istanbul)**; the exact hour is unknown.
 
-Adnan's model code, configs and tests are now implemented on
-`feature/p3-sequence-models` (see
+Adnan's model implementations and the owner's final review fixes are in
+`greek_asr/models/` (see
 [SEQUENCE_MODELS.md](docs/SEQUENCE_MODELS.md) and
 [the contribution file](contributions/ADNAN_DEMIR_220911784_adnan-demir.md)):
 a standard attention encoder-decoder with an optional hybrid CTC head, a
 standard RNN-T transducer, and the two-condition Whisper fine-tuning
-contribution. Data PR #2 is still unmerged (`data/manifests/*.jsonl` do not
-exist), so none of this has run on real HParl/CSS10 audio; everything is
-verified with tiny synthetic tensors and the three real train-pilot clips
-only, on CPU. No training length (`max_steps`), dev selection or benchmark
-result exists yet -- that needs Serdar's GPU pilot measurement
-(`scripts/pilot_sequence_models.py`) plus the real data.
+contribution. Data PR #2 is still unmerged, so its full manifests/audio are
+not yet integrated into main. Model verification uses synthetic tensors and
+three real HParl train-pilot clips, including the recorded GPU checks above.
+No full training budget (`max_steps`), official dev selection or benchmark
+result exists yet; representative real-data measurements remain necessary.
 
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports
@@ -248,13 +259,15 @@ contract as `greek_asr.infer`, and the same `--split test` refusal without
 | `docs/INITIAL_WORK_TR.md` | Completed startup work, observed reference issue and remaining work |
 | `docs/TEACHER_CLARIFICATION_TR.md` | Professor approval, immutable test requirement and data-budget rule |
 | `docs/TEACHER_UPDATES_2026-11-18_TR.md` | New speaker/group split rule, official-split exception and exact baseline/scoring requirements |
-| `docs/reviews/` | Versioned PR #2/#5 reviews, metadata and GPU diagnostic JSON evidence, and correction prompts; no model benchmark |
+| `docs/reviews/` | Versioned PR #2/#5 reviews, metadata/GPU/CLI/RNN-T-math JSON evidence and correction prompts; no model benchmark |
 | `results/runtime_smoke/` | Real train-pilot predictions and runtime record; no benchmark scores |
 | `contributions/` | Actual individual reports and required filename/status inventory |
 | `AGENTS.md` | Scope and test instructions for coding assistants |
 | `requirements.txt` | Dependency scope of the initial implementation |
 | `scripts/review_data_submission.py` | Read-only integration review of submitted manifests, literal repeated test sentences and freeze history |
 | `scripts/probe_sequence_submission.py` | Independent PCM32/token-prefix probes and one-step submitted model checks on three train clips; no dev/test inference |
+| `scripts/probe_sequence_entrypoints.py` | Real attention/RNN-T train/checkpoint/predict CLI diagnostics using temporary train-pilot fixtures; no official dev/test |
+| `scripts/verify_rnnt_submission.py` | CPU exhaustive-alignment oracle for submitted RNN-T values/gradients and ignored-padding contract |
 | `requirements-verification.txt` | Exact optional JiWER oracle-check dependencies |
 | `requirements-rocm.lock.txt` | Actual isolated Whisper/Qwen environment pins, including AMD wheel identities |
 | `requirements-nemo.lock.txt` | Actual separate NeMo environment pins; runtime validation status in its documentation |

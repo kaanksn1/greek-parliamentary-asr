@@ -10,12 +10,11 @@ is not evidence it runs during real GPU training.
 
 This module replaces that compiled op with a loss built entirely from
 ordinary ``torch.autograd`` primitives (``log_softmax``, ``gather``,
-``logaddexp``, elementwise add/compare): every one of those has a kernel on
-every backend torch itself ships, CUDA or ROCm, so there is no backend-
-specific build to be missing. That is why this is the backend chosen in
-docs/SEQUENCE_MODELS.md "RNN-T loss backend" over (b) GPU-encoder/CPU-loss or
-(c) a separately documented environment: it needs no device-specific
-verification step at all, by construction, rather than requiring one.
+``logaddexp``, elementwise add/compare). This avoids the separate compiled
+RNN-T operator dependency; it does not establish correctness or availability
+on every device, dtype or library build. Real forward/backward and optimizer
+checks on the target device remain necessary when the implementation or
+environment changes. See docs/SEQUENCE_MODELS.md "RNN-T loss backend".
 
 Correctness evidence (not assumed from the algorithm description alone):
 tests/test_rnnt_loss.py checks this function's value and gradient against
@@ -23,14 +22,14 @@ tests/test_rnnt_loss.py checks this function's value and gradient against
 and (2) ``torchaudio.functional.rnnt_loss`` on CPU, for both a fixed small
 example and multiple random batches with variable per-sample lengths.
 
-Not yet measured: real throughput on an actual GPU/ROCm device. This is a
-straightforward O(time * label) sequential-over-time, batch-vectorized
-dynamic program -- not the anti-diagonal/compiled-kernel optimization
-``torchaudio``'s own op uses -- and has only been timed on CPU with the
-repo's short pilot/test clips. Serdar's GPU pilot
-(``scripts/pilot_sequence_models.py``) must measure real step time/VRAM on
-this path before any training-budget decision, the same as every other
-unverified-on-ROCm number in this PR.
+At submission commit 0c13ce1, a real RX 7800 XT train-pilot check completed
+with finite gradients and a parameter update; that versioned evidence is in
+docs/reviews/ADNAN_0c13ce1_GPU.json. It does not prove throughput or memory
+feasibility for full training. This is a straightforward O(time * label)
+sequential-over-time, batch-vectorized dynamic program, not the
+anti-diagonal/compiled-kernel optimization used by torchaudio's operator.
+Representative train/dev measurements are still required before selecting
+a full training budget.
 """
 from __future__ import annotations
 
@@ -61,7 +60,13 @@ def rnnt_loss(logits: "torch.Tensor", targets: "torch.Tensor", logit_lengths: "t
     log_probs = torch.log_softmax(logits, dim=-1)
     blank_lp = log_probs[..., blank]  # (batch, max_time, max_u + 1)
     if max_u > 0:
-        index = targets.long().view(batch, 1, max_u, 1).expand(batch, max_time, max_u, 1)
+        label_index = torch.arange(max_u, device=device).view(1, max_u)
+        valid_label = label_index < target_lengths.view(batch, 1)  # (batch, max_u)
+        # Ignored padding may contain a sentinel outside the vocabulary. Make
+        # only those positions safe before gather; invalid real labels must
+        # still raise instead of being silently mapped to another token.
+        safe_targets = targets.long().masked_fill(~valid_label, 0)
+        index = safe_targets.view(batch, 1, max_u, 1).expand(batch, max_time, max_u, 1)
         label_lp = torch.gather(log_probs[:, :, :max_u, :], dim=-1, index=index).squeeze(-1)  # (batch, max_time, max_u)
     else:
         label_lp = torch.zeros(batch, max_time, 0, dtype=dtype, device=device)
@@ -75,8 +80,6 @@ def rnnt_loss(logits: "torch.Tensor", targets: "torch.Tensor", logit_lengths: "t
     neg_inf = torch.full((), _NEG_INF, dtype=dtype, device=device)
     blank_lp = torch.where(valid_time.unsqueeze(-1), blank_lp, neg_inf)
     if max_u > 0:
-        label_index = torch.arange(max_u, device=device).view(1, max_u)
-        valid_label = label_index < target_lengths.view(batch, 1)  # (batch, max_u)
         valid_label_lp = valid_time.unsqueeze(-1) & valid_label.unsqueeze(1)
         label_lp = torch.where(valid_label_lp, label_lp, neg_inf)
 

@@ -226,6 +226,103 @@ class RevisionValidationTests(unittest.TestCase):
                      "max_steps": 1, "warmup_steps": 1},
                     project_root=ROOT, output_dir=Path(directory) / "out")
 
+    def test_prediction_rejects_wrong_model_or_revision_before_loading(self):
+        lock = json.loads((ROOT / "configs/model_sources.lock.json").read_text(encoding="utf-8-sig"))
+        non_whisper = next(row for row in lock["models"] if row["model_id"].startswith("Qwen/"))
+        for model_id, revision in (("openai/whisper-small", "0" * 40),
+                                   ("openai/whisper-small.en", REVISION),
+                                   (non_whisper["model_id"], non_whisper["revision"])):
+            with self.subTest(model_id=model_id, revision=revision), tempfile.TemporaryDirectory() as directory:
+                directory = Path(directory)
+                manifest, _ = _write_manifest_and_references(directory, PILOT[:1], "train")
+                checkpoint = directory / "wrong-source.pt"
+                torch.save({"schema": "greek-asr-whisper-finetune-checkpoint-v1",
+                            "config": {"model_id": model_id, "revision": revision}, "model_state": {}}, checkpoint)
+                loader = unittest.mock.Mock(side_effect=AssertionError("unverified source reached loader"))
+                output = directory / "prediction"
+                with self.assertRaisesRegex(ValueError, "model_sources.lock.json"):
+                    whisper_finetune.predict(checkpoint, manifest, project_root=ROOT, split="train",
+                                             output_dir=output, model_loader=loader)
+                loader.assert_not_called()
+                self.assertFalse(output.exists())
+
+
+@unittest.skipUnless(_DEPS_AVAILABLE, _SKIP_REASON)
+class NonfiniteLossTests(unittest.TestCase):
+    def _failed_run(self, train_losses, *, dev_nonfinite=False):
+        from types import SimpleNamespace
+
+        class ControlledLossModel(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.weight = torch.nn.Parameter(torch.tensor(1.0))
+                self.config = SimpleNamespace(decoder_start_token_id=0)
+                self.generation_config = SimpleNamespace()
+                self.training_calls = 0
+
+            def forward(self, **kwargs):
+                if self.training:
+                    # Exhaustion deliberately fails the test if a NaN is skipped
+                    # or retried, so a regression cannot hang the test runner.
+                    if self.training_calls >= len(train_losses):
+                        raise AssertionError("training continued after a nonfinite loss")
+                    finite = train_losses[self.training_calls]
+                    self.training_calls += 1
+                else:
+                    finite = not dev_nonfinite
+                loss = self.weight.square() if finite else self.weight * float("nan")
+                return SimpleNamespace(loss=loss)
+
+        def synthetic_dataset(utterances, *args, **kwargs):
+            def collate(ids):
+                return {"ids": ids, "input_features": torch.zeros(len(ids), 1),
+                        "labels": torch.zeros(len(ids), 1, dtype=torch.long)}
+            return [row.id for row in utterances], collate
+
+        model = ControlledLossModel()
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            train, train_refs = _write_manifest_and_references(directory, PILOT[:2], "train")
+            dev, dev_refs = _write_manifest_and_references(directory, PILOT[2:], "dev")
+            config = {
+                "model_id": "openai/whisper-small", "revision": REVISION,
+                "train_manifest": str(train), "train_references": str(train_refs),
+                "dev_manifest": str(dev), "dev_references": str(dev_refs),
+                "seed": 42, "learning_rate": 1e-3, "micro_batch_size": 1,
+                "gradient_accumulation_steps": 1 if dev_nonfinite else 2,
+                "max_steps": 1, "warmup_steps": 1, "dev_eval_every": 1,
+            }
+            output = directory / "run"
+            with unittest.mock.patch.object(whisper_finetune, "_dataset_and_collate", side_effect=synthetic_dataset):
+                with self.assertRaisesRegex(FloatingPointError, "non-finite (train|dev) loss"):
+                    whisper_finetune.train(config, project_root=ROOT, output_dir=output,
+                                            model_loader=lambda *args, **kwargs: (object(), model))
+            report = json.loads((output / "run.json").read_text(encoding="utf-8"))
+            self.assertFalse((output / "checkpoint.best.pt").exists())
+            self.assertFalse((output / "checkpoint.last.pt").exists())
+        self.assertEqual(report["status"], "failed")
+        self.assertEqual(report["error_type"], "FloatingPointError")
+        self.assertEqual(report["nonfinite_losses_detected"], 1)
+        self.assertIsNone(report["best_dev_loss"])
+        self.assertIsNone(model.weight.grad)
+        return model, report
+
+    def test_nonfinite_train_loss_never_updates_partial_accumulation_or_retries(self):
+        for losses in ((False,), (True, False)):
+            with self.subTest(losses=losses):
+                model, report = self._failed_run(losses)
+                self.assertEqual(model.training_calls, len(losses))
+                self.assertEqual(model.weight.item(), 1.0)
+                self.assertEqual(report["optimizer_updates_completed"], 0)
+                self.assertEqual(report["micro_steps_completed"], len(losses) - 1)
+                self.assertEqual(report["failed_phase"], "train")
+
+    def test_nonfinite_dev_loss_never_selects_a_checkpoint(self):
+        model, report = self._failed_run((True,), dev_nonfinite=True)
+        self.assertEqual(model.training_calls, 1)
+        self.assertEqual(report["optimizer_updates_completed"], 1)
+        self.assertEqual(report["failed_phase"], "dev")
+
 
 @unittest.skipUnless(_DEPS_AVAILABLE, _SKIP_REASON)
 class TrainAndPredictWithTinyModelTests(unittest.TestCase):

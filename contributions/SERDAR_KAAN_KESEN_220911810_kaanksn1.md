@@ -42,14 +42,33 @@
   probes, recorded actual failures and prepared an actionable correction prompt.
   The unchanged submitted Whisper pilot completed one GPU optimizer step;
   attention and RNN-T failed. No full training or official dev/test inference.
+- Re-reviewed Adnan's `0c13ce1` fixes on 19 November: 114 tests passed; all
+  three unchanged submitted pilots completed real GPU updates with observed
+  finite gradients and changed parameters. Exercised attention/RNN-T actual
+  train/checkpoint/predict CLIs on temporary train-pilot fixtures and recorded
+  an independent exhaustive RNN-T value/gradient oracle. Kept remaining P2
+  issues separate from resolved original blockers. No teammate source edits,
+  official dev/test inference or full-data training were performed.
+  Temporary integration with Samed's `4db1a4a` passed 146 tests; LFS audio
+  blobs were not downloaded or independently rehashed in this code check.
+- After the user's explicit 19 November assignment, completed the remaining
+  sequence review fixes in owner-authored commits: nonfinite Whisper train/dev
+  loss abort/reporting, prediction source-lock validation, safe ignored RNN-T
+  padding, meaningful regression tests, and matching model/config documentation.
+  All 119 local tests passed. Adnan's original model commits and personal
+  contribution report remain intact; these limited fixes are attributed here.
+  Rechecked the committed fixes on GPU (all three model pilots and the actual
+  attention/RNN-T CLI paths), reran the independent RNN-T oracle including
+  ignored padding, and passed 151 tests in temporary data-code integration.
+  Versioned evidence is in docs/reviews/SEQUENCE_P2_RESOLVED_TR.md.
 
 ## Limits and pending dependent work
 
 Samed submitted early test-freeze metadata and his data pipeline in PR #2;
 full audio delivery and independent audio-byte verification are pending; the
 reporting/source-metadata corrections were verified. His pipeline and cleaning
-authorship remain his. Adnan's submitted implementation needs the documented
-model/GPU corrections. Kemal's model work, Ozan's final evaluation and all full
+authorship remain his. Adnan's submitted implementation and the owner's final
+review corrections have passed code/pilot checks. Kemal's model work, Ozan's final evaluation and all full
 benchmark runs remain pending. No custom-data bonus, trained-model improvement or new
 human annotation is claimed. Personal contribution percentages are not results.
 

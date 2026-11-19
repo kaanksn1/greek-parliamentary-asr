@@ -12,15 +12,15 @@ Owners are assigned in `TEAM.md`; assignment is not evidence of completed work.
 |---|---|---|---|
 | MFCC (or log-mel) + GMM-HMM | Train a conventional system with a documented lexicon/decoder recipe | Kemal | Recipe and environment pending |
 | Plain CTC system | Small supervised encoder + CTC trained on the selected train split | Kemal | Implementation/training pending |
-| Attention encoder-decoder, including hybrid CTC/attention | Standard supervised attention ASR baseline | Adnan | Architecture/recipe pending |
-| RNN-T transducer | Standard supervised RNN-T; keep distinct from pretrained Parakeet TDT | Adnan | Architecture/recipe pending |
+| Attention encoder-decoder, including hybrid CTC/attention | Standard supervised attention ASR baseline | Adnan | Code and train-pilot GPU/CLI checks verified; owner completed final review fixes; full training pending |
+| RNN-T transducer | Standard supervised RNN-T; keep distinct from pretrained Parakeet TDT | Adnan | Pure-PyTorch loss mathematically and GPU/CLI verified; owner corrected padding/config; full training pending |
 | wav2vec 2.0 ASR | `lighteternal/wav2vec2-large-xlsr-53-greek` | Kemal | Greek CTC ASR card verified; runtime pending |
 | HuBERT ASR | Must have a Greek-compatible ASR head, not emotion classification or a bare encoder | Kemal | Suitable checkpoint or own standard HuBERT-CTC training pending |
 | Whisper | `openai/whisper-small` multilingual baseline | Serdar | New isolated ROCm runtime verified on three train-pilot clips; full benchmark pending |
 | Canary | `nvidia/canary-1b-v2` | Serdar | New isolated NeMo/ROCm runtime verified on three train-pilot clips; full benchmark pending |
 | Parakeet | `nvidia/parakeet-tdt-0.6b-v3` | Serdar | New isolated NeMo/ROCm runtime verified on three train-pilot clips; NVIDIA CUDA Graph acceleration disabled, standard greedy TDT retained; full benchmark pending |
 | Qwen3-ASR | `Qwen/Qwen3-ASR-0.6B` | Serdar | New isolated ROCm runtime verified on three train-pilot clips; full benchmark pending |
-| Own contribution | Same selected starting Whisper checkpoint with our fine-tuning; HParl-only/mixed-source controls | Adnan | Protocol/budget/training pending; report separately |
+| Own contribution | Same selected starting Whisper checkpoint with our fine-tuning; HParl-only/mixed-source controls | Adnan | PR #5 code and corrected train-pilot GPU step verified; full-data protocol/budget/training pending; report separately |
 
 Serdar runs all full training/inference centrally; model owners provide and fix
 their own code/configs. Ozan owns the common evaluation/comparison, Samed the
