@@ -12,7 +12,7 @@
       "architecture": "HubertForCTC, 24 layers, hidden 1024, stable layer norm; Greek character CTC vocabulary (56 ids, [PAD]=53 blank, '|' word delimiter)",
       "model_card": "absent: no README.md at this revision; training data, metrics and license are not stated",
       "files_used": "config.json, preprocessor_config.json, vocab.json, tokenizer_config.json, special_tokens_map.json, added_tokens.json, pytorch_model.bin (bundled language_model/6gram.bin is not used)",
-      "use_decision": "pending integration-owner licensing decision; the only HuBERT checkpoint found with a trained Greek ASR head",
+      "use_decision": "not selected for the benchmark: no model card, license or training-data statement at the pinned revision. Owner decision 2026-11-19: use our own HuBERT-CTC training from the documented licensed mHuBERT-147 encoder instead; retain this candidate only as historical research/runtime evidence",
       "status": "metadata_verified_runtime_pending"
     },
     {
@@ -24,7 +24,7 @@
       "architecture": "HubertModel base (12 layers, hidden 768), bare encoder without an ASR head",
       "model_card": "multilingual HuBERT pretrained on about 90K hours in 147 languages; 'el' is in its language list",
       "files_used": "config.json, preprocessor_config.json, model.safetensors",
-      "use_decision": "encoder for our own HuBERT + CTC head fine-tuning only; never used as an ASR model by itself",
+      "use_decision": "selected by the integration owner on 2026-11-19 for our standard HuBERT-CTC training path; Greek is in pretraining languages and license is CC-BY-NC-SA-4.0. Not an ASR baseline result until our CTC training and evaluation are completed",
       "status": "metadata_verified_training_recipe_prepared"
     }
   ],

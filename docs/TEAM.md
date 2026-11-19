@@ -196,3 +196,9 @@ Kullanıcının sonraki açık atamasıyla Serdar kalan P2 NaN/padding/source-lo
 ve belge/config düzeltmelerini kendi commit'lerinde tamamladı; 119 test geçti.
 Adnan'ın özgün model commit'leri ve kişisel katkı dosyası korundu. Bu sınırlı
 tamamlama diğer üyelerin görevlerini veya planlanan iş yükü yüzdelerini değiştirmez.
+
+Kemal `680b875d` ile dört baseline kodunu sundu. Owner 164 testi, GMM-HMM CPU
+ve CTC/mHuBERT/wav2vec GPU yollarını üç train pilotunda doğruladı. HuBERT için
+lisansı belirsiz yayımlanmış aday yerine lisanslı mHuBERT-147 + kendi CTC
+eğitimimiz seçildi. [İnceleme ve karar](reviews/KEMAL_PR9_REVIEW_TR.md).
+Tam veri, temsil edici ölçüm, bütçe ve bütün tam koşular hâlâ merkezde bekliyor.
