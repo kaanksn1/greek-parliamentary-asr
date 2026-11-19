@@ -31,13 +31,30 @@ blockers are resolved: all three train-pilot GPU checks show finite loss/gradien
 and parameter updates. Attention/RNN-T actual train/checkpoint/predict CLIs also
 pass GPU checks; a temporary merge with Samed's `4db1a4a` passes 146 tests
 (large LFS audio not downloaded for this code integration check).
-Remaining P2 edge handling and documentation/config corrections
-are listed in [the new review and short correction prompt](docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md).
-Neither teammate PR was merged by this review. Full-data training budgets and
+The user subsequently assigned the final P2 fixes to the owner: nonfinite
+Whisper losses now fail with an explicit run record, prediction validates the
+source lock, ignored RNN-T padding is safe before gather, and docs/configs match
+the code. All 119 tests pass; temporary integration with the data branch passes
+151 tests. All three final GPU checks and the attention/RNN-T CLI checks pass.
+See [the resolution and exact-commit evidence](docs/reviews/SEQUENCE_P2_RESOLVED_TR.md).
+The earlier findings remain versioned in
+[the review](docs/reviews/ADNAN_0c13ce1_REVIEW_TR.md). Full-data training budgets and
 benchmark runs are still pending. The original
 assignment remains in [HANDOFF_ADNAN_TR.md](docs/HANDOFF_ADNAN_TR.md).
 Full runs remain central on Serdar's machine. The user reported the deadline
 as **21 November 2026, Saturday evening (Europe/Istanbul)**; the exact hour is unknown.
+
+Adnan's model implementations and the owner's final review fixes are in
+`greek_asr/models/` (see
+[SEQUENCE_MODELS.md](docs/SEQUENCE_MODELS.md) and
+[the contribution file](contributions/ADNAN_DEMIR_220911784_adnan-demir.md)):
+a standard attention encoder-decoder with an optional hybrid CTC head, a
+standard RNN-T transducer, and the two-condition Whisper fine-tuning
+contribution. Data PR #2 is still unmerged, so its full manifests/audio are
+not yet integrated into main. Model verification uses synthetic tensors and
+three real HParl train-pilot clips, including the recorded GPU checks above.
+No full training budget (`max_steps`), official dev selection or benchmark
+result exists yet; representative real-data measurements remain necessary.
 
 The main source is [HParl](https://inventory.clarin.gr/corpus/1602), a
 Greek parliamentary corpus distributed under CC BY-NC 4.0. The producer reports
@@ -177,14 +194,52 @@ required personal filenames; members write their own actual reports. Git LFS
 is available locally, but the full-data publication size/quota is not yet
 settled. No paid storage or cloud compute is assumed.
 
+## Sequence models: attention, RNN-T, Whisper fine-tuning (Adnan)
+
+Full details, architecture citations, toolkit/loss-backend license
+verification and the GPU pilot package are in
+[SEQUENCE_MODELS.md](docs/SEQUENCE_MODELS.md). Build the isolated CPU
+development environment and run the unit tests (70 tests across
+`tests/test_models_common.py`, `tests/test_models_attention.py`,
+`tests/test_models_transducer.py`, `tests/test_whisper_finetune.py` and
+`tests/test_rnnt_loss.py`; 15 run without any ASR toolkit, the other 55 need
+this environment and are skipped, not failed, without it):
+
+```powershell
+py -3.12 -m venv .venv-sequence
+.venv-sequence\Scripts\python -m pip install -r requirements-sequence.txt
+.venv-sequence\Scripts\python -m unittest discover -s tests -v
+```
+
+Real training/prediction commands (pending Samed's accepted data delivery and
+Serdar's GPU pilot measurement for `max_steps`; `configs/sequence/*.json`
+currently refuse to run with `max_steps: null`):
+
+```bash
+python -m greek_asr.models.attention train --config configs/sequence/attention.json --output outputs/attention_run --device cuda
+python -m greek_asr.models.transducer train --config configs/sequence/transducer.json --output outputs/transducer_run --device cuda
+python -m greek_asr.models.whisper_finetune train --config configs/sequence/whisper_hparl_only.json --output outputs/whisper_hparl_only_run --device cuda
+python -m greek_asr.models.whisper_finetune train --config configs/sequence/whisper_hparl_css10.json --output outputs/whisper_hparl_css10_run --device cuda
+```
+
+All three `train`/`predict` CLIs now take `--device {cpu,cuda}` explicitly
+(default `cpu`; use `cuda` on Serdar's ROCm machine, which reports its
+accelerator through the same `"cuda"` device string). Requesting an
+unavailable device raises instead of silently training on CPU. Each module
+also provides a `predict` subcommand with the same audio-only, no-gold-leak
+contract as `greek_asr.infer`, and the same `--split test` refusal without
+`--allow-test`/a committed `--test-protocol`.
+
 ## Files and status
 
 | Path | Purpose |
 |---|---|
 | `greek_asr/` | Initial common WER/CER scorer and explicit JSONL scoring CLI |
 | `greek_asr/infer.py`, `greek_asr/pretrained/` | Owner's pinned standard inference CLI and four backend adapters |
-| `tests/` | Scoring, real-pilot lineage, audio/manifest/cohort and adapter-contract tests |
-| `scripts/` | Scorer/source checks, owner pilot export and isolated runtime bootstrap scripts |
+| `greek_asr/models/` | Adnan's attention (hybrid CTC/attention), RNN-T and Whisper fine-tuning code; see `docs/SEQUENCE_MODELS.md` |
+| `configs/sequence/` | Adnan's method/Whisper-condition configs; `max_steps` is `null` pending Serdar's GPU pilot measurement |
+| `tests/` | Scoring, real-pilot lineage, audio/manifest/cohort, adapter-contract and sequence-model tests |
+| `scripts/` | Scorer/source checks, owner pilot export, isolated runtime bootstrap and Adnan's sequence-model GPU pilot scripts |
 | `configs/` | Dataset provenance and pinned checkpoint metadata; no model weights |
 | `data/README.md` | Raw/clean data delivery contract and acquisition status |
 | `docs/TOPIC_DECISION_TR.md` | Topic rationale, alternatives and class reservation text |
@@ -193,6 +248,9 @@ settled. No paid storage or cloud compute is assumed.
 | `docs/DATA_CONTRACT.md` | Shared audio/reference/prediction schema and two freeze stages |
 | `docs/HANDOFF_SAMED_TR.md` | Detailed data-owner task prompt, deliverables and acceptance checks |
 | `docs/HANDOFF_ADNAN_TR.md` | Next model-owner prompt after accepted data delivery; training code, controls, tests and central-run package |
+| `docs/SEQUENCE_MODELS.md` | Adnan's architecture/toolkit/loss-backend rationale, environment, GPU pilot package and known limitations |
+| `docs/ADNAN_SLIDES_DRAFT_TR.md` | Adnan's 1-2 slide draft and speaker notes for Ozan; numbers pending real runs |
+| `requirements-sequence.txt` | Adnan's isolated CPU dev environment pins for `greek_asr/models/` (torch/torchaudio/transformers) |
 | `docs/PRETRAINED_TRANSFORMERS.md` | Whisper/Qwen APIs, standard settings and primary sources |
 | `docs/NEMO_RUNTIME.md` | Canary/Parakeet APIs, separate dependencies and actual runtime status |
 | `docs/RUNTIME_ENVIRONMENT.md` | Tested isolated Whisper/Qwen installation, lock replay and training-pilot commands |
@@ -270,3 +328,11 @@ Current lightweight verification: 44 unit tests passed (including the original
 15 startup tests); the independent startup JiWER check
 matched WER/CER on 500 deterministic fixture corpora. The latter are synthetic
 verification cases, not audio data or model results.
+
+Adnan's sequence-model tests add 70 more (114 total): 15 run with no ASR
+toolkit installed, the other 55 (tiny synthetic + real-train-pilot-audio
+forward/backward/checkpoint/predict checks for all three models, the RNN-T
+loss backend's value/gradient correctness, PCM16/32 decoding, device
+selection, and the Whisper decoder-start-token/long-audio regressions) need
+`requirements-sequence.txt` and are skipped, not failed, without it. All 114
+pass inside that environment. See `docs/SEQUENCE_MODELS.md`.

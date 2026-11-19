@@ -12,8 +12,8 @@ Owners are assigned in `TEAM.md`; assignment is not evidence of completed work.
 |---|---|---|---|
 | MFCC (or log-mel) + GMM-HMM | Train a conventional system with a documented lexicon/decoder recipe | Kemal | Recipe and environment pending |
 | Plain CTC system | Small supervised encoder + CTC trained on the selected train split | Kemal | Implementation/training pending |
-| Attention encoder-decoder, including hybrid CTC/attention | Standard supervised attention ASR baseline | Adnan | PR #5 at `0c13ce1`: code, train-pilot GPU/CLI checks verified; P2 review fixes and full training pending |
-| RNN-T transducer | Standard supervised RNN-T; keep distinct from pretrained Parakeet TDT | Adnan | PR #5 at `0c13ce1`: pure-PyTorch loss mathematically and GPU/CLI verified; P2 review fixes and full training pending |
+| Attention encoder-decoder, including hybrid CTC/attention | Standard supervised attention ASR baseline | Adnan | Code and train-pilot GPU/CLI checks verified; owner completed final review fixes; full training pending |
+| RNN-T transducer | Standard supervised RNN-T; keep distinct from pretrained Parakeet TDT | Adnan | Pure-PyTorch loss mathematically and GPU/CLI verified; owner corrected padding/config; full training pending |
 | wav2vec 2.0 ASR | `lighteternal/wav2vec2-large-xlsr-53-greek` | Kemal | Greek CTC ASR card verified; runtime pending |
 | HuBERT ASR | Must have a Greek-compatible ASR head, not emotion classification or a bare encoder | Kemal | Suitable checkpoint or own standard HuBERT-CTC training pending |
 | Whisper | `openai/whisper-small` multilingual baseline | Serdar | New isolated ROCm runtime verified on three train-pilot clips; full benchmark pending |

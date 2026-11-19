@@ -1,0 +1,20 @@
+{
+  "_comment": "Standard RNN-T transducer ASR (greek_asr.models.transducer), using the pure_pytorch_logspace loss backend. max_steps remains null until representative training-data measurements justify the budget; batch_size and gradient_accumulation_steps are provisional values to check in those measurements. See docs/SEQUENCE_MODELS.md.",
+  "architecture": "RNN-T: unidirectional pyramidal LSTM encoder, LSTM prediction network, feed-forward joint network",
+  "primary_sources": [
+    "Graves (2012), Sequence Transduction with Recurrent Neural Networks, arXiv:1211.3711",
+    "He et al. (2019), Streaming End-to-end Speech Recognition for Mobile Devices"
+  ],
+  "loss_backend": "pure_pytorch_logspace",
+  "train_manifest": "data/manifests/train.jsonl",
+  "train_references": "data/manifests/references/train.jsonl",
+  "dev_manifest": "data/manifests/dev.jsonl",
+  "dev_references": "data/manifests/references/dev.jsonl",
+  "seed": 42,
+  "sample_rate": 16000,
+  "learning_rate": 0.0003,
+  "batch_size": 16,
+  "gradient_accumulation_steps": 1,
+  "max_steps": null,
+  "dev_eval_every": 500
+}
