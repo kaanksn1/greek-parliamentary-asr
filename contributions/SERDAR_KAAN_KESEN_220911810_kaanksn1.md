@@ -100,6 +100,9 @@
 - Prepared the exact Samed handoff, byte-verification evidence, source-aware
   storage calculations and reproducible budget report. See
   `docs/HANDOFF_SAMED_FINAL_DATA_TR.md` and `docs/reviews/budget_2026-11-20/`.
+- Final integrated code/config suite: 206 tests passed, zero skips at
+  `16df2e95`. Repeated session selection produced identical files, and the
+  committed timing manifests match all six pretrained inference run hashes.
 
 ## Limits and pending dependent work
 

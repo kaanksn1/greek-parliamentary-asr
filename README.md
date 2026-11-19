@@ -34,6 +34,8 @@ covers the encoding audit, used-data reproducibility and selected audio upload.
 No full-data training, official dev selection, final test protocol or benchmark
 result is complete yet. The earlier review records below describe their dated
 checkouts.
+The final integrated code/config suite passed **206 tests, zero skips** at
+`16df2e95`; see `docs/reviews/budget_2026-11-20/integration_validation.json`.
 
 The two latest professor emails are summarized in
 [TEACHER_UPDATES_2026-11-18_TR.md](docs/TEACHER_UPDATES_2026-11-18_TR.md).

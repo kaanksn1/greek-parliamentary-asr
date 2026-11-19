@@ -1,0 +1,548 @@
+wsl : test_compressed_audio_is_not_misread_as_integer_pcm (test_audio_contract.AudioInputContractTests.test_compressed_
+audio_is_not_misread_as_integer_pcm) ... ok
+At line:2 char:520
++ ... TEXITCODE}; wsl --cd /home/serda/p3-reviews/data-budget-1a95860b -e e ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_compressed...ger_pcm) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+test_float32_and_pcm32_encode_equal_amplitudes_with_different_bytes (test_audio_contract.AudioInputContractTests.test_f
+loat32_and_pcm32_encode_equal_amplitudes_with_different_bytes) ... ok
+test_float_samples_are_not_peak_normalized_or_clipped (test_audio_contract.AudioInputContractTests.test_float_samples_a
+re_not_peak_normalized_or_clipped) ... ok
+test_nonfinite_float_audio_is_rejected (test_audio_contract.AudioInputContractTests.test_nonfinite_float_audio_is_rejec
+ted) ... ok
+test_odd_auxiliary_chunk_does_not_shift_the_audio (test_audio_contract.AudioInputContractTests.test_odd_auxiliary_chunk
+_does_not_shift_the_audio) ... ok
+test_runner_accepts_real_float_contract_without_exposing_gold_text (test_audio_contract.AudioInputContractTests.test_ru
+nner_accepts_real_float_contract_without_exposing_gold_text) ... ok
+test_truncated_audio_is_rejected (test_audio_contract.AudioInputContractTests.test_truncated_audio_is_rejected) ... ok
+test_annotation_tag_is_removed_only_from_train_targets_and_logged (test_data_pipeline.CleaningTests.test_annotation_tag
+_is_removed_only_from_train_targets_and_logged) ... ok
+test_audit_items_hold_measurements_not_text (test_data_pipeline.CleaningTests.test_audit_items_hold_measurements_not_te
+xt) ... ok
+test_counts_and_durations_reconcile_with_the_log (test_data_pipeline.CleaningTests.test_counts_and_durations_reconcile_
+with_the_log) ... ok
+test_css10_is_training_only_and_harmonised_with_provenance (test_data_pipeline.CleaningTests.test_css10_is_training_onl
+y_and_harmonised_with_provenance) ... ok
+test_each_known_problem_gets_the_expected_rule (test_data_pipeline.CleaningTests.test_each_known_problem_gets_the_expec
+ted_rule) ... ok
+test_healthy_records_are_kept_unchanged_and_flags_go_to_review (test_data_pipeline.CleaningTests.test_healthy_records_a
+re_kept_unchanged_and_flags_go_to_review) ... ok
+test_hparl_only_and_mixed_conditions_differ_exactly_by_css10 (test_data_pipeline.CleaningTests.test_hparl_only_and_mixe
+d_conditions_differ_exactly_by_css10) ... ok
+test_human_review_must_be_attributable_and_never_touch_test (test_data_pipeline.CleaningTests.test_human_review_must_be
+_attributable_and_never_touch_test) ... ok
+test_rerun_with_same_inputs_is_byte_identical (test_data_pipeline.CleaningTests.test_rerun_with_same_inputs_is_byte_ide
+ntical) ... ok
+test_stale_audit_is_refused (test_data_pipeline.CleaningTests.test_stale_audit_is_refused) ... ok
+test_cli_verify_and_subset (test_data_pipeline.ContractAndCliTests.test_cli_verify_and_subset) ... ok
+test_cohort_summary_reports_speakers_unknown_ids_and_literal_matches (test_data_pipeline.ContractAndCliTests.test_cohor
+t_summary_reports_speakers_unknown_ids_and_literal_matches) ... ok
+test_literal_overlap_counts_examples_and_distinct_texts_without_any_normalization (test_data_pipeline.ContractAndCliTes
+ts.test_literal_overlap_counts_examples_and_distinct_texts_without_any_normalization) ... ok
+test_paths_are_portable_relative_posix (test_data_pipeline.ContractAndCliTests.test_paths_are_portable_relative_posix)
+... ok
+test_release_shards_round_trip_and_detect_tampering (test_data_pipeline.ContractAndCliTests.test_release_shards_round_t
+rip_and_detect_tampering) ... ok
+test_report_is_generated_from_outputs (test_data_pipeline.ContractAndCliTests.test_report_is_generated_from_outputs) ..
+. ok
+test_shared_runner_accepts_every_delivered_manifest (test_data_pipeline.ContractAndCliTests.test_shared_runner_accepts_
+every_delivered_manifest) ... ok
+test_source_metadata_bytes_are_checked_and_line_ending_changes_fail (test_data_pipeline.ContractAndCliTests.test_source
+_metadata_bytes_are_checked_and_line_ending_changes_fail) ... ok
+test_resumes_from_partial_file_and_hashes_complete_archive (test_data_pipeline.DownloadTests.test_resumes_from_partial_
+file_and_hashes_complete_archive) ... ok
+test_server_ignoring_range_is_rejected (test_data_pipeline.DownloadTests.test_server_ignoring_range_is_rejected) ... ok
+test_duplicate_kaldi_ids_and_empty_lines_are_reported (test_data_pipeline.RawAcquisitionTests.test_duplicate_kaldi_ids_
+and_empty_lines_are_reported) ... ok
+test_hash_mismatch_and_lfs_pointer_are_visible_errors (test_data_pipeline.RawAcquisitionTests.test_hash_mismatch_and_lf
+s_pointer_are_visible_errors) ... ok
+test_layout_prefers_segmented_metadata_and_records_ignored_dirs (test_data_pipeline.RawAcquisitionTests.test_layout_pre
+fers_segmented_metadata_and_records_ignored_dirs) ... ok
+test_raw_record_keeps_source_id_transcript_hash_duration_and_greek (test_data_pipeline.RawAcquisitionTests.test_raw_rec
+ord_keeps_source_id_transcript_hash_duration_and_greek) ... ok
+test_source_problems_are_visible_not_silently_dropped (test_data_pipeline.RawAcquisitionTests.test_source_problems_are_
+visible_not_silently_dropped) ... ok
+test_unsafe_archive_paths_and_links_are_rejected (test_data_pipeline.RawAcquisitionTests.test_unsafe_archive_paths_and_
+links_are_rejected) ... ok
+test_validation_directory_maps_to_dev_and_layout_is_recorded (test_data_pipeline.RawAcquisitionTests.test_validation_di
+rectory_maps_to_dev_and_layout_is_recorded) ... ok
+test_a_different_freeze_is_never_written_over_the_existing_one (test_data_pipeline.TestFreezeTests.test_a_different_fre
+eze_is_never_written_over_the_existing_one) ... ok
+test_any_change_to_test_audio_or_reference_fails_verification (test_data_pipeline.TestFreezeTests.test_any_change_to_te
+st_audio_or_reference_fails_verification) ... ok
+test_cleaning_and_rerun_never_change_the_frozen_test (test_data_pipeline.TestFreezeTests.test_cleaning_and_rerun_never_
+change_the_frozen_test) ... ok
+test_missing_test_audio_blocks_the_freeze (test_data_pipeline.TestFreezeTests.test_missing_test_audio_blocks_the_freeze
+) ... ok
+test_test_ids_equal_official_cohort_and_references_are_verbatim (test_data_pipeline.TestFreezeTests.test_test_ids_equal
+_official_cohort_and_references_are_verbatim) ... ok
+whisper: 1/1 hparl:fixture-a
+test_audio_changed_during_inference_cannot_be_marked_complete (test_infer.InferenceContractTests.test_audio_changed_dur
+ing_inference_cannot_be_marked_complete) ... ok
+whisper: 1/2 hparl:fixture-a
+test_backend_failure_leaves_failed_partial_run_not_successful_predictions (test_infer.InferenceContractTests.test_backe
+nd_failure_leaves_failed_partial_run_not_successful_predictions) ... ok
+test_css10_cannot_enter_development_or_test (test_infer.InferenceContractTests.test_css10_cannot_enter_development_or_t
+est) ... ok
+whisper: 1/2 hparl:fixture-a
+whisper: 2/2 hparl:fixture-b
+test_every_id_has_output_including_empty_text_and_no_gold_reaches_backend (test_infer.InferenceContractTests.test_every
+_id_has_output_including_empty_text_and_no_gold_reaches_backend) ... ok
+test_existing_output_is_preserved_without_loading_model (test_infer.InferenceContractTests.test_existing_output_is_pres
+erved_without_loading_model) ... ok
+test_external_or_absolute_audio_path_is_rejected (test_infer.InferenceContractTests.test_external_or_absolute_audio_pat
+h_is_rejected) ... ok
+test_hparl_official_split_is_preserved (test_infer.InferenceContractTests.test_hparl_official_split_is_preserved) ... o
+k
+test_id_must_match_actual_source_and_original_id (test_infer.InferenceContractTests.test_id_must_match_actual_source_an
+d_original_id) ... ok
+test_invalid_duration_and_frame_metadata_are_rejected (test_infer.InferenceContractTests.test_invalid_duration_and_fram
+e_metadata_are_rejected) ... ok
+whisper: 1/1 hparl:fixture-a
+test_manifest_changed_during_inference_cannot_be_marked_complete (test_infer.InferenceContractTests.test_manifest_chang
+ed_during_inference_cannot_be_marked_complete) ... ok
+test_manifest_metadata_must_match_actual_pcm_wav_header (test_infer.InferenceContractTests.test_manifest_metadata_must_
+match_actual_pcm_wav_header) ... ok
+test_modified_audio_is_rejected_before_loading_model (test_infer.InferenceContractTests.test_modified_audio_is_rejected
+_before_loading_model) ... ok
+test_namespaces_allow_same_original_id_but_reject_duplicate_full_id (test_infer.InferenceContractTests.test_namespaces_
+allow_same_original_id_but_reject_duplicate_full_id) ... ok
+test_nonstring_prediction_is_failure_instead_of_record_drop (test_infer.InferenceContractTests.test_nonstring_predictio
+n_is_failure_instead_of_record_drop) ... ok
+qwen: 1/3 hparl:fixture-a
+qwen: 2/3 hparl:fixture-b
+qwen: 3/3 hparl:fixture-c
+test_qwen_batches_preserve_order_empty_outputs_and_trailing_partial_batch (test_infer.InferenceContractTests.test_qwen_
+batches_preserve_order_empty_outputs_and_trailing_partial_batch) ... ok
+test_test_guards_prevent_model_loading_and_output_creation (test_infer.InferenceContractTests.test_test_guards_prevent_
+model_loading_and_output_creation) ... ok
+test_wrong_qwen_batch_count_fails_without_a_successful_predictions_file (test_infer.InferenceContractTests.test_wrong_q
+wen_batch_count_fails_without_a_successful_predictions_file) ... ok
+test_padding_mask_blocks_attention_over_padded_positions (test_models_attention.SyntheticForwardBackwardTests.test_padd
+ing_mask_blocks_attention_over_padded_positions) ... ok
+test_tiny_batch_forward_backward_updates_parameters_with_finite_loss (test_models_attention.SyntheticForwardBackwardTes
+ts.test_tiny_batch_forward_backward_updates_parameters_with_finite_loss) ... ok
+test_a_failure_mid_prediction_leaves_a_partial_file_and_a_failed_run_json (test_models_attention.TrainAndPredictOnRealP
+ilotAudioTests.test_a_failure_mid_prediction_leaves_a_partial_file_and_a_failed_run_json) ... ok
+test_checkpoint_save_then_load_gives_identical_predictions (test_models_attention.TrainAndPredictOnRealPilotAudioTests.
+test_checkpoint_save_then_load_gives_identical_predictions) ... ok
+test_config_refuses_an_unmeasured_step_budget (test_models_attention.TrainAndPredictOnRealPilotAudioTests.test_config_r
+efuses_an_unmeasured_step_budget) ... ok
+test_predict_on_test_split_is_blocked_without_a_committed_protocol (test_models_attention.TrainAndPredictOnRealPilotAud
+ioTests.test_predict_on_test_split_is_blocked_without_a_committed_protocol) ... ok
+test_rerunning_into_an_existing_output_dir_is_refused_not_overwritten (test_models_attention.TrainAndPredictOnRealPilot
+AudioTests.test_rerunning_into_an_existing_output_dir_is_refused_not_overwritten) ... ok
+test_trailing_partial_accumulation_is_never_dropped (test_models_attention.TrainAndPredictOnRealPilotAudioTests.test_tr
+ailing_partial_accumulation_is_never_dropped)
+gradient_accumulation_steps=3 does not evenly divide one epoch's worth ... ok
+test_train_report_records_full_provenance (test_models_attention.TrainAndPredictOnRealPilotAudioTests.test_train_report
+_records_full_provenance) ... ok
+test_train_writes_checkpoints_then_predict_never_leaks_gold_and_covers_all_ids (test_models_attention.TrainAndPredictOn
+RealPilotAudioTests.test_train_writes_checkpoints_then_predict_never_leaks_gold_and_covers_all_ids) ... ok
+test_checkpoint_loads_with_map_location_regardless_of_training_device (test_models_common.DeviceSelectionTests.test_che
+ckpoint_loads_with_map_location_regardless_of_training_device)
+The checkpoint itself must not pin a training-time device: saving ... ok
+test_cpu_is_always_accepted (test_models_common.DeviceSelectionTests.test_cpu_is_always_accepted) ... ok
+test_move_batch_to_device_only_touches_tensor_values (test_models_common.DeviceSelectionTests.test_move_batch_to_device
+_only_touches_tensor_values) ... ok
+test_requesting_an_unavailable_cuda_device_raises_instead_of_falling_back (test_models_common.DeviceSelectionTests.test
+_requesting_an_unavailable_cuda_device_raises_instead_of_falling_back) ... ok
+test_missing_reference_id_is_never_silently_dropped (test_models_common.LoadUtterancesTests.test_missing_reference_id_i
+s_never_silently_dropped) ... ok
+test_real_pilot_audio_joins_with_references_and_rejects_test_split (test_models_common.LoadUtterancesTests.test_real_pi
+lot_audio_joins_with_references_and_rejects_test_split) ... ok
+test_pad_sequences_preserves_real_lengths_and_zero_pads (test_models_common.PaddingTests.test_pad_sequences_preserves_r
+eal_lengths_and_zero_pads) ... ok
+test_padding_mask_is_built_on_the_lengths_tensor_device_not_cpu_by_default (test_models_common.PaddingTests.test_paddin
+g_mask_is_built_on_the_lengths_tensor_device_not_cpu_by_default)
+Regression for the GPU pilot crash: a CPU-only torch.arange compared ... ok
+test_abandoned_run_leaves_partial_file_and_no_final_file (test_models_common.PartialPredictionWriterTests.test_abandone
+d_run_leaves_partial_file_and_no_final_file) ... ok
+test_finishing_with_a_missing_id_raises_instead_of_silently_completing (test_models_common.PartialPredictionWriterTests
+.test_finishing_with_a_missing_id_raises_instead_of_silently_completing) ... ok
+test_full_run_renames_partial_to_final (test_models_common.PartialPredictionWriterTests.test_full_run_renames_partial_t
+o_final) ... ok
+test_genuine_empty_prediction_is_kept_and_missing_id_raises (test_models_common.PredictionWriterTests.test_genuine_empt
+y_prediction_is_kept_and_missing_id_raises) ... ok
+test_git_commit_hash_is_none_outside_a_git_checkout (test_models_common.ProvenanceTests.test_git_commit_hash_is_none_ou
+tside_a_git_checkout) ... ok
+test_git_commit_hash_returns_the_actual_checked_out_commit (test_models_common.ProvenanceTests.test_git_commit_hash_ret
+urns_the_actual_checked_out_commit) ... ok
+test_hash_file_is_deterministic_and_matches_hashlib (test_models_common.ProvenanceTests.test_hash_file_is_deterministic
+_and_matches_hashlib) ... ok
+test_manifest_source_breakdown_separates_hparl_from_css10 (test_models_common.ProvenanceTests.test_manifest_source_brea
+kdown_separates_hparl_from_css10) ... ok
+test_speaker_utterance_hour_counts_and_literal_overlap (test_models_common.SplitStatisticsTests.test_speaker_utterance_
+hour_counts_and_literal_overlap) ... ok
+test_exactly_one_target_must_be_given (test_models_common.SubsetSelectionTests.test_exactly_one_target_must_be_given) .
+.. ok
+test_selection_is_deterministic_for_a_fixed_seed (test_models_common.SubsetSelectionTests.test_selection_is_determinist
+ic_for_a_fixed_seed) ... ok
+test_speaker_groups_are_never_split_across_the_selection_boundary (test_models_common.SubsetSelectionTests.test_speaker
+_groups_are_never_split_across_the_selection_boundary) ... ok
+test_out_of_vocabulary_character_without_unk_raises (test_models_common.VocabularyTests.test_out_of_vocabulary_characte
+r_without_unk_raises) ... ok
+test_vocab_is_learned_only_from_given_references_and_round_trips (test_models_common.VocabularyTests.test_vocab_is_lear
+ned_only_from_given_references_and_round_trips) ... ok
+test_ieee_float32_decodes_real_amplitudes_instead_of_integer_bits (test_models_common.WaveformTests.test_ieee_float32_d
+ecodes_real_amplitudes_instead_of_integer_bits) ... ok
+test_pcm32_is_decoded_at_its_real_32_bit_width_not_misread_as_int16 (test_models_common.WaveformTests.test_pcm32_is_dec
+oded_at_its_real_32_bit_width_not_misread_as_int16)
+Regression for the CSS10 bug: a 32-bit PCM WAV was previously decoded ... ok
+test_pcm32_resamples_in_memory_without_touching_the_source_file (test_models_common.WaveformTests.test_pcm32_resamples_
+in_memory_without_touching_the_source_file) ... ok
+test_real_wav_decodes_and_resamples_deterministically_without_editing_source (test_models_common.WaveformTests.test_rea
+l_wav_decodes_and_resamples_deterministically_without_editing_source) ... ok
+test_unsupported_sample_width_raises_a_clear_error (test_models_common.WaveformTests.test_unsupported_sample_width_rais
+es_a_clear_error) ... ok
+test_decode_ids_keeps_genuine_empty_output_and_drops_unknown (test_models_ctc.CtcDecodingTests.test_decode_ids_keeps_ge
+nuine_empty_output_and_drops_unknown) ... ok
+test_greedy_decode_ignores_frames_beyond_valid_length (test_models_ctc.CtcDecodingTests.test_greedy_decode_ignores_fram
+es_beyond_valid_length) ... ok
+test_annotation_tags_are_removed_in_memory_only (test_models_ctc.CtcHelperTests.test_annotation_tags_are_removed_in_mem
+ory_only) ... ok
+test_bucketed_batches_cover_every_index_once (test_models_ctc.CtcHelperTests.test_bucketed_batches_cover_every_index_on
+ce) ... ok
+test_collapse_merges_repeats_before_dropping_blanks (test_models_ctc.CtcHelperTests.test_collapse_merges_repeats_before
+_dropping_blanks) ... ok
+test_feasibility_policies (test_models_ctc.CtcHelperTests.test_feasibility_policies) ... ok
+test_measurement_configs_differ_from_full_configs_only_in_budget (test_models_ctc.CtcHelperTests.test_measurement_confi
+gs_differ_from_full_configs_only_in_budget) ... ok
+test_required_frames_count_a_blank_between_repeats (test_models_ctc.CtcHelperTests.test_required_frames_count_a_blank_b
+etween_repeats) ... ok
+test_forward_backward_updates_parameters_with_finite_gradients (test_models_ctc.CtcModelTests.test_forward_backward_upd
+ates_parameters_with_finite_gradients) ... ok
+test_impossible_alignment_is_an_error_not_zero_loss (test_models_ctc.CtcModelTests.test_impossible_alignment_is_an_erro
+r_not_zero_loss) ... ok
+test_output_length_matches_formula (test_models_ctc.CtcModelTests.test_output_length_matches_formula) ... ok
+test_padding_does_not_change_an_utterance_output (test_models_ctc.CtcModelTests.test_padding_does_not_change_an_utteran
+ce_output) ... ok
+ctc update 1/2: train 3.9814 dev 4.9719
+ctc update 2/2: train 6.9861 dev 4.9518
+test_a_dropped_prediction_fails_the_run_instead_of_completing (test_models_ctc.CtcPipelineTests.test_a_dropped_predicti
+on_fails_the_run_instead_of_completing) ... ok
+ctc update 1/1: train 3.9814 dev 4.9719
+test_cli_budget_override_is_recorded (test_models_ctc.CtcPipelineTests.test_cli_budget_override_is_recorded) ... ok
+ctc update 1/2: train 3.9814 dev 4.9719
+ctc update 2/2: train 6.9861 dev 4.9518
+test_empty_prediction_is_kept_and_failure_leaves_partial_file (test_models_ctc.CtcPipelineTests.test_empty_prediction_i
+s_kept_and_failure_leaves_partial_file) ... ok
+ctc update 1/2: train 3.8601 dev 4.8217
+ctc update 2/2: train 3.8452 dev 4.8070
+test_infeasible_training_item_follows_policy (test_models_ctc.CtcPipelineTests.test_infeasible_training_item_follows_po
+licy) ... ok
+test_manifest_reference_id_mismatch_is_refused_before_training (test_models_ctc.CtcPipelineTests.test_manifest_referenc
+e_id_mismatch_is_refused_before_training) ... ok
+test_missing_budget_is_refused (test_models_ctc.CtcPipelineTests.test_missing_budget_is_refused) ... ok
+ctc update 1/2: train 3.9814 dev 4.9719
+ctc update 2/2: train 6.9861 dev 4.9518
+test_test_split_requires_allow_flag_and_protocol (test_models_ctc.CtcPipelineTests.test_test_split_requires_allow_flag_
+and_protocol) ... ok
+ctc update 1/2: train 3.9814 dev 4.9719
+ctc update 2/2: train 6.9861 dev 4.9518
+test_train_checkpoint_reload_and_predict_every_id (test_models_ctc.CtcPipelineTests.test_train_checkpoint_reload_and_pr
+edict_every_id) ... ok
+test_chain_marks_optional_silences_and_mandatory_states (test_models_gmm_hmm.AlignmentTests.test_chain_marks_optional_s
+ilences_and_mandatory_states) ... ok
+test_forced_alignment_recovers_path_and_skips_unused_silences (test_models_gmm_hmm.AlignmentTests.test_forced_alignment
+_recovers_path_and_skips_unused_silences) ... ok
+test_too_short_utterance_has_no_alignment (test_models_gmm_hmm.AlignmentTests.test_too_short_utterance_has_no_alignment
+) ... ok
+test_decoder_follows_the_acoustics_with_silence_word_boundary (test_models_gmm_hmm.LanguageModelAndDecoderTests.test_de
+coder_follows_the_acoustics_with_silence_word_boundary) ... ok
+test_language_model_inserts_frameless_word_boundaries (test_models_gmm_hmm.LanguageModelAndDecoderTests.test_language_m
+odel_inserts_frameless_word_boundaries) ... ok
+test_too_few_frames_for_any_path_is_an_error (test_models_gmm_hmm.LanguageModelAndDecoderTests.test_too_few_frames_for_
+any_path_is_an_error) ... ok
+test_witten_bell_rows_are_distributions (test_models_gmm_hmm.LanguageModelAndDecoderTests.test_witten_bell_rows_are_dis
+tributions) ... ok
+test_em_update_moves_means_towards_aligned_frames (test_models_gmm_hmm.MixtureTests.test_em_update_moves_means_towards_
+aligned_frames) ... ok
+test_split_doubles_components_and_keeps_weights_normalized (test_models_gmm_hmm.MixtureTests.test_split_doubles_compone
+nts_and_keeps_weights_normalized) ... ok
+test_items_too_short_for_their_transcript_follow_policy (test_models_gmm_hmm.PipelineTests.test_items_too_short_for_the
+ir_transcript_follow_policy) ... ok
+test_missing_or_extra_reference_ids_are_refused (test_models_gmm_hmm.PipelineTests.test_missing_or_extra_reference_ids_
+are_refused) ... ok
+test_test_split_requires_allow_flag_and_protocol (test_models_gmm_hmm.PipelineTests.test_test_split_requires_allow_flag
+_and_protocol) ... ok
+tune lm_weight=1.0 insertion_penalty=0.0: WER=0.2308 CER=0.0361
+tune lm_weight=3.0 insertion_penalty=0.0: WER=0.2308 CER=0.0482
+test_train_reload_tune_and_predict_every_id (test_models_gmm_hmm.PipelineTests.test_train_reload_tune_and_predict_every
+_id) ... ok
+test_blank_id_and_lengths_contract_rejects_mismatched_shapes (test_models_transducer.SyntheticLossBackwardTests.test_bl
+ank_id_and_lengths_contract_rejects_mismatched_shapes) ... ok
+test_tiny_batch_loss_is_finite_and_backward_updates_parameters (test_models_transducer.SyntheticLossBackwardTests.test_
+tiny_batch_loss_is_finite_and_backward_updates_parameters) ... ok
+test_a_failure_mid_prediction_leaves_a_partial_file_and_a_failed_run_json (test_models_transducer.TrainAndPredictOnReal
+PilotAudioTests.test_a_failure_mid_prediction_leaves_a_partial_file_and_a_failed_run_json) ... ok
+test_checkpoint_save_then_load_gives_identical_predictions (test_models_transducer.TrainAndPredictOnRealPilotAudioTests
+.test_checkpoint_save_then_load_gives_identical_predictions) ... ok
+test_config_refuses_an_unmeasured_step_budget (test_models_transducer.TrainAndPredictOnRealPilotAudioTests.test_config_
+refuses_an_unmeasured_step_budget) ... ok
+test_predict_on_test_split_is_blocked_without_a_committed_protocol (test_models_transducer.TrainAndPredictOnRealPilotAu
+dioTests.test_predict_on_test_split_is_blocked_without_a_committed_protocol) ... ok
+test_rerunning_into_an_existing_output_dir_is_refused_not_overwritten (test_models_transducer.TrainAndPredictOnRealPilo
+tAudioTests.test_rerunning_into_an_existing_output_dir_is_refused_not_overwritten) ... ok
+test_trailing_partial_accumulation_is_never_dropped (test_models_transducer.TrainAndPredictOnRealPilotAudioTests.test_t
+railing_partial_accumulation_is_never_dropped)
+gradient_accumulation_steps=3 does not evenly divide one epoch's worth ... ok
+test_train_report_records_full_provenance (test_models_transducer.TrainAndPredictOnRealPilotAudioTests.test_train_repor
+t_records_full_provenance) ... ok
+test_train_writes_checkpoints_then_predict_never_leaks_gold_and_covers_all_ids (test_models_transducer.TrainAndPredictO
+nRealPilotAudioTests.test_train_writes_checkpoints_then_predict_never_leaks_gold_and_covers_all_ids) ... ok
+test_frozen_transformer_warmup_trains_only_the_head (test_models_wav2vec_hubert.HubertCtcTrainingTests.test_frozen_tran
+sformer_warmup_trains_only_the_head) ... Some weights of HubertForCTC were not initialized from the model checkpoint at
+ /tmp/tmpja8j2v47/encoder and are newly initialized: ['lm_head.bias', 'lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+hubert-ctc update 1/2: train 332.6548 dev 420.6039
+hubert-ctc update 2/2: train 598.7673 dev 419.5601
+ok
+test_head_training_updates_transformer_but_not_frozen_cnn_and_predicts_every_id (test_models_wav2vec_hubert.HubertCtcTr
+ainingTests.test_head_training_updates_transformer_but_not_frozen_cnn_and_predicts_every_id) ... Some weights of Hubert
+ForCTC were not initialized from the model checkpoint at /tmp/tmp9zhpryjz/encoder and are newly initialized: ['lm_head.
+bias', 'lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+hubert-ctc update 1/2: train 332.6548 dev 418.7319
+hubert-ctc update 2/2: train 596.1367 dev 415.6017
+ok
+test_missing_budget_and_test_split_are_refused (test_models_wav2vec_hubert.HubertCtcTrainingTests.test_missing_budget_a
+nd_test_split_are_refused) ... Some weights of HubertForCTC were not initialized from the model checkpoint at /tmp/tmp8
+n3v2vvx/encoder and are newly initialized: ['lm_head.bias', 'lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+hubert-ctc update 1/2: train 332.6548 dev 418.7319
+hubert-ctc update 2/2: train 596.1367 dev 415.6017
+ok
+test_output_lengths_match_transformers (test_models_wav2vec_hubert.HubertCtcTrainingTests.test_output_lengths_match_tra
+nsformers) ... ok
+test_reference_id_mismatch_is_refused (test_models_wav2vec_hubert.HubertCtcTrainingTests.test_reference_id_mismatch_is_
+refused) ... ok
+test_all_blank_output_is_a_genuine_empty_string (test_models_wav2vec_hubert.PublishedCheckpointBackendTests.test_all_bl
+ank_output_is_a_genuine_empty_string) ... ok
+test_blank_must_be_the_tokenizer_pad (test_models_wav2vec_hubert.PublishedCheckpointBackendTests.test_blank_must_be_the
+_tokenizer_pad) ... ok
+test_double_letters_separated_by_blank_survive_decoding (test_models_wav2vec_hubert.PublishedCheckpointBackendTests.tes
+t_double_letters_separated_by_blank_survive_decoding) ... ok
+test_historical_source_lock_is_unchanged (test_models_wav2vec_hubert.PublishedCheckpointBackendTests.test_historical_so
+urce_lock_is_unchanged) ... ok
+test_loader_rejects_mutable_revision_and_missing_gpu_before_download (test_models_wav2vec_hubert.PublishedCheckpointBac
+kendTests.test_loader_rejects_mutable_revision_and_missing_gpu_before_download) ... ok
+wav2vec: 1/3 hparl:alekshs_tsipras-olomeleia_37_00240000_00243000_4_1
+wav2vec: 2/3 hparl:dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1
+wav2vec: 3/3 hparl:iwannhs_balafas-olomeleia_47_02640000_02643000_1_2
+hubert: 1/3 hparl:alekshs_tsipras-olomeleia_37_00240000_00243000_4_1
+hubert: 2/3 hparl:dhmhtrios_gakhs-olomeleia_15_01512500_01515500_3_1
+hubert: 3/3 hparl:iwannhs_balafas-olomeleia_47_02640000_02643000_1_2
+test_shared_runner_uses_each_backend_lock_and_records_its_code (test_models_wav2vec_hubert.PublishedCheckpointBackendTe
+sts.test_shared_runner_uses_each_backend_lock_and_records_its_code) ... ok
+test_tiny_real_models_transcribe_original_audio (test_models_wav2vec_hubert.PublishedCheckpointBackendTests.test_tiny_r
+eal_models_transcribe_original_audio) ... ok
+test_annotation_marker_is_flagged_without_editing_reference (test_pilot_data.PilotDataTests.test_annotation_marker_is_f
+lagged_without_editing_reference) ... ok
+test_corrupted_audio_bytes_are_rejected (test_pilot_data.PilotDataTests.test_corrupted_audio_bytes_are_rejected) ... ok
+test_real_three_record_pilot_round_trip (test_pilot_data.PilotDataTests.test_real_three_record_pilot_round_trip) ... ok
+test_reference_lineage_mismatch_is_rejected (test_pilot_data.PilotDataTests.test_reference_lineage_mismatch_is_rejected
+) ... ok
+test_empty_hypothesis_is_retained_but_malformed_or_missing_is_an_error (test_pretrained_nemo.NemoAdapterTests.test_empt
+y_hypothesis_is_retained_but_malformed_or_missing_is_an_error) ... ok
+test_no_cpu_fallback_when_gpu_requested (test_pretrained_nemo.NemoAdapterTests.test_no_cpu_fallback_when_gpu_requested)
+ ... ok
+test_parakeet_retains_automatic_language_and_plain_text_result (test_pretrained_nemo.NemoAdapterTests.test_parakeet_ret
+ains_automatic_language_and_plain_text_result) ... ok
+test_pinned_archive_restored_once_and_greek_transcription_selected (test_pretrained_nemo.NemoAdapterTests.test_pinned_a
+rchive_restored_once_and_greek_transcription_selected) ... ok
+test_rocm_parakeet_disables_only_nvidia_graph_optimization_before_restore (test_pretrained_nemo.NemoAdapterTests.test_r
+ocm_parakeet_disables_only_nvidia_graph_optimization_before_restore) ... ok
+test_source_file_required_and_runtime_failures_not_hidden (test_pretrained_nemo.NemoAdapterTests.test_source_file_requi
+red_and_runtime_failures_not_hidden) ... ok
+test_unpinned_or_wrong_family_model_rejected_before_download (test_pretrained_nemo.NemoAdapterTests.test_unpinned_or_wr
+ong_family_model_rejected_before_download) ... ok
+test_batch_api_uses_audio_paths_only_and_preserves_empty_results (test_pretrained_transformers.QwenTests.test_batch_api
+_uses_audio_paths_only_and_preserves_empty_results) ... ok
+test_cuda_request_has_no_silent_cpu_fallback (test_pretrained_transformers.QwenTests.test_cuda_request_has_no_silent_cp
+u_fallback) ... ok
+test_empty_text_is_retained_but_missing_or_multiple_results_are_errors (test_pretrained_transformers.QwenTests.test_emp
+ty_text_is_retained_but_missing_or_multiple_results_are_errors) ... ok
+test_mutable_revision_rejected_before_imports_or_download (test_pretrained_transformers.QwenTests.test_mutable_revision
+_rejected_before_imports_or_download) ... ok
+test_pinned_greek_audio_only_load_and_transcription (test_pretrained_transformers.QwenTests.test_pinned_greek_audio_onl
+y_load_and_transcription) ... ok
+test_long_audio_is_not_silently_cut_to_first_thirty_seconds (test_pretrained_transformers.WhisperTests.test_long_audio_
+is_not_silently_cut_to_first_thirty_seconds) ... ok
+test_snapshot_is_pinned_and_loaded_once_for_repeated_audio (test_pretrained_transformers.WhisperTests.test_snapshot_is_
+pinned_and_loaded_once_for_repeated_audio) ... ok
+test_source_wav_is_read_unchanged_and_wrong_format_is_rejected (test_pretrained_transformers.WhisperTests.test_source_w
+av_is_read_unchanged_and_wrong_format_is_rejected) ... ok
+test_reduction_modes (test_rnnt_loss.DeviceAgnosticConstructionTests.test_reduction_modes) ... ok
+test_runs_entirely_from_ops_available_on_meta_device (test_rnnt_loss.DeviceAgnosticConstructionTests.test_runs_entirely
+_from_ops_available_on_meta_device)
+No part of this loss depends on a backend-specific compiled kernel: ... ok
+test_two_path_lattice_matches_independent_enumeration (test_rnnt_loss.HandEnumeratedLatticeTests.test_two_path_lattice_
+matches_independent_enumeration)
+batch=1, 2 frames, 1 label, vocab={blank, label}: exactly two valid ... ok
+test_out_of_vocabulary_padding_preserves_loss_and_gradients (test_rnnt_loss.IgnoredPaddingTests.test_out_of_vocabulary_
+padding_preserves_loss_and_gradients)
+Ignored sentinels must behave exactly like ordinary zero padding, ... ok
+test_out_of_vocabulary_real_targets_are_not_hidden_as_padding (test_rnnt_loss.IgnoredPaddingTests.test_out_of_vocabular
+y_real_targets_are_not_hidden_as_padding) ... ok
+test_random_variable_length_batches (test_rnnt_loss.MatchesTorchaudioCpuTests.test_random_variable_length_batches) ...
+/home/serda/p3-reviews/data-budget-1a95860b/tests/test_rnnt_loss.py:65: UserWarning: torchaudio.functional.functional._
+rnnt_loss has been deprecated. This deprecation is part of a large refactoring effort to transition TorchAudio into a m
+aintenance phase. Please see https://github.com/pytorch/audio/issues/3902 for more information. It will be removed from
+ the 2.9 release.
+  loss_ta = torchaudio_rnnt_loss(logits_ta, targets.to(torch.int32), logit_lengths.to(torch.int32),
+ok
+test_single_item_batch_with_no_padding (test_rnnt_loss.MatchesTorchaudioCpuTests.test_single_item_batch_with_no_padding
+) ... ok
+test_small_fixed_shapes (test_rnnt_loss.MatchesTorchaudioCpuTests.test_small_fixed_shapes) ... ok
+test_cli_reports_actual_input_hashes_counts_and_protocol (test_scoring.InputAndCliTests.test_cli_reports_actual_input_h
+ashes_counts_and_protocol) ... ok
+test_duplicate_ids_rejected_in_both_input_formats (test_scoring.InputAndCliTests.test_duplicate_ids_rejected_in_both_in
+put_formats) ... ok
+test_record_types_are_rejected (test_scoring.InputAndCliTests.test_record_types_are_rejected) ... ok
+test_test_scoring_requires_explicit_opt_in_before_reading_files (test_scoring.InputAndCliTests.test_test_scoring_requir
+es_explicit_opt_in_before_reading_files) ... ok
+test_corpus_weighting_uses_total_reference_words (test_scoring.ScoringTests.test_corpus_weighting_uses_total_reference_
+words) ... ok
+test_empty_reference_insertions_count_in_corpus (test_scoring.ScoringTests.test_empty_reference_insertions_count_in_cor
+pus) ... ok
+test_error_rate_can_exceed_one (test_scoring.ScoringTests.test_error_rate_can_exceed_one) ... ok
+test_greek_unicode_and_significant_characters (test_scoring.ScoringTests.test_greek_unicode_and_significant_characters)
+ ... ok
+test_hand_computed_edit_counts_and_ties (test_scoring.ScoringTests.test_hand_computed_edit_counts_and_ties) ... ok
+test_prediction_cohort_must_match_exactly (test_scoring.ScoringTests.test_prediction_cohort_must_match_exactly) ... ok
+test_zero_corpus_reference_size_has_null_rates_and_counts (test_scoring.ScoringTests.test_zero_corpus_reference_size_ha
+s_null_rates_and_counts) ... ok
+test_decoder_input_has_the_start_token_exactly_once_after_the_models_own_shift (test_whisper_finetune.BuildLabelsTests.
+test_decoder_input_has_the_start_token_exactly_once_after_the_models_own_shift)
+Regression for docs/reviews/ADNAN_0437631_GPU.json "P1 - Whisper ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 2696.95it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4214.11it/s]
+ok
+test_mismatched_decoder_start_token_id_is_rejected (test_whisper_finetune.BuildLabelsTests.test_mismatched_decoder_star
+t_token_id_is_rejected) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4598.01it/s]
+ok
+test_prefix_tokens_are_real_content_and_only_padding_is_masked (test_whisper_finetune.BuildLabelsTests.test_prefix_toke
+ns_are_real_content_and_only_padding_is_masked) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3836.72it/s]
+ok
+test_vocabulary_is_shared_with_pinned_revision_lock (test_whisper_finetune.BuildLabelsTests.test_vocabulary_is_shared_w
+ith_pinned_revision_lock) ... ok
+test_exactly_30_seconds_is_accepted (test_whisper_finetune.LongAudioGuardTests.test_exactly_30_seconds_is_accepted) ...
+ ok
+test_just_over_30_seconds_raises_instead_of_silently_truncating (test_whisper_finetune.LongAudioGuardTests.test_just_ov
+er_30_seconds_raises_instead_of_silently_truncating) ... ok
+test_both_whisper_conditions_share_everything_except_the_declared_data_difference (test_whisper_finetune.MatchedConditi
+onConfigTests.test_both_whisper_conditions_share_everything_except_the_declared_data_difference) ... ok
+test_shipped_configs_match_the_committed_measured_training_budget (test_whisper_finetune.MatchedConditionConfigTests.te
+st_shipped_configs_match_the_committed_measured_training_budget) ... ok
+test_nonfinite_dev_loss_never_selects_a_checkpoint (test_whisper_finetune.NonfiniteLossTests.test_nonfinite_dev_loss_ne
+ver_selects_a_checkpoint) ... ok
+test_nonfinite_train_loss_never_updates_partial_accumulation_or_retries (test_whisper_finetune.NonfiniteLossTests.test_
+nonfinite_train_loss_never_updates_partial_accumulation_or_retries) ... ok
+test_mismatched_revision_is_rejected_before_any_download (test_whisper_finetune.RevisionValidationTests.test_mismatched
+_revision_is_rejected_before_any_download) ... ok
+test_prediction_rejects_wrong_model_or_revision_before_loading (test_whisper_finetune.RevisionValidationTests.test_pred
+iction_rejects_wrong_model_or_revision_before_loading) ... ok
+test_a_failure_mid_prediction_leaves_a_partial_file_and_a_failed_run_json (test_whisper_finetune.TrainAndPredictWithTin
+yModelTests.test_a_failure_mid_prediction_leaves_a_partial_file_and_a_failed_run_json) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3320.64it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4039.59it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3430.64it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3709.15it/s]
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequenc
+e, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+ok
+test_checkpoint_save_then_load_gives_identical_predictions (test_whisper_finetune.TrainAndPredictWithTinyModelTests.tes
+t_checkpoint_save_then_load_gives_identical_predictions) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3537.11it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3672.13it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3912.60it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3966.62it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3209.11it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3303.12it/s]
+ok
+test_long_reference_is_never_silently_truncated (test_whisper_finetune.TrainAndPredictWithTinyModelTests.test_long_refe
+rence_is_never_silently_truncated) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3499.34it/s]
+Token indices sequence length is longer than the specified maximum sequence length for this model (1326 > 1024). Runnin
+g this sequence through the model will result in indexing errors
+ok
+test_matched_budget_train_then_predict_never_leaks_gold (test_whisper_finetune.TrainAndPredictWithTinyModelTests.test_m
+atched_budget_train_then_predict_never_leaks_gold) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3218.96it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4122.98it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4043.48it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4211.57it/s]
+ok
+test_mixed_condition_records_the_actual_css10_fraction (test_whisper_finetune.TrainAndPredictWithTinyModelTests.test_mi
+xed_condition_records_the_actual_css10_fraction) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4113.68it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3872.86it/s]
+ok
+test_predict_on_test_split_is_blocked_without_a_committed_protocol (test_whisper_finetune.TrainAndPredictWithTinyModelT
+ests.test_predict_on_test_split_is_blocked_without_a_committed_protocol) ... ok
+test_rerunning_into_an_existing_output_dir_is_refused_not_overwritten (test_whisper_finetune.TrainAndPredictWithTinyMod
+elTests.test_rerunning_into_an_existing_output_dir_is_refused_not_overwritten) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4700.03it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3208.37it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4083.64it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4337.44it/s]
+ok
+test_train_report_records_full_provenance_and_source_breakdown (test_whisper_finetune.TrainAndPredictWithTinyModelTests
+.test_train_report_records_full_provenance_and_source_breakdown) ...
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 3196.15it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4114.08it/s]
+ok
+
+----------------------------------------------------------------------
+Ran 206 tests in 64.620s
+
+OK
