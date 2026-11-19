@@ -50,6 +50,17 @@ nonfinite loss, safe ignored padding, predict source-lock and matching docs/conf
 The final local suite passes 119 tests. Original model authorship remains Adnan's.
 Passing these fixtures does not establish full-data training feasibility.
 
+Kemal submitted PR #9 at `680b875d`: 164 tests passed independently; GMM-HMM
+CPU, plain CTC GPU, real mHuBERT-147 + CTC GPU training/checkpoint/predict and
+published wav2vec GPU inference passed train-pilot diagnostics. Model authorship
+remains Kemal's. The owner selected `utter-project/mHuBERT-147` + our Greek CTC
+training, with its documented CC-BY-NC-SA-4.0 model license. The published
+`ntinouldinho/hubert_greek_6gram` candidate has no license/card/training-data
+statement and is not selected for benchmark. Do not label a bare encoder or
+the diagnostic head updates as completed Greek ASR training/benchmark.
+See `docs/reviews/KEMAL_PR9_REVIEW_TR.md`. Full representative measure runs,
+selected train audio delivery and training budgets remain pending.
+
 Freeze and commit the final model/settings/scoring protocol separately, before
 test inference/scoring. Do not tune from test. The two further professor
 emails shared on 18 November are summarized in

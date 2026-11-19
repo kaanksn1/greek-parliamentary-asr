@@ -8,9 +8,9 @@ One shared report does not replace the five individual reports.
 | Member | Required personal filename | Status |
 |---|---|---|
 | Serdar Kaan Kesen | `SERDAR_KAAN_KESEN_220911810_kaanksn1.md` | Owner's report present; ongoing work |
-| Samed Ortakaya | `SAMED_ORTAKAYA_210901024_SmtOrtakaya.md` | Member must create after doing their work |
-| Kemal Arif Karabacıoğlu | `KEMAL_ARIF_KARABACIOGLU_220911802_kemalarif.md` | Member must create after doing their work |
-| Adnan Demir | `ADNAN_DEMIR_220911784_adnan-demir.md` | Member must create after doing their work |
+| Samed Ortakaya | `SAMED_ORTAKAYA_210901024_SmtOrtakaya.md` | Submitted in data PR #2; not yet integrated into main |
+| Kemal Arif Karabacıoğlu | `KEMAL_ARIF_KARABACIOGLU_220911802_kemalarif.md` | Member's report present; central runs pending |
+| Adnan Demir | `ADNAN_DEMIR_220911784_adnan-demir.md` | Member's report present; central full runs pending |
 | Ozan Serhan Denizhan | `OZAN_SERHAN_DENIZHAN_220911758_serhandenizhan.md` | Member must create after doing their work |
 
 Owner integration or central model execution does not transfer another
