@@ -77,6 +77,13 @@ Owner ortak inference kaydına, yayımlanmış HuBERT adapter'ının kullandığ
 `wav2vec.py` helper dosyasının hash'ini de ekledi. Model matematiği, mimari,
 bağımlılık pinleri, sayısal eğitim bütçeleri ve tarihsel source lock değişmedi.
 
+Bu owner entegrasyonu `df8a300dd22f6f24a3698c78811acd0703187839` ile Samed'in
+`4db1a4aa61eb78acbb531b705c45e3bbd090854e` veri kodunun geçici birleşiminde
+**196/196 test, 0 atlanan, 46,585 saniye** ile geçti. Yalnız ortak
+`contributions/README.md` envanteri çakıştı; dosyaların gerçek varlık durumuyla
+çözüldü. Kişisel raporlar ve model/veri kaynakları değiştirilmedi. Büyük LFS
+sesleri indirilmedi; bu kontrol tam ses teslimi/hash doğrulaması değildir.
+
 GMM-HMM/CTC infeasible train örnekleri açık ID/gerekçe ile raporlanıyor;
 CTC blank/tekrar ve valid-length decoding testleri mevcut. Dev annotation
 hazırlığı ve geçici dev WER politikası belgeli; Ozan'ın son ortak scoring

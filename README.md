@@ -24,7 +24,8 @@ were not downloaded/reverified in the model review below.
 See [the 18 November report](docs/reviews/PR2_PR5_FOLLOWUP_TR.md).
 The [first Samed review](docs/reviews/SAMED_PR2_REVIEW_TR.md) is historical.
 
-Kemal PR #9 review (19 November, `680b875d`): all 164 tests passed independently.
+Kemal PR #9 review (19 November, `680b875d`): all 164 tests passed independently;
+owner integration with the data branch passed 196 tests (LFS audio not downloaded).
 GMM-HMM CPU, plain CTC GPU, real mHuBERT-147 + CTC GPU training/checkpoint/predict
 and published wav2vec GPU inference passed train-pilot diagnostics. The selected
 HuBERT path is our standard CTC training from the documented licensed mHuBERT-147

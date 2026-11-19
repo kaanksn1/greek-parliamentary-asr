@@ -68,6 +68,9 @@
   earlier CPU evidence hashes. Recorded the licensed HuBERT training-source
   decision and added the reused wav2vec helper to shared HuBERT run code hashes.
   Kemal's model implementations, original commits and report remain his.
+  Temporary integration with Samed's data code passed 196 tests after resolving
+  only the shared contribution-inventory conflict; no personal report or model/
+  data implementation changed, and no full LFS audio verification was claimed.
 
 ## Limits and pending dependent work
 
