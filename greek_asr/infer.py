@@ -22,7 +22,17 @@ BACKENDS = {
     "qwen": ("qwen", "Qwen/Qwen3-ASR-0.6B"),
     "canary": ("nemo", "nvidia/canary-1b-v2"),
     "parakeet": ("nemo", "nvidia/parakeet-tdt-0.6b-v3"),
+    # Kemal's published CTC checkpoints; a dotted name is an absolute module path.
+    "wav2vec": ("greek_asr.models.wav2vec", "lighteternal/wav2vec2-large-xlsr-53-greek"),
+    "hubert": ("greek_asr.models.hubert", "ntinouldinho/hubert_greek_6gram"),
 }
+# The historical snapshot configs/model_sources.lock.json is never rewritten;
+# checkpoints found later are pinned in their own documented source record.
+SOURCE_LOCKS = {"hubert": "configs/kemal_model_sources.json"}
+
+
+def _backend_module(module_name: str) -> str:
+    return module_name if "." in module_name else "greek_asr.pretrained." + module_name
 
 
 def sha256(path: Path) -> str:
@@ -146,8 +156,9 @@ def run(*, manifest: Path, backend_name: str, split: str, output: Path,
     records = load_manifest(manifest, project_root, split)
     if purpose == "runtime-smoke" and len(records) > 100:
         raise ValueError("runtime smoke accepts at most 100 training records")
-    lock_path = project_root / "configs/model_sources.lock.json"
+    lock_path = project_root / SOURCE_LOCKS.get(backend_name, "configs/model_sources.lock.json")
     module_name, model_id = BACKENDS[backend_name]
+    module_path = _backend_module(module_name)
     lock = json.loads(lock_path.read_text(encoding="utf-8-sig"))
     models = [row for row in lock["models"] if row["model_id"] == model_id]
     if len(models) != 1 or not re.fullmatch(r"[0-9a-f]{40}", models[0]["revision"]):
@@ -166,6 +177,11 @@ def run(*, manifest: Path, backend_name: str, split: str, output: Path,
         "code_sha256": {str(p.relative_to(ROOT)).replace("\\", "/"): sha256(p)
                         for p in (Path(__file__), *sorted((ROOT / "greek_asr/pretrained").glob("*.py")))},
     }
+    if not module_path.startswith("greek_asr.pretrained."):
+        backend_files = [ROOT / (module_path.replace(".", "/") + ".py"),
+                         ROOT / "greek_asr/models/common.py", ROOT / "greek_asr/models/ctc_utils.py"]
+        report["code_sha256"].update({str(p.relative_to(ROOT)).replace("\\", "/"): sha256(p)
+                                      for p in backend_files if p.is_file()})
     try:
         # Importing this runner and validating manifests requires only the stdlib.
         import torch
@@ -176,7 +192,7 @@ def run(*, manifest: Path, backend_name: str, split: str, output: Path,
                 raise RuntimeError("requested GPU is unavailable; no CPU fallback")
             torch.cuda.reset_peak_memory_stats()
         if loader is None:
-            loader = importlib.import_module("greek_asr.pretrained." + module_name).load_backend
+            loader = importlib.import_module(module_path).load_backend
         started = time.perf_counter()
         backend = loader(model_id=model_id, revision=models[0]["revision"], device=device,
                          model_dir=project_root / "models" / (backend_name + "-" + models[0]["revision"][:12]))
