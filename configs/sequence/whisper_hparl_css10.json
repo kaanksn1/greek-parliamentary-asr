@@ -1,5 +1,5 @@
 {
-  "_comment": "Owner train/dev budget generated from configs/training_data_selection.json and docs/reviews/budget_2026-11-20. Seeded approximate passes are a compute allocation, not convergence evidence. Full training waits for corrected CSS10 audit and used-train audio delivery/verification. Final test remains locked until its separate committed protocol.",
+  "_comment": "Owner train/dev budget generated from configs/training_data_selection.json and docs/reviews/budget_2026-11-20. Seeded approximate passes are a compute allocation, not convergence evidence. HParl-only jobs require the committed HParl raw-to-clean acceptance; the mixed condition additionally requires corrected CSS10 audit/acceptance. Repository audio delivery must finish before submission. Final test remains locked.",
   "condition": "hparl_plus_css10",
   "dev_eval_every": 500,
   "dev_manifest": "data/manifests/dev.jsonl",

@@ -118,3 +118,14 @@ Do not buy storage, alter the frozen test or train on unavailable source-catalog
 paths. Full runs still wait for the handoff's real-audio acceptance checks.
 Qwen's owner adapter supports bounded batch inference; record its batch setting
 and choose it on train/dev before the separate final test protocol.
+
+Later on 20 November the user explicitly requested starting training without
+waiting for sleeping Samed. Owner may acquire the SAME locked RAW HParl cohort,
+verify it and reproduce Samed's unchanged audit/clean pipeline in isolation.
+After exact train/dev hashes and unchanged frozen test are verified and the
+HParl acceptance is committed, HParl-only training may run while repository
+audio upload completes. This dataset-specific rule supersedes the earlier
+global CSS10 wait: mixed-corpus training still requires Samed's corrected
+float-aware CSS10 audit. The owner does not rewrite his cleaning methods or
+personal report. RAW/clean-used data must actually be in the public repository
+before final submission. No paid storage or final test inference is authorized.
