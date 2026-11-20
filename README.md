@@ -15,7 +15,9 @@ The independent CSS10 review passed all 229 tests without skips and reproduced
 the selected pipeline using 41,251 original train/dev/test/CSS10 WAV paths.
 Acceptance is committed in `configs/css10_training_acceptance.json`; evidence
 is in `docs/reviews/css10_owner_review_2026-11-20/`. The matched second Whisper
-condition is accepted for launch. Final benchmark predictions and WER/CER
+condition started on 20 November at 16:07 Europe/Istanbul from separate snapshot
+`b760cdcf`; `configs/mixed_training_execution.json` records its identity and
+confirmed first GPU update. Final benchmark predictions and WER/CER
 results are still pending; the final test protocol remains separately locked.
 
 Owner review, 20 November: actual LFS test/dev/CSS10 bytes have been downloaded.
@@ -438,6 +440,7 @@ no WER/CER and no dev/test inference.
 | `configs/kemal/` | Kemal's GMM-HMM, plain CTC and HuBERT-CTC recipes with owner's measured allocations and separate diagnostic `*_measure.json` configs |
 | `configs/training_data_selection.json`, `training_budget.json` | Exact selected RAW/clean training cohort, storage bound, measurements and full-run start conditions |
 | `configs/hparl_training_acceptance.json`, `css10_training_acceptance.json`, `hparl_delivery_status.json` | Independent raw-to-clean acceptance for each training condition and verified original-audio delivery state |
+| `configs/mixed_training_execution.json` | Pinned mixed Whisper execution snapshot, paired original run and confirmed actual GPU start; this launch record is not a completed training result |
 | `scripts/acquire_selected_hparl.py`, `verify_hparl_training.py`, `verify_css10_training.py` | Original selected-audio acquisition and isolated reproduction of the data owner's unchanged cleaning commands |
 | `scripts/run_primary_training_queue.py`, `run_training_job.py`, `keep_training_awake.ps1` | CPU/GPU training execution, actual-update and finite-gradient logs, paired-condition checks and temporary sleep prevention |
 | `docs/PRIMARY_TRAINING_TR.md`, `docs/reviews/primary_training_2026-11-20/`, `docs/reviews/css10_owner_review_2026-11-20/` | Execution protocol, generated primary-run records and independent full-audio CSS10 acceptance evidence |

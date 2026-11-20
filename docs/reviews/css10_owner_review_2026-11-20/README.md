@@ -37,3 +37,8 @@ checkpoint revision, seed, microbatch, accumulation, learning rate, warmup,
 updates and dev set as the completed HParl-only condition. It does not authorize
 test inference or establish a WER/CER improvement. Final evaluation remains a
 separate committed protocol.
+
+The matched second Whisper run started at immutable snapshot `b760cdcf` on
+20 November at 16:07 Europe/Istanbul. `mixed_start.live.json` is the initial
+generated GPU progress snapshot (not a completion or accuracy claim), and
+`configs/mixed_training_execution.json` retains its config/acceptance identity.

@@ -1,0 +1,26 @@
+{
+  "schema": "p3-owner-live-training-v1",
+  "status": "running",
+  "job": "whisper_mixed",
+  "pid": 289,
+  "created_utc": "2026-11-20T13:07:48.514557+00:00",
+  "code_commit": "b760cdcf2662dbe6a40ee3267e59cb7f41dbe0c5",
+  "config": "configs/sequence/whisper_hparl_css10.json",
+  "config_sha256": "aa4adf385cb773e332f84cd103357038fb0979ceae132322cef18706691851b6",
+  "acceptance_sha256": "ef61f78e310e93e72d480b07bcd11c6c4f04f01330f2db35475fef77ceeb505a",
+  "optimizer_updates": 10,
+  "expected_optimizer_updates": 1600,
+  "final_test_used": false,
+  "runtime_env": {
+    "HSA_ENABLE_DXG_DETECTION": "1",
+    "MIOPEN_FIND_MODE": "FAST",
+    "OMP_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "elapsed_seconds": 80.608171589,
+  "gpu": "AMD Radeon RX 7800 XT",
+  "torch": "2.9.1+rocm7.2.1.gitff65f5bc",
+  "hip": "7.2.53211-e1a6bc5663",
+  "last_gradient_norm": 11.706009864807129,
+  "peak_gpu_allocated_bytes": 9294454784
+}

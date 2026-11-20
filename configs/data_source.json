@@ -85,7 +85,7 @@
     "selected_train_audio_delivered":  true,
     "selected_training_plan":  "configs/training_data_selection.json",
     "split_policy":  "preserve original release sessions and splits; no random mirror resplit",
-    "status":  "hparl_primary_complete_css10_independently_accepted_mixed_launch_pending",
+    "status":  "hparl_primary_complete_css10_mixed_training_started",
     "test_audio_independently_verified":  true,
     "test_changes_permitted":  false,
     "test_data_frozen":  true,
@@ -96,5 +96,7 @@
     "css10_independent_acceptance":  "configs/css10_training_acceptance.json",
     "primary_training_completed_utc":  "2026-11-20T10:26:13.404116+00:00",
     "primary_training_code_commit":  "d98abe995f85ff634704ec9f60b26ca671a21a29",
-    "selected_train_audio_locally_verified":  true
+    "selected_train_audio_locally_verified":  true,
+    "mixed_training_started_utc":  "2026-11-20T13:07:46.8256215Z",
+    "mixed_training_execution":  "configs/mixed_training_execution.json"
 }
