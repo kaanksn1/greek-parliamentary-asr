@@ -42,3 +42,9 @@ The matched second Whisper run started at immutable snapshot `b760cdcf` on
 20 November at 16:07 Europe/Istanbul. `mixed_start.live.json` is the initial
 generated GPU progress snapshot (not a completion or accuracy claim), and
 `configs/mixed_training_execution.json` retains its config/acceptance identity.
+
+After integration and audio upload, `verify --selection` also passed in the
+fresh native Git checkout of `b760cdcf`, with local verified audio cache reuse
+and no extra LFS download. `fresh_integrated_verify.json` is its generated
+audio-enabled result: all 32,572 selected train/dev/CSS10 WAV paths plus the
+unchanged 8,679-record frozen test passed. No ASR inference was run on test.
