@@ -1,0 +1,127 @@
+{
+  "schema": "p3-hparl-training-acceptance-v1",
+  "status": "passed",
+  "created_utc": "2026-11-19T23:52:32.755557+00:00",
+  "code_commit": "13686f133c32c33b33da3053405a2b540275475a",
+  "selection_sha256": "6033ef269a32a811ffb8f78a963f39605ee51f87257920622571802904e4d442",
+  "scope": "locked HParl RAW train + official dev; unchanged frozen test only hashed",
+  "cleaning_implementation": "Samed's original greek_asr.data.audit and clean; no changed rules",
+  "css10_accepted": false,
+  "final_test_inference_authorized": false,
+  "cleaning_rule_sha256": "48adc3de9ab725a03d442e6778d2e46cff2e86a40d88c684d93d95bbefcc5792",
+  "implementation_sha256": {
+    "greek_asr/data/__init__.py": "4df3826b9b25c1d763154356f8235b27ab18e6518a2a3920da2a33d93e6cbacc",
+    "greek_asr/data/__main__.py": "97dec484c0e1519f604d9738e7f7c753ffa4c5b6b8fc33fd839ef1e96ac427f3",
+    "greek_asr/data/audit.py": "0c8414c2738b30f2fef9fee2729c361eb3d36a53c4dc6b738438f89994e04950",
+    "greek_asr/data/clean.py": "ed414e14bf2fa6c8814f3cc122cd0a17bc2a1b1fcdf5889de98b2f839eeff3f1",
+    "greek_asr/data/cohort.py": "d07353bbe1f7427baa7bee5d5c72d194bc723714191924a067bce38a6826dfbf",
+    "greek_asr/data/common.py": "6bf196fd3702b1f0f1298a861886ccf01397c5b40974b47e6cbf9fe9875f2d74",
+    "greek_asr/data/css10.py": "6361f4a9114a9ddb1457a85573d6ccda07b183a4eb64017320c1a538e38f10a4",
+    "greek_asr/data/freeze.py": "496e4006e42a02970f0cf9194772cf01d137fd95305884c6ff09de76e53a8cd4",
+    "greek_asr/data/hparl.py": "1d6fb61782c671469e87c2192737dd30bef9bc883be8a6cddc3e472e89908bc1",
+    "greek_asr/data/publish.py": "6e19faef785ba49297571fda055b060ff54d1cf602b3a95532d033a99d14e737",
+    "greek_asr/data/report.py": "e6d6a9911574d6c450b7a0c3f1db8f5f087dc4e78635986999dc99d660bd9da4"
+  },
+  "frozen_source_before": {
+    "data/manifests/test.freeze.json": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "data/manifests/test.jsonl": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+    "data/manifests/references/test.jsonl": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9"
+  },
+  "reproduced_artifacts": {
+    "train_audio_manifest": {
+      "expected_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+      "reproduced_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+      "matches": true
+    },
+    "train_references": {
+      "expected_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
+      "reproduced_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
+      "matches": true
+    },
+    "dev_audio_manifest": {
+      "expected_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+      "reproduced_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+      "matches": true
+    },
+    "dev_references": {
+      "expected_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+      "reproduced_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+      "matches": true
+    }
+  },
+  "local_original_audio_verified": true,
+  "original_audio_files": 39407,
+  "raw_train_records": 23615,
+  "clean_train_records": 23602,
+  "hparl_only_training_authorized": true,
+  "actual_freeze_verification": {
+    "status": "ok",
+    "records": 8679,
+    "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+    "audio_checked": true,
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3"
+  },
+  "frozen_source_after": {
+    "data/manifests/test.freeze.json": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "data/manifests/test.jsonl": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+    "data/manifests/references/test.jsonl": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9"
+  },
+  "audit_summary_sha256": "589a57dc7792d7d18a4d2ee138fd87e39bbe4c58c840d180aa04c31af9441c6d",
+  "clean_summary_sha256": "00072330cd1d538c402668aa34b8b03e8e07fc37059911240e3e1121dd095ad8",
+  "cleaning_log_sha256": "0465189ed1ac03265c05994326f83acfe78c6927330fbc859c14f39c7afca416",
+  "fresh_audit_subsets": {
+    "hparl_train": 23615,
+    "hparl_dev": 7113
+  },
+  "fresh_clean_subsets": {
+    "hparl_train": {
+      "raw_records": 23615,
+      "raw_seconds": 111227.73,
+      "kept_records": 23602,
+      "kept_seconds": 111180.27,
+      "dropped_by_rule": {
+        "cps_extreme": 9,
+        "duplicate_audio": 4
+      },
+      "dropped_seconds_by_rule": {
+        "cps_extreme": 41.67,
+        "duplicate_audio": 5.79
+      },
+      "modified_records": 13527,
+      "modification_steps": {
+        "strip_annotation_tags": 13527
+      },
+      "review_queue_by_flag": {
+        "cps_boundary": 1,
+        "cps_high": 7,
+        "duplicate_suspect": 3,
+        "long_edge_silence": 2,
+        "non_greek_characters": 98,
+        "silence_heavy": 1
+      },
+      "manifest": "data/manifests/train.jsonl",
+      "manifest_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+      "references_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198"
+    },
+    "hparl_dev": {
+      "raw_records": 7113,
+      "raw_seconds": 32613.08,
+      "kept_records": 7113,
+      "kept_seconds": 32613.08,
+      "dropped_by_rule": {},
+      "dropped_seconds_by_rule": {},
+      "modified_records": 0,
+      "modification_steps": {},
+      "review_queue_by_flag": {
+        "cps_high": 10,
+        "duplicate_suspect": 1,
+        "non_greek_characters": 31
+      },
+      "manifest": "data/manifests/dev.jsonl",
+      "manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+      "references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c"
+    }
+  }
+}

@@ -26,6 +26,10 @@ def main():
     parser.add_argument("--acceptance", type=Path, default=ROOT / "configs/hparl_training_acceptance.json")
     args = parser.parse_args()
     from greek_asr.models import common
+    acceptance_relative = args.acceptance.resolve().relative_to(ROOT)
+    if subprocess.run(["git", "ls-files", "--error-unmatch", str(acceptance_relative)], cwd=ROOT,
+                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+        raise ValueError("commit the reviewed HParl acceptance before training")
     acceptance = json.loads(args.acceptance.read_text(encoding="utf-8"))
     if acceptance.get("status") != "passed" or not acceptance.get("hparl_only_training_authorized"):
         raise ValueError("HParl raw-to-clean acceptance has not passed")
