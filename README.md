@@ -13,6 +13,16 @@ CSS10 audio hashes and headers match the committed source inventory. CSS10 is
 integer PCM32. The shared model input now decodes it correctly; Samed must
 regenerate the float-aware audit/clean reports before full training.
 
+Data-owner update, 20 November (PR #2): the format-aware CSS10 re-audit ran on
+the real audio with Python 3.12.10 / NumPy 1.26.4 (`audit`/`clean`/`verify
+--selection`; evidence in `docs/reviews/css10_reaudit_2026-11-20/`). All 1,844
+CSS10 clips are kept (4.137269 h). The clean CSS10 manifest and the
+**25,446-record / 35.020678 h** mixture are byte-identical to the previous
+files. The locked HParl selection and dev were reproduced byte for byte, and
+the frozen test verified unchanged with audio. Acceptance record:
+[`configs/css10_mixture_lineage.json`](configs/css10_mixture_lineage.json).
+The owner's review of this update is pending.
+
 The selected training pool is **18 whole HParl sessions / 30.883408 h**, or
 **35.020678 h with CSS10** before that corrected audit. Its exact RAW/clean IDs,
 references, hashes, overlaps and storage calculation are in
@@ -165,51 +175,99 @@ with the assigned members; the integration starter is not their completed work.
 `python -m greek_asr.data` acquires HParl 1.0.0 and CSS10 Greek, freezes the
 original HParl test **before** any train/dev cleaning, audits train/dev/CSS10,
 applies the versioned cleaning policy with a per-record log and writes the
-HParl-only and HParl + CSS10 training manifests. Design, rules and the run
-order are in [DATA_PIPELINE_TR.md](docs/DATA_PIPELINE_TR.md); the numbers are
-generated into `docs/DATA_REPORT_TR.md` after a real run.
+training manifests. WAVs are read with the shared RIFF reader
+(`greek_asr/audio.py`) and decoded by **format tag**: PCM16/PCM32 use integer
+full-scale scaling, and IEEE float32 (all CSS10 clips) is used as stored, with
+no gain or normalization. NaN/Inf samples, truncated WAVs and Git LFS pointers
+fail visibly, and original WAVs are never converted or overwritten. Design,
+rules and the run order are in [DATA_PIPELINE_TR.md](docs/DATA_PIPELINE_TR.md).
+The numbers are generated into [DATA_REPORT_TR.md](docs/DATA_REPORT_TR.md).
+
+**Data actually used** (owner's locked selection
+[`configs/training_data_selection.json`](configs/training_data_selection.json),
+18 whole official train sessions, seed 42; the CSS10/mixture acceptance record is
+[`configs/css10_mixture_lineage.json`](configs/css10_mixture_lineage.json)):
+
+| Set | Source | Records | Hours | Speakers | Sessions | Manifest |
+|---|---|---|---|---|---|---|
+| Selected train, raw | HParl | 23,615 | 30.896592 | 208 | 18 | `data/manifests/subsets/raw/train_hparl_30.5h_seed42.jsonl` |
+| Selected train, clean | HParl | 23,602 | 30.883408 | 208 | 18 | `data/manifests/subsets/train_hparl_30.5h_seed42.jsonl` |
+| CSS10, raw → clean (train only) | CSS10 | 1,844 → 1,844 | 4.137269 | 1 reader per producer; no per-clip IDs (counted unknown) | — | `data/manifests/css10_el_train.jsonl` |
+| Mixture | HParl + CSS10 | 25,446 | 35.020678 | 208 known + CSS10 unknown | 18 | `data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl` |
+| Dev (unchanged) | HParl | 7,113 | 9.059189 | 64 | 3 | `data/manifests/dev.jsonl` |
+| Test (frozen, unchanged) | HParl | 8,679 | 11.207889 | 82 | 3 | `data/manifests/test.jsonl` |
+
+The full ~99-hour train manifests (`data/manifests/raw/hparl_train.jsonl`,
+`data/manifests/train.jsonl`, `train_hparl_css10.jsonl`) are a **source
+candidate inventory** only. Their audio is not delivered and they are not
+training data. The audit → clean → mixture → verify chain needs only the
+delivered audio (selected raw train, dev, test, CSS10):
 
 ```bash
-pip install -r requirements-data.txt
-python -m greek_asr.data hparl-download   # resumable, ~11.9 GB
-python -m greek_asr.data prepare-freeze   # extract, raw manifests, test freeze (commit separately)
-python -m greek_asr.data prepare-clean --css10-archive <kaggle zip>
-python -m greek_asr.data verify
+pip install -r requirements-data.txt          # Python 3.12, numpy 1.26.4
+python -m greek_asr.data verify-source-metadata
+python -m greek_asr.data verify-freeze        # with test audio
+python -m greek_asr.data audit  --selection configs/training_data_selection.json
+python -m greek_asr.data clean  --selection configs/training_data_selection.json   # CSS10 + mixture + lineage
+python -m greek_asr.data verify --selection configs/training_data_selection.json   # every delivered WAV
+python -m greek_asr.data report
+python scripts/run_selected_data_checks.py    # all of the above + unittest, outputs logged
 ```
+
+`clean --selection` only compares the locked clean HParl selection and dev
+with their recomputed bytes. It never rewrites them, the selection plan or the
+frozen test. A difference is reported in the lineage file and the command
+fails. A changed CSS10 or mixture is written to new `*.css10audit-v2.jsonl`
+files with old → new hashes. On 20 November nothing changed, so the paths above
+stay current. Rebuilding from the source archives (`hparl-download`,
+`prepare-freeze`, `prepare-clean`) needs the full archives; see the pipeline
+document.
 
 ### Split used and speaker overlap
 
 We use the **official HParl 1.0.0 session-based train/dev/test split**. It is
-**not speaker-disjoint**: most test speakers also speak in train (other
-sessions); session overlap between splits is zero. The professor's email
-(How 1) permits a documented official split, so the frozen test is kept and not
+**not speaker-disjoint**: the same members of parliament speak in several
+sessions. Session overlap between splits is zero. The professor's email (How 1)
+permits a documented official split, so the frozen test is kept and not
 resplit. Results are therefore **not** presented as generalization to unseen
-speakers. Speakers, utterances, hours and sessions per split and per training
-condition, test examples whose speaker occurs in training, and literal
-(untransformed) test-sentence matches in each actual training target are
-generated in `docs/DATA_REPORT_TR.md` (section 4b) and
-`data/clean/cohort_summary.json`; `python -m greek_asr.data split-summary`
-recomputes them from the manifests without audio. CSS10 has no per-utterance
-speaker/recording IDs (one reader and one book per its producer); those
-records are counted as unknown, not invented.
+speakers. For the used selection, 49 of the 82 test speakers also occur in the
+selected train, and 4,782 of the 8,679 test examples have such a speaker. 16
+test speakers occur in dev.
+
+Test sentences in training targets are counted in two separate ways:
+
+- **Literal:** a frozen test reference string exactly equal, with no
+  transformation, to a training target string.
+- **Normalized:** a diagnostic only, not the scoring rule. Both sides get
+  `<...>` tags removed, Unicode NFC, casefold and whitespace collapse, and
+  distinct texts are intersected.
+
+For the current mixture (and the clean HParl selection), literal matches are
+3 test examples / 3 distinct texts, and normalized matches are 9 / 9. The raw
+selected train targets have 5 / 5 literal and 9 / 9 normalized matches. No test
+sentence was removed. Per-source records, hours, speakers, sessions and these
+overlaps are generated in `docs/DATA_REPORT_TR.md` (section 4b) and
+`data/clean/selected_train_hparl_30.5h_seed42/cohort_summary.json`. CSS10 has
+no per-utterance speaker/recording IDs (one reader and one book per its
+producer); those records are counted as unknown, not invented.
 
 ### Data status
 
 | Part | Status |
 |---|---|
-| Acquisition, test freeze (`d28c97f`), audit and cleaning | Run on Samed's machine; CSS10 float signal audit must be corrected |
-| Code, tests, manifests, clean references, cleaning log, audit, source records | In this repository |
+| Acquisition, test freeze (`d28c97f`) | Run on Samed's machine; the freeze is verified unchanged with audio |
+| Format-aware audit and cleaning of the used data | Run on the real audio on 20 Nov 2026 (Python 3.12.10, NumPy 1.26.4); outputs in `data/audit/selected_train_hparl_30.5h_seed42/` and `data/clean/selected_train_hparl_30.5h_seed42/` |
+| Old full-inventory audit (`data/audit/*.json[.gz]`, schema v1) | Historical; its CSS10 signal statistics are invalid (float32 read as int32), see `data/audit/README.md` |
+| Code, tests, manifests, clean references, cleaning logs, source records | In this repository |
 | Original Kaldi metadata and CSS10 transcript | In this repository, byte-checked by `verify-source-metadata` |
 | Source audio (test/dev/CSS10, ~3.4 GiB) | In this repository via Git LFS (owner approved on 18 Nov 2026) |
-| Source audio (selected train) | Pending 23,615 RAW WAVs from 18 sessions, exact list in `configs/training_data_selection.json`; the complete 99-hour source train will not be used |
-| Independent audio check | Test/dev verifier passed with audio; CSS10 hashes/RIFF headers passed, but its data verifier on Python 3.12 and signal audit need Samed's float-aware correction |
+| Source audio (selected train) | Upload run by the repository owner: 23,615 RAW WAVs from 18 sessions; the complete 99-hour source train will not be used |
+| Real-audio verification | `verify --selection` opened all 32,572 delivered/used WAVs (5,918,030,664 bytes: 30,728 PCM16, 1,844 IEEE float32) and the frozen test; all passed |
 
 `docs/DATA_REPORT_TR.md` is the generated data report (sources, freeze, raw
-inventory, audit flags, cleaning results with examples, split/speaker and
-literal overlap, delivery sizes). It is produced by
-`python -m greek_asr.data report` and must not be edited by hand. Its current
-CSS10 signal statistics describe the old integer reinterpretation and need
-regeneration; source durations/hash identities are separately verified.
+inventory, audit flags, old vs new CSS10 audit, split/speaker and literal
+overlap, cleaning results with examples, lineage, delivery sizes). It is
+produced by `python -m greek_asr.data report` and must not be edited by hand.
 
 The scorer accepts JSONL references (`id`, `reference`) and predictions (`id`,
 `text`). Full ID equality is required. It reports corpus WER/CER from edit
@@ -395,7 +453,9 @@ no WER/CER and no dev/test inference.
 | `docs/TEACHER_UPDATES_2026-11-18_TR.md` | New speaker/group split rule, official-split exception and exact baseline/scoring requirements |
 | `docs/reviews/` | Versioned PR #2/#5/#9 reviews, source/licensing decisions and metadata/GPU/CLI/math evidence; no model benchmark |
 | `results/runtime_smoke/` | Real train-pilot predictions and runtime record; no benchmark scores |
-| `greek_asr/data/` | Samed's data pipeline: acquisition, test freeze, audit, cleaning, report, delivery shards |
+| `greek_asr/data/` | Samed's data pipeline: acquisition, test freeze, format-aware audit, cleaning, selected-scope chain (`--selection`), report, delivery shards |
+| `configs/css10_mixture_lineage.json` | CSS10/mixture acceptance record: locked HParl/dev reproduction, old → new hashes, old vs new CSS10 audit |
+| `scripts/run_selected_data_checks.py` | Runs the real-audio data acceptance chain and logs every command to `docs/reviews/css10_reaudit_2026-11-20/` |
 | `configs/data_cleaning.json` | Versioned train/dev/CSS10 cleaning policy and flag thresholds |
 | `docs/DATA_PIPELINE_TR.md` | Data pipeline design, rule justifications and run order |
 | `docs/DATA_REPORT_TR.md` | Generated data report (numbers only from pipeline outputs; regenerate, never hand-edit) |

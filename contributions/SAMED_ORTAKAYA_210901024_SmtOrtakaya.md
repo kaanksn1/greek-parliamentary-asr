@@ -95,15 +95,59 @@ freeze, train/dev audit and cleaning, training-condition manifests).
   (the copy the manifests reference) through Git LFS, with
   `verify --only` for checking a partial delivery.
 
+## CSS10 IEEE float32 correction and selected-data chain (20 November 2026)
+
+The owner's real-audio check found two problems in my data code:
+
+- All 1,844 CSS10 WAVs are IEEE float32 (RIFF format tag 3), but my audit read
+  every 4-byte sample as integer PCM32. That made the CSS10 RMS/dBFS values
+  and their signal flags wrong.
+- My `wave`-based probe could not open these files on Python 3.12.
+
+Fixes:
+
+- **Reading:** the data probe now uses the shared RIFF reader
+  (`greek_asr/audio.py`), and signal statistics decode by format tag.
+  - PCM16/PCM32 use integer full-scale scaling.
+  - Float32 values are used as stored, with no gain or normalization.
+  - NaN/Inf, truncated WAVs and LFS pointers fail visibly.
+  - Original WAVs are never converted.
+- **Selected scope:** added `--selection configs/training_data_selection.json`
+  to `audit`, `clean` and `verify`. The chain now needs only the delivered audio
+  (selected raw train, dev, test, CSS10), not the unused 99-hour train.
+- **Locked files protected:** `clean --selection` only compares the locked
+  clean HParl selection and dev byte for byte; it never rewrites them or the
+  frozen test. A changed CSS10 or mixture would go to new versioned files with
+  old → new hashes. The acceptance record is `configs/css10_mixture_lineage.json`.
+- **Real run** (Python 3.12.10, NumPy 1.26.4, Windows,
+  `scripts/run_selected_data_checks.py`, logs in
+  `docs/reviews/css10_reaudit_2026-11-20/`):
+  - Corrected CSS10 RMS median: −27.67 dBFS (the old misread value was −6.105).
+  - One new review flag: `long_edge_silence` on clip 1738.
+  - No CSS10 drop; 1,844/1,844 kept (4.137269 h).
+  - Clean CSS10 and the 25,446-record / 35.020678 h mixture are byte-identical
+    to the previous files.
+  - The locked 23,602-record HParl selection and dev were reproduced byte for
+    byte. The frozen test verified `ok` with audio before and after cleaning.
+  - `verify --selection` opened all 32,572 used WAVs.
+  - 229 tests ran with no failures. 99 model tests were skipped because torch
+    is not in the data environment; no data test was skipped.
+- **Tests added:**
+  - float32 vs PCM32 at the same width
+  - known-amplitude statistics
+  - Python 3.12 CSS10 reading
+  - NaN/Inf, truncated and pointer failures
+  - the selected chain without unselected audio, determinism, versioning and
+    reported HParl differences
+  - locked repository hashes
+
 ## Not yet done
 
-- **Train audio:** only the subset actually used for training will be
-  delivered. It is chosen after Serdar's measured GPU budget, because full
-  train together with the rest exceeds the free LFS storage.
-- **Clean-clone verification:** full verification is therefore pending. The
-  delivered test/dev/CSS10 audio is checked separately (see the PR #2
-  description for the actual result).
-- **Listening review and data slides:** also pending.
+- **Selected train audio:** the 23,615 selected raw train WAVs are uploaded by
+  the repository owner; after that, `verify --selection` should be run on a
+  clean clone.
+- **Listening review and data slides:** no record has been listened to yet
+  (zero human review decisions).
 
 No bonus or model result is claimed.
 
