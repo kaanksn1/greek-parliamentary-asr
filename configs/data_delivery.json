@@ -1,36 +1,36 @@
 {
-  "free_lfs_storage_gib": 10.0,
-  "groups": {
-    "css10_source_metadata": {
-      "detail": "The producer transcript.txt that the manifests use (el/transcript.txt). The second top-level copy is byte-identical (hash-checked) and listed in archive_members.tsv.",
-      "method": "plain Git, `-text`",
-      "status": "in_repo"
-    },
-    "css10_used_wav": {
-      "detail": "Only the copy the manifests reference (el/); the byte-identical second copy is not duplicated. Clean-clone check: `verify --only css10_el_train.jsonl`.",
-      "method": "Git LFS",
-      "status": "in_repo"
-    },
-    "hparl_dev_wav": {
-      "detail": "Same upload as the test audio. Clean-clone check: `verify --only dev.jsonl`.",
-      "method": "Git LFS",
-      "status": "in_repo"
-    },
-    "hparl_source_metadata": {
-      "detail": "Original Kaldi text, utt2spk, spk2utt, wav.scp and spk2gender of all three official splits; `verify-source-metadata` checks every byte hash on a clean clone.",
-      "method": "plain Git, `-text` so bytes are never converted",
-      "status": "in_repo"
-    },
-    "hparl_test_wav": {
-      "detail": "Repository owner approved the upload on 18 November 2026. Clean-clone check: `git lfs pull`, then `verify-freeze` with audio.",
-      "method": "Git LFS",
-      "status": "in_repo"
-    },
-    "hparl_train_wav": {
-      "detail": "Selected 18 whole official train sessions: 23615 raw WAVs (including 13 removed examples), 23602 clean HParl clips, 30.883408 h; exact list in configs/training_data_selection.json. All audio is estimated at 6.714255 GiB; 2.6 GiB reserved for checkpoints/headroom inside the authorized 10 GiB cap.",
-      "method": "Git LFS, subset actually used",
-      "status": "pending"
-    }
-  },
-  "note": "Decision record for putting raw/clean data into this repository. Sizes are computed by `python -m greek_asr.data delivery-plan` from the recorded archive listings. Update a status only when it is true in the pushed repository; never buy storage."
+    "free_lfs_storage_gib":  10.0,
+    "groups":  {
+                   "css10_source_metadata":  {
+                                                 "detail":  "The producer transcript.txt that the manifests use (el/transcript.txt). The second top-level copy is byte-identical (hash-checked) and listed in archive_members.tsv.",
+                                                 "method":  "plain Git, `-text`",
+                                                 "status":  "in_repo"
+                                             },
+                   "css10_used_wav":  {
+                                          "detail":  "Only the copy the manifests reference (el/); the byte-identical second copy is not duplicated. Clean-clone check: `verify --only css10_el_train.jsonl`.",
+                                          "method":  "Git LFS",
+                                          "status":  "in_repo"
+                                      },
+                   "hparl_dev_wav":  {
+                                         "detail":  "Same upload as the test audio. Clean-clone check: `verify --only dev.jsonl`.",
+                                         "method":  "Git LFS",
+                                         "status":  "in_repo"
+                                     },
+                   "hparl_source_metadata":  {
+                                                 "detail":  "Original Kaldi text, utt2spk, spk2utt, wav.scp and spk2gender of all three official splits; `verify-source-metadata` checks every byte hash on a clean clone.",
+                                                 "method":  "plain Git, `-text` so bytes are never converted",
+                                                 "status":  "in_repo"
+                                             },
+                   "hparl_test_wav":  {
+                                          "detail":  "Repository owner approved the upload on 18 November 2026. Clean-clone check: `git lfs pull`, then `verify-freeze` with audio.",
+                                          "method":  "Git LFS",
+                                          "status":  "in_repo"
+                                      },
+                   "hparl_train_wav":  {
+                                           "detail":  "Selected 18 whole official train sessions: 23615 raw WAVs (including 13 removed examples), 23602 clean HParl clips, 30.883408 h; exact list in configs/training_data_selection.json. All audio is estimated at 6.714255 GiB; 2.6 GiB reserved for checkpoints/headroom inside the authorized 10 GiB cap.",
+                                           "method":  "Git LFS, subset actually used",
+                                           "status":  "in_repo"
+                                       }
+               },
+    "note":  "Decision record for putting raw/clean data into this repository. Sizes are computed by `python -m greek_asr.data delivery-plan` from the recorded archive listings. Update a status only when it is true in the pushed repository; never buy storage."
 }

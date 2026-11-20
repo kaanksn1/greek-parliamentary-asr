@@ -15,7 +15,7 @@ CPU GMM-HMM and the GPU training queue now run concurrently; the execution
 snapshot is pinned to `d98abe995`. See [PRIMARY_TRAINING_TR.md](docs/PRIMARY_TRAINING_TR.md).
 The completed CTC run and repeated integration checks are recorded in
 [`docs/reviews/primary_training_2026-11-20/`](docs/reviews/primary_training_2026-11-20/).
-RAW audio is committed through Git LFS; upload state is recorded in
+All selected RAW audio has been uploaded through Git LFS; verification is recorded in
 `configs/hparl_delivery_status.json`. Mixed Whisper still waits for the corrected
 CSS10 data audit. There are no final test predictions or completed benchmark
 tables yet.
@@ -32,8 +32,8 @@ The selected training pool is **18 whole HParl sessions / 30.883408 h**, or
 references, hashes, overlaps and storage calculation are in
 [`configs/training_data_selection.json`](configs/training_data_selection.json).
 The 23,615 selected RAW train WAVs (including 13 removed records) have been
-locally acquired, verified and committed; check the delivery-status record for
-upload completion. The full-source train manifests remain source candidate inventories.
+locally acquired, verified, committed and uploaded; the delivery-status record
+identifies the verified remote branch. The full-source train manifests remain source candidate inventories.
 Active training configs point to the selected subset, rather than undelivered
 99-hour train audio. All estimated audio plus checkpoint/headroom reserve fits
 the user's 10 GiB storage cap; remaining account bandwidth is unverified.
@@ -106,8 +106,8 @@ Adnan's model implementations and the owner's final review fixes are in
 [the contribution file](contributions/ADNAN_DEMIR_220911784_adnan-demir.md)):
 a standard attention encoder-decoder with an optional hybrid CTC head, a
 standard RNN-T transducer, and the two-condition Whisper fine-tuning
-contribution. Data delivery is under review in PR #2; selected train upload is
-in progress and the corrected CSS10 audit is pending. The measured `max_steps` allocations are
+contribution. Data delivery is under review in PR #2; selected train audio is
+uploaded and the corrected CSS10 audit is pending. The measured `max_steps` allocations are
 in `configs/training_budget.json`. Official dev selection and benchmark results
 remain pending.
 
@@ -216,7 +216,7 @@ records are counted as unknown, not invented.
 | Code, tests, manifests, clean references, cleaning log, audit, source records | In this repository |
 | Original Kaldi metadata and CSS10 transcript | In this repository, byte-checked by `verify-source-metadata` |
 | Source audio (test/dev/CSS10, ~3.4 GiB) | In this repository via Git LFS (owner approved on 18 Nov 2026) |
-| Source audio (selected train) | All 23,615 original RAW WAVs locally verified and committed; Git LFS upload in progress, see `configs/hparl_delivery_status.json`. The complete 99-hour source train will not be used |
+| Source audio (selected train) | All 23,615 original RAW WAVs locally verified, committed and uploaded through Git LFS; see `configs/hparl_delivery_status.json`. The complete 99-hour source train will not be used |
 | Independent audio check | Test/dev verifier passed with audio; CSS10 hashes/RIFF headers passed, but its data verifier on Python 3.12 and signal audit need Samed's float-aware correction |
 
 `docs/DATA_REPORT_TR.md` is the generated data report (sources, freeze, raw

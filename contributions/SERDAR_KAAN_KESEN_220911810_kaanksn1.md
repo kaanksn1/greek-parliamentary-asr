@@ -123,7 +123,7 @@ cleaning and model implementations remain with their respective authors.
 
 Samed submitted early test-freeze metadata and his data pipeline in PR #2;
 test/dev audio passed independent verification and CSS10 original hashes/headers
-matched. Selected RAW train upload remains in progress; HParl used-only pipeline
+matched. Selected RAW train audio is uploaded; HParl used-only pipeline
 reproduction has passed. The float-aware CSS10 audit and mixed-data acceptance
 are still pending. His pipeline and cleaning authorship remain
 his. Adnan's submitted implementation and the owner's final
