@@ -32,21 +32,31 @@ def overlap_key(text: str) -> str:
     return " ".join(unicodedata.normalize("NFC", strip_annotation_tags(text)).casefold().split())
 
 
-def signal_stats(payload: bytes, width: int, channels: int, rate: int, signal: dict) -> dict:
+def decode_samples(payload: bytes, format_tag: int, width: int):
+    """True sample amplitudes as float64, chosen by RIFF format tag (no gain/normalization).
+
+    Integer PCM is scaled by its full-scale value (PCM16: 2**15, PCM32: 2**31).
+    IEEE float32 values already are amplitudes and are used as they are;
+    reinterpreting their bytes as int32 was the CSS10 bug fixed in audit v2.
+    """
     import numpy as np  # data-pipeline dependency, see requirements-data.txt
 
-    if width == 2:
-        samples = np.frombuffer(payload, dtype="<i2").astype(np.float64) / 32768.0
-    elif width == 1:
-        samples = (np.frombuffer(payload, dtype=np.uint8).astype(np.float64) - 128.0) / 128.0
-    elif width == 4:
-        samples = np.frombuffer(payload, dtype="<i4").astype(np.float64) / 2147483648.0
-    elif width == 3:
-        raw = np.frombuffer(payload, dtype=np.uint8).reshape(-1, 3).astype(np.int32)
-        value = raw[:, 0] | (raw[:, 1] << 8) | (raw[:, 2] << 16)
-        samples = np.where(value & 0x800000, value - (1 << 24), value).astype(np.float64) / 8388608.0
-    else:
-        raise DataError(f"unsupported sample width {width}")
+    if format_tag == 3 and width == 4:
+        samples = np.frombuffer(payload, dtype="<f4").astype(np.float64)
+        if not np.isfinite(samples).all():
+            raise DataError("IEEE float WAV contains NaN/Inf samples")
+        return samples
+    if format_tag == 1 and width == 2:
+        return np.frombuffer(payload, dtype="<i2").astype(np.float64) / 32768.0
+    if format_tag == 1 and width == 4:
+        return np.frombuffer(payload, dtype="<i4").astype(np.float64) / 2147483648.0
+    raise DataError(f"unsupported WAV encoding for signal statistics (format tag {format_tag}, {width * 8}-bit)")
+
+
+def signal_stats(payload: bytes, width: int, channels: int, rate: int, signal: dict, *, format_tag: int) -> dict:
+    import numpy as np  # data-pipeline dependency, see requirements-data.txt
+
+    samples = decode_samples(payload, format_tag, width)
     clip_fraction = float(np.mean(np.abs(samples) >= signal["clip_threshold"])) if samples.size else 0.0
     if channels > 1:
         samples = samples.reshape(-1, channels).mean(axis=1)
@@ -83,10 +93,11 @@ def _measure(job: tuple) -> list[dict]:
         if audio["audio_sha256"] != row["audio_sha256"]:
             raise DataError(f"{row['id']}: audio changed since the raw manifest was built")
         item = {"id": row["id"], "pcm_sha256": audio["pcm_sha256"],
-                "sample_width_bytes": audio["sample_width_bytes"]}
+                "sample_width_bytes": audio["sample_width_bytes"], "format_tag": audio["format_tag"],
+                "encoding": audio["encoding"]}
         if with_stats:
             item.update(signal_stats(payload, audio["sample_width_bytes"], audio["channels"],
-                                     audio["sampling_rate"], signal))
+                                     audio["sampling_rate"], signal, format_tag=audio["format_tag"]))
         results.append(item)
     return results
 
@@ -125,27 +136,46 @@ def load_config(root: Path, path: Path | None = None) -> tuple[dict, str]:
     return read_json(path), sha256_file(path)
 
 
-def run_audit(root: Path = ROOT, config_path: Path | None = None, workers: int = 1, out: Path | None = None) -> dict:
+AUDIT_SCHEMA = "p3-data-audit-v2"
+DECODER = ("greek_asr.audio RIFF reader; samples decoded by format tag: PCM16/PCM32 integer full-scale, "
+           "IEEE float32 as stored (no gain, no peak normalization); NaN/Inf, truncated WAV and LFS pointers fail")
+
+
+def audit_dir(root: Path, selection: dict | None = None) -> Path:
+    return Path(root) / "data/audit" / (selection["scope_dir"] if selection else "")
+
+
+def run_audit(root: Path = ROOT, config_path: Path | None = None, workers: int = 1, out: Path | None = None,
+              selection: dict | None = None) -> dict:
+    """Audit train/dev/CSS10; with ``selection`` the train side is only the locked selected raw sessions."""
+    from .clean import environment
+    from .selection import check_raw_subset
+
     root = Path(root)
-    out = out or root / "data/audit"
+    out = out or audit_dir(root, selection)
     config, config_sha = load_config(root, config_path)
     flags_cfg, signal = config["flags"], config["signal"]
     raw = root / "data/manifests/raw"
+    sources = {subset: (raw / manifest, raw / references) for subset, (manifest, references) in SUBSETS.items()}
+    if selection:
+        check_raw_subset(root, selection)
+        sources["hparl_train"] = (root / selection["artifacts"]["raw_manifest"]["path"],
+                                  root / selection["artifacts"]["raw_references"]["path"])
     subsets, inputs = {}, {}
-    for subset, (manifest, references) in SUBSETS.items():
-        if not (raw / manifest).exists():
+    for subset, (manifest, references) in sources.items():
+        if not manifest.exists():
             if subset == "css10_el":
                 continue
-            raise DataError(f"missing raw manifest {manifest}; build raw manifests first")
-        rows = read_jsonl(raw / manifest)
-        refs = {r["id"]: r["reference"] for r in read_jsonl(raw / references)}
+            raise DataError(f"missing raw manifest {manifest.name}; build raw manifests first")
+        rows = read_jsonl(manifest)
+        refs = {r["id"]: r["reference"] for r in read_jsonl(references)}
         if set(refs) != {r["id"] for r in rows}:
             raise DataError(f"{subset}: references and manifest IDs differ")
         subsets[subset] = (rows, refs)
-        inputs[manifest] = sha256_file(raw / manifest)
-        inputs[references] = sha256_file(raw / references)
+        inputs[manifest.relative_to(root).as_posix()] = sha256_file(manifest)
+        inputs[references.relative_to(root).as_posix()] = sha256_file(references)
     test_rows = read_jsonl(raw / "hparl_test.jsonl")
-    inputs["hparl_test.jsonl"] = sha256_file(raw / "hparl_test.jsonl")
+    inputs["data/manifests/raw/hparl_test.jsonl"] = sha256_file(raw / "hparl_test.jsonl")
     css10_texts = {}
     if (raw / "css10_el_texts.jsonl").exists():
         css10_texts = {r["id"]: r for r in read_jsonl(raw / "css10_el_texts.jsonl")}
@@ -314,6 +344,8 @@ def run_audit(root: Path = ROOT, config_path: Path | None = None, workers: int =
             "records_with_any_flag": sum(1 for i in chosen if i["flags"]),
             "duration_seconds": percentiles([i["duration_seconds"] for i in chosen]),
             "rms_dbfs": percentiles([i["rms_dbfs"] for i in chosen]),
+            "peak_dbfs": percentiles([i["peak_dbfs"] for i in chosen]),
+            "encodings": dict(sorted(Counter(str(i.get("encoding")) for i in chosen).items())),
             "speech_fraction": percentiles([i["speech_fraction"] for i in chosen]),
             "chars_per_second": percentiles([i["chars_per_second"] for i in chosen]),
             "sampling_rates": dict(sorted(Counter(str(i["sampling_rate"]) for i in chosen).items())),
@@ -324,7 +356,13 @@ def run_audit(root: Path = ROOT, config_path: Path | None = None, workers: int =
             "text_duplicate_records": text_duplicates.get(subset, 0),
             "speakers": len({i["speaker_id"] for i in chosen if i["speaker_id"]}),
         }
-    summary = {"schema": "p3-data-audit-v1", "policy_version": config["policy_version"],
+    scope = ({"kind": "locked_training_selection", "selection": selection["path"],
+              "selection_sha256": selection["sha256"], "sessions": selection["session_ids"],
+              "note": "train = only the selected raw sessions; dev, frozen-test hashes and CSS10 are complete"}
+             if selection else {"kind": "full_source_inventory",
+                                "note": "every raw train record; needs all source train audio"})
+    summary = {"schema": AUDIT_SCHEMA, "decoder": DECODER, "scope": scope, "environment": environment(),
+               "policy_version": config["policy_version"],
                "config_sha256": config_sha, "inputs_sha256": dict(sorted(inputs.items())),
                "cps_reference": {k: {"median": round(m, 4), "mad": round(d, 4)} for k, (m, d) in cps_reference.items()},
                "subsets": summary_subsets, "duplicates": duplicate_stats, "overlaps": overlaps,
@@ -338,10 +376,10 @@ def run_audit(root: Path = ROOT, config_path: Path | None = None, workers: int =
     return summary
 
 
-def load_items(root: Path = ROOT) -> dict[str, dict]:
+def load_items(root: Path = ROOT, directory: Path | None = None, subsets=SUBSETS) -> dict[str, dict]:
     items = {}
-    for subset in SUBSETS:
-        path = Path(root) / "data/audit" / f"items_{subset}.jsonl.gz"
+    for subset in subsets:
+        path = (directory or Path(root) / "data/audit") / f"items_{subset}.jsonl.gz"
         if path.exists():
             for line in gzip.decompress(path.read_bytes()).decode("utf-8").splitlines():
                 if line.strip():
@@ -351,9 +389,12 @@ def load_items(root: Path = ROOT) -> dict[str, dict]:
 
 
 def audit_inputs_current(root: Path, summary: dict) -> bool:
-    raw = Path(root) / "data/manifests/raw"
-    return all((raw / name).exists() and sha256_file(raw / name) == digest
+    root = Path(root)
+    def path_of(name):  # v2 records project-relative paths; v1 recorded names under data/manifests/raw
+        return root / name if "/" in name and name.startswith("data/") else root / "data/manifests/raw" / name
+    return all(path_of(name).exists() and sha256_file(path_of(name)) == digest
                for name, digest in summary["inputs_sha256"].items())
 
 
-__all__ = ["run_audit", "load_items", "audit_inputs_current", "overlap_key", "signal_stats", "sha256_bytes"]
+__all__ = ["run_audit", "load_items", "audit_inputs_current", "audit_dir", "decode_samples", "overlap_key",
+           "signal_stats", "sha256_bytes"]

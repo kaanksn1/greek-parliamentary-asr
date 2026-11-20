@@ -1,0 +1,10 @@
+$ python -m greek_asr.data verify-source-metadata
+# exit code 0, 0.5 s
+
+## stdout
+{
+  "files_checked": 16,
+  "status": "ok"
+}
+
+## stderr

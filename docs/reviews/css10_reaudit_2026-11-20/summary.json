@@ -1,0 +1,79 @@
+{
+  "all_passed": true,
+  "git_branch": "feature/p3-data",
+  "git_head": "7c3caed1293bc124dcce0c2ffdcc460fa6854a65",
+  "machine": "AMD64",
+  "numpy": "1.26.4",
+  "python": "3.12.10",
+  "schema": "p3-data-acceptance-run-v1",
+  "skip_audio_used": false,
+  "steps": [
+    {
+      "command": "python -m greek_asr.data verify-source-metadata",
+      "exit_code": 0,
+      "log": "docs/reviews/css10_reaudit_2026-11-20/01_verify_source_metadata.txt",
+      "name": "verify_source_metadata",
+      "seconds": 0.5
+    },
+    {
+      "command": "python -m greek_asr.data verify-freeze",
+      "exit_code": 0,
+      "log": "docs/reviews/css10_reaudit_2026-11-20/02_verify_freeze_with_audio.txt",
+      "name": "verify_freeze_with_audio",
+      "seconds": 37.9
+    },
+    {
+      "command": "python -m greek_asr.data audit --selection configs/training_data_selection.json",
+      "exit_code": 0,
+      "log": "docs/reviews/css10_reaudit_2026-11-20/03_audit_selected.txt",
+      "name": "audit_selected",
+      "seconds": 27.7
+    },
+    {
+      "command": "python -m greek_asr.data clean --selection configs/training_data_selection.json",
+      "exit_code": 0,
+      "log": "docs/reviews/css10_reaudit_2026-11-20/04_clean_selected.txt",
+      "name": "clean_selected",
+      "seconds": 18.8
+    },
+    {
+      "command": "python -m greek_asr.data verify --selection configs/training_data_selection.json",
+      "exit_code": 0,
+      "log": "docs/reviews/css10_reaudit_2026-11-20/05_verify_selected_with_audio.txt",
+      "name": "verify_selected_with_audio",
+      "seconds": 33.5
+    },
+    {
+      "command": "python -m greek_asr.data verify --only css10_el_train.jsonl dev.jsonl",
+      "exit_code": 0,
+      "log": "docs/reviews/css10_reaudit_2026-11-20/06_verify_css10_dev_with_audio.txt",
+      "name": "verify_css10_dev_with_audio",
+      "seconds": 11.4
+    },
+    {
+      "command": "python -m greek_asr.data report",
+      "exit_code": 0,
+      "log": "docs/reviews/css10_reaudit_2026-11-20/07_report.txt",
+      "name": "report",
+      "seconds": 3.4
+    },
+    {
+      "command": "python -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "log": "docs/reviews/css10_reaudit_2026-11-20/08_unittest.txt",
+      "name": "unittest",
+      "result_lines": [
+        "Ran 229 tests in 12.569s",
+        "OK (skipped=99)"
+      ],
+      "seconds": 13.3,
+      "skipped_reasons": {
+        "requires the .venv-sequence environment (torch/torchaudio); see requirements-sequence.txt": 42,
+        "requires the .venv-sequence environment (torch/transformers/huggingface_hub); see requirements-sequence.txt": 18,
+        "requires torch/torchaudio": 27,
+        "requires torch/torchaudio/transformers": 12
+      }
+    }
+  ],
+  "system": "Windows"
+}

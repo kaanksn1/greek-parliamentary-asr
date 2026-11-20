@@ -8,14 +8,12 @@ caller explicitly asks for a regenerable output.
 from __future__ import annotations
 
 import hashlib
-import io
 import json
 import math
 import os
 import re
 import stat
 import unicodedata
-import wave
 import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Iterator
@@ -226,33 +224,44 @@ def probe_wav(path: Path) -> dict:
 LFS_POINTER = b"version https://git-lfs.github.com/spec/"
 
 
+ENCODINGS = {(1, 2): "pcm_s16le", (1, 4): "pcm_s32le", (3, 4): "ieee_float32le"}
+
+
 def probe_wav_bytes(data: bytes, label: str = "audio") -> dict:
+    """Measure one original WAV with the shared RIFF reader (greek_asr/audio.py).
+
+    The RIFF format tag, not the 4-byte sample width alone, separates integer
+    PCM32 from IEEE float32. Bytes are only read, never converted. A Git LFS
+    pointer, a truncated/malformed file, an unsupported encoding and NaN/Inf
+    float samples are visible DataErrors. ``pcm_sha256`` hashes the exact
+    data-chunk bytes (the same bytes the previous ``wave`` probe hashed).
+    """
+    from ..audio import read_wav_bytes
+
     if data.startswith(LFS_POINTER):
         raise DataError(f"Git LFS pointer instead of audio bytes (run `git lfs pull`): {label}")
     try:
-        with wave.open(io.BytesIO(data), "rb") as audio:
-            properties = {"sampling_rate": audio.getframerate(), "channels": audio.getnchannels(),
-                          "sample_width_bytes": audio.getsampwidth(), "num_frames": audio.getnframes(),
-                          "compression_type": audio.getcomptype()}
-            payload = audio.readframes(audio.getnframes())
-    except (wave.Error, EOFError, ValueError) as error:
-        raise DataError(f"undecodable WAV ({error}): {label}") from None
-    expected = properties["num_frames"] * properties["channels"] * properties["sample_width_bytes"]
-    if properties["compression_type"] != "NONE":
-        raise DataError(f"compressed WAV is not supported by the shared runner: {label}")
-    if len(payload) != expected:
-        raise DataError(f"truncated WAV payload ({len(payload)} of {expected} bytes): {label}")
-    if properties["sampling_rate"] <= 0 or properties["channels"] <= 0:
-        raise DataError(f"invalid WAV header: {label}")
-    properties["duration_seconds"] = properties["num_frames"] / properties["sampling_rate"]
-    properties["audio_bytes"] = len(data)
-    properties["audio_sha256"] = sha256_bytes(data)
-    properties["pcm_sha256"] = sha256_bytes(payload)
-    properties["_payload"] = payload
-    return properties
+        audio = read_wav_bytes(data, label)
+    except ValueError as error:
+        raise DataError(f"undecodable WAV ({error})") from None
+    encoding = ENCODINGS.get((audio.format_tag, audio.sample_width_bytes))
+    if encoding is None:  # read_wav_bytes already restricts this; keep the data contract explicit
+        raise DataError(f"unsupported WAV encoding (format tag {audio.format_tag}, "
+                        f"{audio.sample_width_bytes * 8}-bit): {label}")
+    if audio.format_tag == 3:
+        import numpy as np  # data-pipeline dependency, see requirements-data.txt
+
+        if not np.isfinite(np.frombuffer(audio.payload, dtype="<f4")).all():
+            raise DataError(f"IEEE float WAV contains NaN/Inf samples: {label}")
+    return {"sampling_rate": audio.sampling_rate, "channels": audio.channels,
+            "sample_width_bytes": audio.sample_width_bytes, "num_frames": audio.num_frames,
+            "format_tag": audio.format_tag, "encoding": encoding,
+            "duration_seconds": audio.num_frames / audio.sampling_rate,
+            "audio_bytes": len(data), "audio_sha256": sha256_bytes(data),
+            "pcm_sha256": sha256_bytes(audio.payload), "_payload": audio.payload}
 
 
-def validate_manifest_row(row: dict, root: Path, *, check_audio: bool = True) -> None:
+def validate_manifest_row(row: dict, root: Path, *, check_audio: bool = True, cache: dict | None = None) -> None:
     """Mirror greek_asr.infer.load_manifest so data outputs are runner-ready."""
     missing = [field for field in REQUIRED_FIELDS if field not in row]
     if missing:
@@ -280,7 +289,11 @@ def validate_manifest_row(row: dict, root: Path, *, check_audio: bool = True) ->
     if check_audio:
         if not path.is_file():
             raise DataError(f"{row['id']}: audio file missing: {row['audio_path']}")
-        measured = probe_wav(path)
+        measured = cache.get(row["audio_path"]) if cache is not None else None
+        if measured is None:
+            measured = {k: v for k, v in probe_wav(path).items() if k != "_payload"}
+            if cache is not None:
+                cache[row["audio_path"]] = measured
         if measured["audio_sha256"] != row["audio_sha256"]:
             raise DataError(f"{row['id']}: audio hash mismatch")
         for field in ("sampling_rate", "channels", "num_frames"):
