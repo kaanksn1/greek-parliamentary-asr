@@ -1,5 +1,15 @@
 # Data acquisition and delivery
 
+Current 20 November delivery: all 23,615 original RAW train WAVs from the locked
+18 HParl sessions are locally acquired, hash-verified and committed through
+Git LFS. Remote upload state is in `../configs/hparl_delivery_status.json`.
+Original test/dev/CSS10 audio is already in the data branch through Git LFS.
+An isolated rerun of Samed's unchanged HParl pipeline reproduced every locked
+clean train/dev manifest/reference hash; its committed proof is
+`../configs/hparl_training_acceptance.json`. HParl-only training has started.
+CSS10's original IEEE float32 audio requires Samed's corrected format-aware
+data audit before mixed-corpus training. See `../docs/PRIMARY_TRAINING_TR.md`.
+
 The first three original HParl training WAVs are stored under `raw/pilot/`,
 together with their original references and provenance. They total 6.61 seconds
 and are only a pipeline/runtime sample, not the final training corpus.
@@ -42,15 +52,19 @@ Expected layout for the full selected corpus after acquisition:
 Raw and cleaned data must be included in the eventual public submission as the
 professor requires. They are not excluded by this project's `.gitignore`.
 A download script or external link by itself does not satisfy that requirement.
-Publication format/size must be settled before selecting the final subset.
+The selected RAW/clean cohort and authorized storage calculation are recorded
+in `../configs/training_data_selection.json`; full-source candidate inventories
+do not imply that all 99 hours of HParl train are delivered or used.
 
 Source-reported official HParl split durations (paper Table II):
 train `99:31:41`, development `09:03:33`, test `11:12:28`; total `119:47:42`.
-These figures must be independently checked against the acquired release.
+The full-source measurements are in `../docs/DATA_REPORT_TR.md`; active selected
+training hours are recorded separately in `../configs/training_data_selection.json`.
 
 The selected second training source is CSS10 Greek v1. Its producer reports
-`04:08:14`, from one audiobook reader. No CSS10 audio has been acquired or
-cleaned locally. Combined source-reported availability is `123:55:56`, with a
+`04:08:14`, from one audiobook reader. All original CSS10 bytes are acquired and
+independently hash/header-verified; the old integer-interpreted signal audit
+must be corrected. Combined source-reported availability is `123:55:56`, with a
 maximum pre-cleaning training candidate pool of `103:39:55` (HParl train plus
 CSS10); HParl dev/test are not training hours. These are planning sums, not
 our used/cleaned duration. See `../docs/SECONDARY_SOURCE_TR.md`.

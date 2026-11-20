@@ -1,0 +1,12 @@
+{
+    "schema":  "p3-integration-validation-v1",
+    "code_commit":  "d98abe995f85ff634704ec9f60b26ca671a21a29",
+    "command":  "HSA_ENABLE_DXG_DETECTION=0 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 /home/serda/.venvs/project3-greek-asr-transformers/bin/python -m unittest discover -s tests -v",
+    "exit_code":  0,
+    "tests":  206,
+    "skipped":  0,
+    "seconds":  94.345,
+    "full_log":  "integration_tests.txt",
+    "executed_during_primary_training":  true,
+    "final_test_inference":  false
+}

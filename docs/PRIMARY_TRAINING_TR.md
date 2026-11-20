@@ -2,7 +2,7 @@
 
 20 Kasım'da kullanıcı Samed'i beklemeden eğitime geçmemizi istedi. Kaan aynı
 kilitli 18 HParl oturumunun 23.615 ham WAV'ını özgün CLARIN ZIP'inden sınırlı
-HTTP aralıklarıyla alır; her dosya kaynak CRC/byte/SHA-256 kontrolünden geçer.
+HTTP aralıklarıyla aldı; her dosya kaynak CRC/byte/SHA-256 kontrolünden geçti.
 Dil, split, referans, ham ses veya seçilen oturum listesi değişmez.
 
 `scripts/verify_hparl_training.py`, geçici bir hard-link staging kökünde
@@ -15,6 +15,10 @@ yazılmak üzere açılmaz; staging orijinal WAV'lara hard link verir.
 
 Başarılı rapor `configs/hparl_training_acceptance.json` olarak commit edilir.
 Bu kabul HParl-only koşular içindir; CSS10 denetimini kabul etmiş sayılmaz.
+Kabul `d98abe995f85ff634704ec9f60b26ca671a21a29` commitinde sabitlendi ve
+gerçek eğitimler 20 Kasım 03:06 Türkiye saatinde başlatıldı. Çalışan native
+checkout bu committe kalır; paralel Git LFS teslim/doküman commitleri çalışan
+kod veya ayarları değiştirmez. Bu saat teslim saati veya bitiş tahmini değildir.
 Ham seslerin Git LFS ile depoya teslimi eğitimle paralel tamamlanabilir;
 son teslimde kullanılan bütün ham/temiz veriler gerçekten depoda bulunmalı.
 

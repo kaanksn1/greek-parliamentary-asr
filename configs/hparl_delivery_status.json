@@ -1,0 +1,15 @@
+{
+    "remote_upload_verified":  false,
+    "paid_storage_authorized":  false,
+    "data_commit":  "c86de78aab2d8dfcad85c45e3718efc813c6aa60",
+    "raw_files_include_removed_examples":  true,
+    "training_running":  true,
+    "schema":  "p3-hparl-audio-delivery-v1",
+    "css10_audit_status":  "pending_Samed",
+    "local_raw_to_clean_reproduction":  "passed",
+    "status":  "upload_in_progress",
+    "local_audio_hashes_verified":  true,
+    "checked_utc":  "2026-11-20T00:17:12.4100493Z",
+    "original_raw_train_wavs":  23615,
+    "acceptance_commit":  "d98abe995f85ff634704ec9f60b26ca671a21a29"
+}

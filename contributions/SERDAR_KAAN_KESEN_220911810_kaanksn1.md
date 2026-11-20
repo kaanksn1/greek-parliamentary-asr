@@ -106,10 +106,26 @@
 
 ## Limits and pending dependent work
 
+Later 20 November urgent execution update: at the user's request, acquired
+all 23,615 selected original HParl RAW train WAVs directly from the producer
+archive, preserving size/CRC/SHA-256. Reproduced Samed's unchanged HParl
+audit/cleaning in isolated hard-linked staging from 39,407 original train/dev/test
+WAVs; all four locked clean train/dev audio/reference hashes matched exactly.
+Committed the dataset-specific acceptance at `d98abe995`, then started the
+CPU GMM-HMM and sequential GPU primary training queue with finite-gradient and
+actual-update logging. Added temporary process-scoped sleep prevention.
+The full CTC allocation completed; its generated run/checkpoint identity and
+the repeated 206-test successful integration check at the frozen execution
+commit are retained in `docs/reviews/primary_training_2026-11-20/`.
+The selected RAW audio is committed through Git LFS; remote upload completion
+is recorded separately in `configs/hparl_delivery_status.json`. Original data
+cleaning and model implementations remain with their respective authors.
+
 Samed submitted early test-freeze metadata and his data pipeline in PR #2;
 test/dev audio passed independent verification and CSS10 original hashes/headers
-matched. Selected RAW train upload, float-aware CSS10 data audit and used-only
-pipeline reproduction are pending. His pipeline and cleaning authorship remain
+matched. Selected RAW train upload remains in progress; HParl used-only pipeline
+reproduction has passed. The float-aware CSS10 audit and mixed-data acceptance
+are still pending. His pipeline and cleaning authorship remain
 his. Adnan's submitted implementation and the owner's final
 review corrections have passed code/pilot checks. Kemal's submitted models passed
 code/pilot review; Ozan's final evaluation and all full

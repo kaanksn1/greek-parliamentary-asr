@@ -4,6 +4,15 @@
 Tam model koşuları Kaan'da; ortak son değerlendirme ve sunum Ozan'dadır.
 Teslim cumartesi akşamı; hocanın kesin saatini bilmiyoruz.
 
+**Güncel öncelik:** kullanıcı eğitimlerin gecikmemesini istediği için Kaan aynı
+23.615 ham HParl sesini kaynaktan aldı, Samed'in değişmeyen koduyla HParl
+temizliğini yeniden üretip dört train/dev hashinin birebir eşleştiğini doğruladı
+ve CPU/GPU eğitimlerini başlattı. Ham HParl LFS yüklemesini Kaan yürütüyor;
+`configs/hparl_delivery_status.json` durumunu kontrol et. Bu dosyaları yeniden
+indirmene/yüklemene gerek yok. Öncelikli kalan işin **CSS10 float-aware veri
+denetimi ve temizliği**, karışımın doğrulanması ve ilgili raporlardır. Aşağıdaki
+ham-veri teslim ayrıntıları kaynak/kabul sözleşmesini belgelemeye devam eder.
+
 ## 1. Güncel dal ve kesin eğitim listesi
 
 Kaan'ın veri/bütçe inceleme değişikliklerini içeren güncel `feature/p3-data`
