@@ -1,0 +1,255 @@
+{
+  "conditions": {
+    "clean_css10": {
+      "by_source": {
+        "css10_el": {
+          "hours": 4.137,
+          "known_sessions_or_recordings": 0,
+          "known_speakers": 0,
+          "records": 1844,
+          "records_without_session_id": 1844,
+          "records_without_speaker_id": 1844,
+          "seconds": 14894.17
+        }
+      },
+      "hours": 4.137,
+      "known_sessions_or_recordings": 0,
+      "known_speakers": 0,
+      "literal_test_overlap": {
+        "matched_distinct_test_texts": 0,
+        "matched_test_examples": 0,
+        "matched_test_ids_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "manifest": {
+        "path": "data/manifests/css10_el_train.jsonl",
+        "sha256": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855"
+      },
+      "normalized_test_overlap": {
+        "matched_distinct_normalized_texts": 0,
+        "matched_test_examples": 0,
+        "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+      },
+      "records": 1844,
+      "records_by_source": {
+        "css10_el": 1844
+      },
+      "records_without_session_id": 1844,
+      "records_without_speaker_id": 1844,
+      "references": {
+        "path": "data/manifests/references/css10_el_train.jsonl",
+        "sha256": "8167c13e9002537f7634a9696149cbd790133515ae3383a2ad36777ffdad32cb"
+      },
+      "seconds": 14894.17,
+      "sessions_also_in_dev": 0,
+      "sessions_also_in_test": 0,
+      "speakers_also_in_dev": 0,
+      "test_examples_whose_speaker_is_in_this_training": 0,
+      "test_speakers_also_in_this_training": 0
+    },
+    "clean_selected_hparl": {
+      "by_source": {
+        "hparl": {
+          "hours": 30.883,
+          "known_sessions_or_recordings": 18,
+          "known_speakers": 208,
+          "records": 23602,
+          "records_without_session_id": 0,
+          "records_without_speaker_id": 0,
+          "seconds": 111180.27
+        }
+      },
+      "hours": 30.883,
+      "known_sessions_or_recordings": 18,
+      "known_speakers": 208,
+      "literal_test_overlap": {
+        "matched_distinct_test_texts": 3,
+        "matched_test_examples": 3,
+        "matched_test_ids_sha256": "c0a81a0cb4c5e6c531839b9060607ea27147cf29e2d4971d6267174d72881192"
+      },
+      "manifest": {
+        "path": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+        "sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db"
+      },
+      "normalized_test_overlap": {
+        "matched_distinct_normalized_texts": 9,
+        "matched_test_examples": 9,
+        "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+      },
+      "records": 23602,
+      "records_by_source": {
+        "hparl": 23602
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0,
+      "references": {
+        "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl",
+        "sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198"
+      },
+      "seconds": 111180.27,
+      "sessions_also_in_dev": 0,
+      "sessions_also_in_test": 0,
+      "speakers_also_in_dev": 41,
+      "test_examples_whose_speaker_is_in_this_training": 4782,
+      "test_speakers_also_in_this_training": 49
+    },
+    "mixed_hparl_css10": {
+      "by_source": {
+        "css10_el": {
+          "hours": 4.137,
+          "known_sessions_or_recordings": 0,
+          "known_speakers": 0,
+          "records": 1844,
+          "records_without_session_id": 1844,
+          "records_without_speaker_id": 1844,
+          "seconds": 14894.17
+        },
+        "hparl": {
+          "hours": 30.883,
+          "known_sessions_or_recordings": 18,
+          "known_speakers": 208,
+          "records": 23602,
+          "records_without_session_id": 0,
+          "records_without_speaker_id": 0,
+          "seconds": 111180.27
+        }
+      },
+      "hours": 35.021,
+      "known_sessions_or_recordings": 18,
+      "known_speakers": 208,
+      "literal_test_overlap": {
+        "matched_distinct_test_texts": 3,
+        "matched_test_examples": 3,
+        "matched_test_ids_sha256": "c0a81a0cb4c5e6c531839b9060607ea27147cf29e2d4971d6267174d72881192"
+      },
+      "manifest": {
+        "path": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca"
+      },
+      "normalized_test_overlap": {
+        "matched_distinct_normalized_texts": 9,
+        "matched_test_examples": 9,
+        "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+      },
+      "records": 25446,
+      "records_by_source": {
+        "css10_el": 1844,
+        "hparl": 23602
+      },
+      "records_without_session_id": 1844,
+      "records_without_speaker_id": 1844,
+      "references": {
+        "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0"
+      },
+      "seconds": 126074.44,
+      "sessions_also_in_dev": 0,
+      "sessions_also_in_test": 0,
+      "speakers_also_in_dev": 41,
+      "test_examples_whose_speaker_is_in_this_training": 4782,
+      "test_speakers_also_in_this_training": 49
+    },
+    "raw_selected_hparl": {
+      "by_source": {
+        "hparl": {
+          "hours": 30.897,
+          "known_sessions_or_recordings": 18,
+          "known_speakers": 208,
+          "records": 23615,
+          "records_without_session_id": 0,
+          "records_without_speaker_id": 0,
+          "seconds": 111227.73
+        }
+      },
+      "hours": 30.897,
+      "known_sessions_or_recordings": 18,
+      "known_speakers": 208,
+      "literal_test_overlap": {
+        "matched_distinct_test_texts": 5,
+        "matched_test_examples": 5,
+        "matched_test_ids_sha256": "9012f9c5157983b098390a57afd75299b38dc9d45c6e4d1da60b7f86388f7c55"
+      },
+      "manifest": {
+        "path": "data/manifests/subsets/raw/train_hparl_30.5h_seed42.jsonl",
+        "sha256": "3991a65229c95fdf6a9f4451b6cb9888b64f341460a428850237f912d07715da"
+      },
+      "normalized_test_overlap": {
+        "matched_distinct_normalized_texts": 9,
+        "matched_test_examples": 9,
+        "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+      },
+      "records": 23615,
+      "records_by_source": {
+        "hparl": 23615
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0,
+      "references": {
+        "path": "data/manifests/subsets/raw/references/train_hparl_30.5h_seed42.jsonl",
+        "sha256": "56ac531ff4869c0209b0a06430745e33ca819d5cb961a9de6294d56d9d151539"
+      },
+      "seconds": 111227.73,
+      "sessions_also_in_dev": 0,
+      "sessions_also_in_test": 0,
+      "speakers_also_in_dev": 41,
+      "test_examples_whose_speaker_is_in_this_training": 4782,
+      "test_speakers_also_in_this_training": 49
+    }
+  },
+  "css10_identity_note": "CSS10 Greek: üretici tek okuyucu (Rapunzelina) ve tek kitap (Penelope Delta, 'Paramythi horis onoma') bildiriyor (kaynak: docs/SECONDARY_SOURCE_TR.md, Kyubyong/css10); örnek bazında konuşmacı veya kayıt kimliği verilmediği için speaker_id ve source_recording_id boş bırakıldı ve bilinmeyen olarak sayıldı.",
+  "definitions": {
+    "literal_test_overlap": "a frozen test reference string equal, with no transformation, to at least one training target string; matched test examples and distinct texts",
+    "normalized_test_overlap": "diagnostic only, not the scoring rule: remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+  },
+  "dev": {
+    "by_source": {
+      "hparl": {
+        "hours": 9.059,
+        "known_sessions_or_recordings": 3,
+        "known_speakers": 64,
+        "records": 7113,
+        "records_without_session_id": 0,
+        "records_without_speaker_id": 0,
+        "seconds": 32613.08
+      }
+    },
+    "hours": 9.059,
+    "known_sessions_or_recordings": 3,
+    "known_speakers": 64,
+    "manifest": {
+      "path": "data/manifests/dev.jsonl",
+      "sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a"
+    },
+    "records": 7113,
+    "records_by_source": {
+      "hparl": 7113
+    },
+    "records_without_session_id": 0,
+    "records_without_speaker_id": 0,
+    "seconds": 32613.08,
+    "sessions_also_in_test": 0,
+    "test_speakers_also_in_dev": 16
+  },
+  "schema": "p3-selected-cohort-summary-v1",
+  "split_policy": "official HParl 1.0.0 session-based train/dev/test split; it is not speaker-disjoint",
+  "test": {
+    "distinct_reference_texts": 8678,
+    "hours": 11.208,
+    "known_sessions_or_recordings": 3,
+    "known_speakers": 82,
+    "manifest": {
+      "path": "data/manifests/test.jsonl",
+      "sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+    },
+    "records": 8679,
+    "records_by_source": {
+      "hparl": 8679
+    },
+    "records_without_session_id": 0,
+    "records_without_speaker_id": 0,
+    "references": {
+      "path": "data/manifests/references/test.jsonl",
+      "sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9"
+    },
+    "seconds": 40348.4
+  }
+}

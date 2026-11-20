@@ -19,7 +19,9 @@ checkout, run on CPU during primary training. `integration_validation.json`
 records the command and successful exit status. These are code/data/scoring
 checks, not test-set ASR results.
 
-No WER/CER benchmark or trained-model improvement is claimed here. Other model
-families continue through the independent CPU/sequential GPU queue; completed
-CTC training does not imply the whole queue has finished. Final model settings,
-normalization and scoring protocol must be committed before test inference.
+All six primary model families have now completed their committed allocations;
+the final queue and each job's unedited run/live metadata are retained here.
+`SUMMARY.md` is generated from those records. No WER/CER benchmark or trained-model
+improvement is claimed. Final model settings, normalization and scoring protocol
+must be committed before test inference. The mixed-corpus Whisper condition has
+its own acceptance and execution snapshot; these primary records remain unchanged.

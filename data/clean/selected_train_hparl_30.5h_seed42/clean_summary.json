@@ -1,0 +1,122 @@
+{
+  "audit_schema": "p3-data-audit-v2",
+  "audit_summary": {
+    "path": "data/audit/selected_train_hparl_30.5h_seed42/audit_summary.json",
+    "sha256": "8a615340425420287a9e003195ce11b53e9074dccf187b50e2adf2323711ba21"
+  },
+  "cohort_summary_sha256": "5adfabd9006ca9ecf82107952d6da84c9a2dfb11d2641bbe4f443c548fa85e94",
+  "config_sha256": "48adc3de9ab725a03d442e6778d2e46cff2e86a40d88c684d93d95bbefcc5792",
+  "decoder": "greek_asr.audio RIFF reader; samples decoded by format tag: PCM16/PCM32 integer full-scale, IEEE float32 as stored (no gain, no peak normalization); NaN/Inf, truncated WAV and LFS pointers fail",
+  "environment": {
+    "numpy": "1.26.4",
+    "python": "3.12.10",
+    "system": "Windows"
+  },
+  "log_entries": {
+    "drop": 13,
+    "modify_text": 15370
+  },
+  "log_sha256": "986f3135156b397fb9c04ec0797095462dc39fb1f0270ad01ffceae25411caa0",
+  "policy_version": "p3-data-clean-v3",
+  "review_decisions_applied": 0,
+  "review_decisions_outside_scope": 0,
+  "review_queue_by_subset": {
+    "css10_el": 23,
+    "hparl_dev": 42,
+    "hparl_train": 111
+  },
+  "review_queue_records": 176,
+  "review_queue_sha256": "5b97c803706642d395eb3028d272a54e3c3159cfddccc53ca5f39aa23ae01167",
+  "schema": "p3-data-clean-selected-v1",
+  "selection": {
+    "path": "configs/training_data_selection.json",
+    "sha256": "6033ef269a32a811ffb8f78a963f39605ee51f87257920622571802904e4d442"
+  },
+  "source_inventory_train_issues_outside_selected_raw_manifest": 0,
+  "subsets": {
+    "css10_el": {
+      "dropped_by_rule": {},
+      "dropped_seconds_by_rule": {},
+      "kept_records": 1844,
+      "kept_seconds": 14894.17,
+      "modification_steps": {
+        "collapse_whitespace": 1839,
+        "lowercase": 1770,
+        "remove_characters_absent_from_hparl_train": 1839
+      },
+      "modified_records": 1843,
+      "raw_records": 1844,
+      "raw_seconds": 14894.17,
+      "review_queue_by_flag": {
+        "cps_boundary": 1,
+        "cps_high": 1,
+        "cps_low": 22,
+        "long_edge_silence": 1
+      }
+    },
+    "css10_harmonization": {
+      "allowed_non_letter_characters": "",
+      "hparl_train_uppercase_ratio": 0.0,
+      "lowercase": true
+    },
+    "hparl_dev": {
+      "dropped_by_rule": {},
+      "dropped_seconds_by_rule": {},
+      "kept_records": 7113,
+      "kept_seconds": 32613.08,
+      "modification_steps": {},
+      "modified_records": 0,
+      "raw_records": 7113,
+      "raw_seconds": 32613.08,
+      "review_queue_by_flag": {
+        "cps_high": 10,
+        "duplicate_suspect": 1,
+        "non_greek_characters": 31
+      }
+    },
+    "hparl_train": {
+      "dropped_by_rule": {
+        "cps_extreme": 9,
+        "duplicate_audio": 4
+      },
+      "dropped_seconds_by_rule": {
+        "cps_extreme": 41.67,
+        "duplicate_audio": 5.79
+      },
+      "kept_records": 23602,
+      "kept_seconds": 111180.27,
+      "modification_steps": {
+        "strip_annotation_tags": 13527
+      },
+      "modified_records": 13527,
+      "raw_records": 23615,
+      "raw_seconds": 111227.73,
+      "review_queue_by_flag": {
+        "cps_boundary": 1,
+        "cps_high": 7,
+        "duplicate_suspect": 3,
+        "long_edge_silence": 2,
+        "non_greek_characters": 98,
+        "silence_heavy": 1
+      }
+    }
+  },
+  "test_freeze_after": {
+    "audio_checked": true,
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+    "records": 8679,
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "status": "ok",
+    "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+  },
+  "test_freeze_before": {
+    "audio_checked": true,
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+    "records": 8679,
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "status": "ok",
+    "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+  }
+}

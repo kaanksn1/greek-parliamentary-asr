@@ -1,0 +1,9 @@
+$ python -m greek_asr.data report
+# exit code 0, 3.4 s
+
+## stdout
+{
+  "report": "docs/DATA_REPORT_TR.md"
+}
+
+## stderr

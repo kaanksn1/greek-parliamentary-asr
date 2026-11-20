@@ -12,6 +12,7 @@ from pathlib import Path
 from .cohort import cohort_summary
 from .common import ROOT, TAG_PATTERN, DataError, hms, read_json, read_jsonl, sha256_file, write_output
 from .publish import delivery_plan
+from .selection import LINEAGE
 
 REPORTED = {"train": "99:31:41", "dev": "09:03:33", "test": "11:12:28"}
 CSS10_REPORTED = "04:08:14"
@@ -40,27 +41,13 @@ def _short(text: str | None, limit: int = 90) -> str:
     return text if len(text) <= limit else text[:limit - 1] + "…"
 
 
-def build_report(root: Path = ROOT) -> str:
-    root = Path(root)
-    need = {"inventory": root / "data/manifests/raw/hparl_inventory.json",
-            "freeze": root / "data/manifests/test.freeze.json", "audit": root / "data/audit/audit_summary.json",
-            "clean": root / "data/clean/clean_summary.json", "conditions": root / "data/manifests/conditions.json"}
-    missing = [k for k, p in need.items() if not p.exists()]
-    if missing:
-        raise DataError(f"report inputs missing: {missing}; run the pipeline first")
-    inventory, freeze, audit_summary, clean_summary, conditions = (read_json(need[k]) for k in
-                                                                  ("inventory", "freeze", "audit", "clean", "conditions"))
+def _source_sections(root: Path, inventory: dict, freeze: dict, freeze_check: tuple[str, str]) -> list[str]:
     acquisition = root / "data/raw/hparl/ACQUISITION.json"
     hparl_acq = read_json(acquisition) if acquisition.exists() else {}
     css_acq_path, css_inv_path = root / "data/raw/css10_el/ACQUISITION.json", root / "data/manifests/raw/css10_el_inventory.json"
     css_acq = read_json(css_acq_path) if css_acq_path.exists() else None
     css_inv = read_json(css_inv_path) if css_inv_path.exists() else None
-    log = read_jsonl(root / "data/clean/cleaning_log.jsonl")
-    stats = clean_summary["subsets"]
-    out = ["# Veri raporu — HParl + CSS10 Greek (Samed, veri sorumlusu)", "",
-           "Bu dosya `python -m greek_asr.data report` komutuyla pipeline çıktılarından üretilir; içindeki "
-           "sayılar elle yazılmamıştır. Model başarımı veya bonus iddiası içermez.", ""]
-
+    out = []
     out += ["## 1. Kaynaklar, sürümler ve lisanslar", ""]
     rows = [["HParl", inventory["dataset"]["version"], inventory["dataset"]["license"],
              f"`{hparl_acq.get('archive_sha256', '—')}`", hparl_acq.get("archive_bytes", "—"),
@@ -83,9 +70,8 @@ def build_report(root: Path = ROOT) -> str:
         ["ID listesi SHA-256", f"`{freeze['ids_sha256']}`"],
         ["`test.jsonl` SHA-256", f"`{freeze['test_manifest_sha256']}`"],
         ["`references/test.jsonl` SHA-256", f"`{freeze['references_sha256']}`"],
-        ["`test.freeze.json` SHA-256", f"`{sha256_file(need['freeze'])}`"],
-        ["Temizlik öncesi/sonrası doğrulama", f"{clean_summary['test_freeze_before']['status']} / "
-                                              f"{clean_summary['test_freeze_after']['status']}"],
+        ["`test.freeze.json` SHA-256", f"`{sha256_file(root / "data/manifests/test.freeze.json")}`"],
+        ["Temizlik öncesi/sonrası doğrulama", f"{freeze_check[0]} / {freeze_check[1]}"],
         ["Kaynakta not edilen (değiştirilmeyen) durumlar", len(freeze["source_notes"])]])
     out += ["Test sesleri ve özgün transkript satırları değiştirilmedi; kayıt eklenmedi/çıkarılmadı, yeniden "
             "bölünmedi, normalize edilmedi. CSS10 teste girmedi. `python -m greek_asr.data verify-freeze` her "
@@ -113,6 +99,32 @@ def build_report(root: Path = ROOT) -> str:
     if css_inv:
         out += [f"CSS10 örnekleme hızları: {css_inv['sampling_rates']}; arşivde transkriptte geçmeyen "
                 f"{css_inv['unreferenced_wav_files']} WAV dosyası var (kullanılmadı, silinmedi).", ""]
+
+    return out
+
+
+def build_report(root: Path = ROOT) -> str:
+    root = Path(root)
+    if (root / LINEAGE).exists():
+        from .report_selected import build_selected_report
+
+        return build_selected_report(root, _source_sections)
+    need = {"inventory": root / "data/manifests/raw/hparl_inventory.json",
+            "freeze": root / "data/manifests/test.freeze.json", "audit": root / "data/audit/audit_summary.json",
+            "clean": root / "data/clean/clean_summary.json", "conditions": root / "data/manifests/conditions.json"}
+    missing = [k for k, p in need.items() if not p.exists()]
+    if missing:
+        raise DataError(f"report inputs missing: {missing}; run the pipeline first")
+    inventory, freeze, audit_summary, clean_summary, conditions = (read_json(need[k]) for k in
+                                                                  ("inventory", "freeze", "audit", "clean", "conditions"))
+    log = read_jsonl(root / "data/clean/cleaning_log.jsonl")
+    stats = clean_summary["subsets"]
+    out = ["# Veri raporu — HParl + CSS10 Greek (Samed, veri sorumlusu)", "",
+           "Bu dosya `python -m greek_asr.data report` komutuyla pipeline çıktılarından üretilir; içindeki "
+           "sayılar elle yazılmamıştır. Model başarımı veya bonus iddiası içermez.", ""]
+
+    out += _source_sections(root, inventory, freeze, (clean_summary["test_freeze_before"]["status"],
+                                                      clean_summary["test_freeze_after"]["status"]))
 
     out += ["## 4. Denetim bulguları (train/dev/CSS10)", "",
             "Bayraklar adaydır; tek başına hatalı veri kanıtı değildir. Bir kayıt birden çok bayrak taşıyabilir.", ""]

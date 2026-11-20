@@ -7,7 +7,7 @@
                                                  "status":  "in_repo"
                                              },
                    "css10_used_wav":  {
-                                          "detail":  "Only the copy the manifests reference (el/); the byte-identical second copy is not duplicated. Clean-clone check: `verify --only css10_el_train.jsonl`.",
+                                          "detail":  "Only the copy the manifests reference (el/); the byte-identical second copy is not duplicated. Original IEEE float32 (format tag 3), 22050 Hz mono bytes, never converted. Clean-clone check: `verify --only css10_el_train.jsonl` or `verify --selection configs/training_data_selection.json`; real-audio run on 20 Nov 2026 in docs/reviews/css10_reaudit_2026-11-20/.",
                                           "method":  "Git LFS",
                                           "status":  "in_repo"
                                       },
@@ -27,7 +27,7 @@
                                           "status":  "in_repo"
                                       },
                    "hparl_train_wav":  {
-                                           "detail":  "Selected 18 whole official train sessions: 23615 raw WAVs (including 13 removed examples), 23602 clean HParl clips, 30.883408 h; exact list in configs/training_data_selection.json. All audio is estimated at 6.714255 GiB; 2.6 GiB reserved for checkpoints/headroom inside the authorized 10 GiB cap.",
+                                           "detail":  "Selected 18 whole official train sessions: 23615 raw WAVs (including 13 removed examples), 23602 clean HParl clips, 30.883408 h; exact list in configs/training_data_selection.json. All audio is estimated at 6.714255 GiB; 2.6 GiB reserved for checkpoints/headroom inside the authorized 10 GiB cap. Upload is run by the repository owner. After it is pushed, `verify --selection configs/training_data_selection.json` checks every selected RAW WAV on a clean clone.",
                                            "method":  "Git LFS, subset actually used",
                                            "status":  "in_repo"
                                        }

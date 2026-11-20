@@ -1,0 +1,105 @@
+{
+  "schema": "p3-primary-training-queue-v1",
+  "status": "primary_training_complete",
+  "pid": 303,
+  "started_utc": "2026-11-20T00:06:48.682764+00:00",
+  "jobs": {
+    "gmm": {
+      "pid": 396,
+      "status": "complete",
+      "command": [
+        "/home/serda/.venvs/project3-greek-asr-transformers/bin/python",
+        "/home/serda/p3-runs/hparl-20261120/scripts/run_training_job.py",
+        "--job",
+        "gmm",
+        "--output",
+        "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/gmm"
+      ],
+      "log": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/gmm.log",
+      "started_utc": "2026-11-20T00:06:48.683205+00:00",
+      "exit_code": 0
+    },
+    "ctc": {
+      "pid": 397,
+      "status": "complete",
+      "command": [
+        "/home/serda/.venvs/project3-greek-asr-transformers/bin/python",
+        "/home/serda/p3-runs/hparl-20261120/scripts/run_training_job.py",
+        "--job",
+        "ctc",
+        "--output",
+        "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/ctc"
+      ],
+      "log": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/ctc.log",
+      "started_utc": "2026-11-20T00:06:48.684406+00:00",
+      "exit_code": 0,
+      "ended_utc": "2026-11-20T00:18:28.824538+00:00"
+    },
+    "whisper_hparl": {
+      "pid": 11803,
+      "status": "complete",
+      "command": [
+        "/home/serda/.venvs/project3-greek-asr-transformers/bin/python",
+        "/home/serda/p3-runs/hparl-20261120/scripts/run_training_job.py",
+        "--job",
+        "whisper_hparl",
+        "--output",
+        "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/whisper_hparl"
+      ],
+      "log": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/whisper_hparl.log",
+      "started_utc": "2026-11-20T00:18:28.825949+00:00",
+      "exit_code": 0,
+      "ended_utc": "2026-11-20T04:05:27.319593+00:00"
+    },
+    "attention": {
+      "pid": 12523,
+      "status": "complete",
+      "command": [
+        "/home/serda/.venvs/project3-greek-asr-transformers/bin/python",
+        "/home/serda/p3-runs/hparl-20261120/scripts/run_training_job.py",
+        "--job",
+        "attention",
+        "--output",
+        "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/attention"
+      ],
+      "log": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/attention.log",
+      "started_utc": "2026-11-20T04:05:27.323618+00:00",
+      "exit_code": 0,
+      "ended_utc": "2026-11-20T05:01:48.062543+00:00"
+    },
+    "hubert": {
+      "pid": 12622,
+      "status": "complete",
+      "command": [
+        "/home/serda/.venvs/project3-greek-asr-transformers/bin/python",
+        "/home/serda/p3-runs/hparl-20261120/scripts/run_training_job.py",
+        "--job",
+        "hubert",
+        "--output",
+        "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/hubert"
+      ],
+      "log": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/hubert.log",
+      "started_utc": "2026-11-20T05:01:48.069771+00:00",
+      "exit_code": 0,
+      "ended_utc": "2026-11-20T05:51:28.893286+00:00"
+    },
+    "transducer": {
+      "pid": 38443,
+      "status": "complete",
+      "command": [
+        "/home/serda/.venvs/project3-greek-asr-transformers/bin/python",
+        "/home/serda/p3-runs/hparl-20261120/scripts/run_training_job.py",
+        "--job",
+        "transducer",
+        "--output",
+        "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/transducer"
+      ],
+      "log": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/transducer.log",
+      "started_utc": "2026-11-20T05:51:28.898980+00:00",
+      "exit_code": 0,
+      "ended_utc": "2026-11-20T10:26:13.404116+00:00"
+    }
+  },
+  "mixed_whisper": "waiting_for_corrected_CSS10_acceptance",
+  "final_test_authorized": false
+}

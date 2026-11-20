@@ -1,0 +1,26 @@
+{
+  "schema": "p3-owner-live-training-v1",
+  "status": "complete",
+  "job": "attention",
+  "pid": 12523,
+  "created_utc": "2026-11-20T04:05:27.668642+00:00",
+  "code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+  "config": "configs/sequence/attention.json",
+  "config_sha256": "d10e31d3498e0ce850570be4b2eff7f000b5fdc4e5cae1e7047bb184bdce5f6f",
+  "acceptance_sha256": "beb8f0a3ab60eda00e9833016cde111ce9ecbce4966a2e0e12d57de89cae87f5",
+  "optimizer_updates": 3000,
+  "expected_optimizer_updates": 3000,
+  "final_test_used": false,
+  "runtime_env": {
+    "HSA_ENABLE_DXG_DETECTION": "1",
+    "MIOPEN_FIND_MODE": "FAST",
+    "OMP_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "elapsed_seconds": 3371.6668690760016,
+  "gpu": "AMD Radeon RX 7800 XT",
+  "torch": "2.9.1+rocm7.2.1.gitff65f5bc",
+  "hip": "7.2.53211-e1a6bc5663",
+  "last_gradient_norm": 1.025636911392212,
+  "peak_gpu_allocated_bytes": 8271169536
+}

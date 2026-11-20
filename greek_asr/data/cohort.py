@@ -115,3 +115,58 @@ def cohort_summary(root: Path = ROOT) -> dict:
             "split_policy": ("official HParl 1.0.0 session-based train/dev/test split; it is not speaker-disjoint"),
             "splits": splits, "pairwise_overlaps": overlaps, "training_conditions": conditions,
             "css10_identity_note": CSS10_PRODUCER_NOTE}
+
+
+def by_source(rows: list[dict]) -> dict:
+    """Records, hours, speakers and sessions per source; missing IDs are counted, never invented."""
+    groups: dict[str, list[dict]] = {}
+    for row in rows:
+        groups.setdefault(row["source"], []).append(row)
+    return {source: {**{key: value for key, value in cohort_stats(members).items() if key != "records_by_source"},
+                     "seconds": round(sum(r["duration_seconds"] for r in members), 3)}
+            for source, members in sorted(groups.items())}
+
+
+def selected_cohort_summary(root: Path, conditions: dict[str, tuple[str, str]]) -> dict:
+    """Cohort facts for the locked training selection (dev and the frozen test are unchanged)."""
+    root = Path(root)
+    test_rows = read_jsonl(root / TEST[0])
+    test_refs = [(r["id"], r["reference"]) for r in read_jsonl(root / TEST[1])]
+    test_speakers = {r["id"]: r.get("speaker_id") for r in test_rows}
+    test_sessions = {r["source_recording_id"] for r in test_rows if r.get("source_recording_id")}
+    dev_rows = read_jsonl(root / "data/manifests/dev.jsonl")
+    dev_speakers = {r["speaker_id"] for r in dev_rows if r.get("speaker_id")}
+    dev_sessions = {r["source_recording_id"] for r in dev_rows if r.get("source_recording_id")}
+    result = {}
+    for name, (manifest, references) in conditions.items():
+        rows = read_jsonl(root / manifest)
+        texts = [r["reference"] for r in read_jsonl(root / references)]
+        speakers = {r["speaker_id"] for r in rows if r.get("speaker_id")}
+        sessions = {r["source_recording_id"] for r in rows if r.get("source_recording_id")}
+        result[name] = {
+            "manifest": _file_identity(root, manifest), "references": _file_identity(root, references),
+            **cohort_stats(rows), "seconds": round(sum(r["duration_seconds"] for r in rows), 3),
+            "by_source": by_source(rows),
+            "speakers_also_in_dev": len(speakers & dev_speakers), "sessions_also_in_dev": len(sessions & dev_sessions),
+            "test_speakers_also_in_this_training": len({s for s in test_speakers.values() if s} & speakers),
+            "test_examples_whose_speaker_is_in_this_training": sum(1 for s in test_speakers.values()
+                                                                   if s and s in speakers),
+            "sessions_also_in_test": len(sessions & test_sessions),
+            "literal_test_overlap": literal_overlap(texts, test_refs),
+            "normalized_test_overlap": normalized_overlap(texts, test_refs),
+        }
+    return {"schema": "p3-selected-cohort-summary-v1",
+            "definitions": {
+                "literal_test_overlap": ("a frozen test reference string equal, with no transformation, to at "
+                                         "least one training target string; matched test examples and distinct texts"),
+                "normalized_test_overlap": f"diagnostic only, not the scoring rule: {NORMALIZATION}"},
+            "split_policy": "official HParl 1.0.0 session-based train/dev/test split; it is not speaker-disjoint",
+            "dev": {"manifest": _file_identity(root, "data/manifests/dev.jsonl"), **cohort_stats(dev_rows),
+                    "seconds": round(sum(r["duration_seconds"] for r in dev_rows), 3),
+                    "by_source": by_source(dev_rows),
+                    "test_speakers_also_in_dev": len({s for s in test_speakers.values() if s} & dev_speakers),
+                    "sessions_also_in_test": len(dev_sessions & test_sessions)},
+            "test": {"manifest": _file_identity(root, TEST[0]), "references": _file_identity(root, TEST[1]),
+                     **cohort_stats(test_rows), "seconds": round(sum(r["duration_seconds"] for r in test_rows), 3),
+                     "distinct_reference_texts": len({t for _, t in test_refs})},
+            "conditions": result, "css10_identity_note": CSS10_PRODUCER_NOTE}

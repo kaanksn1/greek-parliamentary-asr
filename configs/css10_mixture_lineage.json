@@ -1,0 +1,259 @@
+{
+  "audit": {
+    "decoder": "greek_asr.audio RIFF reader; samples decoded by format tag: PCM16/PCM32 integer full-scale, IEEE float32 as stored (no gain, no peak normalization); NaN/Inf, truncated WAV and LFS pointers fail",
+    "environment": {
+      "numpy": "1.26.4",
+      "python": "3.12.10",
+      "system": "Windows"
+    },
+    "schema": "p3-data-audit-v2",
+    "summary": {
+      "path": "data/audit/selected_train_hparl_30.5h_seed42/audit_summary.json",
+      "sha256": "8a615340425420287a9e003195ce11b53e9074dccf187b50e2adf2323711ba21"
+    }
+  },
+  "clean": {
+    "cleaning_log": {
+      "path": "data/clean/selected_train_hparl_30.5h_seed42/cleaning_log.jsonl",
+      "sha256": "986f3135156b397fb9c04ec0797095462dc39fb1f0270ad01ffceae25411caa0"
+    },
+    "environment": {
+      "numpy": "1.26.4",
+      "python": "3.12.10",
+      "system": "Windows"
+    },
+    "review_queue": {
+      "path": "data/clean/selected_train_hparl_30.5h_seed42/review_queue.jsonl",
+      "records": 176,
+      "sha256": "5b97c803706642d395eb3028d272a54e3c3159cfddccc53ca5f39aa23ae01167"
+    },
+    "summary": {
+      "path": "data/clean/selected_train_hparl_30.5h_seed42/clean_summary.json",
+      "sha256": "5c10cb479f8a45c4e7df3e9970279aca962dbfcad2d8f1e7a92ddb52df5d7784"
+    }
+  },
+  "config_sha256": "48adc3de9ab725a03d442e6778d2e46cff2e86a40d88c684d93d95bbefcc5792",
+  "css10": {
+    "changed": false,
+    "current": {
+      "manifest": {
+        "path": "data/manifests/css10_el_train.jsonl",
+        "sha256": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855"
+      },
+      "references": {
+        "path": "data/manifests/references/css10_el_train.jsonl",
+        "sha256": "8167c13e9002537f7634a9696149cbd790133515ae3383a2ad36777ffdad32cb"
+      }
+    },
+    "dropped_by_rule": {},
+    "dropped_seconds_by_rule": {},
+    "harmonization": {
+      "allowed_non_letter_characters": "",
+      "hparl_train_uppercase_ratio": 0.0,
+      "lowercase": true
+    },
+    "kept_hours": 4.137269,
+    "kept_records": 1844,
+    "previous": {
+      "manifest": {
+        "path": "data/manifests/css10_el_train.jsonl",
+        "sha256": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855"
+      },
+      "references": {
+        "path": "data/manifests/references/css10_el_train.jsonl",
+        "sha256": "8167c13e9002537f7634a9696149cbd790133515ae3383a2ad36777ffdad32cb"
+      }
+    },
+    "raw_hours": 4.137269,
+    "raw_records": 1844,
+    "signal_audit": {
+      "current": {
+        "flag_counts": {
+          "cps_boundary": 1,
+          "cps_high": 1,
+          "cps_low": 22,
+          "long_edge_silence": 1,
+          "non_greek_characters": 1839
+        },
+        "peak_dbfs": {
+          "max": -4.694,
+          "min": -18.022,
+          "p50": -7.84
+        },
+        "rms_dbfs": {
+          "max": -22.294,
+          "min": -36.603,
+          "p50": -27.67
+        }
+      },
+      "flag_membership_changes": {
+        "long_edge_silence": {
+          "added_ids": [
+            "css10_el:Paramythi_horis_onoma_1738"
+          ],
+          "current": 1,
+          "previous": 0,
+          "removed_ids": []
+        }
+      },
+      "identical_records": 1844,
+      "previous": {
+        "audit_summary": {
+          "path": "data/audit/audit_summary.json",
+          "sha256": "8eef12d9305402c8493b81ba5c3309d84ac06884c91ac6bcdfcd4e0b8f3ae4c8"
+        },
+        "flag_counts": {
+          "cps_boundary": 1,
+          "cps_high": 1,
+          "cps_low": 22,
+          "non_greek_characters": 1839
+        },
+        "peak_dbfs": {
+          "max": -4.998,
+          "min": -4.998,
+          "p50": -4.998
+        },
+        "rms_dbfs": {
+          "max": -5.992,
+          "min": -7.215,
+          "p50": -6.105
+        },
+        "status": "INVALID signal statistics: IEEE float32 sample bytes were read as integer PCM32 (audit schema v1). Kept only as history."
+      },
+      "records_current": 1844,
+      "records_previous": 1844
+    }
+  },
+  "locked_inputs_unchanged": {
+    "dev": {
+      "manifest": {
+        "path": "data/manifests/dev.jsonl",
+        "sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a"
+      },
+      "references": {
+        "path": "data/manifests/references/dev.jsonl",
+        "sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c"
+      },
+      "reproduced_byte_identical": true
+    },
+    "frozen_test": {
+      "after": {
+        "audio_checked": true,
+        "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+        "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+        "records": 8679,
+        "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+        "status": "ok",
+        "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+      },
+      "before": {
+        "audio_checked": true,
+        "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+        "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+        "records": 8679,
+        "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+        "status": "ok",
+        "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+      }
+    },
+    "selected_clean_hparl": {
+      "manifest": {
+        "path": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+        "sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db"
+      },
+      "references": {
+        "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl",
+        "sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198"
+      },
+      "reproduced_byte_identical": true
+    }
+  },
+  "mixture": {
+    "changed": false,
+    "cohort": {
+      "by_source": {
+        "css10_el": {
+          "hours": 4.137,
+          "known_sessions_or_recordings": 0,
+          "known_speakers": 0,
+          "records": 1844,
+          "records_without_session_id": 1844,
+          "records_without_speaker_id": 1844,
+          "seconds": 14894.17
+        },
+        "hparl": {
+          "hours": 30.883,
+          "known_sessions_or_recordings": 18,
+          "known_speakers": 208,
+          "records": 23602,
+          "records_without_session_id": 0,
+          "records_without_speaker_id": 0,
+          "seconds": 111180.27
+        }
+      },
+      "hours": 35.021,
+      "known_sessions_or_recordings": 18,
+      "known_speakers": 208,
+      "literal_test_overlap": {
+        "matched_distinct_test_texts": 3,
+        "matched_test_examples": 3,
+        "matched_test_ids_sha256": "c0a81a0cb4c5e6c531839b9060607ea27147cf29e2d4971d6267174d72881192"
+      },
+      "manifest": {
+        "path": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca"
+      },
+      "normalized_test_overlap": {
+        "matched_distinct_normalized_texts": 9,
+        "matched_test_examples": 9,
+        "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+      },
+      "records": 25446,
+      "records_by_source": {
+        "css10_el": 1844,
+        "hparl": 23602
+      },
+      "records_without_session_id": 1844,
+      "records_without_speaker_id": 1844,
+      "references": {
+        "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0"
+      },
+      "seconds": 126074.44,
+      "sessions_also_in_dev": 0,
+      "sessions_also_in_test": 0,
+      "speakers_also_in_dev": 41,
+      "test_examples_whose_speaker_is_in_this_training": 4782,
+      "test_speakers_also_in_this_training": 49
+    },
+    "current": {
+      "manifest": {
+        "path": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca"
+      },
+      "references": {
+        "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0"
+      }
+    },
+    "previous": {
+      "manifest": {
+        "path": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca"
+      },
+      "references": {
+        "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0"
+      }
+    },
+    "rule": "locked clean HParl selection + current clean CSS10, sorted by id"
+  },
+  "note": "CSS10 is training-only. The locked HParl selection, dev and the frozen test are compared byte-for-byte and never rewritten. Model configs and budgets are updated by the owner.",
+  "policy_version": "p3-data-clean-v3",
+  "schema": "p3-css10-mixture-lineage-v1",
+  "selection": {
+    "path": "configs/training_data_selection.json",
+    "sha256": "6033ef269a32a811ffb8f78a963f39605ee51f87257920622571802904e4d442"
+  },
+  "status": "css10_reaudited_mixture_ready"
+}

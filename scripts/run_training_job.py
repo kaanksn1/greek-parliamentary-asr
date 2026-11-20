@@ -16,33 +16,51 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 CONFIGS = {"ctc": "configs/kemal/ctc.json", "hubert": "configs/kemal/hubert_ctc.json",
            "attention": "configs/sequence/attention.json", "transducer": "configs/sequence/transducer.json",
-           "whisper_hparl": "configs/sequence/whisper_hparl_only.json", "gmm": "configs/kemal/gmm_hmm.json"}
+           "whisper_hparl": "configs/sequence/whisper_hparl_only.json",
+           "whisper_mixed": "configs/sequence/whisper_hparl_css10.json", "gmm": "configs/kemal/gmm_hmm.json"}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--job", choices=CONFIGS, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--acceptance", type=Path, default=ROOT / "configs/hparl_training_acceptance.json")
+    parser.add_argument("--acceptance", type=Path)
     args = parser.parse_args()
     from greek_asr.models import common
+    mixed = args.job == "whisper_mixed"
+    if args.acceptance is None:
+        args.acceptance = ROOT / ("configs/css10_training_acceptance.json" if mixed
+                                  else "configs/hparl_training_acceptance.json")
     acceptance_relative = args.acceptance.resolve().relative_to(ROOT)
     if subprocess.run(["git", "ls-files", "--error-unmatch", str(acceptance_relative)], cwd=ROOT,
                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
-        raise ValueError("commit the reviewed HParl acceptance before training")
+        raise ValueError("commit the reviewed dataset acceptance before training")
     acceptance = json.loads(args.acceptance.read_text(encoding="utf-8"))
-    if acceptance.get("status") != "passed" or not acceptance.get("hparl_only_training_authorized"):
-        raise ValueError("HParl raw-to-clean acceptance has not passed")
+    scope = "mixed_training_authorized" if mixed else "hparl_only_training_authorized"
+    if acceptance.get("status") != "passed" or not acceptance.get(scope):
+        raise ValueError("the requested training condition's raw-to-clean acceptance has not passed")
     selection_path = ROOT / "configs/training_data_selection.json"
     if common.hash_file(selection_path) != acceptance["selection_sha256"]:
         raise ValueError("accepted data selection changed")
     selection = json.loads(selection_path.read_text(encoding="utf-8"))
     config_path = ROOT / CONFIGS[args.job]
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    for key, artifact in (("train_manifest", "clean_manifest"), ("train_references", "clean_references")):
+    train_artifacts = (("train_manifest", "mixed_manifest"), ("train_references", "mixed_references")) if mixed else (
+        ("train_manifest", "clean_manifest"), ("train_references", "clean_references"))
+    for key, artifact in train_artifacts:
         expected = selection["artifacts"][artifact]
         if config[key] != expected["path"] or common.hash_file(ROOT / config[key]) != expected["sha256"]:
-            raise ValueError("job does not use the accepted HParl-only training pool")
+            raise ValueError("job does not use the accepted training condition")
+    if mixed:
+        if common.hash_file(ROOT / "configs/css10_mixture_lineage.json") != acceptance["submitted_lineage_sha256"]:
+            raise ValueError("accepted CSS10 lineage changed")
+        paired = json.loads((ROOT / CONFIGS["whisper_hparl"]).read_text(encoding="utf-8"))
+        condition_fields = {"condition", "train_manifest", "train_references", "_comment"}
+        settings = {key: value for key, value in config.items() if key not in condition_fields}
+        if settings != {key: value for key, value in paired.items() if key not in condition_fields}:
+            raise ValueError("paired Whisper training settings differ")
+        if settings != acceptance["optimization_settings"]:
+            raise ValueError("mixed Whisper settings changed after independent acceptance")
     for key, relative in (("dev_audio_manifest", config["dev_manifest"]), ("dev_references", config["dev_references"])):
         if common.hash_file(ROOT / relative) != acceptance["reproduced_artifacts"][key]["expected_sha256"]:
             raise ValueError("accepted dev input changed")
@@ -83,7 +101,8 @@ def main():
             state["hip"] = torch.version.hip
         state["status"] = "running"
         save()
-        module_name = {"whisper_hparl": "whisper_finetune", "gmm": "gmm_hmm"}.get(args.job, args.job)
+        module_name = {"whisper_hparl": "whisper_finetune", "whisper_mixed": "whisper_finetune",
+                       "gmm": "gmm_hmm"}.get(args.job, args.job)
         module = importlib.import_module("greek_asr.models." + module_name)
         if cpu:
             original_frontend = module.MfccFrontend.__call__

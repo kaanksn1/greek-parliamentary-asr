@@ -11,7 +11,7 @@ import os
 import sys
 from pathlib import Path
 
-from . import audit, clean, cohort, css10, freeze, hparl, publish, report
+from . import audit, clean, cohort, css10, freeze, hparl, publish, report, selection
 from .common import ROOT, DataError, read_json, read_jsonl, validate_manifest_row
 
 
@@ -66,14 +66,34 @@ def cmd_css10_manifest(args) -> dict:
     return {k: v for k, v in inventory.items() if k not in ("issues",)}
 
 
+def _selection(args):
+    return selection.load_selection(args.root, args.selection) if getattr(args, "selection", None) else None
+
+
 def cmd_audit(args) -> dict:
     freeze.verify_freeze(args.root, check_audio=False)
-    summary = audit.run_audit(args.root, workers=args.workers)
-    return {subset: {"records": data["records"], "hours": round(data["seconds"] / 3600, 3),
-                     "flag_counts": data["flag_counts"]} for subset, data in summary["subsets"].items()}
+    chosen = _selection(args)
+    summary = audit.run_audit(args.root, workers=args.workers, selection=chosen)
+    result = {subset: {"records": data["records"], "hours": round(data["seconds"] / 3600, 3),
+                       "flag_counts": data["flag_counts"]} for subset, data in summary["subsets"].items()}
+    return {"scope": summary["scope"]["kind"], "schema": summary["schema"],
+            "output": audit.audit_dir(args.root, chosen).relative_to(args.root).as_posix(), **result}
 
 
 def cmd_clean(args) -> dict:
+    chosen = _selection(args)
+    if chosen:
+        summary = clean.run_clean_selected(args.root, chosen)
+        lineage = read_json(args.root / selection.LINEAGE)
+        return {"lineage": selection.LINEAGE, "status": lineage["status"],
+                "locked_hparl_reproduced": lineage["locked_inputs_unchanged"]["selected_clean_hparl"]["reproduced_byte_identical"],
+                "dev_reproduced": lineage["locked_inputs_unchanged"]["dev"]["reproduced_byte_identical"],
+                "css10": {k: lineage["css10"][k] for k in ("changed", "current", "kept_records", "kept_hours",
+                                                            "dropped_by_rule")},
+                "mixture": {k: lineage["mixture"][k] for k in ("changed", "current")},
+                "mixture_records": lineage["mixture"]["cohort"]["records"],
+                "mixture_hours": lineage["mixture"]["cohort"]["hours"],
+                **{k: v for k, v in summary.items() if k in ("log_entries", "review_queue_records", "environment")}}
     summary = clean.run_clean(args.root)
     return {k: v for k, v in summary.items() if k in ("subsets", "log_entries", "review_queue_records")}
 
@@ -91,8 +111,14 @@ def cmd_report(args) -> dict:
 def cmd_verify(args) -> dict:
     """Validate every delivered manifest against the shared contract and real audio."""
     root = args.root
-    result = {"test_freeze": freeze.verify_freeze(root)}
+    chosen = _selection(args)
+    if chosen:
+        if getattr(args, "only", None):
+            raise DataError("use either --selection or --only")
+        return selection.verify_selection(root, chosen, check_audio=not args.skip_audio)
+    result = {"test_freeze": freeze.verify_freeze(root, check_audio=not args.skip_audio)}
     files = ["train.jsonl", "dev.jsonl", "train_hparl_css10.jsonl", "css10_el_train.jsonl", "test.jsonl"]
+    cache = {}  # each WAV is opened once even when several manifests share it
     if getattr(args, "only", None):
         unknown = sorted(set(args.only) - set(files))
         if unknown:
@@ -113,7 +139,7 @@ def cmd_verify(args) -> dict:
         for row in rows:
             if "reference" in row or "text" in row:
                 raise DataError(f"{name}: gold text must not appear in an audio manifest")
-            validate_manifest_row(row, root, check_audio=not args.skip_audio)
+            validate_manifest_row(row, root, check_audio=not args.skip_audio, cache=cache)
         result[name] = {"records": len(rows), "hours": round(sum(r["duration_seconds"] for r in rows) / 3600, 3)}
     test_ids = {r["id"] for r in read_jsonl(root / "data/manifests/test.jsonl")}
     for name in [f for f in files if f != "test.jsonl"]:
@@ -194,9 +220,14 @@ def build_parser() -> argparse.ArgumentParser:
     css.add_argument("--no-fetch-metadata", action="store_true")
     add("css10-manifest", cmd_css10_manifest, "raw CSS10 manifest (training only)") \
         .add_argument("--transcript", help="relative path of transcript.txt inside the release, if ambiguous")
-    add("audit", cmd_audit, "measure quality/duplicates/overlaps (no data changes)") \
-        .add_argument("--workers", type=int, default=min(8, os.cpu_count() or 1))
-    add("clean", cmd_clean, "apply the versioned cleaning policy and write clean manifests + log")
+    selection_help = ("locked training selection plan, e.g. configs/training_data_selection.json: train side = only "
+                      "its selected raw sessions (dev, frozen test and CSS10 complete); no unused train audio needed")
+    audit_cmd = add("audit", cmd_audit, "measure quality/duplicates/overlaps (no data changes)")
+    audit_cmd.add_argument("--workers", type=int, default=min(8, os.cpu_count() or 1))
+    audit_cmd.add_argument("--selection", type=Path, help=selection_help)
+    add("clean", cmd_clean, "apply the versioned cleaning policy and write clean manifests + log; with "
+                            "--selection: CSS10 + mixture (versioned if changed) and the lineage report") \
+        .add_argument("--selection", type=Path, help=selection_help)
     subset = add("subset", cmd_subset, "seeded whole-session subset of the clean HParl train")
     subset.add_argument("--hours", type=float, required=True)
     subset.add_argument("--seed", type=int, default=42)
@@ -206,6 +237,8 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--skip-audio", action="store_true")
     verify.add_argument("--only", nargs="+", metavar="MANIFEST",
                         help="check only these manifests, e.g. dev.jsonl test.jsonl css10_el_train.jsonl")
+    verify.add_argument("--selection", type=Path,
+                        help="check raw/clean selected HParl, current CSS10, current mixture and dev of this plan")
     add("publish-plan", cmd_publish_plan, "sizes of raw/clean deliverables vs a Git LFS quota") \
         .add_argument("--quota-gib", type=float, default=10.0)
     add("split-summary", cmd_split_summary,

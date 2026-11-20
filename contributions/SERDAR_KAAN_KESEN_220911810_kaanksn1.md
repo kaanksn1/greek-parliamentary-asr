@@ -106,6 +106,15 @@
 
 ## Limits and pending dependent work
 
+20 November completion/review update: all six primary HParl jobs completed
+their committed allocations at immutable snapshot `d98abe995`; exported the
+generated queue/run records. Independently reviewed Samed's CSS10 correction
+at `28930653`, ran all 229 tests with zero skips and reproduced his unchanged
+selected pipeline using 41,251 original WAV paths. Locked data, corrected CSS10
+statistics, cleaning log and review queue match. Added a separate mixed-condition
+acceptance and the matched-budget training entry point. Samed's cleaning code,
+Adnan's/Kemal's model code and their individual authorship remain theirs.
+
 Later 20 November urgent execution update: at the user's request, acquired
 all 23,615 selected original HParl RAW train WAVs directly from the producer
 archive, preserving size/CRC/SHA-256. Reproduced Samed's unchanged HParl
@@ -125,7 +134,7 @@ Samed submitted early test-freeze metadata and his data pipeline in PR #2;
 test/dev audio passed independent verification and CSS10 original hashes/headers
 matched. Selected RAW train audio is uploaded; HParl used-only pipeline
 reproduction has passed. The float-aware CSS10 audit and mixed-data acceptance
-are still pending. His pipeline and cleaning authorship remain
+have also passed the independent review above. His pipeline and cleaning authorship remain
 his. Adnan's submitted implementation and the owner's final
 review corrections have passed code/pilot checks. Kemal's submitted models passed
 code/pilot review; Ozan's final evaluation and all full

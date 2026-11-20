@@ -6,18 +6,25 @@ testler `tests/test_data_pipeline.py` içindedir. Gerçek veri sayıları
 `docs/DATA_REPORT_TR.md` dosyasına koddan yazılır. Bu belgede sonuç rakamı
 yoktur.
 
-Durum (18 Kasım 2026):
+Durum (20 Kasım 2026):
 
-- **Samed'in bilgisayarında yapılan gerçek koşum:** HParl ve CSS10 edinildi,
-  test temizlikten önce donduruldu (`d28c97f`), denetim ve temizlik çalıştı.
-  Sayılar raporda.
-- **Repoda olanlar:** kod, testler, bütün manifestler, temiz referanslar,
-  temizlik günlüğü, denetim çıktıları ve kaynak kayıtları. Özgün Kaldi ve CSS10
-  metin dosyaları da bu sürümden itibaren repoda.
-- **Ses:** test, dev ve CSS10 sesi Git LFS ile repoda (repo sahibinin 18 Kasım
-  onayıyla). Train sesi bekliyor (bölüm 7). Bu yüzden temiz clone'da tam
-  `verify` yapılamaz; teslim edilen kısım `verify-freeze` ve
-  `verify --only dev.jsonl test.jsonl css10_el_train.jsonl` ile denetlenir.
+- **Kullanılan veri:** sahibin kilitli seçimi `configs/training_data_selection.json`
+  (18 tam resmî train oturumu, seed 42) + değişmeyen dev + dondurulmuş test +
+  yalnız train'de CSS10. Tam ~99 saatlik train manifesti yalnız kaynak aday
+  envanteridir; sesi teslim edilmez.
+- **CSS10 float32 düzeltmesi:** 1.844 CSS10 WAV'ı IEEE float32'dir (RIFF format
+  tag 3). Eski denetim bunları integer PCM32 gibi okuyordu ve CSS10 sinyal
+  istatistikleri yanlıştı. Python 3.12'deki `wave` modülü ise bu dosyaları hiç
+  açmıyordu. Artık ses `greek_asr/audio.py` RIFF okuyucusuyla okunur ve format
+  tag'e göre çözülür (bölüm 1b). Yeniden denetim gerçek seslerle 20 Kasım'da
+  çalıştı (Python 3.12.10, NumPy 1.26.4).
+- **Sonuç:** CSS10 1.844/1.844 korundu. Temiz CSS10 ve 25.446 kayıt /
+  35,020678 saatlik karışım önceki dosyalarla bayt-özdeş çıktı. Kilitli HParl
+  seçimi ve dev bayt-özdeş yeniden üretildi, test freeze sesle `ok` verdi.
+  Kayıt: `configs/css10_mixture_lineage.json`, kanıt:
+  `docs/reviews/css10_reaudit_2026-11-20/`, sayılar: `docs/DATA_REPORT_TR.md`.
+- **Ses:** test, dev ve CSS10 Git LFS ile repoda. Seçili 23.615 ham train
+  WAV'ının yüklemesini repo sahibi yürütüyor.
 
 ## 1. Samed'in bilgisayarında çalıştırma
 
@@ -93,6 +100,64 @@ Sonra:
 4. `python -m greek_asr.data delivery-plan` ile teslim boyutunu ölç (bölüm 7).
 5. Temizlik commit'i, kendi katkı dosyan ve PR açıklaması.
 
+## 1b. Güncel zincir: kilitli seçimle (`--selection`)
+
+Repoda teslim edilen ses yalnız seçili ham train, dev, test ve CSS10'dur.
+`audit`, `clean` ve `verify` komutları `--selection <plan>` ile bu kapsamda
+çalışır. Kullanılmayan train sesini istemez.
+
+```bash
+python -m greek_asr.data verify-source-metadata
+python -m greek_asr.data verify-freeze                      # test sesleri dahil
+python -m greek_asr.data audit  --selection configs/training_data_selection.json
+python -m greek_asr.data clean  --selection configs/training_data_selection.json
+python -m greek_asr.data verify --selection configs/training_data_selection.json
+python -m greek_asr.data report
+# hepsi + unittest, her komutun çıktısı docs/reviews/<klasör>/ altına:
+python scripts/run_selected_data_checks.py
+```
+
+- **Plan kontrolü:** komutlar önce plandaki altı kilitli dosyanın (ham/temiz
+  seçili manifest + referans, karışım manifest + referans) SHA-256'sını
+  doğrular. Seçili ham satırların tam envanterin satırlarıyla birebir aynı
+  olduğunu ve seçili oturumların bütün kayıtlarını içerdiğini de kontrol eder.
+  Hash tutmazsa durur.
+- **`audit --selection`:** train tarafı yalnız seçili ham oturumlardır. Dev,
+  CSS10 ve test hash'leri tamdır. Çıktı:
+  `data/audit/selected_<etiket>/` (şema `p3-data-audit-v2`; decoder, kodlama
+  sayıları ve Python/NumPy ortamı yazılır).
+- **`clean --selection`:**
+  - Aynı kurallarla yeniden hesaplar. Kilitli temiz HParl seçimi ve dev ile
+    **yalnız bayt karşılaştırması** yapar; onları, planı ve testi asla yazmaz.
+  - Fark çıkarsa farklı ID'leri ve bayraklarını lineage dosyasına yazar ve
+    hata verir. Otomatik güncelleme yok.
+  - CSS10 ve karışım (kilitli temiz HParl + güncel CSS10, ID sıralı) önceki
+    dosyayla bayt-özdeşse aynı yolda kalır. Değiştiyse yeni
+    `*.css10audit-v2.jsonl` dosyasına yazılır.
+  - Günlük/kuyruk/özet `data/clean/selected_<etiket>/` altına gider. Kabul
+    kaydı `configs/css10_mixture_lineage.json`: eski → yeni hash'ler, eski ve
+    yeni CSS10 bayrakları, freeze öncesi/sonrası.
+- **`verify --selection`:**
+  - Ham/temiz seçili HParl, güncel CSS10, güncel karışım ve dev'in hash'lerini
+    plan/lineage ile karşılaştırır. Referans hizasını, test ID ayrılığını ve
+    train'de dev/test oturumu olmadığını kontrol eder.
+  - Temizin ham satırları yeniden kullandığını ve karışımın tam olarak
+    HParl + CSS10 olduğunu kontrol eder.
+  - Her WAV'ı bir kez açar; hash, başlık, format ve NaN/Inf kontrolü yapar.
+  - Freeze'i sesle doğrular.
+- **Ses okuma:** `greek_asr/audio.py` RIFF okuyucusu kullanılır, `wave`
+  kullanılmaz. Kodlama format tag'den gelir:
+  - PCM16 → ÷2^15, PCM32 → ÷2^31.
+  - IEEE float32 değerleri olduğu gibi kullanılır. Kazanç veya tepe
+    normalizasyonu yok.
+  - NaN/Inf, kesik/tutarsız RIFF, desteklenmeyen kodlama ve LFS pointer
+    görünür `DataError` verir.
+  - `pcm_sha256` data chunk'ının aynı baytlarıdır, yani eski tekrar analiziyle
+    uyumludur. Özgün WAV'lar dönüştürülmez.
+
+Eski tam-envanter denetimi (`data/audit/*.json[.gz]`, şema v1) tarihsel kayıttır;
+CSS10 sinyal değerleri geçersizdir (`data/audit/README.md`).
+
 ## 2. Aşamalar ve çıktılar
 
 | Komut | Okur | Yazar |
@@ -107,6 +172,9 @@ Sonra:
 | `clean` | audit + config + inceleme kararları | `data/manifests/{train,dev,css10_el_train,train_hparl_css10}.jsonl` + referanslar, `conditions.json`, `data/clean/cleaning_log.jsonl`, `review_queue.jsonl`, `clean_summary.json` |
 | `report` | yukarıdaki kayıtlar | `docs/DATA_REPORT_TR.md` |
 | `verify` | bütün manifestler | yalnız kontrol: sözleşme, ses hash'i, test ayrımı |
+| `audit --selection P` | plandaki seçili ham train, dev, CSS10, test hash'leri | `data/audit/selected_<etiket>/` |
+| `clean --selection P` | seçili audit + config + kararlar + kilitli dosyalar | `data/clean/selected_<etiket>/`, `configs/css10_mixture_lineage.json`, değişirse `*.css10audit-v2.jsonl` |
+| `verify --selection P` | plan + lineage'daki bütün kullanılan manifestler | yalnız kontrol (bütün kullanılan WAV'lar + freeze) |
 
 Clean manifestler ham sesin **kendisini** gösterir. Train/dev için ses
 türetilmedi: resampling, kırpma veya gürültü azaltma yok. Bu yüzden "temiz
@@ -203,6 +271,9 @@ alınacağına Ozan'ın puanlama politikası karar verir.
 
 Her değişen kayıt `before_text` ve `after_text` alanlarıyla günlüğe yazılır.
 Uyumlama metni tahminle düzeltmez; yalnız biçimi HParl yazım düzenine çeker.
+`--selection` kapsamında "HParl train referansları" seçili temiz HParl
+hedefleridir. 20 Kasım koşusunda büyük harf oranı 0, korunan harf dışı karakter
+yoktu. Sonuç tam envanter koşusundaki CSS10 metinleriyle bayt-özdeş çıktı.
 
 ## 5. İnsan inceleme kararları
 
@@ -290,7 +361,7 @@ git lfs pull
 python -m greek_asr.data verify-source-metadata
 python -m greek_asr.data verify-freeze
 python -m greek_asr.data verify --only dev.jsonl test.jsonl css10_el_train.jsonl
-python -m greek_asr.data verify          # yalnız train sesi de repodaysa
+python -m greek_asr.data verify --selection configs/training_data_selection.json   # seçili train sesi de gelince
 ```
 
 LFS pointer dosyası ses sanılmaz, pipeline pointer görünce "Git LFS pointer"
@@ -329,15 +400,36 @@ Sınananlar:
 - Kaynak metin dosyasında satır sonu değişince `verify-source-metadata`
   kontrolünün başarısız olması
 
+Fixture'daki CSS10 klipleri gerçek veri gibi IEEE float32'dir. 20 Kasım'da
+eklenen testler:
+
+- `tests/test_data_audio.py`:
+  - aynı 4 bayt genişlikte float32 ile integer PCM32'nin format tag'le ayrılması
+  - bilinen genlikte RMS/dBFS/tepe/kırpılma/sessizlik değerleri; kazanç yok
+  - PCM16/PCM32 desteği
+  - Python 3.12'de `wave` olmadan CSS10 okuma
+  - NaN/Inf, kesik WAV, LFS pointer ve desteklenmeyen kodlama hataları
+- `tests/test_data_selection.py`:
+  - seçili zincirin seçilmeyen train sesi olmadan çalışması
+  - kilitli HParl/dev'in bayt-özdeş üretilmesi
+  - aynı girdiyle bayt-özdeş yeniden çalışma
+  - CSS10 değişince sürümlü dosya ve eski → yeni hash
+  - oturumlar arası tekrar yüzünden HParl farkının yazılmadan raporlanması
+  - bozuk ses/pointer'da `verify` hatası
+  - kurcalanmış kilitli dosyanın reddi
+- `tests/test_data_locked_repo.py`:
+  - gerçek repodaki kilitli seçim, dev, test ve freeze hash'lerinin değişmemesi
+  - lineage tutarlılığı
+  - gerçek CSS10 sesi varsa 1.844 dosyanın float32 başlık ve hash kontrolü
+
 ## 9. Açık konular
 
-- **Train sesi:** kullanılacak alt küme Serdar'ın GPU bütçe ölçümünden sonra
-  seçilip LFS ile teslim edilecek (bölüm 7). O zamana kadar temiz clone'da tam
-  `verify` yapılamaz.
+- **Seçili train sesi:** 23.615 ham WAV'ın LFS yüklemesini repo sahibi
+  yürütüyor. Yüklendikten sonra temiz clone'da
+  `verify --selection configs/training_data_selection.json` çalıştırılmalı.
 - **İnceleme kuyruğu:** hiçbir kayıt dinlenmedi, insan inceleme kararı sıfır.
+  Güncel kuyruk: `data/clean/selected_train_hparl_30.5h_seed42/review_queue.jsonl`.
   Dinlenen her karar `configs/review_decisions.jsonl` dosyasına yazılır.
-- **Eğitim bütçesi:** alt küme ihtiyacı Serdar'ın donanım ölçümüne bağlı.
-- **Karışım politikası:** oran ve adım politikası Adnan/Serdar'ın kararıdır.
-- **Puanlama:** `<spoken_noise>` ve diğer normalizasyon kararları Ozan'ın
-  ortak puanlama politikasındadır. Dondurulmuş dev/test referansları
-  değiştirilmez.
+- **Karışım politikası:** oran ve adım politikası model sahiplerinin kararıdır.
+- **Puanlama:** `<spoken_noise>` ve diğer normalizasyon kararları ortak
+  puanlama politikasındadır. Dondurulmuş dev/test referansları değiştirilmez.

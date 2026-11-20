@@ -1,0 +1,53 @@
+$ python -m greek_asr.data clean --selection configs/training_data_selection.json
+# exit code 0, 18.8 s
+
+## stdout
+{
+  "css10": {
+    "changed": false,
+    "current": {
+      "manifest": {
+        "path": "data/manifests/css10_el_train.jsonl",
+        "sha256": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855"
+      },
+      "references": {
+        "path": "data/manifests/references/css10_el_train.jsonl",
+        "sha256": "8167c13e9002537f7634a9696149cbd790133515ae3383a2ad36777ffdad32cb"
+      }
+    },
+    "dropped_by_rule": {},
+    "kept_hours": 4.137269,
+    "kept_records": 1844
+  },
+  "dev_reproduced": true,
+  "environment": {
+    "numpy": "1.26.4",
+    "python": "3.12.10",
+    "system": "Windows"
+  },
+  "lineage": "configs/css10_mixture_lineage.json",
+  "locked_hparl_reproduced": true,
+  "log_entries": {
+    "drop": 13,
+    "modify_text": 15370
+  },
+  "mixture": {
+    "changed": false,
+    "current": {
+      "manifest": {
+        "path": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca"
+      },
+      "references": {
+        "path": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+        "sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0"
+      }
+    }
+  },
+  "mixture_hours": 35.021,
+  "mixture_records": 25446,
+  "review_queue_records": 176,
+  "status": "css10_reaudited_mixture_ready"
+}
+
+## stderr

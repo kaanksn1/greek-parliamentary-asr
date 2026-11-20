@@ -129,3 +129,14 @@ global CSS10 wait: mixed-corpus training still requires Samed's corrected
 float-aware CSS10 audit. The owner does not rewrite his cleaning methods or
 personal report. RAW/clean-used data must actually be in the public repository
 before final submission. No paid storage or final test inference is authorized.
+
+Later 20 November review: Samed's CSS10 data correction at 28930653 passed all
+229 tests independently, with zero skips in the owner's Python 3.12 runtime.
+An isolated real-audio audit/clean/verify reproduction passed using 41,251
+original WAV paths; the selected HParl/dev, CSS10/mixture, cleaning log and
+review queue match the submission. configs/css10_training_acceptance.json
+records the owner acceptance for matched mixed Whisper training. All six
+HParl-only jobs at immutable execution snapshot d98abe995 completed. Keep that
+snapshot and its original run records; run mixed Whisper from a separate
+committed snapshot with the same optimizer/update budget and starting model.
+Frozen test is still untouched and final test inference remains separately locked.
