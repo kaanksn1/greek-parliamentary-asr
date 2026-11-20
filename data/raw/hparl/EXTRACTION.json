@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "676ba16a70c44001d364ba190610c477e900df9356cb86f081df6da19b8b1108",
+  "bytes": 13845422168,
+  "extracted_to": "release/",
+  "files": 92148,
+  "members_listing_sha256": "32e5a0b7b145707b87ae534a9e45b1d6d17a7eda998938c605a97ccfb2a5be84",
+  "strip_prefix": "hparl/",
+  "wav_files": 92133
+}

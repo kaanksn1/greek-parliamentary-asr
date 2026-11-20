@@ -63,7 +63,8 @@ class CtcHelperTests(unittest.TestCase):
         for name in ("ctc", "hubert_ctc"):
             full = json.loads((ROOT / f"configs/kemal/{name}.json").read_text(encoding="utf-8"))
             measure = json.loads((ROOT / f"configs/kemal/{name}_measure.json").read_text(encoding="utf-8"))
-            self.assertIsNone(full["max_steps"])  # the real budget is still unmeasured
+            self.assertIsInstance(full["max_steps"], int)  # measured owner budget is committed
+            self.assertGreater(full["max_steps"], 0)
             self.assertIsInstance(measure["max_steps"], int)
             self.assertEqual({k: v for k, v in full.items() if k not in budget_keys},
                              {k: v for k, v in measure.items() if k not in budget_keys})

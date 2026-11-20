@@ -1,0 +1,20 @@
+{
+    "schema":  "p3-mixed-training-execution-v1",
+    "code_commit":  "b760cdcf2662dbe6a40ee3267e59cb7f41dbe0c5",
+    "acceptance":  "configs/css10_training_acceptance.json",
+    "native_root":  "/home/serda/p3-runs/mixed-20261120",
+    "job":  "whisper_mixed",
+    "output":  "outputs/whisper_mixed_20261120",
+    "expected_optimizer_updates":  1600,
+    "starting_model":  "openai/whisper-small",
+    "starting_revision":  "973afd24965f72e36ca33b3055d56a652f456b4d",
+    "windows_training_pid":  27428,
+    "windows_awake_pid":  19120,
+    "started_utc":  "2026-11-20T13:07:46.8256215Z",
+    "final_test_authorized":  false,
+    "config_sha256":  "aa4adf385cb773e332f84cd103357038fb0979ceae132322cef18706691851b6",
+    "acceptance_sha256":  "ef61f78e310e93e72d480b07bcd11c6c4f04f01330f2db35475fef77ceeb505a",
+    "actual_gpu_start_confirmed":  true,
+    "paired_primary_execution_commit":  "d98abe995f85ff634704ec9f60b26ca671a21a29",
+    "observed_start_evidence":  "docs/reviews/css10_owner_review_2026-11-20/mixed_start.live.json"
+}

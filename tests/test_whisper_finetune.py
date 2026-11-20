@@ -208,10 +208,15 @@ class MatchedConditionConfigTests(unittest.TestCase):
         self.assertNotEqual(only["train_manifest"], css10["train_manifest"])
         self.assertEqual(only["dev_manifest"], css10["dev_manifest"])  # dev/scoring stay shared
 
-    def test_shipped_configs_require_a_measured_step_budget_before_training(self):
+    def test_shipped_configs_match_the_committed_measured_training_budget(self):
+        budget = json.loads((ROOT / "configs/training_budget.json").read_text("utf-8"))
+        by_path = {row["config"]: row for row in budget["training_runs"]}
         for name in ("attention.json", "transducer.json", "whisper_hparl_only.json", "whisper_hparl_css10.json"):
             config = json.loads((ROOT / "configs/sequence" / name).read_text("utf-8"))
-            self.assertIsNone(config["max_steps"], f"{name}: max_steps must stay unset until Serdar's pilot measures it")
+            entry = by_path["configs/sequence/" + name]
+            self.assertEqual(config["max_steps"], entry["optimizer_updates"])
+            measurement = ROOT / "docs/reviews/budget_2026-11-20" / entry["measurement"]
+            self.assertEqual(json.loads(measurement.read_text("utf-8"))["status"], "complete")
 
 
 @unittest.skipUnless(_DEPS_AVAILABLE, _SKIP_REASON)

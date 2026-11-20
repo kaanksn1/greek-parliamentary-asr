@@ -7,7 +7,7 @@ from typing import Any
 
 
 class QwenBackend:
-    def __init__(self, model: Any):
+    def __init__(self, model: Any, batch_size: int = 1):
         self.model = model
         observed_attention = {}
         for name, module in model.model.named_modules():
@@ -20,7 +20,7 @@ class QwenBackend:
             "observed_module_attention": observed_attention,
             "attention_note": "upstream composite submodules may retain their default SDPA implementation",
             "num_beams": 1,
-            "do_sample": False, "max_inference_batch_size": 1,
+            "do_sample": False, "max_inference_batch_size": batch_size,
             "max_new_tokens": 512, "backend": "qwen-asr transformers",
             "reference_or_context_prompt": False,
         }
@@ -41,8 +41,27 @@ class QwenBackend:
         return results[0].text
 
 
+    def transcribe_batch(self, audio_paths: list[Path]) -> list[str]:
+        import torch
+
+        if not audio_paths:
+            raise ValueError("Qwen batch must not be empty")
+        paths = [Path(path) for path in audio_paths]
+        for path in paths:
+            if not path.is_file():
+                raise FileNotFoundError(path)
+        with torch.inference_mode():
+            results = self.model.transcribe(audio=[str(path) for path in paths], language="Greek", context="",
+                                            return_time_stamps=False)
+        if len(results) != len(paths) or any(not isinstance(getattr(result, "text", None), str) for result in results):
+            raise ValueError("Qwen returned an invalid batch transcription count/type")
+        return [result.text for result in results]
+
+
 def load_backend(*, model_id: str, revision: str, device: str,
-                 model_dir: Path | None = None) -> QwenBackend:
+                 model_dir: Path | None = None, batch_size: int = 1) -> QwenBackend:
+    if type(batch_size) is not int or not 1 <= batch_size <= 8:
+        raise ValueError("Qwen batch_size must be an integer from 1 to 8")
     if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
         raise ValueError("revision must be a full, immutable Hugging Face commit SHA")
     if not re.fullmatch(r"cpu|cuda(?::[0-9]+)?", device):
@@ -61,9 +80,9 @@ def load_backend(*, model_id: str, revision: str, device: str,
     model = Qwen3ASRModel.from_pretrained(
         local, dtype=torch.float32, device_map=device, attn_implementation="eager",
         local_files_only=True, use_safetensors=True,
-        max_inference_batch_size=1, max_new_tokens=512,
+        max_inference_batch_size=batch_size, max_new_tokens=512,
     )
     model.model.eval()
     model.model.generation_config.do_sample = False
     model.model.generation_config.num_beams = 1
-    return QwenBackend(model)
+    return QwenBackend(model, batch_size)

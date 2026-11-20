@@ -1,0 +1,114 @@
+{
+  "audit_summary_sha256": "8eef12d9305402c8493b81ba5c3309d84ac06884c91ac6bcdfcd4e0b8f3ae4c8",
+  "cohort_summary_sha256": "e2e5bafbed03d93e3d120fb2897c5c7885503a3a8c57b1e61c685c515298855c",
+  "config_sha256": "48adc3de9ab725a03d442e6778d2e46cff2e86a40d88c684d93d95bbefcc5792",
+  "environment": {
+    "numpy": "2.5.5",
+    "python": "3.15.2",
+    "system": "Windows"
+  },
+  "log_entries": {
+    "drop": 39,
+    "modify_text": 46299
+  },
+  "log_sha256": "5fa67ba3e71c617aa83938a9ae1f9aa93ef2eab46bed0dd70d0c740b50fbfae9",
+  "policy_version": "p3-data-clean-v3",
+  "review_decisions_applied": 0,
+  "review_queue_records": 451,
+  "review_queue_sha256": "acf0d57dec726ad14210e9fa8ebef3db4d1dcf36f0b6c4853f5a7ce8c2168bb7",
+  "schema": "p3-data-clean-v1",
+  "subsets": {
+    "css10_el": {
+      "dropped_by_rule": {},
+      "dropped_seconds_by_rule": {},
+      "kept_records": 1844,
+      "kept_seconds": 14894.17,
+      "manifest": "data/manifests/css10_el_train.jsonl",
+      "manifest_sha256": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855",
+      "modification_steps": {
+        "collapse_whitespace": 1839,
+        "lowercase": 1770,
+        "remove_characters_absent_from_hparl_train": 1839
+      },
+      "modified_records": 1843,
+      "raw_records": 1844,
+      "raw_seconds": 14894.17,
+      "references_sha256": "8167c13e9002537f7634a9696149cbd790133515ae3383a2ad36777ffdad32cb",
+      "review_queue_by_flag": {
+        "cps_boundary": 1,
+        "cps_high": 1,
+        "cps_low": 22
+      }
+    },
+    "css10_harmonization": {
+      "allowed_non_letter_characters": "",
+      "hparl_train_uppercase_ratio": 0.0,
+      "lowercase": true
+    },
+    "hparl_dev": {
+      "dropped_by_rule": {},
+      "dropped_seconds_by_rule": {},
+      "kept_records": 7113,
+      "kept_seconds": 32613.08,
+      "manifest": "data/manifests/dev.jsonl",
+      "manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+      "modification_steps": {},
+      "modified_records": 0,
+      "raw_records": 7113,
+      "raw_seconds": 32613.08,
+      "references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+      "review_queue_by_flag": {
+        "cps_high": 9,
+        "duplicate_suspect": 1,
+        "non_greek_characters": 31
+      }
+    },
+    "hparl_train": {
+      "dropped_by_rule": {
+        "cps_extreme": 22,
+        "duplicate_audio": 17
+      },
+      "dropped_seconds_by_rule": {
+        "cps_extreme": 120.64,
+        "duplicate_audio": 26.49
+      },
+      "kept_records": 76302,
+      "kept_seconds": 358154.21,
+      "manifest": "data/manifests/train.jsonl",
+      "manifest_sha256": "85f5482c69323488fe53225553930b0d2dd2baaced737bd654b4bff3ed25a1c2",
+      "modification_steps": {
+        "strip_annotation_tags": 44456
+      },
+      "modified_records": 44456,
+      "raw_records": 76341,
+      "raw_seconds": 358301.34,
+      "references_sha256": "0e231d017d84eddca24eff03f93d18e0c5a5aed63aeaf73bcbf9eccc4e37b200",
+      "review_queue_by_flag": {
+        "cps_boundary": 6,
+        "cps_high": 40,
+        "duplicate_suspect": 14,
+        "long_edge_silence": 7,
+        "non_greek_characters": 322,
+        "silence_heavy": 6
+      }
+    }
+  },
+  "test_freeze_after": {
+    "audio_checked": true,
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+    "records": 8679,
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "status": "ok",
+    "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+  },
+  "test_freeze_before": {
+    "audio_checked": true,
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+    "records": 8679,
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "status": "ok",
+    "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+  }
+}

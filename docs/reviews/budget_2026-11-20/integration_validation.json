@@ -1,0 +1,15 @@
+{
+    "test_count":  206,
+    "final_test_inference_performed":  false,
+    "test_command":  "python -m unittest discover -s tests -v",
+    "schema":  "p3-owner-final-code-validation-v1",
+    "raw_model_lock_unchanged":  true,
+    "selection_repeated_byte_identically":  true,
+    "full_training_performed":  false,
+    "status":  "passed",
+    "tested_commit":  "16df2e950214daf401da065ec7c887d90325c258",
+    "skipped_tests":  0,
+    "test_seconds":  64.62,
+    "runtime":  "Python 3.12 isolated Transformers/ROCm environment, CPU test run, HSA_ENABLE_DXG_DETECTION=0 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2",
+    "measurement_manifest_hashes_verified":  true
+}

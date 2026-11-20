@@ -130,8 +130,11 @@ SpecAugment, Park et al., 2019). No pretrained weights; separate from wav2vec/Hu
   length-bucketed batches, SpecAugment on train only, dev CTC loss every
   `dev_eval_every` updates; `checkpoint.best.pt` (lowest dev loss) and `checkpoint.last.pt`.
 - **Decoding:** greedy best path over each utterance's valid frames only.
-- **Budget:** `max_steps` is `null`; training refuses to start until a measured budget
-  is given in the config or with `--max-steps` (recorded as `max_steps_source`).
+- **Budget (owner update, 20 November):** measured allocations and selected
+  cohort paths are now in the configs and `configs/training_budget.json`.
+  Plain CTC uses 2,300 updates; HuBERT 1,500 (batch 8 × accumulation 4).
+  An unset budget still fails. Used RAW train delivery and corrected CSS10
+  audit are pending; the budget is not final-test permission.
 
 ```bash
 "$P3_PYTHON" -m greek_asr.models.ctc train --config configs/kemal/ctc_measure.json --output outputs/kemal_ctc_measure --device cuda

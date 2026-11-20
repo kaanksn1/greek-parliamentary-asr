@@ -1,0 +1,206 @@
+{
+  "all_train_and_dev_loss_estimated_hours": 16.846167545697966,
+  "checkpoint_storage_policy": "Reserve is for final selected inference weights uploaded once; intermediate best/last/optimizer states remain local, not multiple LFS versions.",
+  "final_test_authorized": false,
+  "final_test_used_for_measurements": false,
+  "gmm_training_estimated_hours": 2.7436573040159606,
+  "paid_storage_authorized": false,
+  "pretrained_inference_measurements": [
+    {
+      "audio_seconds": 173.13,
+      "backend": "whisper",
+      "batch_size": 1,
+      "estimated_frozen_test_hours": 1.2735211241000866,
+      "measured_seconds": 19.672083531,
+      "not_test_inference": true,
+      "train_clips": 32
+    },
+    {
+      "audio_seconds": 173.13,
+      "backend": "qwen",
+      "batch_size": 1,
+      "estimated_frozen_test_hours": 5.408128262149645,
+      "measured_seconds": 83.539368846,
+      "not_test_inference": true,
+      "train_clips": 32
+    },
+    {
+      "audio_seconds": 173.13,
+      "backend": "wav2vec",
+      "batch_size": 1,
+      "estimated_frozen_test_hours": 0.4378395309407725,
+      "measured_seconds": 6.763308171999995,
+      "not_test_inference": true,
+      "train_clips": 32
+    },
+    {
+      "audio_seconds": 173.13,
+      "backend": "parakeet",
+      "batch_size": 1,
+      "estimated_frozen_test_hours": 0.7435041477901226,
+      "measured_seconds": 11.484910162999995,
+      "not_test_inference": true,
+      "train_clips": 32
+    },
+    {
+      "audio_seconds": 173.13,
+      "backend": "canary",
+      "batch_size": 1,
+      "estimated_frozen_test_hours": 1.2155147562753024,
+      "measured_seconds": 18.77605904299992,
+      "not_test_inference": true,
+      "train_clips": 32
+    },
+    {
+      "audio_seconds": 173.13,
+      "backend": "qwen",
+      "batch_size": 4,
+      "estimated_frozen_test_hours": 2.660338370514918,
+      "measured_seconds": 41.094252505999975,
+      "not_test_inference": true,
+      "train_clips": 32
+    }
+  ],
+  "qwen_batch_consistency": {
+    "accuracy_comparison": false,
+    "different_raw_hypotheses": 0,
+    "empty_batch_hypotheses": 0,
+    "records": 32,
+    "reference_text_used": false,
+    "same_ordered_training_ids": true
+  },
+  "runtime_environment": {
+    "HSA_ENABLE_DXG_DETECTION": "1",
+    "MIOPEN_FIND_MODE": "FAST"
+  },
+  "runtime_note": "FAST measured on new random HuBERT input shapes; old default-mode random-shape timings include substantial startup/search cost. No model architecture or loss changed.",
+  "schedule": {
+    "final_inference_reserve_hours": 12,
+    "integration_retry_report_reserve_hours": 4,
+    "note": "planning allocations, not professor's exact deadline; exact Saturday evening cutoff remains unknown. Re-estimate after first real run; use dev only for revisions.",
+    "train_dev_reserve_hours": 22
+  },
+  "schema": "p3-owner-training-budget-v1",
+  "seeds": [
+    42
+  ],
+  "selection_sha256": "6033ef269a32a811ffb8f78a963f39605ee51f87257920622571802904e4d442",
+  "start_conditions": [
+    "apply dataset-specific acceptance below; HParl-only jobs need no CSS10 data",
+    "complete repository RAW/clean-used audio delivery before submission",
+    "keep final test inference separately locked"
+  ],
+  "start_conditions_by_scope": {
+    "hparl_css10": [
+      "all HParl conditions",
+      "correct float-aware CSS10 audit/clean outputs accepted and their manifest hashes frozen"
+    ],
+    "hparl_only": [
+      "all selected original RAW HParl audio and official dev locally hash-verified",
+      "Samed's unchanged audit/clean pipeline reruns on selected RAW audio and exactly reproduces locked train/dev hashes",
+      "configs/hparl_training_acceptance.json passed and committed before training",
+      "unchanged frozen test audio/metadata verify passes; no test predictions"
+    ]
+  },
+  "status": "measured_budget_data_corrections_pending",
+  "storage_authorized_gib": 10,
+  "training_runs": [
+    {
+      "approximate_pass_target": 2,
+      "condition": "hparl_only",
+      "config": "configs/sequence/attention.json",
+      "dev_evaluations": 3,
+      "effective_batch_size": 16,
+      "estimated_dev_loss_hours": 0.1338188972051035,
+      "estimated_train_hours": 1.2121244148611114,
+      "gradient_accumulation_steps": 1,
+      "limits": "pilot extrapolation; variable-shape overhead, caching and data loading can differ",
+      "measured_micro_update_seconds": 1.4545492978333339,
+      "measurement": "attention_random_b16_n6.json",
+      "micro_batch_size": 16,
+      "model": "attention",
+      "optimizer_updates": 3000
+    },
+    {
+      "approximate_pass_target": 1,
+      "condition": "hparl_only",
+      "config": "configs/sequence/transducer.json",
+      "dev_evaluations": 3,
+      "effective_batch_size": 8,
+      "estimated_dev_loss_hours": 0.4585375957262802,
+      "estimated_train_hours": 3.3020894719445297,
+      "gradient_accumulation_steps": 1,
+      "limits": "pilot extrapolation; variable-shape overhead, caching and data loading can differ",
+      "measured_micro_update_seconds": 3.9625073663334356,
+      "measurement": "transducer_random_b8_n3.json",
+      "micro_batch_size": 8,
+      "model": "transducer",
+      "optimizer_updates": 3000
+    },
+    {
+      "approximate_pass_target": 3,
+      "condition": "hparl_only",
+      "config": "configs/kemal/ctc.json",
+      "dev_evaluations": 3,
+      "effective_batch_size": 32,
+      "estimated_dev_loss_hours": 0.05749928318860817,
+      "estimated_train_hours": 0.40739221223145494,
+      "gradient_accumulation_steps": 1,
+      "limits": "pilot extrapolation; variable-shape overhead, caching and data loading can differ",
+      "measured_micro_update_seconds": 0.6376573756666252,
+      "measurement": "ctc_random_b32_fast.json",
+      "micro_batch_size": 32,
+      "model": "ctc",
+      "optimizer_updates": 2300
+    },
+    {
+      "approximate_pass_target": 2,
+      "condition": "hparl_only",
+      "config": "configs/kemal/hubert_ctc.json",
+      "dev_evaluations": 3,
+      "effective_batch_size": 32,
+      "estimated_dev_loss_hours": 0.3319777452944571,
+      "estimated_train_hours": 1.2496120964583375,
+      "gradient_accumulation_steps": 4,
+      "limits": "pilot extrapolation; variable-shape overhead, caching and data loading can differ",
+      "measured_micro_update_seconds": 0.7497672578750025,
+      "measurement": "hubert_random_b8_fast.json",
+      "micro_batch_size": 8,
+      "model": "hubert",
+      "optimizer_updates": 1500
+    },
+    {
+      "approximate_pass_target": 1,
+      "condition": "hparl_only",
+      "config": "configs/sequence/whisper_hparl_only.json",
+      "dev_evaluations": 4,
+      "effective_batch_size": 16,
+      "estimated_dev_loss_hours": 1.0319262068304937,
+      "estimated_train_hours": 2.4428030555555686,
+      "gradient_accumulation_steps": 8,
+      "limits": "pilot extrapolation; variable-shape overhead, caching and data loading can differ",
+      "measured_micro_update_seconds": 0.6870383593750038,
+      "measurement": "whisper_random_b2_n32.json",
+      "micro_batch_size": 2,
+      "model": "whisper",
+      "optimizer_updates": 1600
+    },
+    {
+      "approximate_pass_target": 1,
+      "condition": "hparl_plus_css10",
+      "config": "configs/sequence/whisper_hparl_css10.json",
+      "dev_evaluations": 4,
+      "effective_batch_size": 16,
+      "estimated_dev_loss_hours": 1.0319262068304937,
+      "estimated_train_hours": 2.4428030555555686,
+      "gradient_accumulation_steps": 8,
+      "limits": "pilot extrapolation; variable-shape overhead, caching and data loading can differ",
+      "measured_micro_update_seconds": 0.6870383593750038,
+      "measurement": "whisper_random_b2_n32.json",
+      "micro_batch_size": 2,
+      "model": "whisper",
+      "optimizer_updates": 1600
+    }
+  ],
+  "urgent_execution_order": "20 Nov user requested training without waiting for Samed. Owner acquires the exact locked HParl RAW cohort; CPU GMM runs alongside a sequential GPU lane. CSS10 data work remains with Samed."
+}

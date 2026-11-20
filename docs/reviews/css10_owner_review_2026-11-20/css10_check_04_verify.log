@@ -1,0 +1,81 @@
+{
+  "audio_checked": true,
+  "clean_css10": {
+    "hours": 4.137269,
+    "manifest": "data/manifests/css10_el_train.jsonl",
+    "records": 1844,
+    "records_by_source": {
+      "css10_el": 1844
+    },
+    "references": "data/manifests/references/css10_el_train.jsonl",
+    "references_sha256": "8167c13e9002537f7634a9696149cbd790133515ae3383a2ad36777ffdad32cb",
+    "sha256": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855"
+  },
+  "clean_selected_hparl": {
+    "hours": 30.883408,
+    "manifest": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+    "records": 23602,
+    "records_by_source": {
+      "hparl": 23602
+    },
+    "references": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl",
+    "references_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
+    "sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db"
+  },
+  "current_manifest_source": "configs/css10_mixture_lineage.json",
+  "dev": {
+    "hours": 9.059189,
+    "manifest": "data/manifests/dev.jsonl",
+    "records": 7113,
+    "records_by_source": {
+      "hparl": 7113
+    },
+    "references": "data/manifests/references/dev.jsonl",
+    "references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+    "sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a"
+  },
+  "encodings": {
+    "ieee_float32le": 1844,
+    "pcm_s16le": 30728
+  },
+  "mixed_hparl_css10": {
+    "hours": 35.020678,
+    "manifest": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+    "records": 25446,
+    "records_by_source": {
+      "css10_el": 1844,
+      "hparl": 23602
+    },
+    "references": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+    "references_sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0",
+    "sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca"
+  },
+  "raw_selected_hparl": {
+    "hours": 30.896592,
+    "manifest": "data/manifests/subsets/raw/train_hparl_30.5h_seed42.jsonl",
+    "records": 23615,
+    "records_by_source": {
+      "hparl": 23615
+    },
+    "references": "data/manifests/subsets/raw/references/train_hparl_30.5h_seed42.jsonl",
+    "references_sha256": "56ac531ff4869c0209b0a06430745e33ca819d5cb961a9de6294d56d9d151539",
+    "sha256": "3991a65229c95fdf6a9f4451b6cb9888b64f341460a428850237f912d07715da"
+  },
+  "selection": {
+    "path": "configs/training_data_selection.json",
+    "sha256": "6033ef269a32a811ffb8f78a963f39605ee51f87257920622571802904e4d442"
+  },
+  "test_freeze": {
+    "audio_checked": true,
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+    "records": 8679,
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "status": "ok",
+    "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+  },
+  "unique_audio_bytes_checked": 5918030664,
+  "unique_audio_files_checked": 32572
+}
+
+STDERR

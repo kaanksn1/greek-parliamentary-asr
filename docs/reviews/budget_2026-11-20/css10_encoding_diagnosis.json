@@ -1,0 +1,87 @@
+{
+  "all_original_audio_hashes_verified": true,
+  "data_submission": "4db1a4aa61eb78acbb531b705c45e3bbd090854e",
+  "examples": [
+    {
+      "audio_sha256": "5dcee756bf02489d08b7464cd67497ec2370012121c9a0b034ad237452b12c50",
+      "correct_ieee_float32": {
+        "nonfinite_values": 0,
+        "peak_dbfs": -7.5676160824061895,
+        "rms_dbfs": -27.85518886228131
+      },
+      "header": {
+        "bits_per_sample": 32,
+        "block_align": 4,
+        "channels": 1,
+        "format_tag": 3,
+        "num_frames": 195360,
+        "sampling_rate": 22050
+      },
+      "id": "css10_el:Paramythi_horis_onoma_0000",
+      "incorrect_int32_reinterpretation": {
+        "nonfinite_values": 0,
+        "peak_dbfs": -4.997549464331998,
+        "rms_dbfs": -6.093888349094324
+      }
+    },
+    {
+      "audio_sha256": "d6fc02f1b10e303be53f3fd5bca8393971fb74e8ab9eb80999fe7d4827bb5f59",
+      "correct_ieee_float32": {
+        "nonfinite_values": 0,
+        "peak_dbfs": -4.734383844254734,
+        "rms_dbfs": -27.19959348862308
+      },
+      "header": {
+        "bits_per_sample": 32,
+        "block_align": 4,
+        "channels": 1,
+        "format_tag": 3,
+        "num_frames": 199760,
+        "sampling_rate": 22050
+      },
+      "id": "css10_el:Paramythi_horis_onoma_0001",
+      "incorrect_int32_reinterpretation": {
+        "nonfinite_values": 0,
+        "peak_dbfs": -4.997549464331998,
+        "rms_dbfs": -6.093017845369399
+      }
+    },
+    {
+      "audio_sha256": "7817dcc3a20250233da74302721cc6b9b5e3ea395f733349909c071e2c6933ae",
+      "correct_ieee_float32": {
+        "nonfinite_values": 0,
+        "peak_dbfs": -7.268738698177667,
+        "rms_dbfs": -27.769134484708577
+      },
+      "header": {
+        "bits_per_sample": 32,
+        "block_align": 4,
+        "channels": 1,
+        "format_tag": 3,
+        "num_frames": 206140,
+        "sampling_rate": 22050
+      },
+      "id": "css10_el:Paramythi_horis_onoma_0002",
+      "incorrect_int32_reinterpretation": {
+        "nonfinite_values": 0,
+        "peak_dbfs": -4.997549464331998,
+        "rms_dbfs": -6.079203187865644
+      }
+    }
+  ],
+  "format_counts": [
+    {
+      "bits_per_sample": 32,
+      "format_tag": 3,
+      "records": 1844
+    }
+  ],
+  "hash_or_header_failures": [],
+  "impact": "Python 3.12 wave rejects IEEE float; Python 3.15 wave reads it, but width=4 is not proof of integer PCM. Existing signal_stats treats all width=4 bytes as int32, invalidating CSS10 signal statistics.",
+  "official_test_audio_or_text_read": false,
+  "production_data_verify_passed": false,
+  "production_model_float_decode_supported": false,
+  "record_count": 1844,
+  "schema": "p3-css10-original-audio-diagnosis-v1",
+  "source_audio_changed": false
+}

@@ -1,0 +1,518 @@
+{
+  "config_sha256": "48adc3de9ab725a03d442e6778d2e46cff2e86a40d88c684d93d95bbefcc5792",
+  "cps_reference": {
+    "css10_el": {
+      "mad": 1.1568,
+      "median": 12.8245
+    },
+    "hparl": {
+      "mad": 1.8722,
+      "median": 11.7647
+    }
+  },
+  "decoder": "greek_asr.audio RIFF reader; samples decoded by format tag: PCM16/PCM32 integer full-scale, IEEE float32 as stored (no gain, no peak normalization); NaN/Inf, truncated WAV and LFS pointers fail",
+  "duplicates": {
+    "bytes": {
+      "groups": 4,
+      "records_in_groups": 8
+    },
+    "pcm": {
+      "groups": 4,
+      "records_in_groups": 8
+    }
+  },
+  "environment": {
+    "numpy": "1.26.4",
+    "python": "3.12.10",
+    "system": "Windows"
+  },
+  "inputs_sha256": {
+    "data/manifests/raw/css10_el.jsonl": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855",
+    "data/manifests/raw/hparl_dev.jsonl": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+    "data/manifests/raw/hparl_test.jsonl": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+    "data/manifests/raw/references/css10_el.jsonl": "6d09ee69ea3ba276f22dc93eb0dda07588b8693e067fe825dc5702cbe925bffa",
+    "data/manifests/raw/references/hparl_dev.jsonl": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+    "data/manifests/subsets/raw/references/train_hparl_30.5h_seed42.jsonl": "56ac531ff4869c0209b0a06430745e33ca819d5cb961a9de6294d56d9d151539",
+    "data/manifests/subsets/raw/train_hparl_30.5h_seed42.jsonl": "3991a65229c95fdf6a9f4451b6cb9888b64f341460a428850237f912d07715da"
+  },
+  "note": "Flags are candidates, not proven errors. Test audio was only hashed.",
+  "overlaps": {
+    "distinct_texts_after_tag_strip_nfc_casefold_space": {
+      "hparl_dev&hparl_test": 2,
+      "hparl_train&hparl_dev": 5,
+      "hparl_train&hparl_test": 9
+    },
+    "original_ids": {
+      "hparl_dev&hparl_test": 0,
+      "hparl_train&hparl_dev": 0,
+      "hparl_train&hparl_test": 0
+    },
+    "recordings_or_sessions": {
+      "hparl_dev&hparl_test": 0,
+      "hparl_train&hparl_dev": 0,
+      "hparl_train&hparl_test": 0
+    },
+    "speakers": {
+      "hparl_dev&hparl_test": 16,
+      "hparl_train&hparl_dev": 41,
+      "hparl_train&hparl_test": 49
+    }
+  },
+  "policy_version": "p3-data-clean-v3",
+  "schema": "p3-data-audit-v2",
+  "scope": {
+    "kind": "locked_training_selection",
+    "note": "train = only the selected raw sessions; dev, frozen-test hashes and CSS10 are complete",
+    "selection": "configs/training_data_selection.json",
+    "selection_sha256": "6033ef269a32a811ffb8f78a963f39605ee51f87257920622571802904e4d442",
+    "sessions": [
+      "olomeleia_13",
+      "olomeleia_15",
+      "olomeleia_2",
+      "olomeleia_20",
+      "olomeleia_21",
+      "olomeleia_23",
+      "olomeleia_29",
+      "olomeleia_32",
+      "olomeleia_33",
+      "olomeleia_35",
+      "olomeleia_36",
+      "olomeleia_37",
+      "olomeleia_40",
+      "olomeleia_45",
+      "olomeleia_48",
+      "olomeleia_49",
+      "olomeleia_5",
+      "olomeleia_9"
+    ]
+  },
+  "subsets": {
+    "css10_el": {
+      "annotation_tags": {},
+      "character_inventory": {
+        " ": 36289,
+        "!": 585,
+        "'": 311,
+        ",": 3172,
+        "-": 1364,
+        ".": 2950,
+        ":": 106,
+        ";": 500,
+        "Ά": 74,
+        "Έ": 129,
+        "Ή": 28,
+        "Ί": 4,
+        "Ό": 83,
+        "Ύ": 28,
+        "Ώ": 8,
+        "ΐ": 6,
+        "Α": 298,
+        "Β": 778,
+        "Γ": 149,
+        "Δ": 183,
+        "Ε": 302,
+        "Ζ": 36,
+        "Η": 96,
+        "Θ": 96,
+        "Ι": 28,
+        "Κ": 646,
+        "Λ": 99,
+        "Μ": 386,
+        "Ν": 91,
+        "Ξ": 21,
+        "Ο": 333,
+        "Π": 467,
+        "Ρ": 22,
+        "Σ": 236,
+        "Τ": 493,
+        "Υ": 17,
+        "Φ": 64,
+        "Χ": 30,
+        "Ψ": 3,
+        "Ω": 16,
+        "ά": 4838,
+        "έ": 3997,
+        "ή": 1540,
+        "ί": 3575,
+        "α": 18915,
+        "β": 1210,
+        "γ": 2630,
+        "δ": 2494,
+        "ε": 11964,
+        "ζ": 733,
+        "η": 4188,
+        "θ": 1906,
+        "ι": 11842,
+        "κ": 6794,
+        "λ": 5746,
+        "μ": 5466,
+        "ν": 9661,
+        "ξ": 1153,
+        "ο": 15071,
+        "π": 6554,
+        "ρ": 7620,
+        "ς": 4982,
+        "σ": 8268,
+        "τ": 12673,
+        "υ": 6084,
+        "φ": 1708,
+        "χ": 2053,
+        "ψ": 333,
+        "ω": 2121,
+        "ϊ": 21,
+        "ϋ": 1,
+        "ό": 3352,
+        "ύ": 2123,
+        "ώ": 1622
+      },
+      "chars_per_second": {
+        "max": 40.5612,
+        "min": 0.7892,
+        "p01": 3.171,
+        "p05": 9.8186,
+        "p50": 12.8258,
+        "p95": 15.468,
+        "p99": 16.387
+      },
+      "duration_seconds": {
+        "max": 26.4,
+        "min": 1.2372,
+        "p01": 2.6041,
+        "p05": 4.2902,
+        "p50": 8.2313,
+        "p95": 11.0449,
+        "p99": 16.6721
+      },
+      "encodings": {
+        "ieee_float32le": 1844
+      },
+      "flag_counts": {
+        "cps_boundary": 1,
+        "cps_high": 1,
+        "cps_low": 22,
+        "long_edge_silence": 1,
+        "non_greek_characters": 1839
+      },
+      "flag_seconds": {
+        "cps_boundary": 3.402,
+        "cps_high": 3.402,
+        "cps_low": 212.836,
+        "long_edge_silence": 9.588,
+        "non_greek_characters": 14871.78
+      },
+      "letters": 178488,
+      "peak_dbfs": {
+        "max": -4.694,
+        "min": -18.022,
+        "p01": -10.889,
+        "p05": -9.876,
+        "p50": -7.84,
+        "p95": -5.815,
+        "p99": -4.929
+      },
+      "records": 1844,
+      "records_with_any_flag": 1839,
+      "rms_dbfs": {
+        "max": -22.294,
+        "min": -36.603,
+        "p01": -30.044,
+        "p05": -29.199,
+        "p50": -27.67,
+        "p95": -26.395,
+        "p99": -25.589
+      },
+      "sampling_rates": {
+        "22050": 1844
+      },
+      "seconds": 14894.169614512472,
+      "speakers": 0,
+      "speech_fraction": {
+        "max": 0.874,
+        "min": 0.2193,
+        "p01": 0.5278,
+        "p05": 0.5765,
+        "p50": 0.688,
+        "p95": 0.7769,
+        "p99": 0.8102
+      },
+      "text_duplicate_records": 4,
+      "uppercase_letters": 5244
+    },
+    "hparl_dev": {
+      "annotation_tags": {
+        "<spoken_noise>": 4267
+      },
+      "character_inventory": {
+        " ": 68430,
+        "a": 7,
+        "b": 1,
+        "c": 18,
+        "d": 18,
+        "e": 6,
+        "f": 6,
+        "g": 6,
+        "i": 24,
+        "l": 3,
+        "m": 3,
+        "n": 8,
+        "o": 29,
+        "p": 5,
+        "r": 13,
+        "s": 5,
+        "t": 3,
+        "u": 6,
+        "v": 15,
+        "w": 10,
+        "y": 2,
+        "z": 1,
+        "ά": 7994,
+        "έ": 8030,
+        "ή": 5372,
+        "ί": 10149,
+        "α": 39342,
+        "β": 2542,
+        "γ": 6826,
+        "δ": 7414,
+        "ε": 29500,
+        "ζ": 1080,
+        "η": 14145,
+        "θ": 4331,
+        "ι": 29592,
+        "κ": 15657,
+        "λ": 10657,
+        "μ": 13728,
+        "ν": 24446,
+        "ξ": 1727,
+        "ο": 30794,
+        "π": 16295,
+        "ρ": 16703,
+        "ς": 13180,
+        "σ": 17485,
+        "τ": 30745,
+        "υ": 13812,
+        "φ": 2736,
+        "χ": 5023,
+        "ψ": 489,
+        "ω": 5543,
+        "ό": 8628,
+        "ύ": 3930,
+        "ώ": 3210
+      },
+      "chars_per_second": {
+        "max": 35.9375,
+        "min": 1.5294,
+        "p01": 5.625,
+        "p05": 7.6433,
+        "p50": 12.2667,
+        "p95": 17.2414,
+        "p99": 20.0
+      },
+      "duration_seconds": {
+        "max": 14.62,
+        "min": 0.67,
+        "p01": 1.1,
+        "p05": 1.41,
+        "p50": 4.14,
+        "p95": 9.13,
+        "p99": 11.0
+      },
+      "encodings": {
+        "pcm_s16le": 7113
+      },
+      "flag_counts": {
+        "annotation_tag": 4267,
+        "cps_high": 10,
+        "duplicate_suspect": 1,
+        "non_greek_characters": 31
+      },
+      "flag_seconds": {
+        "annotation_tag": 18748.84,
+        "cps_high": 25.11,
+        "duplicate_suspect": 2.08,
+        "non_greek_characters": 165.96
+      },
+      "letters": 401294,
+      "peak_dbfs": {
+        "max": -2.0,
+        "min": -21.522,
+        "p01": -12.061,
+        "p05": -10.469,
+        "p50": -6.983,
+        "p95": -3.952,
+        "p99": -3.03
+      },
+      "records": 7113,
+      "records_with_any_flag": 4280,
+      "rms_dbfs": {
+        "max": -14.696,
+        "min": -39.142,
+        "p01": -29.54,
+        "p05": -26.809,
+        "p50": -22.561,
+        "p95": -18.539,
+        "p99": -17.595
+      },
+      "sampling_rates": {
+        "16000": 7113
+      },
+      "seconds": 32613.08,
+      "speakers": 64,
+      "speech_fraction": {
+        "max": 1.0,
+        "min": 0.2951,
+        "p01": 0.5208,
+        "p05": 0.6214,
+        "p50": 0.8594,
+        "p95": 1.0,
+        "p99": 1.0
+      },
+      "text_duplicate_records": 2,
+      "uppercase_letters": 0
+    },
+    "hparl_train": {
+      "annotation_tags": {
+        "<spoken_noise>": 13536
+      },
+      "character_inventory": {
+        " ": 231430,
+        "a": 56,
+        "b": 17,
+        "c": 13,
+        "d": 18,
+        "e": 82,
+        "f": 32,
+        "g": 23,
+        "h": 5,
+        "i": 30,
+        "k": 7,
+        "l": 24,
+        "m": 34,
+        "n": 46,
+        "o": 71,
+        "p": 6,
+        "r": 50,
+        "s": 47,
+        "t": 38,
+        "u": 14,
+        "v": 4,
+        "w": 7,
+        "x": 3,
+        "y": 28,
+        "z": 2,
+        "ά": 25906,
+        "έ": 26631,
+        "ή": 18250,
+        "ί": 34971,
+        "α": 133156,
+        "β": 8835,
+        "γ": 21633,
+        "δ": 24451,
+        "ε": 97141,
+        "ζ": 3991,
+        "η": 47660,
+        "θ": 14508,
+        "ι": 95746,
+        "κ": 52283,
+        "λ": 36902,
+        "μ": 46110,
+        "ν": 82328,
+        "ξ": 5716,
+        "ο": 98455,
+        "π": 52009,
+        "ρ": 52349,
+        "ς": 43957,
+        "σ": 55868,
+        "τ": 103534,
+        "υ": 47421,
+        "φ": 9482,
+        "χ": 15544,
+        "ψ": 1798,
+        "ω": 17962,
+        "ό": 28968,
+        "ύ": 13092,
+        "ώ": 10297
+      },
+      "chars_per_second": {
+        "max": 1109.2643,
+        "min": 1.0156,
+        "p01": 5.4839,
+        "p05": 7.2222,
+        "p50": 11.7647,
+        "p95": 16.9082,
+        "p99": 20.0
+      },
+      "duration_seconds": {
+        "max": 15.1,
+        "min": 0.6,
+        "p01": 1.1,
+        "p05": 1.41,
+        "p50": 4.24,
+        "p95": 9.4,
+        "p99": 11.33
+      },
+      "encodings": {
+        "pcm_s16le": 23615
+      },
+      "flag_counts": {
+        "annotation_tag": 13536,
+        "cps_boundary": 1,
+        "cps_extreme": 9,
+        "cps_high": 16,
+        "duplicate_audio": 4,
+        "duplicate_suspect": 3,
+        "long_edge_silence": 2,
+        "non_greek_characters": 98,
+        "silence_heavy": 1
+      },
+      "flag_seconds": {
+        "annotation_tag": 60121.03,
+        "cps_boundary": 4.34,
+        "cps_extreme": 41.67,
+        "cps_high": 55.47,
+        "duplicate_audio": 5.79,
+        "duplicate_suspect": 5.3,
+        "long_edge_silence": 14.6,
+        "non_greek_characters": 620.13,
+        "silence_heavy": 1.6
+      },
+      "letters": 1327611,
+      "peak_dbfs": {
+        "max": -2.616,
+        "min": -27.312,
+        "p01": -15.82,
+        "p05": -12.47,
+        "p50": -8.073,
+        "p95": -4.491,
+        "p99": -3.66
+      },
+      "records": 23615,
+      "records_with_any_flag": 13580,
+      "rms_dbfs": {
+        "max": -16.056,
+        "min": -46.389,
+        "p01": -35.236,
+        "p05": -30.964,
+        "p50": -23.945,
+        "p95": -19.54,
+        "p99": -18.234
+      },
+      "sampling_rates": {
+        "16000": 23615
+      },
+      "seconds": 111227.73,
+      "speakers": 208,
+      "speech_fraction": {
+        "max": 1.0,
+        "min": 0.1719,
+        "p01": 0.4286,
+        "p05": 0.5403,
+        "p50": 0.8071,
+        "p95": 0.9935,
+        "p99": 1.0
+      },
+      "text_duplicate_records": 92,
+      "uppercase_letters": 0
+    }
+  },
+  "test_audio_hashed_for_leakage_only": 8679
+}

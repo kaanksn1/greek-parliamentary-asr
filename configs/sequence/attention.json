@@ -1,22 +1,22 @@
 {
-  "_comment": "Standard hybrid CTC/attention ASR (greek_asr.models.attention). max_steps/batch_size/gradient_accumulation_steps are left pending: Serdar's pilot (section 7 of docs/HANDOFF_ADNAN_TR.md) must measure real step time/VRAM before a non-arbitrary training-length decision. See docs/SEQUENCE_MODELS.md.",
+  "_comment": "Owner train/dev budget generated from configs/training_data_selection.json and docs/reviews/budget_2026-11-20. Seeded approximate passes are a compute allocation, not convergence evidence. HParl-only jobs require the committed HParl raw-to-clean acceptance; the mixed condition additionally requires corrected CSS10 audit/acceptance. Repository audio delivery must finish before submission. Final test remains locked.",
   "architecture": "Listen, Attend and Spell encoder-decoder with an auxiliary CTC head (hybrid CTC/attention)",
+  "batch_size": 16,
+  "ctc_weight": 0.3,
+  "dev_eval_every": 1000,
+  "dev_manifest": "data/manifests/dev.jsonl",
+  "dev_references": "data/manifests/references/dev.jsonl",
+  "gradient_accumulation_steps": 1,
+  "learning_rate": 0.0003,
+  "max_decode_length": 400,
+  "max_steps": 3000,
   "primary_sources": [
     "Chan, Jaitly, Le, Vinyals (2016), Listen, Attend and Spell, arXiv:1508.01211",
     "Watanabe et al. (2017), Hybrid CTC/Attention Architecture for End-to-End Speech Recognition, IEEE JSTSP"
   ],
-  "toolkit": "plain PyTorch/torchaudio (no ESPnet/SpeechBrain/WeNet dependency added); see docs/SEQUENCE_MODELS.md 'Toolkit choice'",
-  "train_manifest": "data/manifests/train.jsonl",
-  "train_references": "data/manifests/references/train.jsonl",
-  "dev_manifest": "data/manifests/dev.jsonl",
-  "dev_references": "data/manifests/references/dev.jsonl",
-  "seed": 42,
   "sample_rate": 16000,
-  "ctc_weight": 0.3,
-  "max_decode_length": 400,
-  "learning_rate": 0.0003,
-  "batch_size": 16,
-  "gradient_accumulation_steps": 1,
-  "max_steps": null,
-  "dev_eval_every": 500
+  "seed": 42,
+  "toolkit": "plain PyTorch/torchaudio (no ESPnet/SpeechBrain/WeNet dependency added); see docs/SEQUENCE_MODELS.md 'Toolkit choice'",
+  "train_manifest": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+  "train_references": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl"
 }

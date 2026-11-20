@@ -1,0 +1,47 @@
+$ python -m greek_asr.data audit --selection configs/training_data_selection.json
+# exit code 0, 27.7 s
+
+## stdout
+{
+  "css10_el": {
+    "flag_counts": {
+      "cps_boundary": 1,
+      "cps_high": 1,
+      "cps_low": 22,
+      "long_edge_silence": 1,
+      "non_greek_characters": 1839
+    },
+    "hours": 4.137,
+    "records": 1844
+  },
+  "hparl_dev": {
+    "flag_counts": {
+      "annotation_tag": 4267,
+      "cps_high": 10,
+      "duplicate_suspect": 1,
+      "non_greek_characters": 31
+    },
+    "hours": 9.059,
+    "records": 7113
+  },
+  "hparl_train": {
+    "flag_counts": {
+      "annotation_tag": 13536,
+      "cps_boundary": 1,
+      "cps_extreme": 9,
+      "cps_high": 16,
+      "duplicate_audio": 4,
+      "duplicate_suspect": 3,
+      "long_edge_silence": 2,
+      "non_greek_characters": 98,
+      "silence_heavy": 1
+    },
+    "hours": 30.897,
+    "records": 23615
+  },
+  "output": "data/audit/selected_train_hparl_30.5h_seed42",
+  "schema": "p3-data-audit-v2",
+  "scope": "locked_training_selection"
+}
+
+## stderr

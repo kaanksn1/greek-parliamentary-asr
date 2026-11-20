@@ -1,7 +1,19 @@
 * text=auto eol=lf
 # This historical metadata snapshot is byte-hashed by the original smoke run.
 configs/model_sources.lock.json -text whitespace=cr-at-eol
+# Verbatim TRAIN measurement manifests: their raw byte hashes are in run.json.
+docs/reviews/budget_2026-11-20/inference_train*.jsonl -text whitespace=cr-at-eol
+docs/reviews/budget_2026-11-20/pilot_*.jsonl -text whitespace=cr-at-eol
 *.wav -text
 *.flac -text
 *.png -text
 *.pdf -text
+
+# Original source files are stored byte-for-byte: no line-ending or encoding
+# conversion (their SHA-256 values are recorded in the inventories/freeze).
+data/raw/hparl/release/** -text
+data/raw/css10_el/release/** -text
+# Source audio, if delivered in the repository, goes through Git LFS. The
+# pattern only applies to files that are actually added.
+data/raw/hparl/release/**/*.wav filter=lfs diff=lfs merge=lfs -text
+data/raw/css10_el/release/**/*.wav filter=lfs diff=lfs merge=lfs -text

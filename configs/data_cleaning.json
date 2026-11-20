@@ -1,0 +1,47 @@
+{
+  "policy_version": "p3-data-clean-v3",
+  "note": "Thresholds flag candidates for review; only the rules listed under `drop` remove records. Every value is justified in docs/DATA_PIPELINE_TR.md and must be chosen from train/dev evidence, never from test.",
+  "signal": {
+    "frame_seconds": 0.025,
+    "silence_frame_dbfs": -45.0,
+    "clip_threshold": 0.999
+  },
+  "flags": {
+    "duration_short_seconds": 0.5,
+    "duration_long_seconds": 30.0,
+    "low_level_rms_dbfs": -50.0,
+    "clipping_fraction": 0.001,
+    "silence_heavy_speech_fraction": 0.2,
+    "long_edge_silence_seconds": 2.0,
+    "cps_robust_z": 5.0,
+    "cps_boundary_min": 40.0,
+    "cps_extreme_min": 60.0,
+    "duplicate_suspect_duration_tolerance_seconds": 0.05,
+    "reported_duration_tolerance_seconds": 0.05,
+    "expected_hparl_format": {"sampling_rate": 16000, "channels": 1, "sample_width_bytes": 2}
+  },
+  "subsets": {
+    "hparl_train": {
+      "drop": ["overlap_test_audio", "overlap_dev_audio", "duplicate_audio", "duplicate_pcm", "digital_silence", "cps_extreme", "duration_long", "empty_reference"],
+      "text": "strip_annotation_tags",
+      "drop_if_empty_after_text_policy": true
+    },
+    "hparl_dev": {
+      "drop": ["overlap_test_audio", "duplicate_audio", "duplicate_pcm"],
+      "text": "unchanged",
+      "drop_if_empty_after_text_policy": false
+    },
+    "css10_el": {
+      "drop": ["overlap_test_audio", "overlap_hparl_audio", "duplicate_audio", "duplicate_pcm", "digital_silence", "cps_extreme", "duration_long", "empty_reference"],
+      "text": "harmonize_to_hparl_train",
+      "drop_if_empty_after_text_policy": true
+    }
+  },
+  "css10_harmonization": {
+    "source_field": "normalized_text",
+    "lowercase": "auto",
+    "auto_lowercase_max_uppercase_ratio": 0.001,
+    "non_letter_characters": "keep only those present in cleaned HParl train references; replace others with a space"
+  },
+  "review_decisions": "configs/review_decisions.jsonl"
+}

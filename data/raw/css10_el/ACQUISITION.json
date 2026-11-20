@@ -1,0 +1,24 @@
+{
+  "acquired_utc": "2026-11-18T09:32:54+00:00",
+  "archive_bytes": 1287643166,
+  "archive_file": "archive.zip",
+  "archive_sha256": "cb2a923fa2d5092cab7e2509be4724b38a86fb5b8a18a519299865bc91411f17",
+  "dataset": {
+    "audiobook": "https://librivox.org/paramythi-horis-onoma-by-penelope-delta/",
+    "kaggle_dataset_id": 30096,
+    "kaggle_ref": "bryanpark/greek-single-speaker-speech-dataset",
+    "license_declared_by_distributor": "CC0: Public Domain",
+    "name": "CSS10 Greek (Greek Single Speaker Speech Dataset)",
+    "paper": "https://arxiv.org/abs/1903.11269",
+    "planned_version": 1,
+    "producer_repository": "https://github.com/Kyubyong/css10"
+  },
+  "kaggle_metadata_fields": {
+    "currentVersionNumber": 1,
+    "id": 30096,
+    "licenseName": "CC0: Public Domain",
+    "ref": "bryanpark/greek-single-speaker-speech-dataset",
+    "totalBytes": 1314687746
+  },
+  "kaggle_metadata_sha256": "826fd00064a2a5788540456d8b474faba9ca5d3041ad4b4994bbdf199a2c3308"
+}

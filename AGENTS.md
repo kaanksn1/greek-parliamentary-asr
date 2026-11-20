@@ -100,3 +100,43 @@ is explicitly attributed and reported as our training contribution.
 Verification for common scoring changes:
 `python -m unittest discover -s tests -v` from this directory.
 Model runs and data cleaning require their own appropriate checks once implemented.
+
+20 November owner integration update: all test/dev LFS WAVs passed independent
+audio verification; CSS10's 1844 original audio hashes/RIFF headers also match.
+Actual CSS10 is IEEE float32 (format tag 3), not integer PCM32. The owner repaired
+the shared input contract in greek_asr/audio.py, infer.py and the thin
+models/common.py decoder adapter; no model architecture was changed. All 203
+tests passed after that fix. Samed still owns correcting data/common.py and the
+format-aware signal audit/clean reports, plus selected RAW train audio delivery.
+Current handoff: docs/HANDOFF_SAMED_FINAL_DATA_TR.md. Do not claim that the old
+CSS10 integer-interpreted audit is valid or that full-data training is complete.
+
+The user explicitly selected the 10 GiB free storage cap on 20 November. The
+owner's measured session-cohort decision, raw/clean delivery hashes and training
+allocations are configs/training_data_selection.json and training_budget.json.
+Do not buy storage, alter the frozen test or train on unavailable source-catalog
+paths. Full runs still wait for the handoff's real-audio acceptance checks.
+Qwen's owner adapter supports bounded batch inference; record its batch setting
+and choose it on train/dev before the separate final test protocol.
+
+Later on 20 November the user explicitly requested starting training without
+waiting for sleeping Samed. Owner may acquire the SAME locked RAW HParl cohort,
+verify it and reproduce Samed's unchanged audit/clean pipeline in isolation.
+After exact train/dev hashes and unchanged frozen test are verified and the
+HParl acceptance is committed, HParl-only training may run while repository
+audio upload completes. This dataset-specific rule supersedes the earlier
+global CSS10 wait: mixed-corpus training still requires Samed's corrected
+float-aware CSS10 audit. The owner does not rewrite his cleaning methods or
+personal report. RAW/clean-used data must actually be in the public repository
+before final submission. No paid storage or final test inference is authorized.
+
+Later 20 November review: Samed's CSS10 data correction at 28930653 passed all
+229 tests independently, with zero skips in the owner's Python 3.12 runtime.
+An isolated real-audio audit/clean/verify reproduction passed using 41,251
+original WAV paths; the selected HParl/dev, CSS10/mixture, cleaning log and
+review queue match the submission. configs/css10_training_acceptance.json
+records the owner acceptance for matched mixed Whisper training. All six
+HParl-only jobs at immutable execution snapshot d98abe995 completed. Keep that
+snapshot and its original run records; run mixed Whisper from a separate
+committed snapshot with the same optimizer/update budget and starting model.
+Frozen test is still untouched and final test inference remains separately locked.

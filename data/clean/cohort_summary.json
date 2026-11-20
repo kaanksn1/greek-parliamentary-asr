@@ -1,0 +1,173 @@
+{
+  "css10_identity_note": "CSS10 Greek: üretici tek okuyucu (Rapunzelina) ve tek kitap (Penelope Delta, 'Paramythi horis onoma') bildiriyor (kaynak: docs/SECONDARY_SOURCE_TR.md, Kyubyong/css10); örnek bazında konuşmacı veya kayıt kimliği verilmediği için speaker_id ve source_recording_id boş bırakıldı ve bilinmeyen olarak sayıldı.",
+  "pairwise_overlaps": {
+    "dev&test": {
+      "sessions_or_recordings": 0,
+      "speakers": 16
+    },
+    "train&dev": {
+      "sessions_or_recordings": 0,
+      "speakers": 59
+    },
+    "train&test": {
+      "sessions_or_recordings": 0,
+      "speakers": 76
+    }
+  },
+  "schema": "p3-cohort-summary-v1",
+  "split_policy": "official HParl 1.0.0 session-based train/dev/test split; it is not speaker-disjoint",
+  "splits": {
+    "clean_dev": {
+      "hours": 9.059,
+      "known_sessions_or_recordings": 3,
+      "known_speakers": 64,
+      "records": 7113,
+      "records_by_source": {
+        "hparl": 7113
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0
+    },
+    "dev": {
+      "hours": 9.059,
+      "known_sessions_or_recordings": 3,
+      "known_speakers": 64,
+      "records": 7113,
+      "records_by_source": {
+        "hparl": 7113
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0
+    },
+    "test": {
+      "hours": 11.208,
+      "known_sessions_or_recordings": 3,
+      "known_speakers": 82,
+      "records": 8679,
+      "records_by_source": {
+        "hparl": 8679
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0
+    },
+    "train": {
+      "hours": 99.528,
+      "known_sessions_or_recordings": 43,
+      "known_speakers": 376,
+      "records": 76341,
+      "records_by_source": {
+        "hparl": 76341
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0
+    }
+  },
+  "test": {
+    "distinct_reference_texts": 8678,
+    "manifest": {
+      "path": "data/manifests/test.jsonl",
+      "sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+    },
+    "records": 8679,
+    "references": {
+      "path": "data/manifests/references/test.jsonl",
+      "sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9"
+    }
+  },
+  "training_conditions": {
+    "clean_hparl_css10": {
+      "hours": 103.625,
+      "known_sessions_or_recordings": 43,
+      "known_speakers": 376,
+      "literal_test_overlap": {
+        "matched_distinct_test_texts": 6,
+        "matched_test_examples": 6,
+        "matched_test_ids_sha256": "382dc7e5a9019499b65d316085ec2c73dcb3d679a1258df21cefaa3126be9dbb"
+      },
+      "manifest": {
+        "path": "data/manifests/train_hparl_css10.jsonl",
+        "sha256": "24bb49c5fef5f3c4d2eb4ed1dc57a8b048e500f82c465fd04b43f34f28708159"
+      },
+      "normalized_test_overlap": {
+        "matched_distinct_normalized_texts": 21,
+        "matched_test_examples": 22,
+        "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+      },
+      "records": 78146,
+      "records_by_source": {
+        "css10_el": 1844,
+        "hparl": 76302
+      },
+      "records_without_session_id": 1844,
+      "records_without_speaker_id": 1844,
+      "references": {
+        "path": "data/manifests/references/train_hparl_css10.jsonl",
+        "sha256": "f92365155047a9d5b82c33c8a0fad51e46273575ffd0748979d5312beeb1d73b"
+      },
+      "test_examples_whose_speaker_is_in_this_training": 7777,
+      "test_speakers_also_in_this_training": 76
+    },
+    "clean_hparl_only": {
+      "hours": 99.487,
+      "known_sessions_or_recordings": 43,
+      "known_speakers": 376,
+      "literal_test_overlap": {
+        "matched_distinct_test_texts": 6,
+        "matched_test_examples": 6,
+        "matched_test_ids_sha256": "382dc7e5a9019499b65d316085ec2c73dcb3d679a1258df21cefaa3126be9dbb"
+      },
+      "manifest": {
+        "path": "data/manifests/train.jsonl",
+        "sha256": "85f5482c69323488fe53225553930b0d2dd2baaced737bd654b4bff3ed25a1c2"
+      },
+      "normalized_test_overlap": {
+        "matched_distinct_normalized_texts": 21,
+        "matched_test_examples": 22,
+        "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+      },
+      "records": 76302,
+      "records_by_source": {
+        "hparl": 76302
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0,
+      "references": {
+        "path": "data/manifests/references/train.jsonl",
+        "sha256": "0e231d017d84eddca24eff03f93d18e0c5a5aed63aeaf73bcbf9eccc4e37b200"
+      },
+      "test_examples_whose_speaker_is_in_this_training": 7777,
+      "test_speakers_also_in_this_training": 76
+    },
+    "raw_hparl_train": {
+      "hours": 99.528,
+      "known_sessions_or_recordings": 43,
+      "known_speakers": 376,
+      "literal_test_overlap": {
+        "matched_distinct_test_texts": 14,
+        "matched_test_examples": 14,
+        "matched_test_ids_sha256": "5d5e11ab7418ae194c336efdb07c68da97a8b65dcf474a6bf7899ecd5eeae86f"
+      },
+      "manifest": {
+        "path": "data/manifests/raw/hparl_train.jsonl",
+        "sha256": "0f63095de728867d089b194292604edf83c3e0751f00489474365bb006fc2257"
+      },
+      "normalized_test_overlap": {
+        "matched_distinct_normalized_texts": 21,
+        "matched_test_examples": 22,
+        "transformations": "remove <...> annotation tags, Unicode NFC, casefold, collapse whitespace; distinct texts"
+      },
+      "records": 76341,
+      "records_by_source": {
+        "hparl": 76341
+      },
+      "records_without_session_id": 0,
+      "records_without_speaker_id": 0,
+      "references": {
+        "path": "data/manifests/raw/references/hparl_train.jsonl",
+        "sha256": "d897e088f73b500d34910e3abbca3f947a1828e3a9d3cb55afb0782da62c5d18"
+      },
+      "test_examples_whose_speaker_is_in_this_training": 7777,
+      "test_speakers_also_in_this_training": 76
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "greek-asr-hubert-ctc-train-v1",
+  "status": "complete",
+  "config": {
+    "_comment": "Owner train/dev budget generated from configs/training_data_selection.json and docs/reviews/budget_2026-11-20. Seeded approximate passes are a compute allocation, not convergence evidence. HParl-only jobs require the committed HParl raw-to-clean acceptance; the mixed condition additionally requires corrected CSS10 audit/acceptance. Repository audio delivery must finish before submission. Final test remains locked.",
+    "batch_size": 8,
+    "dev_eval_every": 500,
+    "dev_manifest": "data/manifests/dev.jsonl",
+    "dev_references": "data/manifests/references/dev.jsonl",
+    "encoder_model_id": "utter-project/mHuBERT-147",
+    "encoder_revision": "7ad3fc0bc5106c58c9c13526abccad527150d135",
+    "final_dropout": 0.0,
+    "freeze_transformer_updates": 500,
+    "gradient_accumulation_steps": 4,
+    "gradient_checkpointing": false,
+    "infeasible_policy": "exclude_and_report",
+    "layerdrop": 0.0,
+    "learning_rate": 5e-05,
+    "mask_time_prob": 0.05,
+    "max_excluded_fraction": 0.01,
+    "max_grad_norm": 1.0,
+    "max_steps": 1500,
+    "seed": 42,
+    "train_manifest": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+    "train_references": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl",
+    "warmup_steps": 150,
+    "weight_decay": 0.0
+  },
+  "provenance": "own CTC fine-tuning of a pretrained HuBERT encoder (not an off-the-shelf result)",
+  "encoder": {
+    "model_id": "utter-project/mHuBERT-147",
+    "revision": "7ad3fc0bc5106c58c9c13526abccad527150d135",
+    "local_dir": null
+  },
+  "max_steps": 1500,
+  "max_steps_source": "config",
+  "vocab_size": 59,
+  "seed": 42,
+  "created_utc": "2026-11-20T05:02:13.243738+00:00",
+  "code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+  "code_sha256": {
+    "hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5"
+  },
+  "train_manifest_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+  "train_references_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
+  "dev_manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+  "dev_references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+  "train_source_breakdown": {
+    "hparl": {
+      "utterances": 23602,
+      "hours": 30.883408333333563
+    }
+  },
+  "train_items": 23601,
+  "train_excluded_infeasible": [
+    {
+      "id": "hparl:gewrgios_tsipras-olomeleia_9_00187500_00190500_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 216,
+      "required_frames": 243
+    }
+  ],
+  "dev_loss_items": 7113,
+  "dev_loss_excluded": [],
+  "dev_reference_preparation": "annotation tags removed in memory for dev loss only",
+  "frozen": [
+    "hubert.feature_extractor (CNN)",
+    "transformer for the first 500 updates"
+  ],
+  "total_parameters": 94417083,
+  "trainable_parameters_after_warmup": 90216635,
+  "effective_batch_size": 32,
+  "precision": "float32",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "optimizer_updates_completed": 1500,
+  "best_dev_loss": 2.520636194251382,
+  "best_optimizer_update": 1500,
+  "dev_history": [
+    {
+      "optimizer_update": 500,
+      "dev_loss": 10.494613373546045,
+      "train_loss": 9.735481262207031,
+      "dev_seconds": 391.34981993600013
+    },
+    {
+      "optimizer_update": 1000,
+      "dev_loss": 3.1494660510571717,
+      "train_loss": 3.1161417961120605,
+      "dev_seconds": 307.2356959989993
+    },
+    {
+      "optimizer_update": 1500,
+      "dev_loss": 2.520636194251382,
+      "train_loss": 2.6373119354248047,
+      "dev_seconds": 298.76758013699873
+    }
+  ],
+  "training_seconds": 2942.3350820069973,
+  "dev_eval_seconds": 997.3530960719982,
+  "seconds_per_update_excluding_dev": 1.2966546572899993,
+  "micro_steps_completed": 6000,
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "huggingface-hub": "0.36.2"
+    },
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+    "hip": "7.2.53211-e1a6bc5663",
+    "cuda": null,
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 11678178816
+  }
+}

@@ -72,12 +72,70 @@
   only the shared contribution-inventory conflict; no personal report or model/
   data implementation changed, and no full LFS audio verification was claimed.
 
+## 20 November: independent audio verification and measured budgets
+
+- Downloaded Samed's actual LFS test/dev/CSS10 audio. Independently verified
+  the unchanged 8,679-record frozen test with audio and the 7,113 dev WAVs;
+  byte-checked 16 original metadata files. Verified all 1,844 original CSS10
+  audio hashes/RIFF headers and detected IEEE float32 rather than integer PCM32.
+- Repaired the shared model input contract (`greek_asr/audio.py`, shared runner
+  validation and the thin `models/common.py` decoding adapter), preserving raw
+  bytes and model architectures. Added semantic float/amplitude/finite/truncation
+  tests; all 203 tests passed after that fix. Samed owns the outstanding
+  data-probe/audit-statistics correction and regeneration.
+- Acquired a deterministic 144-clip official TRAIN timing cohort (128 random
+  plus long audio/text tails) with source hashes, and measured actual attention,
+  RNN-T, CTC, licensed mHuBERT and Whisper GPU steps/VRAM plus GMM-HMM CPU cost.
+  Exercised the longest real CSS10 inputs after the shared decoder correction.
+  Measured ROCm MIOpen FAST on previously unmeasured input shapes.
+- Reused Samed's whole-session selector to generate the 18-session used-data
+  pool, RAW/clean/reference/delivery hashes and conservative 10 GiB storage plan.
+  The RAW delivery includes removed examples; cleaning authorship remains Samed's.
+  Generated central training allocations and both matched Whisper conditions
+  from real measurement JSON, rather than inventing an hour or step limit.
+- Measured all five selected published ASR backends on 32 real TRAIN clips.
+  Added bounded Qwen batching with ID/order/empty-result/failure checks; batch
+  4 produced the same 32 hypotheses as single inference in roughly half the
+  measured time. These are runtime observations, not WER/CER benchmark scores.
+- Prepared the exact Samed handoff, byte-verification evidence, source-aware
+  storage calculations and reproducible budget report. See
+  `docs/HANDOFF_SAMED_FINAL_DATA_TR.md` and `docs/reviews/budget_2026-11-20/`.
+- Final integrated code/config suite: 206 tests passed, zero skips at
+  `16df2e95`. Repeated session selection produced identical files, and the
+  committed timing manifests match all six pretrained inference run hashes.
+
 ## Limits and pending dependent work
 
+20 November completion/review update: all six primary HParl jobs completed
+their committed allocations at immutable snapshot `d98abe995`; exported the
+generated queue/run records. Independently reviewed Samed's CSS10 correction
+at `28930653`, ran all 229 tests with zero skips and reproduced his unchanged
+selected pipeline using 41,251 original WAV paths. Locked data, corrected CSS10
+statistics, cleaning log and review queue match. Added a separate mixed-condition
+acceptance and the matched-budget training entry point. Samed's cleaning code,
+Adnan's/Kemal's model code and their individual authorship remain theirs.
+
+Later 20 November urgent execution update: at the user's request, acquired
+all 23,615 selected original HParl RAW train WAVs directly from the producer
+archive, preserving size/CRC/SHA-256. Reproduced Samed's unchanged HParl
+audit/cleaning in isolated hard-linked staging from 39,407 original train/dev/test
+WAVs; all four locked clean train/dev audio/reference hashes matched exactly.
+Committed the dataset-specific acceptance at `d98abe995`, then started the
+CPU GMM-HMM and sequential GPU primary training queue with finite-gradient and
+actual-update logging. Added temporary process-scoped sleep prevention.
+The full CTC allocation completed; its generated run/checkpoint identity and
+the repeated 206-test successful integration check at the frozen execution
+commit are retained in `docs/reviews/primary_training_2026-11-20/`.
+The selected RAW audio is committed through Git LFS; remote upload completion
+is recorded separately in `configs/hparl_delivery_status.json`. Original data
+cleaning and model implementations remain with their respective authors.
+
 Samed submitted early test-freeze metadata and his data pipeline in PR #2;
-full audio delivery and independent audio-byte verification are pending; the
-reporting/source-metadata corrections were verified. His pipeline and cleaning
-authorship remain his. Adnan's submitted implementation and the owner's final
+test/dev audio passed independent verification and CSS10 original hashes/headers
+matched. Selected RAW train audio is uploaded; HParl used-only pipeline
+reproduction has passed. The float-aware CSS10 audit and mixed-data acceptance
+have also passed the independent review above. His pipeline and cleaning authorship remain
+his. Adnan's submitted implementation and the owner's final
 review corrections have passed code/pilot checks. Kemal's submitted models passed
 code/pilot review; Ozan's final evaluation and all full
 benchmark runs remain pending. No custom-data bonus, trained-model improvement or new

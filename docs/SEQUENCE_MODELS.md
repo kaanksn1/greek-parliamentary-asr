@@ -15,9 +15,11 @@ reload and predict CLI paths also passed. Evidence is recorded in
 These checks used only the three original training-pilot clips, not the
 official dev/test sets. No full-data training or benchmark result is claimed.
 
-Full data delivery and byte verification follow Samed's separate data PR #2.
-The model configs expect its shared manifests; `max_steps` remains `null`
-until representative full-data measurements justify the training budget.
+Current owner update, 20 November: representative TRAIN measurements set the
+allocations in `configs/training_budget.json`; all configs use the selected
+18-session cohort in `configs/training_data_selection.json`. Test/dev audio
+verification passed. Selected RAW train upload and a corrected float-aware
+CSS10 audit remain with Samed in PR #2. Full runs start after their acceptance.
 All full training/inference runs centrally on Serdar's machine (`docs/TEAM.md`).
 
 ## Toolkit choice
@@ -166,9 +168,9 @@ one device the kernel supports.
   (`tests/test_whisper_finetune.py::MatchedConditionConfigTests` enforces
   this at the config level). Both read the same HParl `dev`/`test` manifests.
   CSS10 only ever appears in the `train` split.
-- Matched training budget: both configs fix `micro_batch_size=8`,
-  `gradient_accumulation_steps=2` (effective batch 16) and the same
-  `max_steps` (optimizer updates) once set — never "same epoch count", since
+- Matched training budget: both configs fix `micro_batch_size=2`,
+  `gradient_accumulation_steps=8` (effective batch 16) and the same
+  1,600 `max_steps` (optimizer updates). The epoch counts can differ, since
   the two training sets have different sizes.
 - Labels: `processor.tokenizer.set_prefix_tokens(language="el", task="transcribe")`
   then tokenize; `-100` is applied from the tokenizer's **attention mask**,
@@ -206,18 +208,16 @@ one device the kernel supports.
   (repeat with `whisper_hparl_css10.json`), and `... predict ...` with the
   same `--allow-test`/`--test-protocol` gate as the other two models.
 
-## Training budget: deliberately left unset
+## Training budget from representative TRAIN measurements
 
-`configs/sequence/*.json` set `max_steps: null`. All three `train()` functions
-raise immediately (`"max_steps must be set from a measured pilot run..."`)
-rather than silently assuming an arbitrary step count — see
-`tests/test_models_attention.py`/`test_models_transducer.py::test_shipped_config_refuses_an_unmeasured_step_budget`
-and `test_whisper_finetune.py::MatchedConditionConfigTests::test_shipped_configs_require_a_measured_step_budget_before_training`.
-The three-clip GPU checks above establish execution. Serdar must additionally
-measure representative training lengths, batch/label sizes, dev evaluation
-and checkpoint costs using the accepted data before setting a justified
-`max_steps`/batch size. Existing batch and accumulation values are provisional;
-they are not measurements from a completed full-data run.
+The owner's generated allocations and timing/memory evidence are in
+`configs/training_budget.json` and `docs/reviews/budget_2026-11-20/README.md`.
+Attention uses batch 16 / 3,000 updates; RNN-T batch 8 / 3,000 updates; both
+Whisper conditions microbatch 2 × accumulation 8 / 1,600 updates. Actual full
+training/convergence is pending. Any unset `max_steps` still fails immediately;
+the regression tests set it to `None` explicitly to exercise that guard.
+Source audio, used-cohort hashes and the corrected CSS10 audit must be accepted
+before training. These allocations do not authorize final test inference.
 
 ## GPU pilot package (for Serdar)
 
@@ -273,8 +273,9 @@ conflict requires separate investigation rather than replacing that runtime.
   validation instead of duplicating it. Raises (never silently drops) on any
   missing/extra ID, and refuses the `test` split outright (`load_utterances`
   is only ever called for `train`/`dev`).
-- `load_waveform`: decodes mono integer PCM16 (HParl) and PCM32 (CSS10) WAV
-  at the actual sample width, then resamples only in memory via
+- `load_waveform`: the owner's thin shared-input adapter uses
+  `greek_asr.audio` to distinguish PCM16 (HParl), integer PCM32 fixtures and
+  the actual IEEE float32 CSS10 files by RIFF format tag, then resamples in memory via
   `torchaudio.functional.resample`. Unsupported formats fail explicitly;
   the source file is never rewritten.
 - `select_grouped_subset`: speaker/recording-grouped, seeded subset selection
@@ -283,7 +284,8 @@ conflict requires separate investigation rather than replacing that runtime.
   speaker nor a recording ID fall back to utterance-level grouping, and the
   count of that fallback is reported in the returned diagnostics for the
   README. Tested on a synthetic multi-speaker fixture in
-  `tests/test_models_common.py`; a final training subset has not been chosen.
+  `tests/test_models_common.py`. The owner chose Samed's 18 whole-session
+  prefix; its raw/clean IDs and byte/storage bounds are versioned separately.
 - `split_statistics` / `literal_overlap`: read-only speaker/utterance/hour
   counts and literal (unnormalized) train/test text-overlap counts, for the
   per-split reporting required in section 0.2 and the PR description. Never

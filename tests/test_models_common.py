@@ -153,7 +153,7 @@ class WaveformTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "unsupported PCM sample width"):
                 common.load_waveform(path, target_sample_rate=16000)
 
-    def test_non_pcm_wav_raises_a_clear_error_instead_of_silent_misdecoding(self):
+    def test_ieee_float32_decodes_real_amplitudes_instead_of_integer_bits(self):
         import struct
         import wave
 
@@ -173,8 +173,10 @@ class WaveformTests(unittest.TestCase):
                 stream.write(b"data")
                 stream.write(struct.pack("<I", len(data)))
                 stream.write(data)
-            with self.assertRaisesRegex(ValueError, "unsupported or malformed WAV|expected uncompressed PCM"):
-                common.load_waveform(path, target_sample_rate=16000)
+            before = path.read_bytes()
+            decoded = common.load_waveform(path, target_sample_rate=16000)
+            self.assertEqual(path.read_bytes(), before)
+            self.assertEqual(decoded.tolist(), [0.0, 0.5, -0.5, 1.0])
 
 
 class VocabularyTests(unittest.TestCase):

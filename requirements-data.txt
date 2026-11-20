@@ -1,0 +1,12 @@
+# Data pipeline (python -m greek_asr.data). Everything else is the Python 3.12
+# standard library. Same pin as the existing Transformers/ROCm lock, so the
+# data commands also run inside that environment. Tested with 1.26.4 on
+# Python 3.12 and with numpy 2.x on Python 3.13. The 18-19 Nov full-inventory
+# run used Python 3.15 / numpy 2.5.5 (data/clean/clean_summary.json); the
+# 20 Nov format-aware selected-scope run used Python 3.12.10 / numpy 1.26.4
+# (data/clean/selected_train_hparl_30.5h_seed42/clean_summary.json).
+numpy==1.26.4
+# Optional but recommended on Windows: lets the HParl download verify the
+# CLARIN:EL certificate chain with the operating system's trust store
+# (verification stays on). Used automatically by the CLI when installed.
+truststore==0.10.5

@@ -1,0 +1,155 @@
+{
+  "batch_size": 2,
+  "benchmark_result": false,
+  "checkpoint_saved": false,
+  "condition": "css10",
+  "created_utc": "2026-11-19T22:28:02.855755+00:00",
+  "device": "cuda",
+  "environment": {
+    "cuda": null,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "gpu_available": true,
+    "hip": "7.2.53211-e1a6bc5663",
+    "packages": {
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4",
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6"
+    },
+    "peak_gpu_memory_allocated_bytes": 0,
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc"
+  },
+  "evaluation_batches": [
+    {
+      "audio_seconds": 52.051700680272106,
+      "loss": 0.029039589688181877,
+      "loss_finite": true,
+      "seconds": 0.37706308399999955
+    },
+    {
+      "audio_seconds": 46.19501133786848,
+      "loss": 0.401498019695282,
+      "loss_finite": true,
+      "seconds": 0.38242008999999655
+    },
+    {
+      "audio_seconds": 41.07664399092971,
+      "loss": 0.3730684518814087,
+      "loss_finite": true,
+      "seconds": 0.3786228840000021
+    }
+  ],
+  "evaluation_seconds_per_audio_hour": 29.40771688368788,
+  "gpu_allocator_fraction_limit": 0.85,
+  "gpu_name": "AMD Radeon RX 7800 XT",
+  "initialization_seconds": 6.857962493000002,
+  "max_update_seconds": 0.7298715609999995,
+  "mean_update_seconds": 0.7135711159999989,
+  "model": "whisper",
+  "model_source_sha256": {
+    "__init__.py": "697d55b06d6deddffab61dca0d8d95e4e08c86fa60305ba7cb02f53b204d8e07",
+    "attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc",
+    "hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "rnnt_loss.py": "50789fc37f78db00487817f129fea6a0a5a21c97f108cd2c9b46da6019b0e60e",
+    "transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db",
+    "wav2vec.py": "08a821c77eff2476a2dab2799061d56d14fe5b52110647001d2f7967f25c4309",
+    "whisper_finetune.py": "989300fbfdf83be6c82fd4acfce5b94c4e0b192cf5e87dcc4cf609f8c1fe5c6b"
+  },
+  "official_dev_or_test_read": false,
+  "optimizer": "AdamW",
+  "peak_gpu_allocated_bytes": 8750585344,
+  "peak_gpu_reserved_bytes": 9659482112,
+  "pool_audio_hours": 4.137269337364575,
+  "pool_duration_max_seconds": 26.4,
+  "pool_utterances": 1844,
+  "precision": "float32",
+  "random_offset": 0,
+  "requested_measured_updates": 4,
+  "runtime_environment": {
+    "HSA_ENABLE_DXG_DETECTION": "1",
+    "MIOPEN_FIND_MODE": null,
+    "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL": null
+  },
+  "schema": "p3-representative-training-budget-v1",
+  "script_sha256": "70f8000a42c6642b482c123045f46c6339907c2aa8c9e2701a692f5947818325",
+  "seed": 42,
+  "status": "complete",
+  "trainable_parameters": 240582912,
+  "training_seconds_per_audio_hour": 49.35200932970875,
+  "updates": [
+    {
+      "audio_seconds": 52.051700680272106,
+      "gradient_norm": 11.380108833312988,
+      "ids": [
+        "css10_el:Paramythi_horis_onoma_0957",
+        "css10_el:Paramythi_horis_onoma_1586"
+      ],
+      "loss": 0.5526912212371826,
+      "max_audio_seconds": 26.4,
+      "max_target_characters": 391,
+      "seconds": 2.097312553000002,
+      "warmup": true
+    },
+    {
+      "audio_seconds": 52.051700680272106,
+      "gradient_norm": 5.907582759857178,
+      "ids": [
+        "css10_el:Paramythi_horis_onoma_0957",
+        "css10_el:Paramythi_horis_onoma_1586"
+      ],
+      "loss": 0.2868000864982605,
+      "max_audio_seconds": 26.4,
+      "max_target_characters": 391,
+      "seconds": 0.7298715609999995,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 52.051700680272106,
+      "gradient_norm": 4.092477321624756,
+      "ids": [
+        "css10_el:Paramythi_horis_onoma_0957",
+        "css10_el:Paramythi_horis_onoma_1586"
+      ],
+      "loss": 0.16772280633449554,
+      "max_audio_seconds": 26.4,
+      "max_target_characters": 391,
+      "seconds": 0.7153050950000015,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 52.051700680272106,
+      "gradient_norm": 2.9469552040100098,
+      "ids": [
+        "css10_el:Paramythi_horis_onoma_0957",
+        "css10_el:Paramythi_horis_onoma_1586"
+      ],
+      "loss": 0.09711334109306335,
+      "max_audio_seconds": 26.4,
+      "max_target_characters": 391,
+      "seconds": 0.7106010589999983,
+      "warmup": false
+    },
+    {
+      "audio_seconds": 52.051700680272106,
+      "gradient_norm": 2.046032428741455,
+      "ids": [
+        "css10_el:Paramythi_horis_onoma_0957",
+        "css10_el:Paramythi_horis_onoma_1586"
+      ],
+      "loss": 0.05559365451335907,
+      "max_audio_seconds": 26.4,
+      "max_target_characters": 391,
+      "seconds": 0.6985067489999963,
+      "warmup": false
+    }
+  ],
+  "warmup_updates": 1
+}

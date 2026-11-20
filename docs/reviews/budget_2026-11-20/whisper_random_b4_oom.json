@@ -1,0 +1,78 @@
+{
+  "batch_size": 4,
+  "benchmark_result": false,
+  "checkpoint_saved": false,
+  "condition": "random",
+  "created_utc": "2026-11-19T22:09:40.644754+00:00",
+  "device": "cuda",
+  "environment": {
+    "cuda": null,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "gpu_available": true,
+    "hip": "7.2.53211-e1a6bc5663",
+    "packages": {
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4",
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6"
+    },
+    "peak_gpu_memory_allocated_bytes": 0,
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc"
+  },
+  "error": "HIP out of memory. Tried to allocate 412.00 MiB. GPU 0 has a total capacity of 15.80 GiB of which 861.52 MiB is free. 13.43 GiB allowed; Of the allocated memory 12.29 GiB is allocated by PyTorch, and 789.53 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "error_type": "OutOfMemoryError",
+  "evaluation_batches": [],
+  "gpu_allocator_fraction_limit": 0.85,
+  "gpu_name": "AMD Radeon RX 7800 XT",
+  "initialization_seconds": 8.914413179999997,
+  "model": "whisper",
+  "model_source_sha256": {
+    "__init__.py": "697d55b06d6deddffab61dca0d8d95e4e08c86fa60305ba7cb02f53b204d8e07",
+    "attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
+    "common.py": "d6e796292039a08bf8530b6f62eac05f24db12d549ebb1ad1f3b36f20323d0fc",
+    "ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc",
+    "hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "rnnt_loss.py": "50789fc37f78db00487817f129fea6a0a5a21c97f108cd2c9b46da6019b0e60e",
+    "transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db",
+    "wav2vec.py": "08a821c77eff2476a2dab2799061d56d14fe5b52110647001d2f7967f25c4309",
+    "whisper_finetune.py": "989300fbfdf83be6c82fd4acfce5b94c4e0b192cf5e87dcc4cf609f8c1fe5c6b"
+  },
+  "official_dev_or_test_read": false,
+  "optimizer": "AdamW",
+  "peak_gpu_allocated_bytes": 13267553280,
+  "peak_gpu_reserved_bytes": 14344519680,
+  "pool_audio_hours": 0.16917222222222222,
+  "pool_duration_max_seconds": 13.3,
+  "pool_utterances": 128,
+  "precision": "float32",
+  "requested_measured_updates": 12,
+  "schema": "p3-representative-training-budget-v1",
+  "script_sha256": "662060f4c2ec02ff709f5766a744b2e0b9f9558d3022635ad9cc36b6e40e3372",
+  "seed": 42,
+  "status": "failed",
+  "traceback": "Traceback (most recent call last):\n  File \"/mnt/c/Users/serda/OneDrive/Masaüstü/nlp/output/p3_data_budget/scripts/measure_train_budget.py\", line 213, in main\n    loss.backward()\n  File \"/home/serda/.venvs/project3-greek-asr-transformers/lib/python3.12/site-packages/torch/_tensor.py\", line 625, in backward\n    torch.autograd.backward(\n  File \"/home/serda/.venvs/project3-greek-asr-transformers/lib/python3.12/site-packages/torch/autograd/__init__.py\", line 354, in backward\n    _engine_run_backward(\n  File \"/home/serda/.venvs/project3-greek-asr-transformers/lib/python3.12/site-packages/torch/autograd/graph.py\", line 841, in _engine_run_backward\n    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.OutOfMemoryError: HIP out of memory. Tried to allocate 412.00 MiB. GPU 0 has a total capacity of 15.80 GiB of which 861.52 MiB is free. 13.43 GiB allowed; Of the allocated memory 12.29 GiB is allocated by PyTorch, and 789.53 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)\n",
+  "trainable_parameters": 240582912,
+  "updates": [
+    {
+      "audio_seconds": 21.68,
+      "gradient_norm": 20.65007209777832,
+      "ids": [
+        "hparl:dhmhtrios_gakhs-olomeleia_15_01515000_01518000_3_1",
+        "hparl:alekshs_tsipras-olomeleia_37_00242500_00245500_1_1",
+        "hparl:iwannhs_bournous-olomeleia_5_03607500_03610500_2_1",
+        "hparl:gewrgios_stathakhs-olomeleia_47_02977500_02980500_2_2"
+      ],
+      "loss": 1.0905828475952148,
+      "max_audio_seconds": 11.5,
+      "max_target_characters": 153,
+      "seconds": 11.51862797999999,
+      "warmup": true
+    }
+  ],
+  "warmup_updates": 1
+}

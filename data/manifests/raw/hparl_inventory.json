@@ -1,0 +1,110 @@
+{
+  "archive_sha256": "676ba16a70c44001d364ba190610c477e900df9356cb86f081df6da19b8b1108",
+  "dataset": {
+    "license": "CC-BY-NC-4.0",
+    "name": "HParl: Hellenic Parliamentary Speech Corpus",
+    "persistent_identifier": "http://hdl.handle.net/11500/CLARIN-EL-0000-0000-7665-A",
+    "record": "https://inventory.clarin.gr/corpus/1602",
+    "version": "1.0.0"
+  },
+  "layout": {
+    "dev": {
+      "metadata_dir": "hparl_segmented_dev",
+      "wav_dirs": [
+        "dev_wavs"
+      ]
+    },
+    "test": {
+      "metadata_dir": "hparl_segmented_test",
+      "wav_dirs": [
+        "test_wavs"
+      ]
+    },
+    "train": {
+      "metadata_dir": "hparl_segmented_train",
+      "wav_dirs": [
+        "train_wavs"
+      ]
+    }
+  },
+  "splits": {
+    "dev": {
+      "audio_seconds": 32613.08,
+      "channels": {
+        "1": 7113
+      },
+      "issue_counts": {},
+      "issues": [],
+      "manifest_records": 7113,
+      "manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+      "metadata_files_sha256": {
+        "hparl_segmented_dev/spk2gender": "4e24905e8e5c79abde103c3a2f7f50442337eeeb257123f79ee937242e5d9ff5",
+        "hparl_segmented_dev/spk2utt": "4d6924c0ed198e641d24d74135cf01c65f09234e5aee3b1205c15ef0b4a4e2e5",
+        "hparl_segmented_dev/text": "fcce693fa3c3f06d1bb3ecf554374d838cbd4ec7b3ac5344da72124106dbf15b",
+        "hparl_segmented_dev/utt2spk": "5acf153015313042b60592f60a87134d3a163ab83aa6c291ca8380415aaf57c9",
+        "hparl_segmented_dev/wav.scp": "b413b57726f58dacacb2344db55b59f72208825c9c7a191f24a6c82578f7a411"
+      },
+      "recording_id_derivation_failures": 0,
+      "recording_id_method": "derived_session_from_utterance_id(<speaker>-<session>_<start>_<end>_<n>_<m>)",
+      "recordings_or_sessions": 3,
+      "references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+      "sampling_rates": {
+        "16000": 7113
+      },
+      "speakers": 64,
+      "transcript_lines": 7113
+    },
+    "test": {
+      "audio_seconds": 40348.4,
+      "channels": {
+        "1": 8679
+      },
+      "issue_counts": {},
+      "issues": [],
+      "manifest_records": 8679,
+      "manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+      "metadata_files_sha256": {
+        "hparl_segmented_test/spk2gender": "d4413a6a0b792521ac9c4f0d374d3c06d93b60203aab0331532d52af45e4621a",
+        "hparl_segmented_test/spk2utt": "bad22f0dfd856d665deb37996e1005f60b133051615ebe75a0a492151192ec60",
+        "hparl_segmented_test/text": "b222de1ca83b1851c9e1c2641b037f0951a9030c4d95ef7d92d227b0b62aeedc",
+        "hparl_segmented_test/utt2spk": "9d8479ca95fcae84e666304fa15371dfd15ee5a1d76075f08141c4af9f05bb02",
+        "hparl_segmented_test/wav.scp": "3dec8d340a92a9b11d0c42a18994f949ed8157675507911ad29703903c8b4944"
+      },
+      "recording_id_derivation_failures": 0,
+      "recording_id_method": "derived_session_from_utterance_id(<speaker>-<session>_<start>_<end>_<n>_<m>)",
+      "recordings_or_sessions": 3,
+      "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+      "sampling_rates": {
+        "16000": 8679
+      },
+      "speakers": 82,
+      "transcript_lines": 8679
+    },
+    "train": {
+      "audio_seconds": 358301.34,
+      "channels": {
+        "1": 76341
+      },
+      "issue_counts": {},
+      "issues": [],
+      "manifest_records": 76341,
+      "manifest_sha256": "0f63095de728867d089b194292604edf83c3e0751f00489474365bb006fc2257",
+      "metadata_files_sha256": {
+        "hparl_segmented_train/spk2gender": "03aed44e013bcbb071cde2bfa5685aefd04ee10a04aace352f0d19275ba68d1e",
+        "hparl_segmented_train/spk2utt": "b8d28985f0add04f8162b2202239dec5266c95cc2f69cb2602277864019beac1",
+        "hparl_segmented_train/text": "30680b51037d39d30439552b501d7b8721590055fe6d50c7041df2de91f1e778",
+        "hparl_segmented_train/utt2spk": "85600fb37fc5f330c08a0f226b78e653079ccd10ee88ee2d0023b92acc7741e1",
+        "hparl_segmented_train/wav.scp": "185d246b9ddcd6b9b893bf23e5770608a50837c7a9ff9ccdb39c31819ea04f16"
+      },
+      "recording_id_derivation_failures": 0,
+      "recording_id_method": "derived_session_from_utterance_id(<speaker>-<session>_<start>_<end>_<n>_<m>)",
+      "recordings_or_sessions": 43,
+      "references_sha256": "d897e088f73b500d34910e3abbca3f947a1828e3a9d3cb55afb0782da62c5d18",
+      "sampling_rates": {
+        "16000": 76341
+      },
+      "speakers": 376,
+      "transcript_lines": 76341
+    }
+  }
+}

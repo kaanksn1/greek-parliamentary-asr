@@ -1,0 +1,26 @@
+$ python -m greek_asr.data verify --only css10_el_train.jsonl dev.jsonl
+# exit code 0, 11.4 s
+
+## stdout
+{
+  "css10_el_train.jsonl": {
+    "hours": 4.137,
+    "records": 1844
+  },
+  "dev.jsonl": {
+    "hours": 9.059,
+    "records": 7113
+  },
+  "scope": "only ['dev.jsonl', 'css10_el_train.jsonl']; other manifests were not checked",
+  "test_freeze": {
+    "audio_checked": true,
+    "freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+    "ids_sha256": "bf1fc6b715c5613c737b8388ebc9468030250954ba22d45170c67b5c67f76ad5",
+    "records": 8679,
+    "references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+    "status": "ok",
+    "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a"
+  }
+}
+
+## stderr
