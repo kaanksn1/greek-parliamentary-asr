@@ -1,0 +1,129 @@
+{
+  "schema": "p3-extended-ctc-protocol-v1",
+  "status": "frozen_before_training_and_test",
+  "created_utc": "2026-11-21T18:59:52.918490+00:00",
+  "purpose": "Longer training for the two non-converged group-trained CTC baselines. Model, data, seed, optimizer, learning rate and decoding are unchanged; only training length differs.",
+  "motivation_source": "DEV only: full-DEV CTC loss of the original runs had not converged (original_run_dev_history).",
+  "system_order": [
+    "hubert_ctc_extended",
+    "plain_ctc_extended"
+  ],
+  "systems": {
+    "hubert_ctc_extended": {
+      "job": "hubert_extended",
+      "kind": "hubert",
+      "config": "configs/kemal/hubert_ctc_extended.json",
+      "original": "hubert_ctc",
+      "checkpoint": "checkpoints/hubert_ctc_extended",
+      "batch_size": 4,
+      "config_sha256": "5c29b1aa0973cc7fac9e8a821b3fa9ec4a8448e9eb07ae8a787883f84fe29f43",
+      "changes_from_original": {
+        "dev_eval_every": {
+          "original": 500,
+          "extended": 1000
+        },
+        "max_steps": {
+          "original": 1500,
+          "extended": 8000
+        },
+        "warmup_steps": {
+          "original": 150,
+          "extended": 800
+        }
+      },
+      "original_run_dev_history": [
+        {
+          "optimizer_update": 500,
+          "dev_loss": 10.494613373546045
+        },
+        {
+          "optimizer_update": 1000,
+          "dev_loss": 3.1494660510571717
+        },
+        {
+          "optimizer_update": 1500,
+          "dev_loss": 2.520636194251382
+        }
+      ],
+      "device": "cuda",
+      "decode": "greedy CTC best path (unchanged)"
+    },
+    "plain_ctc_extended": {
+      "job": "ctc_extended",
+      "kind": "ctc",
+      "config": "configs/kemal/ctc_extended.json",
+      "original": "plain_ctc",
+      "checkpoint": "checkpoints/plain_ctc_extended/model.pt",
+      "batch_size": 16,
+      "config_sha256": "e04b11d6601db7c8f310f324853853e915147ba61599e75f76e732737be76fa2",
+      "changes_from_original": {
+        "dev_eval_every": {
+          "original": 1000,
+          "extended": 1500
+        },
+        "max_steps": {
+          "original": 2300,
+          "extended": 15000
+        },
+        "warmup_steps": {
+          "original": 230,
+          "extended": 1500
+        }
+      },
+      "original_run_dev_history": [
+        {
+          "optimizer_update": 1000,
+          "dev_loss": 3.186708714030935
+        },
+        {
+          "optimizer_update": 2000,
+          "dev_loss": 3.0434289226144484
+        },
+        {
+          "optimizer_update": 2300,
+          "dev_loss": 3.034691465627528
+        }
+      ],
+      "device": "cuda",
+      "decode": "greedy CTC best path (unchanged)"
+    }
+  },
+  "selection_rule": "checkpoint with the lowest full-DEV CTC loss among the scheduled DEV evaluations (same rule as originals)",
+  "test_rule": "each new system is decoded exactly once on all 8,679 frozen test clips after its own training finishes",
+  "reporting_rule": "new rows are reported as separate *_extended rows regardless of outcome; original rows, runs, checkpoints and scores stay byte-identical and remain in every table",
+  "scoring": {
+    "protocol": "configs/final_test_protocol.json",
+    "protocol_sha256": "b322570ca6376e7524466534b758155d6a28cb6ef0f3f92bf458969710742db2",
+    "scoring_policy": "greek-asr-nfc-casefold-punctuation-v1",
+    "scorer_code_sha256": "f8d413a232dfdb650d970b513e4955fc986b77be68e567e0ec03abc55c9e0e60"
+  },
+  "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+  "test_references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+  "test_freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+  "locked_code_sha256": {
+    "greek_asr/audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "greek_asr/infer.py": "3cfbd49f598738ed0b55b95f62cb0fcaf0e0c131829457fff7861813916e07da",
+    "greek_asr/evaluation.py": "06ade2abe5b54fd2446c66720ff0d7de749f8974f82244ef41697c259253b458",
+    "greek_asr/scoring.py": "e6a823b657d5692810ef75d1ae7bd757a2a507b1df3c314899b5ba6dc38519cc",
+    "greek_asr/models/common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "greek_asr/models/ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "greek_asr/models/ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "greek_asr/models/hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "scripts/run_training_job.py": "0679ad2d6224789edd6843be3908e274fefa5be63b0f207e11695f516bf70ef3",
+    "scripts/run_extended_ctc.py": "07b0ad8cafe256ba59e929310d286c542f3e2c6a0a52d6c12e4ecbe6d0171897",
+    "scripts/prepare_benchmark.py": "ce24bcc5936ddd7fb212f67de1f6be3d142f49959146b94bc5efc1d479be7d87"
+  },
+  "measured_cost_basis": {
+    "hubert_seconds_per_update": 1.2967,
+    "hubert_dev_eval_seconds": 300,
+    "ctc_seconds_per_update": 0.2553,
+    "ctc_dev_eval_seconds": 25,
+    "source": "original run.json records on the same AMD RX 7800 XT machine",
+    "expected_hours": {
+      "hubert_ctc_extended": 3.6,
+      "plain_ctc_extended": 1.2,
+      "test_inference_and_checks": 0.3
+    }
+  },
+  "storage": "new selected weights add about 0.39 GiB of Git LFS, within the free 10 GiB cap"
+}

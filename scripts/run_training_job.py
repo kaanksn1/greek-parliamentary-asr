@@ -17,7 +17,10 @@ sys.path.insert(0, str(ROOT))
 CONFIGS = {"ctc": "configs/kemal/ctc.json", "hubert": "configs/kemal/hubert_ctc.json",
            "attention": "configs/sequence/attention.json", "transducer": "configs/sequence/transducer.json",
            "whisper_hparl": "configs/sequence/whisper_hparl_only.json",
-           "whisper_mixed": "configs/sequence/whisper_hparl_css10.json", "gmm": "configs/kemal/gmm_hmm.json"}
+           "whisper_mixed": "configs/sequence/whisper_hparl_css10.json", "gmm": "configs/kemal/gmm_hmm.json",
+           # Pre-registered extended-training addendum (configs/extended_ctc_protocol.json).
+           "ctc_extended": "configs/kemal/ctc_extended.json",
+           "hubert_extended": "configs/kemal/hubert_ctc_extended.json"}
 
 
 def main():
@@ -102,7 +105,8 @@ def main():
         state["status"] = "running"
         save()
         module_name = {"whisper_hparl": "whisper_finetune", "whisper_mixed": "whisper_finetune",
-                       "gmm": "gmm_hmm"}.get(args.job, args.job)
+                       "gmm": "gmm_hmm", "ctc_extended": "ctc",
+                       "hubert_extended": "hubert"}.get(args.job, args.job)
         module = importlib.import_module("greek_asr.models." + module_name)
         if cpu:
             original_frontend = module.MfccFrontend.__call__
