@@ -1,0 +1,40 @@
+{
+  "schema": "p3-teacher-audit-evidence-v1",
+  "checked_utc": "2026-11-21T17:31:11.190318+00:00",
+  "reviewed_main_commit": "0db2307179a977213615cdc17ba1ab0ce9368e9e",
+  "public_repository": "https://github.com/kaanksn1/greek-parliamentary-asr",
+  "repository_public": true,
+  "github_linked_member_authorship": {
+    "kaanksn1": {
+      "sha": "0db2307179a977213615cdc17ba1ab0ce9368e9e",
+      "url": "https://github.com/kaanksn1/greek-parliamentary-asr/commit/0db2307179a977213615cdc17ba1ab0ce9368e9e"
+    },
+    "SmtOrtakaya": {
+      "sha": "28930653a6af253541b6750cea221877d7bce012",
+      "url": "https://github.com/kaanksn1/greek-parliamentary-asr/commit/28930653a6af253541b6750cea221877d7bce012"
+    },
+    "kemalarif": {
+      "sha": "680b875d533b94da378ddf940b66b9a97cf55baa",
+      "url": "https://github.com/kaanksn1/greek-parliamentary-asr/commit/680b875d533b94da378ddf940b66b9a97cf55baa"
+    },
+    "adnan-demir": {
+      "sha": "0c13ce1ac51b561dc9b1d284a46bcbebda512ad9",
+      "url": "https://github.com/kaanksn1/greek-parliamentary-asr/commit/0c13ce1ac51b561dc9b1d284a46bcbebda512ad9"
+    }
+  },
+  "missing_member_login": "serhandenizhan",
+  "missing_personal_report": "contributions/OZAN_SERHAN_DENIZHAN_220911758_serhandenizhan.md",
+  "class_reservation_user_confirmed": true,
+  "class_wide_exclusivity_independently_verified": false,
+  "lms_submitted_by_agent": false,
+  "lms_delivery_owner": "Serhan / prime submitter, per user reply",
+  "lfs_remaining_download_allowance_verified": false,
+  "lfs_billing_api_http_status": 404,
+  "connected_browser_available_for_billing": false,
+  "paid_storage_or_compute_purchased": false,
+  "public_object_check": "public_delivery.json",
+  "clean_clone_check": "clean_clone_verification.json",
+  "results_acceptance": "results_validation.json",
+  "frozen_runtime_tests": "frozen_runtime_tests.log",
+  "note": "Authorship and absence are as of the reviewed main commit, not a claim about later contributions. Cached clean-clone materialization does not certify remaining internet download allowance."
+}

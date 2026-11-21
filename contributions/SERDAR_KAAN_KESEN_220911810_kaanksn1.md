@@ -173,3 +173,24 @@ Published the frozen protocol/weights through merged PR #12. Final inference
 continues from its immutable snapshot; generated outputs report the actual
 completion count. Added data/training reports, upstream-cache preparation and
 the final Serhan handoff without modifying model/scoring decisions from test.
+
+## 21 November: final acceptance and teacher audit
+
+All twelve frozen test systems subsequently completed on the identical 8,679
+original clips. Recomputed corpus edit counts, WER/CER, speaker-bootstrap
+intervals and CSV values from saved predictions, with all twelve systems
+passing archive acceptance. The frozen runtime passed all 240 tests without
+skips. Checked the untouched test audio before and after execution and verified
+anonymous public LFS availability for representative audio and all seven
+selected weights; this metadata check did not redownload the payloads.
+
+Audited the provided teacher instructions and earlier project deductions.
+Reconciled stale baseline/planning documentation, added an every-script map,
+and extended the selected-cohort data report generator to derive actual
+delivery/cleaning counts from committed manifests and logs. It checks that
+removed raw IDs and logged drop decisions match, without changing data.
+Documented outstanding member-owned contribution/submission items, the
+unverified remaining LFS download allowance and scientific limits honestly.
+No model algorithms, frozen settings, test data, weights or another member's
+personal report were modified by this audit. Final completion supersedes the
+earlier dated pending statements in this report.

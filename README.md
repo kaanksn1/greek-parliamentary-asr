@@ -220,6 +220,11 @@ protocol and generated final results define the current benchmark.
 [A descriptive protocol erratum](docs/FINAL_PROTOCOL_ERRATA.md) corrects the
 GMM LM name without changing the frozen model, weights, settings or protocol bytes.
 
+[The script and document map](docs/REPOSITORY_MAP.md) explains each committed
+script and separates current guides from historical planning/pilot records.
+[The teacher-instruction audit](docs/TEACHER_FINAL_AUDIT_TR.md) records verified
+requirements and remaining member/submission/access items; it is not a grade guarantee.
+
 Samed wrote the data pipeline; Kemal wrote GMM-HMM/plain CTC/wav2vec/HuBERT work;
 Adnan wrote attention/RNN-T/Whisper fine-tuning. Serdar handled integration,
 environments, central full runs, standard pretrained adapters and the explicitly

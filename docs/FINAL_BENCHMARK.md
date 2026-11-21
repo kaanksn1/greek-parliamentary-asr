@@ -111,6 +111,7 @@ the separate NeMo Python for the two NVIDIA checkpoints:
 ```bash
 python scripts/run_benchmark_queue.py --phase test --output outputs/final_benchmark --nemo-python NEMO_PYTHON
 python scripts/summarize_benchmark.py
+python scripts/report_benchmark_data.py
 ```
 
 `requirements-rocm.lock.txt` and `requirements-nemo.lock.txt` pin the isolated

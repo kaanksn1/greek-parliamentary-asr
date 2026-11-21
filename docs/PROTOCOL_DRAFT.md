@@ -1,5 +1,7 @@
 # Experimental protocol — draft
 
+> **Superseded planning record:** pending/acquisition/scoring statements below are historical. Current data: [selected report](DATA_REPORT_TR.md); protocol: [final protocol](../configs/final_test_protocol.json); completed results: [final table](../results/benchmark/SUMMARY.md).
+
 This file is not a frozen final-test protocol. No official-test evaluation is
 authorized by the existence of this draft.
 
