@@ -1,0 +1,48 @@
+{
+  "examples": 65,
+  "wer": 0.8835705045278137,
+  "cer": 0.5786387434554974,
+  "word_counts": {
+    "substitutions": 488,
+    "insertions": 22,
+    "deletions": 173,
+    "reference_units": 773,
+    "hypothesis_units": 622,
+    "errors": 683
+  },
+  "character_counts": {
+    "substitutions": 1385,
+    "insertions": 143,
+    "deletions": 1235,
+    "reference_units": 4775,
+    "hypothesis_units": 3683,
+    "errors": 2763
+  },
+  "empty_normalized_references": 0,
+  "empty_predictions": 0,
+  "schema": "greek-asr-final-score-v1",
+  "split": "dev",
+  "policy": {
+    "name": "greek-asr-nfc-casefold-punctuation-v1",
+    "status": "final",
+    "annotation_tokens": "remove angle-bracket non-speech annotation tags in memory",
+    "unicode": "NFC, casefold, NFC",
+    "punctuation": "replace Unicode P* characters by spaces",
+    "whitespace": "strip/collapse Unicode whitespace",
+    "diacritics": "retain Greek accents and diaeresis",
+    "numbers": "retain digits; no number-word conversion",
+    "symbols": "retain non-punctuation symbols",
+    "cer_spaces": "include the normalized internal spaces",
+    "alignment": "JiWER 4.0.0 / RapidFuzz",
+    "aggregation": "sum S/I/D and reference units across every utterance, then divide",
+    "empty_references": "keep all IDs; nonempty hypotheses contribute insertions; zero corpus denominator is null",
+    "test_source_files": "never rewritten or filtered"
+  },
+  "scorer_code_sha256": "f8d413a232dfdb650d970b513e4955fc986b77be68e567e0ec03abc55c9e0e60",
+  "reference_sha256": "5bc3344fdec86428aa44cf3045157b075dda391cd50791171fa4dae80b323142",
+  "predictions_sha256": "24d4874e2a256addd873b644f971a5fbce33512b0e268f326b7882a67fab5021",
+  "manifest_sha256": "7b946113fc14c5346111ca2badcd80324a80341c78a85f1ba9dbdb83db3fdc19",
+  "audio_seconds": 326.0,
+  "jiwer": "4.0.0",
+  "rapidfuzz": "3.14.6"
+}

@@ -1,4 +1,5 @@
-# Common scoring, manifest validation and lightweight tests use Python 3.12 stdlib.
+# Lightweight manifest validation and historical scoring use Python 3.12 stdlib.
+# The final benchmark scorer/plots use the exact requirements-evaluation.txt pins.
 # This deliberately empty requirements file is not the model runtime recipe.
 # Use scripts/setup_transformers_rocm.sh for Whisper/Qwen and
 # scripts/setup_nemo_rocm.sh for Canary/Parakeet in separate environments.

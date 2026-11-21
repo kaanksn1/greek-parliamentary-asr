@@ -140,3 +140,16 @@ HParl-only jobs at immutable execution snapshot d98abe995 completed. Keep that
 snapshot and its original run records; run mixed Whisper from a separate
 committed snapshot with the same optimizer/update budget and starting model.
 Frozen test is still untouched and final test inference remains separately locked.
+
+21 November explicit user assignment: Serhan is waiting to make the slides;
+the user assigned ALL remaining evaluation, comparison, figures, protocol,
+central inference and repository-delivery work to the owner, without skipping
+any required system. This extends the previous evaluation ownership boundary;
+retain the original model/data authors and do not write teammates' personal
+contribution claims or impersonate their commits. User's working cutoff is
+21:00 Europe/Istanbul today; the professor's exact cutoff remains unspecified.
+All seven trainings are complete. Select/check inference settings on dev,
+commit the final common scoring/model protocol, then run every system once on
+the unchanged full test. Do not tune from test, omit difficult clips/baselines,
+or purchase compute/storage. Final test execution is authorized after this
+committed protocol and dev acceptance. Preserve immutable original run roots.

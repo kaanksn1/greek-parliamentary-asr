@@ -1,0 +1,77 @@
+{
+  "schema": "greek-asr-inference-v1",
+  "status": "complete",
+  "purpose": "baseline",
+  "created_utc": "2026-11-21T09:28:56.682534+00:00",
+  "backend": "whisper",
+  "batch_size": 8,
+  "model": {
+    "model_id": "openai/whisper-small",
+    "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+    "pipeline_tag": "automatic-speech-recognition",
+    "license": "apache-2.0",
+    "source": "https://huggingface.co/openai/whisper-small",
+    "status": "metadata_verified_runtime_pending"
+  },
+  "seed": 42,
+  "device": "cuda",
+  "split": "dev",
+  "manifest_sha256": "7b946113fc14c5346111ca2badcd80324a80341c78a85f1ba9dbdb83db3fdc19",
+  "source_lock_sha256": "fd720cd46842ee20f9278d8635f36276d0bd44ccbca985a6c6c84d72c68defaa",
+  "test_protocol_sha256": null,
+  "expected_records": 65,
+  "total_audio_seconds": 326.0,
+  "training_performed": false,
+  "references_used_as_model_input": false,
+  "wer_cer": null,
+  "completed_records": 65,
+  "code_sha256": {
+    "greek_asr/infer.py": "3cfbd49f598738ed0b55b95f62cb0fcaf0e0c131829457fff7861813916e07da",
+    "greek_asr/audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "greek_asr/pretrained/__init__.py": "729b49beb875b629929f515457c1fc59680d28e6a56b9e14be1e656af37c7a2f",
+    "greek_asr/pretrained/nemo.py": "a6614bc1b69a10d090451c0a890e9d3f2e80e2cc4a23485932a79217648899a3",
+    "greek_asr/pretrained/qwen.py": "71bfec89eb6e048d9209c3bf922f0a47199690c2d31f0b3e30be815d3ff32309",
+    "greek_asr/pretrained/whisper.py": "f405a072d85e74ab98dd7c41379616895beea9a7ac57e43e20441d15558a571a"
+  },
+  "download_and_load_seconds": 11.657617535999975,
+  "settings": {
+    "language": "el",
+    "task": "transcribe",
+    "dtype": "float32",
+    "attention": "eager",
+    "num_beams": 1,
+    "do_sample": false,
+    "batch_size": 8,
+    "audio_input": "original mono PCM16 16000 Hz WAV",
+    "long_audio": "untruncated features and timestamp-based generation above 30 s",
+    "generation_length": "checkpoint generation_config default",
+    "reference_or_context_prompt": false
+  },
+  "inference_seconds_including_output_io": 22.797531999000057,
+  "predictions_sha256": "da7f03ec9b314f0b990e1d6308e5144fb3eea2d9ce3fd4785ad9fa3e348a5905",
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "qwen-asr": "0.0.6",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 3912352256
+  },
+  "job": {
+    "backend": "whisper",
+    "batch_size": 8,
+    "device": "cuda",
+    "kind": "pretrained",
+    "name": "whisper_pretrained",
+    "role": "baseline"
+  },
+  "worker_seconds_including_load": 34.543046945000015,
+  "worker_code_sha256": "efc19889f7e6ab29317ae397f05f58ea392848ecf4a786d85eb1875d3708e30e",
+  "code_commit": "220eb85bba186067b562c9bc794ac220b0f0610f"
+}

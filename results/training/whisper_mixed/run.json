@@ -1,0 +1,63 @@
+{
+  "best_dev_loss": 1.115272074653737,
+  "best_optimizer_update": 500,
+  "code_commit": "b760cdcf2662dbe6a40ee3267e59cb7f41dbe0c5",
+  "code_sha256": {
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "whisper_finetune.py": "989300fbfdf83be6c82fd4acfce5b94c4e0b192cf5e87dcc4cf609f8c1fe5c6b"
+  },
+  "config": {
+    "_comment": "Owner train/dev budget generated from configs/training_data_selection.json and docs/reviews/budget_2026-11-20. Seeded approximate passes are a compute allocation, not convergence evidence. HParl-only jobs require the committed HParl raw-to-clean acceptance; the mixed condition additionally requires corrected CSS10 audit/acceptance. Repository audio delivery must finish before submission. Final test remains locked.",
+    "condition": "hparl_plus_css10",
+    "dev_eval_every": 500,
+    "dev_manifest": "data/manifests/dev.jsonl",
+    "dev_references": "data/manifests/references/dev.jsonl",
+    "gradient_accumulation_steps": 8,
+    "language": "el",
+    "learning_rate": 1e-05,
+    "max_steps": 1600,
+    "micro_batch_size": 2,
+    "model_id": "openai/whisper-small",
+    "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+    "sample_rate": 16000,
+    "seed": 42,
+    "task": "transcribe",
+    "train_manifest": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+    "train_references": "data/manifests/subsets/references/train_hparl_30.5h_seed42_css10.jsonl",
+    "warmup_steps": 50
+  },
+  "created_utc": "2026-11-20T13:08:21.629902+00:00",
+  "dev_manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+  "dev_references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+  "dev_utterances": 7113,
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "effective_batch_size": 16,
+  "max_steps": 1600,
+  "micro_steps_completed": 12800,
+  "model_id": "openai/whisper-small",
+  "nonfinite_losses_detected": 0,
+  "optimizer_updates_completed": 1600,
+  "precision": "float32",
+  "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+  "schema": "greek-asr-whisper-finetune-train-v1",
+  "seed": 42,
+  "status": "complete",
+  "train_audio_seconds": 126074.43961451248,
+  "train_manifest_sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca",
+  "train_references_sha256": "28b0f955f1a3cbbd0fc3f5a7fb94b4300c11a8869624db8507ad9bd7ffc79eb0",
+  "train_source_breakdown": {
+    "css10_el": {
+      "hours": 4.1372693373645815,
+      "utterances": 1844
+    },
+    "hparl": {
+      "hours": 30.883408333333563,
+      "utterances": 23602
+    }
+  },
+  "train_utterances": 25446,
+  "trainable_parameters": 240582912,
+  "training_seconds": 11402.150959364
+}

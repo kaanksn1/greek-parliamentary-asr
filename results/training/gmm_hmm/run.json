@@ -1,0 +1,415 @@
+{
+  "acoustic_states": 171,
+  "code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+  "code_sha256": {
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc"
+  },
+  "config": {
+    "_comment": "MFCC + GMM-HMM grapheme baseline (greek_asr.models.gmm_hmm). CPU or GPU tensors; the train set is read fully into RAM as 39-dim MFCC (about 5.6 GB for the full HParl-only train). train_subset_hours=null uses the whole manifest; set it only from a measured budget. See docs/KEMAL_BASELINES.md.",
+    "dev_manifest": "data/manifests/dev.jsonl",
+    "dev_references": "data/manifests/references/dev.jsonl",
+    "features": {
+      "cmn": "utterance_mean",
+      "deltas": true,
+      "frame_length_ms": 25.0,
+      "frame_shift_ms": 10.0,
+      "num_ceps": 13,
+      "num_mel_bins": 23,
+      "sample_rate": 16000
+    },
+    "seed": 42,
+    "train_manifest": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+    "train_references": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl",
+    "train_subset_hours": null,
+    "training": {
+      "align_batch_cells": 20000000,
+      "infeasible_policy": "exclude_and_report",
+      "initial_self_loop": 0.5,
+      "lm_order": 3,
+      "max_excluded_fraction": 0.01,
+      "max_gaussians_per_state": 16,
+      "min_gaussian_occupancy": 20.0,
+      "num_iterations": 25,
+      "self_loop_bounds": [
+        0.05,
+        0.95
+      ],
+      "split_iterations": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "states_per_unit": 3,
+      "variance_floor_fraction": 0.01
+    },
+    "tuning": {
+      "dev_utterances": 200,
+      "insertion_penalties": [
+        -10.0,
+        0.0,
+        10.0
+      ],
+      "lm_weights": [
+        6.0,
+        10.0,
+        14.0
+      ],
+      "space_skip_logprob": 0.0
+    }
+  },
+  "created_utc": "2026-11-20T03:16:22.659043+00:00",
+  "device_requested": "cpu",
+  "device_used": "cpu",
+  "environment": {
+    "cuda": null,
+    "gpu_available": false,
+    "hip": "7.2.53211-e1a6bc5663",
+    "packages": {
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4",
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6"
+    },
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc"
+  },
+  "excluded": [
+    {
+      "frames": 432,
+      "id": "hparl:gewrgios_tsipras-olomeleia_9_00187500_00190500_2_1",
+      "mandatory_states": 618,
+      "reason": "fewer_frames_than_mandatory_states"
+    },
+    {
+      "frames": 119,
+      "id": "hparl:panagiwta_vrantza-olomeleia_15_00210000_00213000_3_2",
+      "mandatory_states": 120,
+      "reason": "fewer_frames_than_mandatory_states"
+    }
+  ],
+  "feature_seconds": 95.79634394099999,
+  "features": {
+    "cmn": "utterance_mean",
+    "deltas": true,
+    "frame_length_ms": 25.0,
+    "frame_shift_ms": 10.0,
+    "num_ceps": 13,
+    "num_mel_bins": 23,
+    "sample_rate": 16000
+  },
+  "gaussians_per_state_max": 16,
+  "iterations": [
+    {
+      "alignment": "equal",
+      "components": 1,
+      "frames": 11070272,
+      "iteration": 0
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -108.7632134308828,
+      "components": 1,
+      "frames": 11070272,
+      "iteration": 1,
+      "seconds": 118.934448275
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -105.36625056736446,
+      "components": 1,
+      "frames": 11070272,
+      "iteration": 2,
+      "seconds": 138.394249001,
+      "split_to": 4
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -104.80724161304025,
+      "components": 2,
+      "frames": 11070272,
+      "iteration": 3,
+      "seconds": 154.74411310899995
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -103.80851415024689,
+      "components": 2,
+      "frames": 11070272,
+      "iteration": 4,
+      "seconds": 149.40044264799997,
+      "split_to": 8
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -103.86572974457869,
+      "components": 4,
+      "frames": 11070272,
+      "iteration": 5,
+      "seconds": 227.24767712300002
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -102.99826062260625,
+      "components": 4,
+      "frames": 11070272,
+      "iteration": 6,
+      "seconds": 247.12530200899994,
+      "split_to": 16
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -103.183193922364,
+      "components": 8,
+      "frames": 11070272,
+      "iteration": 7,
+      "seconds": 365.4598705410001
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -102.4059479024322,
+      "components": 8,
+      "frames": 11070272,
+      "iteration": 8,
+      "seconds": 341.720144465,
+      "split_to": 32
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -102.58120395855597,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 9,
+      "seconds": 619.2353541760003
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -101.8288750880917,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 10,
+      "seconds": 581.658084103
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -101.53060775810383,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 11,
+      "seconds": 557.8056847080002
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -101.266326484747,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 12,
+      "seconds": 561.090980076
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -101.02808242357395,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 13,
+      "seconds": 554.0380230110004
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.8575767102083,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 14,
+      "seconds": 582.3714285260003
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.7505897184595,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 15,
+      "seconds": 570.0940524939997
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.68451921867334,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 16,
+      "seconds": 580.6678871780005
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.64066589521842,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 17,
+      "seconds": 521.4697433359997
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.60872545506017,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 18,
+      "seconds": 435.09572103699975
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.58388998787805,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 19,
+      "seconds": 454.8800648569995
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.5639199232875,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 20,
+      "seconds": 570.3096583100005
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.54740984740484,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 21,
+      "seconds": 575.0161871279997
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.533619912384,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 22,
+      "seconds": 680.7306347279991
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.52202394260559,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 23,
+      "seconds": 492.0998416530001
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.51223520275391,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 24,
+      "seconds": 549.9197041520001
+    },
+    {
+      "alignment": "viterbi",
+      "avg_loglik_per_frame": -100.50417042016193,
+      "components": 16,
+      "frames": 11070272,
+      "iteration": 25,
+      "seconds": 603.5828723640007
+    }
+  ],
+  "lm": {
+    "order": 3,
+    "smoothing": "Witten-Bell interpolation, add-one unigram",
+    "trained_on": "train references only"
+  },
+  "schema": "greek-asr-gmm-hmm-train-v1",
+  "seed": 42,
+  "status": "complete",
+  "train_frames_used": 11070272,
+  "train_manifest_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+  "train_references_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
+  "train_subset": null,
+  "train_utterances_loaded": 23602,
+  "train_utterances_used": 23600,
+  "training": {
+    "align_batch_cells": 20000000,
+    "infeasible_policy": "exclude_and_report",
+    "initial_self_loop": 0.5,
+    "lm_order": 3,
+    "max_excluded_fraction": 0.01,
+    "max_gaussians_per_state": 16,
+    "min_gaussian_occupancy": 20.0,
+    "num_iterations": 25,
+    "self_loop_bounds": [
+      0.05,
+      0.95
+    ],
+    "split_iterations": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "states_per_unit": 3,
+    "variance_floor_fraction": 0.01
+  },
+  "training_seconds": 11353.002958613999,
+  "units": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "ά",
+    "έ",
+    "ή",
+    "ί",
+    "α",
+    "β",
+    "γ",
+    "δ",
+    "ε",
+    "ζ",
+    "η",
+    "θ",
+    "ι",
+    "κ",
+    "λ",
+    "μ",
+    "ν",
+    "ξ",
+    "ο",
+    "π",
+    "ρ",
+    "ς",
+    "σ",
+    "τ",
+    "υ",
+    "φ",
+    "χ",
+    "ψ",
+    "ω",
+    "ό",
+    "ύ",
+    "ώ",
+    "<sil>"
+  ]
+}

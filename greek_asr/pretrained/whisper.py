@@ -30,12 +30,13 @@ def _read_pcm16(audio_path: Path) -> tuple[bytes, int]:
 
 
 class WhisperBackend:
-    def __init__(self, processor: Any, model: Any, device: str):
+    def __init__(self, processor: Any, model: Any, device: str, batch_size: int = 1):
         self.processor, self.model, self.device = processor, model, device
+        self.batch_size = batch_size
         self.settings = {
             "language": "el", "task": "transcribe", "dtype": "float32",
             "attention": "eager", "num_beams": 1, "do_sample": False,
-            "batch_size": 1, "audio_input": "original mono PCM16 16000 Hz WAV",
+            "batch_size": batch_size, "audio_input": "original mono PCM16 16000 Hz WAV",
             "long_audio": "untruncated features and timestamp-based generation above 30 s",
             "generation_length": "checkpoint generation_config default",
             "reference_or_context_prompt": False,
@@ -64,11 +65,35 @@ class WhisperBackend:
             raise ValueError("Whisper returned an invalid single-record transcription")
         return texts[0]
 
+    def transcribe_batch(self, audio_paths: list[Path]) -> list[str]:
+        import numpy as np
+        import torch
+
+        if not audio_paths:
+            return []
+        decoded = [_read_pcm16(Path(path)) for path in audio_paths]
+        # Preserve the existing timestamp-based long-recording path.
+        if any(frames > 30 * 16000 for pcm, frames in decoded):
+            return [self.transcribe(path) for path in audio_paths]
+        audios = [np.frombuffer(pcm, dtype="<i2").astype(np.float32) / 32768.0 for pcm, frames in decoded]
+        inputs = self.processor(audios, sampling_rate=16000, return_tensors="pt",
+                                return_attention_mask=True, truncation=False, padding="max_length")
+        inputs = {key: value.to(self.device) for key, value in inputs.items()}
+        with torch.inference_mode():
+            generated = self.model.generate(**inputs, language="el", task="transcribe", num_beams=1,
+                                            do_sample=False, return_timestamps=False)
+        texts = self.processor.batch_decode(generated, skip_special_tokens=True)
+        if len(texts) != len(audio_paths) or any(not isinstance(text, str) for text in texts):
+            raise ValueError("Whisper returned an invalid prediction batch")
+        return texts
+
 
 def load_backend(*, model_id: str, revision: str, device: str,
-                 model_dir: Path | None = None) -> WhisperBackend:
+                 model_dir: Path | None = None, batch_size: int = 1) -> WhisperBackend:
     """Load exactly one pinned checkpoint. Explicit CUDA failure never falls back."""
     _validate_load_options(revision, device)
+    if type(batch_size) is not int or not 1 <= batch_size <= 8:
+        raise ValueError("batch_size must be an integer from 1 to 8")
     import torch
     from huggingface_hub import snapshot_download
     from transformers import WhisperForConditionalGeneration, WhisperProcessor
@@ -85,4 +110,4 @@ def load_backend(*, model_id: str, revision: str, device: str,
         local, local_files_only=True, torch_dtype=torch.float32,
         attn_implementation="eager", use_safetensors=True,
     ).to(device).eval()
-    return WhisperBackend(processor, model, device)
+    return WhisperBackend(processor, model, device, batch_size)

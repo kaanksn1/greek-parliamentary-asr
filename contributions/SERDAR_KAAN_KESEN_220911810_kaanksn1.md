@@ -144,3 +144,22 @@ human annotation is claimed. Personal contribution percentages are not results.
 Commits made under `kaanksn1` in this repository provide the version history.
 Coding-agent assistance was used for implementation, research and checks;
 that does not establish teammates' authorship or work they have not performed.
+
+## 21 November: remaining benchmark assignment
+
+The user explicitly reassigned remaining evaluation, common reporting and
+repository delivery to the integration owner while Serhan prepares the slides.
+Confirmed all seven full training allocations finished, including the matched
+mixed-corpus Whisper run. Exported selected inference weights without changing
+retained tensors and kept original training run records. Both Whisper runs
+select step 500 by full-dev loss after their 1,600-update allocations.
+
+Implemented common versioned Greek normalization, compiled corpus WER/CER,
+speaker-cluster uncertainty, paired Whisper comparison, bounded Whisper/NeMo
+batch inference and the dev-first queue with committed-test-protocol checks.
+The integrated candidate at `220eb85` passed 240 tests, zero skips. Added
+generated report/figure/presentation-brief commands and pinned scoring/plotting
+dependencies. Final run completion and measured benchmark values are recorded
+in generated `results/benchmark/` records rather than asserted in this personal
+report before those jobs finish. Original model/data authorship remains with
+Samed, Kemal and Adnan. Serhan must commit his own presentation contribution.

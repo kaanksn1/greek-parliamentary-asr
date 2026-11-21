@@ -147,8 +147,8 @@ def run(*, manifest: Path, backend_name: str, split: str, output: Path,
         raise ValueError("unknown backend")
     if type(batch_size) is not int or not 1 <= batch_size <= 8:
         raise ValueError("batch_size must be an integer from 1 to 8")
-    if batch_size > 1 and backend_name != "qwen":
-        raise ValueError("batch_size > 1 is currently supported only for Qwen")
+    if batch_size > 1 and backend_name not in ("qwen", "whisper", "canary", "parakeet"):
+        raise ValueError("batch_size > 1 requires a batched Qwen, Whisper or NeMo backend")
     if split not in ("train", "dev", "test"):
         raise ValueError("split must be train, dev or test")
     if purpose == "runtime-smoke" and split != "train":
@@ -249,7 +249,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--batch-size", type=int, default=1, help="Qwen only for batches larger than one")
+    parser.add_argument("--batch-size", type=int, default=1, help="Qwen, Whisper and NeMo support bounded batches")
     parser.add_argument("--purpose", choices=("baseline", "runtime-smoke"), default="baseline")
     parser.add_argument("--allow-test", action="store_true")
     parser.add_argument("--test-protocol", type=Path)

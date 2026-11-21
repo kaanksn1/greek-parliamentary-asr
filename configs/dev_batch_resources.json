@@ -1,0 +1,45 @@
+{
+  "selection_uses": "DEV inference time and observed GPU memory only",
+  "trials": [
+    {
+      "name": "whisper_pretrained",
+      "candidate_batch": 8,
+      "previous_batch": 4,
+      "exit_code": 0,
+      "previous_seconds": 28.702695124999998,
+      "candidate_seconds": 22.797531999000057,
+      "peak_gpu_bytes": 3912352256,
+      "selected_batch": 8
+    },
+    {
+      "name": "whisper_hparl",
+      "candidate_batch": 8,
+      "previous_batch": 4,
+      "exit_code": 0,
+      "previous_seconds": 27.943674629,
+      "candidate_seconds": 22.123502742000028,
+      "peak_gpu_bytes": 3912359936,
+      "selected_batch": 8
+    },
+    {
+      "name": "whisper_mixed",
+      "candidate_batch": 8,
+      "previous_batch": 4,
+      "exit_code": 0,
+      "previous_seconds": 26.677310852000005,
+      "candidate_seconds": 22.13452343000006,
+      "peak_gpu_bytes": 3912359936,
+      "selected_batch": 8
+    },
+    {
+      "name": "qwen",
+      "candidate_batch": 8,
+      "previous_batch": 4,
+      "exit_code": 0,
+      "previous_seconds": 82.30455294800004,
+      "candidate_seconds": 58.79515632799996,
+      "peak_gpu_bytes": 4664394752,
+      "selected_batch": 8
+    }
+  ]
+}

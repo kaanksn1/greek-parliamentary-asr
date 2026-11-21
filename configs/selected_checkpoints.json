@@ -1,0 +1,112 @@
+{
+  "audio_plus_weights_gib": 8.954381002113223,
+  "exports": {
+    "attention": {
+      "export_sha256": "a767de757477192e761953c206def27f31a1de705771a300bd2b48525ce946e7",
+      "inference_tensors_sha256": "f533d24280ba34e80fa6121eb40f08e8a58452fcf075d30df451e3c3aafedbb1",
+      "path": "checkpoints/attention/model.pt",
+      "removed_training_state_keys": [
+        "optimizer_state",
+        "scheduler_state",
+        "rng_state"
+      ],
+      "selection": "best full-DEV loss",
+      "source_sha256": "51dcaf8ce7543472d6bb0252d6b54d5515a90ee933238f8f6a407cc3ca831c01",
+      "step": 3000,
+      "tensor_values_identical": true,
+      "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+      "training_run_sha256": "1f49a8f5e5c220d7dea2b3c8ca0f1ab395474039e49f433f33f8e1f6ba986ba0"
+    },
+    "gmm_hmm": {
+      "export_sha256": "cd8af43a061352c08bcb11672a43bc62c87e8e065a2d23e4171cf118b047cb47",
+      "inference_tensors_sha256": "5011311cdad8c414cff71f2d6c554733d6727cd12d09ac2239547e009a0ca8f1",
+      "path": "checkpoints/gmm_hmm/model.pt",
+      "removed_training_state_keys": [],
+      "selection": "completed fixed EM allocation",
+      "source_sha256": "ee8d656d6930e114ac77e697a98e550b64568087d1e430208419d1ab400de472",
+      "step": null,
+      "tensor_values_identical": true,
+      "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+      "training_run_sha256": "214ad8d77d8f54b8802410dc31229f1f117edb8eedf00bf50a974e14d2c51b24"
+    },
+    "hubert_ctc": {
+      "files": {
+        "config.json": "a4f19f0e407bcbe3c75cd9a990ba9c1f6e3d0c144702a98c5412783c0ec9ac83",
+        "greek_asr_ctc.json": "d895ed5995598c894945b3a5954d7bba531cc9d26fc7bea036d98d31e394a664",
+        "model.safetensors": "5c855dfea80209251f654683c58850a7b5952d492e790f935510ccaf39e60c2f",
+        "preprocessor_config.json": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86"
+      },
+      "path": "checkpoints/hubert_ctc",
+      "selection": "best full-DEV loss",
+      "training_run_sha256": "d82cca07f455be0904954a5d5d88c5bb4ba7b64eef54024d76a348eb78e8db71"
+    },
+    "plain_ctc": {
+      "export_sha256": "9d73bc1284722b3a49ca341eb043c5e7ab055145b42a07a215f62ead078bed8c",
+      "inference_tensors_sha256": "93bc79efabe7882be37d57f4a6f3604530da75c1e556f034f9ebed77ea7d0859",
+      "path": "checkpoints/plain_ctc/model.pt",
+      "removed_training_state_keys": [
+        "optimizer_state",
+        "scheduler_state",
+        "rng_state"
+      ],
+      "selection": "best full-DEV loss",
+      "source_sha256": "7f56a445c92a40e5b221d159b0e22fd56cff2a6da09b46b910be56f91b149b98",
+      "step": 2300,
+      "tensor_values_identical": true,
+      "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+      "training_run_sha256": "50368fc2140f4efe3d1a2553edaa264e407f55a8429dca488e9ed0f9ef640187"
+    },
+    "transducer": {
+      "export_sha256": "ea2c500507ad144df888967408937ec875eb6891211dfe0bbe158f514404990e",
+      "inference_tensors_sha256": "80a0ba3599f359b24be3a67913a3da2d806daebda58b2a866062a0e499acf77b",
+      "path": "checkpoints/transducer/model.pt",
+      "removed_training_state_keys": [
+        "optimizer_state",
+        "scheduler_state",
+        "rng_state"
+      ],
+      "selection": "best full-DEV loss",
+      "source_sha256": "9895ff1baaab629e6372b404001c182c8185d9e231ae205e57795027ba6bea2e",
+      "step": 3000,
+      "tensor_values_identical": true,
+      "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+      "training_run_sha256": "5ae2bf9f077dfad78ead956ed2afa457ee9eec6d1d09e1ea4dc8a936a9dfd09f"
+    },
+    "whisper_hparl": {
+      "export_sha256": "ee85a2b51a4933155fb6e3a77dd1e0ea0fac54b1c2d38e3f54f5757768ce7d27",
+      "inference_tensors_sha256": "8a3802f799b3ef49c19aa5dad7a8f2654ae53b9a56bca03462ece982d424400b",
+      "path": "checkpoints/whisper_hparl/model.pt",
+      "removed_training_state_keys": [
+        "optimizer_state",
+        "scheduler_state",
+        "rng_state"
+      ],
+      "selection": "best full-DEV loss",
+      "source_sha256": "ae8f1f1d80e34123745f405f702d94b639dc68d92a19a4346e3c0c85d93724ee",
+      "step": 500,
+      "tensor_values_identical": true,
+      "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+      "training_run_sha256": "5f4a35719f1b4a5dc51d5d5f0f10f4bf093e6b199b96912460a9aa8bcc565643"
+    },
+    "whisper_mixed": {
+      "export_sha256": "c5b97718f9fa571b98c6ef9980dbf34ed9ed9f132b3174d1acd55a514c2a6ff4",
+      "inference_tensors_sha256": "a8c3da5f20da0d23cf52a604910b9ab6b3811c0f0b7b5b9fae5c397e4f734c58",
+      "path": "checkpoints/whisper_mixed/model.pt",
+      "removed_training_state_keys": [
+        "optimizer_state",
+        "scheduler_state",
+        "rng_state"
+      ],
+      "selection": "best full-DEV loss",
+      "source_sha256": "eab4787c60211ad3c3ff6f817a6c67c69229149f453a3081261fe77f1fd1ea26",
+      "step": 500,
+      "tensor_values_identical": true,
+      "training_code_commit": "b760cdcf2662dbe6a40ee3267e59cb7f41dbe0c5",
+      "training_run_sha256": "f80d09d668d0aba20574dc29c9346f82f58d72f0e33edb520d556258a8b90865"
+    }
+  },
+  "inference_weight_bytes": 2405317506,
+  "paid_storage_authorized": false,
+  "schema": "p3-selected-inference-checkpoints-v1",
+  "selection_uses": "training full-DEV losses only; no test predictions"
+}

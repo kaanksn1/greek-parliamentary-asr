@@ -1,0 +1,62 @@
+{
+  "best_dev_loss": 136.17320692512428,
+  "best_optimizer_update": 3000,
+  "code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+  "code_sha256": {
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db"
+  },
+  "config": {
+    "_comment": "Owner train/dev budget generated from configs/training_data_selection.json and docs/reviews/budget_2026-11-20. Seeded approximate passes are a compute allocation, not convergence evidence. HParl-only jobs require the committed HParl raw-to-clean acceptance; the mixed condition additionally requires corrected CSS10 audit/acceptance. Repository audio delivery must finish before submission. Final test remains locked.",
+    "architecture": "RNN-T: unidirectional pyramidal LSTM encoder, LSTM prediction network, feed-forward joint network",
+    "batch_size": 8,
+    "dev_eval_every": 1000,
+    "dev_manifest": "data/manifests/dev.jsonl",
+    "dev_references": "data/manifests/references/dev.jsonl",
+    "gradient_accumulation_steps": 1,
+    "learning_rate": 0.0003,
+    "loss_backend": "pure_pytorch_logspace",
+    "max_steps": 3000,
+    "primary_sources": [
+      "Graves (2012), Sequence Transduction with Recurrent Neural Networks, arXiv:1211.3711",
+      "He et al. (2019), Streaming End-to-end Speech Recognition for Mobile Devices"
+    ],
+    "sample_rate": 16000,
+    "seed": 42,
+    "train_manifest": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+    "train_references": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl"
+  },
+  "created_utc": "2026-11-20T05:51:39.400837+00:00",
+  "dev_manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+  "dev_references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+  "dev_utterances": 7113,
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "effective_batch_size": 8,
+  "max_steps": 3000,
+  "micro_steps_completed": 3000,
+  "model_config": {
+    "encoder_hidden": 256,
+    "encoder_layers": 3,
+    "input_dim": 80,
+    "joint_dim": 256,
+    "max_symbols_per_step": 5,
+    "max_total_symbols": 400,
+    "predictor_embedding": 256,
+    "predictor_hidden": 256,
+    "predictor_layers": 1,
+    "vocab_size": 60
+  },
+  "optimizer_updates_completed": 3000,
+  "precision": "float32",
+  "rnnt_loss_backend": "pure_pytorch_logspace",
+  "schema": "greek-asr-transducer-train-v1",
+  "seed": 42,
+  "train_manifest_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+  "train_references_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
+  "train_utterances": 23602,
+  "trainable_parameters": 2611772,
+  "training_seconds": 16467.971140247,
+  "vocab_size": 60
+}
