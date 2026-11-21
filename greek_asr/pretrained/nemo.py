@@ -53,13 +53,14 @@ class NemoBackend:
     _model: Any
     _torch: Any
     _cuda_graphs_disabled: bool = False
+    batch_size: int = 1
 
     @property
     def settings(self) -> dict[str, Any]:
         settings = {
             "runtime": "nemo",
             "checkpoint_file": MODEL_FILES[self.model_id],
-            "batch_size": 1,
+            "batch_size": self.batch_size,
             "source_lang": "el" if self.model_id == "nvidia/canary-1b-v2" else "auto",
             "target_lang": "el" if self.model_id == "nvidia/canary-1b-v2" else "auto",
             "decoder": "checkpoint defaults",
@@ -70,33 +71,38 @@ class NemoBackend:
         return settings
 
     def transcribe(self, audio_path: Path) -> str:
-        path = Path(audio_path).resolve()
-        if not path.is_file():
-            raise FileNotFoundError(path)
+        return self.transcribe_batch([audio_path])[0]
+
+    def transcribe_batch(self, audio_paths: list[Path]) -> list[str]:
+        paths = [Path(path).resolve() for path in audio_paths]
+        if not paths:
+            return []
+        for path in paths:
+            if not path.is_file():
+                raise FileNotFoundError(path)
 
         # Canary is multitask: both language tokens are required to select
         # Greek transcription rather than Greek-to-English translation.
-        options: dict[str, Any] = {"batch_size": 1}
+        options: dict[str, Any] = {"batch_size": self.batch_size}
         if self.model_id == "nvidia/canary-1b-v2":
             options.update(source_lang="el", target_lang="el")
         # Parakeet v3 detects language itself; it has no Canary language prompt.
         with self._torch.inference_mode():
-            results = self._model.transcribe([str(path)], **options)
-        if not isinstance(results, (list, tuple)) or len(results) != 1:
+            results = self._model.transcribe([str(path) for path in paths], **options)
+        if not isinstance(results, (list, tuple)) or len(results) != len(paths):
             raise RuntimeError(
-                f"NeMo returned an unexpected number/shape of predictions for {path.name}"
+                "NeMo returned an unexpected number/shape of predictions"
             )
-        result = results[0]
-        text = result if isinstance(result, str) else getattr(result, "text", None)
-        if not isinstance(text, str):
-            raise RuntimeError(f"NeMo returned a non-text prediction for {path.name}")
+        texts = [result if isinstance(result, str) else getattr(result, "text", None) for result in results]
+        if any(not isinstance(text, str) for text in texts):
+            raise RuntimeError("NeMo returned a non-text prediction")
         # An actual empty hypothesis is retained for corpus scoring. A failed
         # or missing result above is never silently converted into an empty one.
-        return text
+        return texts
 
 
 def load_backend(
-    *, model_id: str, revision: str, device: str, model_dir: Path | None = None
+    *, model_id: str, revision: str, device: str, model_dir: Path | None = None, batch_size: int = 1
 ) -> NemoBackend:
     """Download the exact producer archive and restore it once.
 
@@ -105,6 +111,8 @@ def load_backend(
     """
     if model_id not in MODEL_FILES:
         raise ValueError(f"Unsupported NeMo model: {model_id}")
+    if type(batch_size) is not int or not 1 <= batch_size <= 8:
+        raise ValueError("batch_size must be an integer from 1 to 8")
     if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
         raise ValueError("revision must be a full 40-character Hugging Face commit SHA")
     torch, download, model_class = _import_runtime()
@@ -145,4 +153,5 @@ def load_backend(
         _model=model,
         _torch=torch,
         _cuda_graphs_disabled=rocm_parakeet,
+        batch_size=batch_size,
     )

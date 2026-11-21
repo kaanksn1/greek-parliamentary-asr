@@ -370,9 +370,11 @@ def _require_test_protocol(path: Path | None, manifest: Path, project_root: Path
 
 def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, split: str, output_dir: Path,
            device: str = "cpu", num_beams: int = 1, allow_test: bool = False, test_protocol: Path | None = None,
-           model_loader: Callable[..., tuple[Any, Any]] | None = None) -> dict[str, Any]:
+           model_loader: Callable[..., tuple[Any, Any]] | None = None, batch_size: int = 1) -> dict[str, Any]:
     import torch
 
+    if type(batch_size) is not int or not 1 <= batch_size <= 8:
+        raise ValueError("batch_size must be an integer from 1 to 8")
     resolved_device = common.resolve_device(device)
     if split == "test" and not allow_test:
         raise ValueError("test prediction requires --allow-test after the final protocol commit")
@@ -396,6 +398,7 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
     report = {
         "schema": "greek-asr-whisper-finetune-predict-v1", "status": "running", "checkpoint": str(checkpoint_path),
         "split": split, "model_id": config["model_id"], "revision": config["revision"], "num_beams": num_beams,
+        "batch_size": batch_size,
         "records": len(records), "completed_records": 0, "inference_seconds": None,
         "references_used_as_model_input": False, "created_utc": datetime.now(timezone.utc).isoformat(),
         "device_requested": device, "device_used": str(resolved_device),
@@ -405,17 +408,27 @@ def predict(checkpoint_path: Path, manifest_path: Path, *, project_root: Path, s
     started = time.perf_counter()
     try:
         with torch.no_grad():
-            for row in records:
-                waveform = common.load_waveform(row["audio"], target_sample_rate=sample_rate).numpy()
-                _require_within_whisper_window(waveform, sample_rate, row["id"])
-                features = processor.feature_extractor([waveform], sampling_rate=sample_rate, return_tensors="pt")
-                generated = model.generate(input_features=features["input_features"].to(device), language=language,
+            for start in range(0, len(records), batch_size):
+                chunk = records[start:start + batch_size]
+                waveforms = []
+                for row in chunk:
+                    waveform = common.load_waveform(row["audio"], target_sample_rate=sample_rate).numpy()
+                    _require_within_whisper_window(waveform, sample_rate, row["id"])
+                    waveforms.append(waveform)
+                extraction_options = {"return_attention_mask": True} if batch_size > 1 else {}
+                features = processor.feature_extractor(waveforms, sampling_rate=sample_rate, return_tensors="pt",
+                                                       **extraction_options)
+                generate_inputs = {key: value.to(device) for key, value in features.items()}
+                generated = model.generate(**generate_inputs, language=language,
                                            task=task, num_beams=num_beams, do_sample=False)
                 decoded = processor.batch_decode(generated, skip_special_tokens=True)
-                if len(decoded) != 1 or not isinstance(decoded[0], str):
-                    raise ValueError(f"{row['id']}: expected a single-record transcription")
-                writer.write(row["id"], decoded[0])
-                report["completed_records"] += 1
+                if len(decoded) != len(chunk) or any(not isinstance(text, str) for text in decoded):
+                    raise ValueError("expected one transcription per batch record")
+                for row, text in zip(chunk, decoded):
+                    writer.write(row["id"], text)
+                    report["completed_records"] += 1
+                if report["completed_records"] % 100 == 0 or report["completed_records"] == len(records):
+                    print(f"Whisper: {report['completed_records']}/{len(records)}", flush=True)
         writer.finish()
         report["status"] = "complete"
     except Exception as error:
@@ -446,6 +459,7 @@ def main(argv: list[str] | None = None) -> int:
     predict_parser.add_argument("--project-root", type=Path, default=ROOT)
     predict_parser.add_argument("--device", default="cpu")
     predict_parser.add_argument("--num-beams", type=int, default=1)
+    predict_parser.add_argument("--batch-size", type=int, default=1)
     predict_parser.add_argument("--allow-test", action="store_true")
     predict_parser.add_argument("--test-protocol", type=Path)
 
@@ -457,7 +471,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             predict(args.checkpoint, args.manifest, project_root=args.project_root, split=args.split,
                     output_dir=args.output, device=args.device, num_beams=args.num_beams,
-                    allow_test=args.allow_test, test_protocol=args.test_protocol)
+                    allow_test=args.allow_test, test_protocol=args.test_protocol, batch_size=args.batch_size)
     except (ValueError, OSError, RuntimeError, FloatingPointError) as error:
         parser.exit(1, f"whisper fine-tuning {args.command} failed: {error}\n")
     return 0
