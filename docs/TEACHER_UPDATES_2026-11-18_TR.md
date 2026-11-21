@@ -1,6 +1,6 @@
 # İki yeni P3 mailinin projeye uygulanması
 
-> **21 Kas?m durum notu:** a?a??daki kaynak se?imi/pilot/bekleme ifadeleri belgenin tarihindeki durumu korur. Kullan?c? s?n?f tablosu kayd?n? teyit etti; se?ili veri, yedi e?itim ve 12 final sistem tamamland?. G?ncel kan?t ve a??k i?ler: [son denetim](TEACHER_FINAL_AUDIT_TR.md), [veri raporu](DATA_REPORT_TR.md), [final benchmark](FINAL_BENCHMARK.md). Hocan?n kurallar? bu durum notuyla de?i?tirilmez.
+> **21 Kasım durum notu:** aşağıdaki kaynak seçimi/pilot/bekleme ifadeleri belgenin tarihindeki durumu korur. Kullanıcı sınıf tablosu kaydını teyit etti; seçili veri, yedi eğitim ve 12 final sistem tamamlandı. Güncel kanıt ve açık işler: [son denetim](TEACHER_FINAL_AUDIT_TR.md), [veri raporu](DATA_REPORT_TR.md), [final benchmark](FINAL_BENCHMARK.md). Hocanın kuralları bu durum notuyla değiştirilmez.
 
 Kullanıcı iki maili 18 Kasım 2026'da paylaştı. Bu, maillerin gönderim tarihi
 iddiası değildir. Aşağıdaki metin gerekliliklerin özetidir; eski onay yanıtı
