@@ -17,6 +17,8 @@ GitHub Free ve Pro için depolama ile indirme kotası ayrı ayrı 10 GiB'dir; ba
 
 Public clone doğrulaması gerçek WAV ve ağırlıklarla, zaten yüklenmiş nesnelerin yerel LFS önbelleği kullanılarak yapıldı. Yeniden yaklaşık 9 GiB indirilmedi; bu nedenle bu kontrolü yeni bir kullanıcının tüm payload'ı internetten indirdiğinin kanıtı diye sunmuyoruz.
 
+21 Kasım sonraki erişim kontrolünde bir train WAV'ı ve küçük seçili GMM ağırlığı gerçekten anonim indirildi; toplam 1.786.223 baytın ikisi de tam SHA-256 eşleşmesi verdi. [İndirme kanıtı](reviews/final_benchmark_2026-11-21/small_public_download.json). Bu, güncel LFS payload erişiminin çalıştığını gösterir; kalan aylık hakkı veya tam clone'u doğrulamaz. Kullanıcının özel CSV raporunda yalnız depolama SKU'su vardı, bandwidth miktarı belirtilmiyordu; rapor depoya konmadı. README, kod/sonuç/sunum incelemesi için LFS payload indirmeden clone yolunu ve gerçek yürütme için seçmeli/tam indirme komutlarını açıklıyor. Ham/temiz veri teslimi değiştirilmedi.
+
 ## Önceki projelerdeki kesintiler
 
 | Hocanın uyarısı | Mevcut kanıt / durum |
