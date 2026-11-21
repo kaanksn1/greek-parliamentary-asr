@@ -4,9 +4,70 @@
 
 Owner: Kemal Arif Karabacıoğlu (`kemalarif`), branch `feature/p3-ctc-hmm`
 (`docs/TEAM.md`, person 3). This document describes code, configs and small
-checks that exist in the repository. **No full-data training, dev selection or
-test inference has been run; there are no WER/CER results here.** All full runs
-are central on Serdar's RX 7800 XT / 32 GB machine.
+checks that exist in the repository. The sections after "Results and analysis"
+were written on 19 November, before any full run; the central training and the
+frozen-test benchmark were completed on 21 November on Serdar's RX 7800 XT /
+32 GB machine (not by me), and are analysed below.
+
+## Results and analysis (21 November, frozen full test)
+
+Source: `results/benchmark/*/score.json` and `results/training/*/run.json`,
+produced centrally by the common scorer on all 8,679 frozen test clips (82
+speaker/recording clusters). I only read these files; no number below was
+computed on test by me or tuned from test.
+
+| System (provenance) | WER % | CER % | WER 95% CI | CER 95% CI | Word S / D / I |
+|---|---:|---:|---|---|---|
+| wav2vec 2.0, published `lighteternal` checkpoint | 57.81 | 20.30 | 56.36–59.35 | 19.31–21.39 | 41,511 / 7,625 / 4,489 |
+| MFCC + GMM-HMM, our implementation + training | 89.15 | 49.67 | 88.52–89.78 | 48.58–50.74 | 58,121 / 22,341 / 2,232 |
+| HuBERT-CTC, our CTC training of mHuBERT-147 | 99.89 | 82.18 | 99.86–99.91 | 81.70–82.64 | 12,558 / 80,090 / 3 |
+| Plain CTC, our training from scratch | 99.95 | 91.37 | 99.93–99.96 | 91.27–91.50 | 8,629 / 84,077 / 0 |
+
+CIs are the scorer's paired speaker-bootstrap intervals (1,000 resamples). One
+training seed per system; they do not cover seed variation.
+
+**Training that produced these models** (`results/training/SUMMARY.md`): about
+23,600 selected HParl train clips (30.9 h, the owner's measured data/storage
+budget, not the 99.5 h manifest). GMM-HMM: 25 EM iterations on CPU, 3.15 h, two
+items excluded as too short for their transcripts. Plain CTC: 2,300 updates at
+batch 32 (about 3 epochs), 11 min on GPU, 70 items excluded by the CTC
+feasibility check. HuBERT-CTC: 1,500 updates at effective batch 32 (about 2
+epochs), 49 min, one item excluded.
+
+**What the numbers say**
+
+1. **The published wav2vec is my best system** and the only one of the four that
+   produces mostly readable Greek. Its errors are mainly substitutions of
+   near-homophone spellings (e.g. `σκόπευα` → `σκόπεβα`, `σήμερα` → `σίμερα`,
+   `ο`/`ω`, `ι`/`η`), which hurt WER much more than CER (57.8 vs 20.3). It was
+   fine-tuned on read speech (Common Voice, CSS10), not parliament speech.
+2. **GMM-HMM is the strongest of our own trained models.** Its CER (49.67) is
+   lower than the attention (60.96) and RNN-T (56.49) baselines with
+   non-overlapping speaker-bootstrap CIs, and its WER is close to RNN-T (88.60;
+   CIs overlap). Against the off-the-shelf Whisper-small (CER 48.42, CI
+   44.47–52.97) the CIs overlap, so it is comparable, not better. Its training
+   log-likelihood rose from −108.76 (iteration 1) to −100.50 per frame (iteration
+   25) and changed by only 0.11 over iterations 18–25, i.e. it
+   converged within this recipe. The grapheme-level decoder
+   without a word lexicon explains the high WER: most words contain at least one
+   wrong letter even when the CER is about 50%.
+3. **Both CTC models are undertrained, not broken.** Their dev CTC loss was still
+   falling at the last allowed update and the best checkpoint was the last one
+   (plain CTC 3.19 → 3.04 → 3.03; HuBERT-CTC 10.50 → 3.15 → 2.52). Plain CTC
+   emits exactly one "word" per clip (8,679 hypothesis words for 8,679 clips,
+   e.g. `ταααααααααααα`), so 84,077 of its 92,706 word errors are deletions: at
+   this budget it learned the character prior but not word boundaries. HuBERT-CTC
+   has 95 empty outputs and 80,090 deletions. Both need many more updates than the
+   2–3 epochs that fit the shared deadline; from-scratch CTC on about 31 h is
+   also known to need much more data or pretraining.
+4. **A few references look much shorter than their audio.** The median test
+   reference rate is 14.1 characters per second, but 5 clips have under 4 and
+   45 under 6. The highest-error examples of wav2vec and GMM-HMM are such clips:
+   `hparl:anastasia_xristodoulopoulou-olomeleia_22_01545000_01548000_3_1` is
+   6.5 s with the reference `διαστάσεις`, and both models transcribe a whole
+   sentence after it (insertions). This is a possible reference/audio mismatch
+   in the source data; following the professor's rule the frozen test was not
+   edited, and these clips stay in every system's score.
 
 Owner review, 19 November: all 164 tests passed independently in the existing
 ROCm runtime. GMM-HMM CPU, plain CTC GPU, real mHuBERT-147 + CTC GPU training
