@@ -72,4 +72,4 @@ Kişisel katkı raporları kendi yazarlarına aittir; bu düzeltmeler bir üyeye
 1. Gerçek sunum/analiz çalışmasını, doğru adlı kişisel dosyasını ve kendi commit'lerini PR ile zamanında tamamla; prime submitter ile tek yüklemeyi koordine et.
 2. Blackboard'daki güncel PPTX + GitHub biçimini ve kesin son saati kontrol et. Linki anonim pencerede aç; LFS erişim/kota durumunu da kontrol et.
 3. Genel sunum yönergesi: teknik derinlik %50, akıcılık %25, tempo %25; slayttan okuma akıcılık puanını düşürür. Bildirilen tempo kuralında iki dakikanın altı en yüksek kademedir, 3:30'da kesilme/0 riski vardır; P3'e özel daha yeni bir süre verilmişse onu uygula.
-4. Tüm üyeler sunum/sonraki tartışma oturumuna katılmalı ve MEDU yoklamasını kontrol etmeli. Son tabloları [sunum devrindeki](HANDOFF_SERHAN_FINAL_TR.md) kaynaklardan al; pilot sayılarını final gibi kullanma.
+4. Tüm üyeler sunum/sonraki tartışma oturumuna katılmalı ve MEDU yoklamasını kontrol etmeli. Son tabloları [sunum özetindeki](../results/PRESENTATION_BRIEF_TR.md) kaynaklardan al; pilot sayılarını final gibi kullanma.

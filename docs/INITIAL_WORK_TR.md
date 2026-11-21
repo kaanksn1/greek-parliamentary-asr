@@ -18,8 +18,8 @@ ve Samed için ayrıntılı prompt hazırlamayı atadı.
 - Public repo açıldı ve kod yüklendi:
   https://github.com/kaanksn1/greek-parliamentary-asr . Dört gerçek GitHub
   hesabına write daveti gönderildi; davet kabulü üyenin kendi işlemidir.
-- Ortak veri/tahmin sözleşmesi `DATA_CONTRACT.md`, Samed'in ayrıntılı promptu
-  `HANDOFF_SAMED_TR.md` içinde. Kendi katkı raporumuz var; diğer üyelerin
+- Ortak veri/tahmin sözleşmesi `DATA_CONTRACT.md`, Samed'e ayrıca ayrıntılı bir
+  devir notu hazırlandı (ekip içi not; final ağaçtan kaldırıldı, git geçmişinde duruyor). Kendi katkı raporumuz var; diğer üyelerin
   raporları onlar adına doldurulmadı.
 - Dört standart pretrained adapter ve audio-only CLI eklendi. Eksik/bozuk
   kayıt atılmaz; gerçek boş tahmin korunur, başarısız koşum ayrı kaydedilir.
