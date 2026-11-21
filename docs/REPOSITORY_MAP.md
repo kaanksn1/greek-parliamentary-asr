@@ -58,11 +58,10 @@ These reproduce dated diagnostics or resource measurements using train fixtures,
 - [Data pipeline](DATA_PIPELINE_TR.md): raw-to-clean commands; scope is stated at the top.
 - [Protocol erratum](FINAL_PROTOCOL_ERRATA.md): descriptive GMM LM typo and original-byte archive restoration.
 - [Teacher audit](TEACHER_FINAL_AUDIT_TR.md): evidence and open items.
-- [Serhan handoff](HANDOFF_SERHAN_FINAL_TR.md): presentation/member-owned delivery.
 
 ## Historical and ownership documents
 
-`PROTOCOL_DRAFT.md`, `SECONDARY_SOURCE_TR.md`, `INITIAL_WORK_TR.md`, `TOPIC_DECISION_TR.md` and earlier handoffs preserve dated plans/source choices. They do not override the final protocol.
+`PROTOCOL_DRAFT.md`, `SECONDARY_SOURCE_TR.md`, `INITIAL_WORK_TR.md`, `TOPIC_DECISION_TR.md` preserve dated plans/source choices. Earlier handoffs preserve dated team instructions; two superseded handoff prompts were removed from the final tree and remain in the git history. They do not override the final protocol.
 `docs/reviews/` retains dated train-pilot bug reviews, budget measurements, training and final verification evidence. Failed/OOM diagnostics are not final benchmark rows.
 `TEAM.md` is the dated ownership plan. Individual contribution reports preserve their authors' dated development work; current central execution is recorded in generated results.
 Teacher clarification documents record the supplied rules. Old text-classification-specific novelty examples are not the Project 3 ASR baseline list.

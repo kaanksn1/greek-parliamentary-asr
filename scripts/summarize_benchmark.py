@@ -105,8 +105,17 @@ def main():
             'delta_percentage_points':100*(completed[pair[1]][0]['wer']-completed[pair[0]][0]['wer']),
             'paired_speaker_bootstrap_95_ci':np.quantile(delta,[.025,.975]).tolist(), 'speakers':len(speakers), 'seed':42,'resamples':1000}
         report['paired_data_composition_comparison']=comparison
-        text += ['## Matched data-composition comparison','',f"Mixed minus HParl-only WER: **{comparison['delta_percentage_points']:.2f} percentage points**; paired speaker-bootstrap 95% CI {comparison['paired_speaker_bootstrap_95_ci']}.",
-                 'Both conditions share the original checkpoint, seed, effective batch, learning rate, warmup, 1,600-update training allocation and full dev/test sets. Full-dev loss selected step 500 in both runs. A confidence interval spanning zero does not support a directional improvement claim.','']
+        ci_low, ci_high = comparison['paired_speaker_bootstrap_95_ci']
+        if ci_high < 0:
+            ci_reading = ('The paired 95% CI lies entirely below zero: on this test cohort and this single training seed, '
+                          'adding CSS10 gave a small but statistically supported WER reduction.')
+        elif ci_low > 0:
+            ci_reading = ('The paired 95% CI lies entirely above zero: on this test cohort and this single training seed, '
+                          'adding CSS10 gave a statistically supported WER increase.')
+        else:
+            ci_reading = 'The paired 95% CI spans zero, so it does not support a directional improvement claim.'
+        text += ['## Matched data-composition comparison','',f"Mixed minus HParl-only WER: **{comparison['delta_percentage_points']:.2f} percentage points**; paired speaker-bootstrap 95% CI [{ci_low:.2f}, {ci_high:.2f}].",
+                 'Both conditions share the original checkpoint, seed, effective batch, learning rate, warmup, 1,600-update training allocation and full dev/test sets. Full-dev loss selected step 500 in both runs. '+ci_reading+' It does not estimate variation over training seeds.','']
     available = [row for row in rows if row['status']=='complete']
     if available:
         import matplotlib
@@ -161,6 +170,7 @@ def main():
             for extension in ('png','svg'): fig.savefig(figures/('whisper_conditions.'+extension),dpi=180)
             plt.close(fig)
     text += ['## Limits','', 'One training seed and finite update budgets; from-scratch models may remain undertrained.',
+             'plain_ctc and hubert_ctc did not converge within their update allocations (WER near 100%): their predictions are almost empty, repeated-character strings. They are reported unchanged as real results of the frozen protocol, not as representative CTC/HuBERT performance; see the README.',
              'The official session split is not speaker-disjoint: 49 test speakers also occur in selected training; results are not unseen-speaker generalization.',
              'Case/punctuation are unscored; accents, digits and symbols are retained. Empty normalized references remain in the full cohort.',
              'CPU/GPU and batch settings differ by system; speed is hardware/runtime dependent. Speaker-bootstrap CIs do not estimate variation over training seeds.',

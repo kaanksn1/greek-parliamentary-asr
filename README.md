@@ -51,6 +51,18 @@ corpus coverage. Other group-trained methods remain standard baseline families
 and earn implementation/training credit; a powerful pretrained model alone is
 not our model contribution.
 
+**Two group-trained baselines did not converge.** Plain CTC (WER 99.95%) and
+mHuBERT-147 + our CTC head (WER 99.89%) produce almost empty, repeated-character
+outputs: on average 1.0 and 1.5 predicted words per test clip. Their final
+full-dev CTC losses were 3.03 (plain CTC, 2,300 updates, about 11 minutes of
+training) and 2.52 (HuBERT, 1,500 updates, still decreasing). The CTC decoder
+itself is standard greedy collapse and is unit-tested; the models had not yet
+learned usable alignments within their measured allocations. These rows are kept
+unchanged as real frozen-protocol results. They show that these allocations were
+too short, not what CTC or HuBERT-CTC can reach on Greek. The published Greek
+wav2vec 2.0 CTC checkpoint (WER 57.81%) shows the same family working with
+sufficient training.
+
 Exact model IDs, full 40-character upstream revisions, local selected-weight
 hashes, decoding and batch settings are in
 [`configs/final_test_protocol.json`](configs/final_test_protocol.json).
