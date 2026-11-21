@@ -127,6 +127,34 @@ seed, limited allocations and overlapping voices limit interpretation.
 
 ## Reproduce
 
+For code, saved predictions, result tables, figures or presentation review,
+clone without automatically downloading large LFS payloads:
+
+```bash
+GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/kaanksn1/greek-parliamentary-asr.git
+```
+
+In PowerShell, set `$env:GIT_LFS_SKIP_SMUDGE="1"` before `git clone`, then
+remove the temporary variable with `Remove-Item Env:GIT_LFS_SKIP_SMUDGE`.
+This review checkout contains LFS pointers until explicitly materialized.
+All original audio and selected weights remain uploaded in this repository.
+From that checkout, fetch the payloads needed for actual execution:
+
+```bash
+# Audio only; selected model weights can be fetched separately.
+git lfs pull --include="data/raw/**" --exclude=""
+# Example: only the selected mixed-corpus Whisper weights.
+git lfs pull --include="checkpoints/whisper_mixed/**" --exclude=""
+# Or materialize all audio and all selected weights for full reproduction.
+git lfs pull --include="" --exclude=""
+```
+
+Each fresh LFS download uses the owner's monthly bandwidth; reuse a populated
+checkout for repeated runs. A [bounded real anonymous download check](docs/reviews/final_benchmark_2026-11-21/small_public_download.json)
+retrieved and verified a training WAV and the small selected GMM checkpoint.
+It confirms current payload access, not the remaining monthly allowance.
+The private account billing CSV is not published.
+
 Use Python 3.12. Install Git LFS before cloning, then materialize repository data
 and selected weights with `git lfs pull`. Every notebook/script is committed;
 no manual Colab upload or Drive download replaces repository data.

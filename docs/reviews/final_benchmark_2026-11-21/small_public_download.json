@@ -1,0 +1,26 @@
+{
+  "schema": "p3-small-public-lfs-download-v1",
+  "checked_utc": "2026-11-21T17:57:51.234519+00:00",
+  "status": "passed",
+  "github_account_credentials_sent": false,
+  "downloaded_bytes": 1786223,
+  "samples": [
+    {
+      "label": "kept_train",
+      "sha256": "c532667525ca06006634205deb7b8d41ec6444beb139bd0b69b21f278c3fb756",
+      "bytes": 131884,
+      "http_status": 200,
+      "full_object_checksum_verified": true
+    },
+    {
+      "label": "gmm_hmm",
+      "sha256": "cd8af43a061352c08bcb11672a43bc62c87e8e065a2d23e4171cf118b047cb47",
+      "bytes": 1654339,
+      "http_status": 200,
+      "full_object_checksum_verified": true
+    }
+  ],
+  "full_repository_payload_downloaded": false,
+  "remaining_monthly_download_allowance_verified": false,
+  "scope": "A real anonymous train-audio and small selected-checkpoint download succeeded. This does not measure the remaining allowance or guarantee a full clone."
+}
