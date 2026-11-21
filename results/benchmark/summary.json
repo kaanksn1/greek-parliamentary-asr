@@ -1,9 +1,9 @@
 {
   "schema": "p3-benchmark-summary-v1",
-  "status": "partial",
-  "generated_utc": "2026-11-21T13:50:19.806554+00:00",
+  "status": "complete",
+  "generated_utc": "2026-11-21T16:17:09.155394+00:00",
   "expected_systems": 12,
-  "completed_systems": 11,
+  "completed_systems": 12,
   "generator_sha256": "55c1e369e651e55a4ab291ccb873d86effcf2cfc785b759541e94619ba768a89",
   "rows": [
     {
@@ -225,16 +225,26 @@
     {
       "system": "qwen",
       "role": "baseline",
-      "status": "pending",
-      "wer_percent": null,
-      "cer_percent": null,
-      "rtfx": null,
-      "inference_seconds": null,
+      "status": "complete",
+      "wer_percent": 48.22868601492087,
+      "cer_percent": 22.543333432238224,
+      "rtfx": 6.755317155079421,
+      "inference_seconds": 5972.835778651999,
       "batch_size": 8,
       "device": "cuda",
       "model_id": "Qwen/Qwen3-ASR-0.6B",
       "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
-      "trained_by_group": false
+      "trained_by_group": false,
+      "word_substitutions": 33261,
+      "word_insertions": 3375,
+      "word_deletions": 8099,
+      "empty_predictions": 0,
+      "records": 8679,
+      "peak_gpu_bytes": 4718854656,
+      "wer_ci95_low_percent": 46.719084013211784,
+      "wer_ci95_high_percent": 49.861109696673765,
+      "cer_ci95_low_percent": 21.499528898557237,
+      "cer_ci95_high_percent": 23.71143937404532
     },
     {
       "system": "whisper_hparl",

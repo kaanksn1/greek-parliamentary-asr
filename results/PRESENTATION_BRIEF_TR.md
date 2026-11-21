@@ -1,6 +1,6 @@
 # Serhan için gerçek sonuç paketi
 
-Durum: 11/12 sistem tamamlandı; kısmi sonuçlar.
+Durum: 12/12 sistem tamamlandı; son sonuçlar.
 
 Tablolar: results/benchmark/results.csv ve SUMMARY.md. Grafikler: results/benchmark/figures/.
 Her modelin score.json dosyasında ham hata sayıları ve speaker-bootstrap aralıkları; error_examples.json dosyasında otomatik seçilmiş gerçek hata örnekleri var.
