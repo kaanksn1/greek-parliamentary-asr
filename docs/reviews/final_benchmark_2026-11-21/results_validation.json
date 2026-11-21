@@ -1,59 +1,84 @@
 {
+  "schema": "p3-final-result-acceptance-v1",
   "status": "passed",
-  "complete_systems_checked": 10,
-  "expected_systems": 12,
+  "checked_utc": "2026-11-21T16:17:30.263209+00:00",
   "systems": [
-    {
-      "system": "attention",
-      "records": 8679,
-      "identity_and_counts_verified": true
-    },
-    {
-      "system": "canary",
-      "records": 8679,
-      "identity_and_counts_verified": true
-    },
     {
       "system": "gmm_hmm",
       "records": 8679,
-      "identity_and_counts_verified": true
-    },
-    {
-      "system": "hubert_ctc",
-      "records": 8679,
-      "identity_and_counts_verified": true
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "74974b5b9eaf9788fd605badd532e2974c52136c6f837931970eee8648a202d7"
     },
     {
       "system": "plain_ctc",
       "records": 8679,
-      "identity_and_counts_verified": true
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "c821f7f9db1c3bc8bfa63b6496c6d5df8c98715b51d8b92faedf6c15131e1e1c"
+    },
+    {
+      "system": "attention",
+      "records": 8679,
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "7da7802659129d167f47b8db38bf4ccfd7e0ef7157b258a226f1ac870c0d695c"
     },
     {
       "system": "transducer",
       "records": 8679,
-      "identity_and_counts_verified": true
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "e70814105b7f335c2b26271169feb360f32fb37c292e199602a6371f18d3658a"
     },
     {
       "system": "wav2vec",
       "records": 8679,
-      "identity_and_counts_verified": true
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "fb08e9fed7ca036f0808b4765b7859f7c454761c020544dd2f704577f4cdb927"
     },
     {
-      "system": "whisper_hparl",
+      "system": "hubert_ctc",
       "records": 8679,
-      "identity_and_counts_verified": true
-    },
-    {
-      "system": "whisper_mixed",
-      "records": 8679,
-      "identity_and_counts_verified": true
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "1a723c139d007fb68beaa2ffa163a8c323396f34d9c3464c05123773e3096f90"
     },
     {
       "system": "whisper_pretrained",
       "records": 8679,
-      "identity_and_counts_verified": true
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "cd673bcb17b552a4acaa4dca7fe11465a36e1ec6d381ba814e245b91b7ac3150"
+    },
+    {
+      "system": "canary",
+      "records": 8679,
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "794ee3419c6a7a7b761c085c24c3c4f29758bc9c6fe61a2da2ad485b6b565857"
+    },
+    {
+      "system": "parakeet",
+      "records": 8679,
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "ba52ad899d2055e71a87fe3de257bac8c18ccfbada0601af6bda6dbf0c31069e"
+    },
+    {
+      "system": "qwen",
+      "records": 8679,
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "afcc29013a440ef6659383bed213a9029a88d1d8deafe4c50018a85d55f1e140"
+    },
+    {
+      "system": "whisper_hparl",
+      "records": 8679,
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "9c1abee09a136f61bdaf8b4ca8e49bc1ac55d067d744595078691e1066b872ad"
+    },
+    {
+      "system": "whisper_mixed",
+      "records": 8679,
+      "counts_and_intervals_recomputed": true,
+      "prediction_sha256": "0c536bb6fd1f710d2702a61290071c513d30b84e37b6c374a93ebd00f7ebbcf6"
     }
   ],
+  "complete_systems_checked": 12,
+  "expected_systems": 12,
   "original_training_run_hashes_match": true,
-  "final_test_still_running": true
+  "asr_inference_repeated": false,
+  "generator_sha256": "85cd4890eab0ae75f1b07e22911fbd57d2f0e2db5c379ae0c3ab62725d74968f"
 }

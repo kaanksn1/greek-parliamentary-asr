@@ -3,14 +3,15 @@
 COE025 NLP Project 3 — Anonymous group.
 Public repository: https://github.com/kaanksn1/greek-parliamentary-asr
 
-**21 November status:** all seven training allocations are complete. The final
-12-system test queue started at 12:34 Europe/Istanbul from immutable execution
-commit `0ff3196c9870317be89d11a7fd09277bd0445dde`, after every system passed the
-same development calibration and the final protocol was committed. Final
-test results are being generated; development/pilot scores are not final results.
-The current completed-system count is in the generated table below. Clean-clone
-source metadata, original test audio and selected-data verification all passed;
-see `docs/reviews/final_benchmark_2026-11-21/clean_clone_verification.json`.
+**21 November final model status:** all seven training allocations and all
+12 final test systems are complete. Every system uses all 8,679 unchanged
+original test clips at immutable execution snapshot `0ff3196c`. Saved
+predictions, corpus edit counts, WER/CER, speaker-bootstrap intervals and
+CSV values passed independent regeneration checks. Original test audio
+passed verification before and after execution. Clean-clone data/weight
+verification and all 240 frozen-runtime regression tests passed.
+The generated final table below is complete. Presentation delivery and
+Serhan's own contribution report remain separate member-owned work.
 
 The task is automatic transcription of Greek parliamentary speech. Our main
 experiment compares matched Whisper fine-tuning on HParl alone and HParl plus

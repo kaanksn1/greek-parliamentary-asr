@@ -1,0 +1,132 @@
+{
+  "schema": "p3-benchmark-queue-v1",
+  "phase": "test",
+  "status": "complete",
+  "pid": 301,
+  "started_utc": "2026-11-21T09:35:00.585767+00:00",
+  "expected_systems": 12,
+  "jobs": {
+    "gmm_hmm": {
+      "status": "complete",
+      "pid": 419,
+      "started_utc": "2026-11-21T09:35:00.586931+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/gmm_hmm.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T10:11:41.075678+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "whisper_pretrained": {
+      "status": "complete",
+      "pid": 420,
+      "started_utc": "2026-11-21T09:35:00.587481+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/whisper_pretrained.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T10:40:03.526519+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "whisper_hparl": {
+      "status": "complete",
+      "pid": 2304,
+      "started_utc": "2026-11-21T10:40:05.007388+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/whisper_hparl.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T11:20:30.603075+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "whisper_mixed": {
+      "status": "complete",
+      "pid": 2408,
+      "started_utc": "2026-11-21T11:20:32.122498+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/whisper_mixed.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T12:00:02.734439+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "plain_ctc": {
+      "status": "complete",
+      "pid": 2492,
+      "started_utc": "2026-11-21T12:00:04.579128+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/plain_ctc.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T12:00:59.584539+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "hubert_ctc": {
+      "status": "complete",
+      "pid": 4637,
+      "started_utc": "2026-11-21T12:01:01.275693+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/hubert_ctc.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T12:07:21.332179+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "attention": {
+      "status": "complete",
+      "pid": 19765,
+      "started_utc": "2026-11-21T12:07:23.155513+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/attention.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T12:25:28.396629+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "transducer": {
+      "status": "complete",
+      "pid": 19834,
+      "started_utc": "2026-11-21T12:25:30.467596+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/transducer.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T12:40:05.690956+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "wav2vec": {
+      "status": "complete",
+      "pid": 19872,
+      "started_utc": "2026-11-21T12:40:07.836258+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/wav2vec.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T12:53:52.943972+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "canary": {
+      "status": "complete",
+      "pid": 41554,
+      "started_utc": "2026-11-21T12:53:55.086753+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/canary.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T13:40:05.802572+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "parakeet": {
+      "status": "complete",
+      "pid": 66536,
+      "started_utc": "2026-11-21T13:40:08.008577+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/parakeet.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T13:49:53.080685+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    },
+    "qwen": {
+      "status": "complete",
+      "pid": 85127,
+      "started_utc": "2026-11-21T13:49:55.448951+00:00",
+      "log": "/home/serda/p3-runs/benchmark-test-20261121/outputs/final_test_20261121/qwen.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T15:29:52.070233+00:00",
+      "score_exit_code": 0,
+      "report_exit_code": 0
+    }
+  },
+  "final_report_exit_code": 0,
+  "finished_utc": "2026-11-21T15:29:58.289170+00:00"
+}
