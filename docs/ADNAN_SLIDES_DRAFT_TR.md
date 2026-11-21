@@ -1,5 +1,7 @@
 # Adnan — 1-2 slayt taslağı (Ozan'ın sunumu için)
 
+> **21 November completion note:** all selected data delivery and seven training allocations are complete; all twelve final systems were evaluated. Current evidence: [training](../results/training/SUMMARY.md), [benchmark](../results/benchmark/SUMMARY.md), [reproduction guide](FINAL_BENCHMARK.md). Earlier pilot-stage pending statements below describe their dated review stage, not current delivery.
+
 Bu taslak Ozan'a teslim edilecek bir girdidir; bütün sunumu veya ortak
 karşılaştırmayı üstlenmez. Sayılar yalnız depodaki kodla üretilmiş gerçek
 koşulardan gelecek; aşağıdaki sayı alanları hâlâ **[PENDING — Serdar'ın

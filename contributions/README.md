@@ -15,3 +15,10 @@ One shared report does not replace the five individual reports.
 
 Owner integration or central model execution does not transfer another
 member's code authorship. No teammate report is prefilled on their behalf.
+
+Individual reports preserve each member's dated development work. Earlier
+central-run/pilot blockers are historical: current central completion is in
+`results/training/SUMMARY.md`, `results/benchmark/SUMMARY.md` and
+`docs/FINAL_BENCHMARK.md`. This integration note does not add work to another
+person's report. Each member must commit their own actual contribution/report
+before the applicable repository deadline.

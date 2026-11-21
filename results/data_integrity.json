@@ -1,4 +1,17 @@
 {
+  "audio_plus_selected_weights_gib": 8.954381002113223,
+  "cleaning": {
+    "dropped_by_rule": {
+      "cps_extreme": 9,
+      "duplicate_audio": 4
+    },
+    "human_review_decisions": 0,
+    "log": "data/clean/selected_train_hparl_30.5h_seed42/cleaning_log.jsonl",
+    "log_sha256": "986f3135156b397fb9c04ec0797095462dc39fb1f0270ad01ffceae25411caa0",
+    "removed_records": 13,
+    "review_queue_records": 176,
+    "text_policy_log_entries": 15370
+  },
   "cohorts": {
     "css10_train": {
       "hours": 4.137269337364575,
@@ -63,7 +76,7 @@
   },
   "computed_after_selection_frozen": true,
   "css10_speaker_note": "Producer single-reader corpus; original manifests encode no speaker/session IDs. All CSS10 is training-only; no invented IDs or cross-source identity claims.",
-  "generator_sha256": "e730d920fc75213f478d356528832650010168291a179b92281c454e59a30252",
+  "generator_sha256": "44d2aafbd41044aeb49af9d594464918245c72121acf3ec4ceb19fa74a9357ea",
   "normalization_policy": "greek-asr-nfc-casefold-punctuation-v1",
   "normalized_empty_test_references_retained": 0,
   "schema": "p3-benchmark-data-report-v1",

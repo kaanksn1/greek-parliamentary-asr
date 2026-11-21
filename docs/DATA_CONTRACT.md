@@ -1,5 +1,7 @@
 # Shared data and prediction contract
 
+> **21 November completion note:** all selected data delivery and seven training allocations are complete; all twelve final systems were evaluated. Current evidence: [training](../results/training/SUMMARY.md), [benchmark](../results/benchmark/SUMMARY.md), [reproduction guide](FINAL_BENCHMARK.md). Earlier pilot-stage pending statements below describe their dated review stage, not current delivery.
+
 Version 1, 18 November 2026. This is the minimum shared interface for data,
 models and evaluation. Samed implements the full data pipeline; the owner
 provides the common inference runner. Nothing here claims completed full-data

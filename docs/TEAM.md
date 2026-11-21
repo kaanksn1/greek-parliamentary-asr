@@ -1,5 +1,7 @@
 # Anonymous — Proje 3 görev dağılımı
 
+> **21 November completion note:** all selected data delivery and seven training allocations are complete; all twelve final systems were evaluated. Current evidence: [training](../results/training/SUMMARY.md), [benchmark](../results/benchmark/SUMMARY.md), [reproduction guide](FINAL_BENCHMARK.md). Earlier pilot-stage pending statements below describe their dated review stage, not current delivery.
+
 17 Kasım 2026 tarihli plan. Önceki beş kişilik ekip ve çalışma düzeni korunur:
 **CPU baseline'lar dahil bütün tam eğitim ve model tahmin koşuları Serdar'ın
 RX 7800 XT / 32 GB RAM bilgisayarında çalışır; sunumu Ozan yapar.** Diğer

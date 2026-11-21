@@ -1,5 +1,7 @@
 # Başlangıç ve entegrasyon durumu — 18 Kasım 2026
 
+> **21 Kasım durum notu:** aşağıdaki kaynak seçimi/pilot/bekleme ifadeleri belgenin tarihindeki durumu korur. Kullanıcı sınıf tablosu kaydını teyit etti; seçili veri, yedi eğitim ve 12 final sistem tamamlandı. Güncel kanıt ve açık işler: [son denetim](TEACHER_FINAL_AUDIT_TR.md), [veri raporu](DATA_REPORT_TR.md), [final benchmark](FINAL_BENCHMARK.md). Hocanın kuralları bu durum notuyla değiştirilmez.
+
 Çalışma konusu: **Yunanca parlamento konuşmalarında ASR ve alan verisiyle
 fine-tuning**. Dil/dataset rezervasyonu henüz sınıf tablosuna işlenmiş sayılmıyor.
 

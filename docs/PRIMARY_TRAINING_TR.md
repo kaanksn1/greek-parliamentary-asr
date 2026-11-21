@@ -1,5 +1,7 @@
 # HParl eğitimlerini geciktirmeden başlatma
 
+> **21 November completion note:** all selected data delivery and seven training allocations are complete; all twelve final systems were evaluated. Current evidence: [training](../results/training/SUMMARY.md), [benchmark](../results/benchmark/SUMMARY.md), [reproduction guide](FINAL_BENCHMARK.md). Earlier pilot-stage pending statements below describe their dated review stage, not current delivery.
+
 20 Kasım'da kullanıcı Samed'i beklemeden eğitime geçmemizi istedi. Kaan aynı
 kilitli 18 HParl oturumunun 23.615 ham WAV'ını özgün CLARIN ZIP'inden sınırlı
 HTTP aralıklarıyla aldı; her dosya kaynak CRC/byte/SHA-256 kontrolünden geçti.

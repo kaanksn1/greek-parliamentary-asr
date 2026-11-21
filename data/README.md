@@ -1,6 +1,6 @@
 # Data acquisition and delivery
 
-## Current state (20 November 2026)
+## Current selected-cohort state (verified 21 November 2026)
 
 Training uses only the owner's locked selection `../configs/training_data_selection.json`
 (18 whole official HParl train sessions, seed 42), the unchanged official dev and the frozen
@@ -51,7 +51,7 @@ seed and bounded archive access. No development/test audio or references were re
 
 Run `python scripts/audit_train_pilot.py --output outputs/train_pilot_audit.json`.
 One reference contains `<spoken_noise>`; the audit flags it without rewriting
-the source. Its treatment in any final reference/scoring policy is unresolved.
+the source. The final in-memory annotation policy is fixed in `../configs/final_test_protocol.json`; this pilot did not alter its source reference.
 
 The full-corpus pipeline is `python -m greek_asr.data` (see
 `../docs/DATA_PIPELINE_TR.md`). After a real run the layout is:
@@ -80,7 +80,7 @@ Expected layout for the full selected corpus after acquisition:
 Raw and cleaned data must be included in the eventual public submission as the
 professor requires. They are not excluded by this project's `.gitignore`.
 A download script or external link by itself does not satisfy that requirement.
-Publication format/size must be settled before selecting the final subset.
+The selected subset is now delivered through Git LFS as described above; these paragraphs preserve the original planning contract.
 
 Source-reported official HParl split durations (paper Table II):
 train `99:31:41`, development `09:03:33`, test `11:12:28`; total `119:47:42`.

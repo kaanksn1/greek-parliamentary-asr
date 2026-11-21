@@ -1,5 +1,7 @@
 # Kemal's baselines: MFCC + GMM-HMM, plain CTC, wav2vec 2.0, HuBERT
 
+> **21 November completion note:** all selected data delivery and seven training allocations are complete; all twelve final systems were evaluated. Current evidence: [training](../results/training/SUMMARY.md), [benchmark](../results/benchmark/SUMMARY.md), [reproduction guide](FINAL_BENCHMARK.md). Earlier pilot-stage pending statements below describe their dated review stage, not current delivery.
+
 Owner: Kemal Arif Karabacıoğlu (`kemalarif`), branch `feature/p3-ctc-hmm`
 (`docs/TEAM.md`, person 3). This document describes code, configs and small
 checks that exist in the repository. **No full-data training, dev selection or

@@ -1,7 +1,7 @@
 {
   "schema": "p3-final-result-acceptance-v1",
   "status": "passed",
-  "checked_utc": "2026-11-21T16:17:30.263209+00:00",
+  "checked_utc": "2026-11-21T17:28:45.448809+00:00",
   "systems": [
     {
       "system": "gmm_hmm",

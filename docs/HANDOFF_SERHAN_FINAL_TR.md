@@ -9,7 +9,7 @@ ayrı branch/PR ile teslim et. Başkasının yazdığı modeli veya merkezî ko�
 
 - `results/benchmark/SUMMARY.md`, `results.csv`, `summary.json`: koddan üretilen
   nihai tablo; yalnız `complete` satırlarını sonuç diye sun. `pending` satırına
-  tahminî sayı yazma. Tüm 12 sistem bitince paketin durumu `complete` olur.
+  tahminî sayı yazma. 21 Kasım'da tüm 12 sistem tamamlandı; paketin durumu `complete`.
 - `results/benchmark/figures/`: WER/CER ve hız grafikleri, PNG/SVG.
 - Her sistemin `score.json`: hata sayıları ve speaker-bootstrap güven aralıkları.
 - Her sistemin `error_examples.json`: aynı kayıtlar üzerinden gerçek hata
@@ -57,8 +57,13 @@ ayrı branch/PR ile teslim et. Başkasının yazdığı modeli veya merkezî ko�
    LFS'de; sabit sürümler, script, protokol, çıktılar. Hocanın custom/domain
    boyutlarını uygun bulması tamamlanmış +5 puan garantisi değildir.
 
-Sunum süresini dersin gerçek kuralına göre ayarla; bu sırayı gereksiz metinle
-doldurma. Sonuç sayılarını dev/pilot sonuçlarıyla değiştirme. Mevcut test
+Paylaşılan genel yönergede teknik derinlik %50, akıcılık %25, tempo %25.
+Tempo için iki dakikanın altı en yüksek kademe; 3:30'da kesilme/0 riski var.
+P3 için daha yeni bir süre verilmişse onu uygula. Sekiz içerik maddesini sekiz
+uzun slayt zorunluluğu gibi alma; yaklaşık 110 saniyeye prova edilmiş kısa
+akışta birleştir. Slayttan okuma; sonuçların anlamını ve sınırlamaları açıkla.
+Bütün üyeler sunum/sonraki tartışma ve MEDU yoklamasını kontrol etmeli.
+Sonuç sayılarını dev/pilot sonuçlarıyla değiştirme. Mevcut test
 çalışmasını yeniden çalıştırma, ayar değiştirme veya testten model seçme.
 
 ## Kendi teslimin
@@ -74,3 +79,11 @@ Branch: `feature/p3-presentation` veya kendi açık branch'in. `main` güncel
 halinden çalış; başka üyelerin kodunu/kayıtlarını silme. PR açıklamasında
 eklenen dosyaları, sonuç paketi commit'ini ve yaptığın gözden geçirmeyi yaz.
 README'deki katkı envanterinde yalnız gerçekten tamamlanan durumunu güncelle.
+
+21 Kasım kullanıcı açıklamasına göre son yüklemeyi sen yapacaksın; ajan teslim
+yapmadı. Genel yönergede PPTX ile tam `https://github.com/` bağlantısı birlikte
+isteniyor. Blackboard'daki geçerli P3 biçimini ve son saati kontrol et; prime
+submitter ile tek yüklemeyi koordine et. Kendi gerçek çalışmanı ve katkı
+dosyanı depo son tarihinden önce commit et; sunumun sözlü tarihinin sonra
+olması bu süreyi uzatmaz. [Son denetimdeki açık maddeleri](TEACHER_FINAL_AUDIT_TR.md)
+kapat; özellikle kişisel commit/dosya ve LFS indirme hakkı doğrulamasını atlama.

@@ -1,5 +1,7 @@
 # Veri pipeline'ı — HParl + CSS10 Greek (Samed)
 
+> **Final selected-cohort reporting:** `python scripts/report_benchmark_data.py` generates `docs/DATA_REPORT_TR.md` and `results/data_integrity.json`. The older `python -m greek_asr.data report` command writes a full-source/inventory report to the same Markdown path; after a historical reproduction, run the selected-cohort generator last. Full-source counts are not delivered training hours.
+
 Bu belge veri hazırlama kodunun ne yaptığını, kuralların gerekçesini ve gerçek
 verinin nasıl çalıştırılacağını anlatır. Kod `greek_asr/data/` altında,
 testler `tests/test_data_pipeline.py` içindedir. Gerçek veri sayıları

@@ -1,5 +1,7 @@
 # Adnan's sequence models: attention, RNN-T and Whisper fine-tuning
 
+> **21 November completion note:** all selected data delivery and seven training allocations are complete; all twelve final systems were evaluated. Current evidence: [training](../results/training/SUMMARY.md), [benchmark](../results/benchmark/SUMMARY.md), [reproduction guide](FINAL_BENCHMARK.md). Earlier pilot-stage pending statements below describe their dated review stage, not current delivery.
+
 This covers the three model tasks assigned to Adnan Demir in `docs/TEAM.md`
 and `docs/HANDOFF_ADNAN_TR.md`: a standard attention encoder-decoder (hybrid
 CTC/attention included), a standard RNN-T transducer, and our own fine-tuning

@@ -1,70 +1,48 @@
-# Baseline inventory — draft, not completed runs
+# Final baseline inventory
 
-Every standard Week 9 method is a baseline. This inventory now follows the
-professor's exact baseline email shared on 18 November; the required family
-list is clear. Slides can further specify standard recipes. Run every listed
-baseline that supports Greek. Unsupported language/head cases need a producer
-model-card link and explanation in the README; never use a wrong language.
-No row is silently satisfied by merely naming an architecture.
-Owners are assigned in `TEAM.md`; assignment is not evidence of completed work.
+Updated after the 21 November final queue: every required Greek-applicable
+family was evaluated on every original test clip. This replaces the earlier
+pilot-only inventory. Scores are generated in
+[the final benchmark](../results/benchmark/SUMMARY.md); this file contains no
+manually copied result table.
 
-| Family | Candidate / implementation | Owner | Current status |
-|---|---|---|---|
-| MFCC (or log-mel) + GMM-HMM | Own PyTorch grapheme GMM-HMM: MFCC+Δ+ΔΔ, Viterbi training, char n-gram LM decoder (`greek_asr/models/gmm_hmm.py`) | Kemal | Owner verified CPU train/checkpoint/predict on real train-pilot fixtures; representative measurement and full training pending |
-| Plain CTC system | Conv + BiLSTM encoder + CTC trained from scratch (`greek_asr/models/ctc.py`) | Kemal | Owner verified GPU loss/gradients, parameter updates and train/checkpoint/predict on real train-pilot fixtures; measured `max_steps` and full training pending |
-| Attention encoder-decoder, including hybrid CTC/attention | Standard supervised attention ASR baseline | Adnan | Code and train-pilot GPU/CLI checks verified; owner completed final review fixes; full training pending |
-| RNN-T transducer | Standard supervised RNN-T; keep distinct from pretrained Parakeet TDT | Adnan | Pure-PyTorch loss mathematically and GPU/CLI verified; owner corrected padding/config; full training pending |
-| wav2vec 2.0 ASR | `lighteternal/wav2vec2-large-xlsr-53-greek` (`greek_asr.infer --backend wav2vec`) | Kemal | Real pinned checkpoint independently transcribed three train-pilot clips on GPU; full benchmark pending |
-| HuBERT ASR | Selected: our standard HuBERT-CTC training from `utter-project/mHuBERT-147` (`greek_asr/models/hubert.py`); published unlicensed candidate not selected | Kemal | Real licensed encoder verified with GPU CTC training, finite gradients and checkpoint/predict; representative budget and full training pending. A bare encoder is not an ASR result. See `KEMAL_BASELINES.md` |
-| Whisper | `openai/whisper-small` multilingual baseline | Serdar | New isolated ROCm runtime verified on three train-pilot clips; full benchmark pending |
-| Canary | `nvidia/canary-1b-v2` | Serdar | New isolated NeMo/ROCm runtime verified on three train-pilot clips; full benchmark pending |
-| Parakeet | `nvidia/parakeet-tdt-0.6b-v3` | Serdar | New isolated NeMo/ROCm runtime verified on three train-pilot clips; NVIDIA CUDA Graph acceleration disabled, standard greedy TDT retained; full benchmark pending |
-| Qwen3-ASR | `Qwen/Qwen3-ASR-0.6B` | Serdar | New isolated ROCm runtime verified on three train-pilot clips; full benchmark pending |
-| Own contribution | Same selected starting Whisper checkpoint with our fine-tuning; HParl-only/mixed-source controls | Adnan | PR #5 code and corrected train-pilot GPU step verified; full-data protocol/budget/training pending; report separately |
+| Required family | Exact selected system / implementation | Training provenance |
+|---|---|---|
+| MFCC + GMM-HMM | `greek_asr/models/gmm_hmm.py`, `checkpoints/gmm_hmm/model.pt`; character HMM and order-3 LM | Kemal's implementation, group training |
+| CTC encoder | Conv + BiLSTM CTC, `greek_asr/models/ctc.py`, `checkpoints/plain_ctc/model.pt` | Kemal's implementation, group training |
+| Attention encoder-decoder | LAS-style hybrid CTC/attention, `greek_asr/models/attention.py`, `checkpoints/attention/model.pt` | Adnan's implementation, group training |
+| Transducer | LSTM RNN-T, `greek_asr/models/transducer.py`, `checkpoints/transducer/model.pt` | Adnan's implementation, group training |
+| wav2vec 2.0 + Greek head | `lighteternal/wav2vec2-large-xlsr-53-greek`, `greek_asr/models/wav2vec.py` | Published Greek fine-tuning; no group training |
+| HuBERT + Greek head | `utter-project/mHuBERT-147` plus our trained CTC head, `greek_asr/models/hubert.py`, `checkpoints/hubert_ctc/` | Group Greek CTC training; evaluated checkpoint has an ASR head |
+| Whisper | `openai/whisper-small`, `greek_asr/pretrained/whisper.py` | Published multilingual checkpoint |
+| Canary | `nvidia/canary-1b-v2`, `greek_asr/pretrained/nemo.py` | Published Greek-capable checkpoint |
+| Parakeet | `nvidia/parakeet-tdt-0.6b-v3`, same NeMo adapter | Published multilingual v3; standard TDT, CUDA graphs disabled for ROCm |
+| Qwen3-ASR | `Qwen/Qwen3-ASR-0.6B`, `greek_asr/pretrained/qwen.py` | Published Greek-capable checkpoint |
 
-Serdar runs all full training/inference centrally; model owners provide and fix
-their own code/configs. Ozan owns the common evaluation/comparison, Samed the
-shared data. A standard toolkit recipe is acceptable with attribution, exact
-versions and reproducible committed run/training code; a bespoke architecture
-is not an additional requirement.
+The two separate contribution rows are our matched `openai/whisper-small`
+fine-tuning on HParl only and HParl + CSS10. Training implementation:
+`greek_asr/models/whisper_finetune.py`; actual allocations and dev-selected
+steps: [training summary](../results/training/SUMMARY.md). All baseline training
+code is committed; central execution does not transfer its authorship.
 
-Checkpoint metadata, when fetched, are recorded in `configs/model_sources.lock.json`.
-That file is the immutable metadata-fetch snapshot: its status fields describe
-the fetch time, before the later Whisper runtime check. Current runtime evidence
-is in the table above and `results/runtime_smoke/` (including the verified
-owner Whisper/Qwen/Canary/Parakeet records). See `RUNTIME_ENVIRONMENT.md` and
-`NEMO_RUNTIME.md` for the tested environments and execution settings.
-Pinning a revision does not certify inference, training compatibility or absence
-of pretraining overlap. Model cards' declared training data must be reviewed.
+Exact immutable upstream revisions, model-card links, local checkpoint hashes,
+device/batch/decoder settings and development acceptance are in
+[`configs/final_test_protocol.json`](../configs/final_test_protocol.json).
+The GMM's descriptive bigram typo in that immutable protocol is corrected in
+[the erratum](FINAL_PROTOCOL_ERRATA.md); the actual frozen model always used
+its trained trigram LM. No weights or decoding were changed.
 
-Whisper must be multilingual (`openai/whisper-small`, not a `.en` model);
-Parakeet must be multilingual v3, not English-only v2. The professor permits
-Qwen3-ASR 0.6B or 1.7B; our selected 0.6B is one of those exact choices.
-Kemal's 19 November search found one published HuBERT checkpoint with a Greek
-ASR head, without license or model card, and prepared both its standard
-inference and an own HuBERT-CTC training recipe; candidates and reasons are in
-`KEMAL_BASELINES.md` and `configs/kemal_model_sources.json`. A bare
-HuBERT/wav2vec encoder cannot supply a transcription.
-The owner selected the licensed mHuBERT-147 + our CTC training route; the
-published candidate lacking license/card is not selected for benchmark.
-See `reviews/KEMAL_PR9_REVIEW_TR.md` for the source decision and runtime checks.
+The published candidate `ntinouldinho/hubert_greek_6gram` has no license/model
+card and was not selected. Its historical diagnostic is not our HuBERT result.
+The final HuBERT row uses the licensed encoder plus our actual trained Greek
+head, never a bare encoder or emotion classifier. The CTC models' very poor
+results remain in the table; completed execution is not a claim of good ASR.
 
-A checkpoint fine-tuned and published by someone else is still an off-the-shelf
-baseline. If we train GMM-HMM/CTC or an ASR head ourselves, the standard method
-remains a baseline while the group receives credit for its actual training
-work. Label this provenance separately; do not claim a new architecture.
-Any own fine-tuned version and its off-the-shelf starting model use the same
-frozen test/reference/scoring policy and clearly separate result rows.
+Standard families remain baselines even when the group implements/trains them.
+Credit implementation/training separately. Running advanced pretrained Qwen,
+Canary or Parakeet alone is not a new model contribution. All systems use
+identical original test IDs/references and the same scoring policy. Settings
+were chosen on development before test; no result was omitted.
 
-Primary sources:
-
-- https://huggingface.co/lighteternal/wav2vec2-large-xlsr-53-greek
-- https://huggingface.co/openai/whisper-small
-- https://huggingface.co/nvidia/canary-1b-v2
-- https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3
-- https://github.com/QwenLM/Qwen3-ASR
-
-Advanced pretrained models remain baselines. Plain CTC and pretrained wav2vec,
-or a trained transducer and pretrained Parakeet, are not automatically merged
-into one fulfilled requirement. Applicability questions must be settled against
-the slides and professor's instructions, not by selecting only easy rows.
+Current reproduction: [FINAL_BENCHMARK.md](FINAL_BENCHMARK.md).
+Teacher clarification: [TEACHER_UPDATES_2026-11-18_TR.md](TEACHER_UPDATES_2026-11-18_TR.md).

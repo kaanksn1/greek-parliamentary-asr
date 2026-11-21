@@ -1,5 +1,7 @@
 # İkinci kaynak kararı — CSS10 Greek
 
+> **Superseded planning record:** pending/acquisition/scoring statements below are historical. Current data: [selected report](DATA_REPORT_TR.md); protocol: [final protocol](../configs/final_test_protocol.json); completed results: [final table](../results/benchmark/SUMMARY.md).
+
 17 Kasım 2026 planı: HParl'e **yalnız eğitimde kullanılmak üzere CSS10 Greek**
 eklenecek. İkinci korpus henüz indirilmedi; temizleme, yerel süre ölçümü,
 karma veriyle eğitim ve bu ek kaynağın yararını gösteren bir deney yapılmadı.
