@@ -1,0 +1,51 @@
+{
+  "schema": "greek-asr-hubert-ctc-predict-v1",
+  "status": "complete",
+  "checkpoint": "/home/serda/p3-runs/benchmark-test-20261121/checkpoints/hubert_ctc",
+  "checkpoint_step": 1500,
+  "provenance": "own CTC fine-tuning (not an off-the-shelf result)",
+  "split": "test",
+  "decode": "greedy CTC best path over valid encoder frames",
+  "batch_size": 4,
+  "manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+  "test_protocol_sha256": "b322570ca6376e7524466534b758155d6a28cb6ef0f3f92bf458969710742db2",
+  "records": 8679,
+  "completed_records": 8679,
+  "references_used_as_model_input": false,
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "code_commit": "0ff3196c9870317be89d11a7fd09277bd0445dde",
+  "code_sha256": {
+    "hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5"
+  },
+  "created_utc": "2026-11-21T12:01:06.905303+00:00",
+  "inference_seconds": 371.8201451980003,
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "qwen-asr": "0.0.6",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 1292409856
+  },
+  "job": {
+    "batch_size": 4,
+    "checkpoint": "checkpoints/hubert_ctc",
+    "device": "cuda",
+    "kind": "hubert",
+    "name": "hubert_ctc",
+    "role": "baseline"
+  },
+  "worker_seconds_including_load": 376.19815706400004,
+  "worker_code_sha256": "7e03fcebd4a2ceed6d0ba3c3cc8dfc0ad1f1c6aab0047d4c1bd479c874022688",
+  "seed": 42,
+  "predictions_sha256": "1a723c139d007fb68beaa2ffa163a8c323396f34d9c3464c05123773e3096f90"
+}

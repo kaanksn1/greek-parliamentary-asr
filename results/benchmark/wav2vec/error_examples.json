@@ -1,0 +1,467 @@
+{
+  "selection": "highest utterance error rate plus seed-42 random sample",
+  "highest_error": [
+    {
+      "id": "hparl:anastasia_xristodoulopoulou-olomeleia_22_01545000_01548000_3_1",
+      "reference": "διαστάσεις",
+      "prediction": "εδιαστά σεστέρατος γιατί λεύε οιπό σήμερα ότι",
+      "normalized_reference": "διαστάσεισ",
+      "normalized_prediction": "εδιαστά σεστέρατοσ γιατί λεύε οιπό σήμερα ότι",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 6,
+        "deletions": 0,
+        "reference_units": 1,
+        "hypothesis_units": 7,
+        "errors": 7
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 35,
+        "deletions": 0,
+        "reference_units": 10,
+        "hypothesis_units": 45,
+        "errors": 35
+      }
+    },
+    {
+      "id": "hparl:fwteinh_vakh-olomeleia_22_01197500_01200500_3_1",
+      "reference": "δεν σκόπευα σήμερα",
+      "prediction": "δε σκόπεβασίμερα μπα ν' αναφερθώσε θέματα επικαιρό τα σωφύλωυ όμως κάφιες απαντήσεις ωσα ακούστηκαν προηγωμένος αυτή την αίθουσα",
+      "normalized_reference": "δεν σκόπευα σήμερα",
+      "normalized_prediction": "δε σκόπεβασίμερα μπα ν αναφερθώσε θέματα επικαιρό τα σωφύλωυ όμωσ κάφιεσ απαντήσεισ ωσα ακούστηκαν προηγωμένοσ αυτή την αίθουσα",
+      "word_counts": {
+        "substitutions": 3,
+        "insertions": 15,
+        "deletions": 0,
+        "reference_units": 3,
+        "hypothesis_units": 18,
+        "errors": 18
+      },
+      "character_counts": {
+        "substitutions": 4,
+        "insertions": 109,
+        "deletions": 0,
+        "reference_units": 18,
+        "hypothesis_units": 127,
+        "errors": 113
+      }
+    },
+    {
+      "id": "hparl:gewrgios_varemenos-olomeleia_11_02507500_02510500_2_1",
+      "reference": "<spoken_noise> αποτέλεσε",
+      "prediction": "δεν ποτέ λεσεν",
+      "normalized_reference": "αποτέλεσε",
+      "normalized_prediction": "δεν ποτέ λεσεν",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 2,
+        "deletions": 0,
+        "reference_units": 1,
+        "hypothesis_units": 3,
+        "errors": 3
+      },
+      "character_counts": {
+        "substitutions": 1,
+        "insertions": 5,
+        "deletions": 0,
+        "reference_units": 9,
+        "hypothesis_units": 14,
+        "errors": 6
+      }
+    },
+    {
+      "id": "hparl:apostolos_karanastashs-olomeleia_11_02505000_02508000_1_1",
+      "reference": "για έργο αυτής της κλίμακας το νότιο τμήμα του",
+      "prediction": "για έβγω αυτή στις γλήμακα στο νώτιο τομήματου έψουν ξυταπέντε θα έχει ολοκληρωθεί δηλαζί σε τριατεέξει μείνες θα έχει υλοκληρωθεί και πηθανότα να έχε ολοκτερουθίκ",
+      "normalized_reference": "για έργο αυτήσ τησ κλίμακασ το νότιο τμήμα του",
+      "normalized_prediction": "για έβγω αυτή στισ γλήμακα στο νώτιο τομήματου έψουν ξυταπέντε θα έχει ολοκληρωθεί δηλαζί σε τριατεέξει μείνεσ θα έχει υλοκληρωθεί και πηθανότα να έχε ολοκτερουθίκ",
+      "word_counts": {
+        "substitutions": 8,
+        "insertions": 16,
+        "deletions": 0,
+        "reference_units": 9,
+        "hypothesis_units": 25,
+        "errors": 24
+      },
+      "character_counts": {
+        "substitutions": 6,
+        "insertions": 119,
+        "deletions": 2,
+        "reference_units": 46,
+        "hypothesis_units": 163,
+        "errors": 127
+      }
+    },
+    {
+      "id": "hparl:iwannhs_maniaths-olomeleia_11_02610000_02613000_3_2",
+      "reference": "<spoken_noise> για το νότιο τμήμα του",
+      "prediction": "ς για από το νότιο τμήμα του έψελο να ξυταπέντεένα έργω το οποίο πέρασε από το ελεγκτικό συνέδριο",
+      "normalized_reference": "για το νότιο τμήμα του",
+      "normalized_prediction": "σ για από το νότιο τμήμα του έψελο να ξυταπέντεένα έργω το οποίο πέρασε από το ελεγκτικό συνέδριο",
+      "word_counts": {
+        "substitutions": 0,
+        "insertions": 13,
+        "deletions": 0,
+        "reference_units": 5,
+        "hypothesis_units": 18,
+        "errors": 13
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 75,
+        "deletions": 0,
+        "reference_units": 22,
+        "hypothesis_units": 97,
+        "errors": 75
+      }
+    },
+    {
+      "id": "hparl:kyriakos_mhtsotakhs-olomeleia_1_01300000_01303000_2_1",
+      "reference": "<spoken_noise> κρίσιμα σταυροδρόμια",
+      "prediction": "ά κρίσυ μας στα λογόμια",
+      "normalized_reference": "κρίσιμα σταυροδρόμια",
+      "normalized_prediction": "ά κρίσυ μασ στα λογόμια",
+      "word_counts": {
+        "substitutions": 2,
+        "insertions": 3,
+        "deletions": 0,
+        "reference_units": 2,
+        "hypothesis_units": 5,
+        "errors": 5
+      },
+      "character_counts": {
+        "substitutions": 4,
+        "insertions": 4,
+        "deletions": 1,
+        "reference_units": 20,
+        "hypothesis_units": 23,
+        "errors": 9
+      }
+    },
+    {
+      "id": "hparl:gianhs_varoufakhs-olomeleia_1_01840000_01843000_2_2",
+      "reference": "δεν είστε για πρωθυπουργός της ελλάδας στο <spoken_noise>",
+      "prediction": "δεν είστε για πρόσθυπλοο σελάδες το μέρε ήκως πέτε θα κάνουμε ότι χρειάζεται για να βοηθήσουμε στην ανατρωπή σας",
+      "normalized_reference": "δεν είστε για πρωθυπουργόσ τησ ελλάδασ στο",
+      "normalized_prediction": "δεν είστε για πρόσθυπλοο σελάδεσ το μέρε ήκωσ πέτε θα κάνουμε ότι χρειάζεται για να βοηθήσουμε στην ανατρωπή σασ",
+      "word_counts": {
+        "substitutions": 4,
+        "insertions": 12,
+        "deletions": 0,
+        "reference_units": 7,
+        "hypothesis_units": 19,
+        "errors": 16
+      },
+      "character_counts": {
+        "substitutions": 10,
+        "insertions": 70,
+        "deletions": 0,
+        "reference_units": 42,
+        "hypothesis_units": 112,
+        "errors": 80
+      }
+    },
+    {
+      "id": "hparl:athanasios_theoxaropoulos-olomeleia_11_01432500_01435500_2_1",
+      "reference": "υπεύθυνα <spoken_noise>",
+      "prediction": "είπε συνε",
+      "normalized_reference": "υπεύθυνα",
+      "normalized_prediction": "είπε συνε",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 1,
+        "deletions": 0,
+        "reference_units": 1,
+        "hypothesis_units": 2,
+        "errors": 2
+      },
+      "character_counts": {
+        "substitutions": 4,
+        "insertions": 1,
+        "deletions": 0,
+        "reference_units": 8,
+        "hypothesis_units": 9,
+        "errors": 5
+      }
+    },
+    {
+      "id": "hparl:athanasios_vardalhs-olomeleia_11_02727500_02730500_1_2",
+      "reference": "<spoken_noise> καλλιέργειες",
+      "prediction": "ι καλλιέργες",
+      "normalized_reference": "καλλιέργειεσ",
+      "normalized_prediction": "ι καλλιέργεσ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 1,
+        "deletions": 0,
+        "reference_units": 1,
+        "hypothesis_units": 2,
+        "errors": 2
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 2,
+        "deletions": 2,
+        "reference_units": 12,
+        "hypothesis_units": 12,
+        "errors": 4
+      }
+    },
+    {
+      "id": "hparl:dhmhtrios_koutsoumpas-olomeleia_1_00805000_00808000_1_1",
+      "reference": "<spoken_noise> αποστολές εκτός συνόρων",
+      "prediction": "ξα πως το λες εκτόσην ώρον",
+      "normalized_reference": "αποστολέσ εκτόσ συνόρων",
+      "normalized_prediction": "ξα πωσ το λεσ εκτόσην ώρον",
+      "word_counts": {
+        "substitutions": 3,
+        "insertions": 3,
+        "deletions": 0,
+        "reference_units": 3,
+        "hypothesis_units": 6,
+        "errors": 6
+      },
+      "character_counts": {
+        "substitutions": 7,
+        "insertions": 4,
+        "deletions": 1,
+        "reference_units": 23,
+        "hypothesis_units": 26,
+        "errors": 12
+      }
+    }
+  ],
+  "random_sample": [
+    {
+      "id": "hparl:diamantw_manwlakou-olomeleia_11_00747500_00750500_1_2",
+      "reference": "<spoken_noise> φορέων της αυστραλίας που έχουν ταχθεί κατά της σύμβασης αφού όπως λένε",
+      "prediction": "φοραίον της αστρανείας που έχουν ταχθύ κατά της σύμβασης αφού όπως λένε",
+      "normalized_reference": "φορέων τησ αυστραλίασ που έχουν ταχθεί κατά τησ σύμβασησ αφού όπωσ λένε",
+      "normalized_prediction": "φοραίον τησ αστρανείασ που έχουν ταχθύ κατά τησ σύμβασησ αφού όπωσ λένε",
+      "word_counts": {
+        "substitutions": 3,
+        "insertions": 0,
+        "deletions": 0,
+        "reference_units": 12,
+        "hypothesis_units": 12,
+        "errors": 3
+      },
+      "character_counts": {
+        "substitutions": 4,
+        "insertions": 2,
+        "deletions": 2,
+        "reference_units": 71,
+        "hypothesis_units": 71,
+        "errors": 8
+      }
+    },
+    {
+      "id": "hparl:alekshs_tsipras-olomeleia_1_01380000_01383000_4_1",
+      "reference": "ούτε τη δραματική κατάσταση που υπάρχει σήμερα στην ελληνική οικονομία στα ελληνικά νοικοκυριά και στις επιχειρήσεις πίσω από την <spoken_noise>",
+      "prediction": "ούτε τη δραματγή κατάσταση που πάρει σήμερα στη ελυγή υπονομίας θελικάανεοιτογριά και της επιρίσειςπίσω από τη",
+      "normalized_reference": "ούτε τη δραματική κατάσταση που υπάρχει σήμερα στην ελληνική οικονομία στα ελληνικά νοικοκυριά και στισ επιχειρήσεισ πίσω από την",
+      "normalized_prediction": "ούτε τη δραματγή κατάσταση που πάρει σήμερα στη ελυγή υπονομίασ θελικάανεοιτογριά και τησ επιρίσεισπίσω από τη",
+      "word_counts": {
+        "substitutions": 9,
+        "insertions": 0,
+        "deletions": 3,
+        "reference_units": 19,
+        "hypothesis_units": 16,
+        "errors": 12
+      },
+      "character_counts": {
+        "substitutions": 12,
+        "insertions": 1,
+        "deletions": 20,
+        "reference_units": 129,
+        "hypothesis_units": 110,
+        "errors": 33
+      }
+    },
+    {
+      "id": "hparl:kwnstantinos_katsikhs-olomeleia_11_02775000_02778000_2_1",
+      "reference": "υποχρεούται να καλύψει από <spoken_noise>",
+      "prediction": "υποχρεούτε να καλίψε από εί",
+      "normalized_reference": "υποχρεούται να καλύψει από",
+      "normalized_prediction": "υποχρεούτε να καλίψε από εί",
+      "word_counts": {
+        "substitutions": 2,
+        "insertions": 1,
+        "deletions": 0,
+        "reference_units": 4,
+        "hypothesis_units": 5,
+        "errors": 3
+      },
+      "character_counts": {
+        "substitutions": 2,
+        "insertions": 3,
+        "deletions": 2,
+        "reference_units": 26,
+        "hypothesis_units": 27,
+        "errors": 7
+      }
+    },
+    {
+      "id": "hparl:iwannhs_lagos-olomeleia_22_01860000_01863000_1_1",
+      "reference": "<spoken_noise> της αντιπολίτευσης αν η χρυσή αυγή μπορεί να κάνει κάτι για να σταματήσει έστω και τώρα αυτή τη συμφωνία",
+      "prediction": "σαν την πολυτουσάν η χρυσή αυγή μπορεί να κάνει κάτι για να σταματήσει έστω και τώρα αυτή τη συφωνία",
+      "normalized_reference": "τησ αντιπολίτευσησ αν η χρυσή αυγή μπορεί να κάνει κάτι για να σταματήσει έστω και τώρα αυτή τη συμφωνία",
+      "normalized_prediction": "σαν την πολυτουσάν η χρυσή αυγή μπορεί να κάνει κάτι για να σταματήσει έστω και τώρα αυτή τη συφωνία",
+      "word_counts": {
+        "substitutions": 4,
+        "insertions": 0,
+        "deletions": 0,
+        "reference_units": 19,
+        "hypothesis_units": 19,
+        "errors": 4
+      },
+      "character_counts": {
+        "substitutions": 8,
+        "insertions": 1,
+        "deletions": 5,
+        "reference_units": 104,
+        "hypothesis_units": 100,
+        "errors": 14
+      }
+    },
+    {
+      "id": "hparl:hlias_panagiwtaros-olomeleia_11_00620000_00623000_2_1",
+      "reference": "στην ελλάδα κυρίες και <spoken_noise>",
+      "prediction": "στην ελάβα κύρυγε",
+      "normalized_reference": "στην ελλάδα κυρίεσ και",
+      "normalized_prediction": "στην ελάβα κύρυγε",
+      "word_counts": {
+        "substitutions": 2,
+        "insertions": 0,
+        "deletions": 1,
+        "reference_units": 4,
+        "hypothesis_units": 3,
+        "errors": 3
+      },
+      "character_counts": {
+        "substitutions": 3,
+        "insertions": 1,
+        "deletions": 6,
+        "reference_units": 22,
+        "hypothesis_units": 17,
+        "errors": 10
+      }
+    },
+    {
+      "id": "hparl:gewrgios_germenhs-olomeleia_11_01527500_01530500_1_1",
+      "reference": "<spoken_noise> δεν ξέρουμε τι θέλει να πει ο νομοθέτης ή ο ποιητής",
+      "prediction": "όδεξε με τι θελενάπει ονομοθέτη σιοποιητηςπου αναφέρετ",
+      "normalized_reference": "δεν ξέρουμε τι θέλει να πει ο νομοθέτησ ή ο ποιητήσ",
+      "normalized_prediction": "όδεξε με τι θελενάπει ονομοθέτη σιοποιητησπου αναφέρετ",
+      "word_counts": {
+        "substitutions": 6,
+        "insertions": 0,
+        "deletions": 4,
+        "reference_units": 11,
+        "hypothesis_units": 7,
+        "errors": 10
+      },
+      "character_counts": {
+        "substitutions": 7,
+        "insertions": 13,
+        "deletions": 10,
+        "reference_units": 51,
+        "hypothesis_units": 54,
+        "errors": 30
+      }
+    },
+    {
+      "id": "hparl:dhmhtrios_vitsas-olomeleia_11_01052500_01055500_2_1",
+      "reference": "<spoken_noise> αυτός που τη χρησιμοποιεί",
+      "prediction": "αι αυτός κου τη χρησίμοποίή",
+      "normalized_reference": "αυτόσ που τη χρησιμοποιεί",
+      "normalized_prediction": "αι αυτόσ κου τη χρησίμοποίή",
+      "word_counts": {
+        "substitutions": 2,
+        "insertions": 1,
+        "deletions": 0,
+        "reference_units": 4,
+        "hypothesis_units": 5,
+        "errors": 3
+      },
+      "character_counts": {
+        "substitutions": 4,
+        "insertions": 3,
+        "deletions": 1,
+        "reference_units": 25,
+        "hypothesis_units": 27,
+        "errors": 8
+      }
+    },
+    {
+      "id": "hparl:dhmhtrios_koutsoumpas-olomeleia_1_00735000_00738000_2_1",
+      "reference": "<spoken_noise> για τη φτώχεια",
+      "prediction": "για τη φτώχεια",
+      "normalized_reference": "για τη φτώχεια",
+      "normalized_prediction": "για τη φτώχεια",
+      "word_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "reference_units": 3,
+        "hypothesis_units": 3,
+        "errors": 0
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "reference_units": 14,
+        "hypothesis_units": 14,
+        "errors": 0
+      }
+    },
+    {
+      "id": "hparl:mixahl_katrinhs-olomeleia_1_01515000_01518000_1_1",
+      "reference": "<spoken_noise> πραγματικά δεν καταλαβαίνω την επιμονή σας",
+      "prediction": "ς πραγματικά δεν καταλαβαίνου την επιμονή σας",
+      "normalized_reference": "πραγματικά δεν καταλαβαίνω την επιμονή σασ",
+      "normalized_prediction": "σ πραγματικά δεν καταλαβαίνου την επιμονή σασ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 1,
+        "deletions": 0,
+        "reference_units": 6,
+        "hypothesis_units": 7,
+        "errors": 2
+      },
+      "character_counts": {
+        "substitutions": 1,
+        "insertions": 3,
+        "deletions": 0,
+        "reference_units": 42,
+        "hypothesis_units": 45,
+        "errors": 4
+      }
+    },
+    {
+      "id": "hparl:anastasia_xristodoulopoulou-olomeleia_22_01505000_01508000_2_2",
+      "reference": "<spoken_noise> ανθρώπους που υποβάλλουν αιτήσεις να τους μεταχειρίζονται ως πολίτες και όχι να περιμένουν τρία χρόνια για ένα αποτέλεσμα",
+      "prediction": "άνθρωποι που υποβάλεμνε τίσεις να μεταχειρίζοντάς πολύτες και όχι ένα περιμένει τρία χρόνια ένα ποτέλεσμα",
+      "normalized_reference": "ανθρώπουσ που υποβάλλουν αιτήσεισ να τουσ μεταχειρίζονται ωσ πολίτεσ και όχι να περιμένουν τρία χρόνια για ένα αποτέλεσμα",
+      "normalized_prediction": "άνθρωποι που υποβάλεμνε τίσεισ να μεταχειρίζοντάσ πολύτεσ και όχι ένα περιμένει τρία χρόνια ένα ποτέλεσμα",
+      "word_counts": {
+        "substitutions": 8,
+        "insertions": 0,
+        "deletions": 3,
+        "reference_units": 18,
+        "hypothesis_units": 15,
+        "errors": 11
+      },
+      "character_counts": {
+        "substitutions": 12,
+        "insertions": 1,
+        "deletions": 17,
+        "reference_units": 121,
+        "hypothesis_units": 105,
+        "errors": 30
+      }
+    }
+  ]
+}

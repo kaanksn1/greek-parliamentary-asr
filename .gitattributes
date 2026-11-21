@@ -21,3 +21,6 @@ data/raw/css10_el/release/**/*.wav filter=lfs diff=lfs merge=lfs -text
 # Selected final inference weights only; optimizer/resume states stay local.
 checkpoints/**/*.pt filter=lfs diff=lfs merge=lfs -text
 checkpoints/**/*.safetensors filter=lfs diff=lfs merge=lfs -text
+# Preserve unedited program output and Matplotlib's generated SVG path formatting.
+docs/reviews/final_benchmark_2026-11-21/*.log -text -whitespace
+results/benchmark/figures/*.svg -whitespace

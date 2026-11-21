@@ -1,0 +1,45 @@
+{
+  "schema": "greek-asr-whisper-finetune-predict-v1",
+  "status": "complete",
+  "checkpoint": "/home/serda/p3-runs/benchmark-test-20261121/checkpoints/whisper_hparl/model.pt",
+  "split": "test",
+  "model_id": "openai/whisper-small",
+  "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+  "num_beams": 1,
+  "batch_size": 8,
+  "records": 8679,
+  "completed_records": 8679,
+  "inference_seconds": 2412.5920068839996,
+  "references_used_as_model_input": false,
+  "created_utc": "2026-11-21T10:40:14.655970+00:00",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "qwen-asr": "0.0.6",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 3912380928
+  },
+  "job": {
+    "batch_size": 8,
+    "checkpoint": "checkpoints/whisper_hparl/model.pt",
+    "device": "cuda",
+    "kind": "whisper",
+    "name": "whisper_hparl",
+    "role": "contribution"
+  },
+  "worker_seconds_including_load": 2420.4045835609995,
+  "worker_code_sha256": "7e03fcebd4a2ceed6d0ba3c3cc8dfc0ad1f1c6aab0047d4c1bd479c874022688",
+  "seed": 42,
+  "code_commit": "0ff3196c9870317be89d11a7fd09277bd0445dde",
+  "manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+  "predictions_sha256": "9c1abee09a136f61bdaf8b4ca8e49bc1ac55d067d744595078691e1066b872ad"
+}

@@ -1,0 +1,94 @@
+{
+  "schema": "p3-final-public-delivery-check-v1",
+  "checked_utc": "2026-11-21T09:47:01.846278+00:00",
+  "repository_public": true,
+  "all_available": true,
+  "authentication_sent": false,
+  "payload_bytes_downloaded": 0,
+  "samples": [
+    {
+      "label": "kept_train",
+      "oid": "c532667525ca06006634205deb7b8d41ec6444beb139bd0b69b21f278c3fb756",
+      "size": 131884,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "removed_raw_train",
+      "oid": "9e33c6a791db463ee5eb3d22af35f370f40de87f45c5a89513754b82a18b6143",
+      "size": 117484,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "dev",
+      "oid": "090158099085e5e8996efcb19bb739d4e0f66f06b042d151eeca5a992fc88b1a",
+      "size": 99564,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "test",
+      "oid": "fea81ad6bfb05e874541214af47430f7b46c9e869ac46f4e4847283e8f0bb3b2",
+      "size": 108844,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "css10",
+      "oid": "5dcee756bf02489d08b7464cd67497ec2370012121c9a0b034ad237452b12c50",
+      "size": 781498,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "attention",
+      "oid": "a767de757477192e761953c206def27f31a1de705771a300bd2b48525ce946e7",
+      "size": 44189258,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "gmm_hmm",
+      "oid": "cd8af43a061352c08bcb11672a43bc62c87e8e065a2d23e4171cf118b047cb47",
+      "size": 1654339,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "hubert_ctc",
+      "oid": "5c855dfea80209251f654683c58850a7b5952d492e790f935510ccaf39e60c2f",
+      "size": 377693764,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "plain_ctc",
+      "oid": "9d73bc1284722b3a49ca341eb043c5e7ab055145b42a07a215f62ead078bed8c",
+      "size": 37151183,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "transducer",
+      "oid": "ea2c500507ad144df888967408937ec875eb6891211dfe0bbe158f514404990e",
+      "size": 10455844,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "whisper_hparl",
+      "oid": "ee85a2b51a4933155fb6e3a77dd1e0ea0fac54b1c2d38e3f54f5757768ce7d27",
+      "size": 967084599,
+      "available_anonymously": true,
+      "error": null
+    },
+    {
+      "label": "whisper_mixed",
+      "oid": "c5b97718f9fa571b98c6ef9980dbf34ed9ed9f132b3174d1acd55a514c2a6ff4",
+      "size": 967084599,
+      "available_anonymously": true,
+      "error": null
+    }
+  ]
+}

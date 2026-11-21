@@ -1,0 +1,54 @@
+{
+  "status": "ok",
+  "records": [
+    {
+      "system": "gmm_hmm",
+      "source": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/gmm/run.json",
+      "sha256": "214ad8d77d8f54b8802410dc31229f1f117edb8eedf00bf50a974e14d2c51b24",
+      "catalog_matches": true,
+      "content_equal_before_byte_restore": true
+    },
+    {
+      "system": "plain_ctc",
+      "source": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/ctc/run.json",
+      "sha256": "50368fc2140f4efe3d1a2553edaa264e407f55a8429dca488e9ed0f9ef640187",
+      "catalog_matches": true,
+      "content_equal_before_byte_restore": true
+    },
+    {
+      "system": "attention",
+      "source": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/attention/run.json",
+      "sha256": "1f49a8f5e5c220d7dea2b3c8ca0f1ab395474039e49f433f33f8e1f6ba986ba0",
+      "catalog_matches": true,
+      "content_equal_before_byte_restore": true
+    },
+    {
+      "system": "transducer",
+      "source": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/transducer/run.json",
+      "sha256": "5ae2bf9f077dfad78ead956ed2afa457ee9eec6d1d09e1ea4dc8a936a9dfd09f",
+      "catalog_matches": true,
+      "content_equal_before_byte_restore": true
+    },
+    {
+      "system": "hubert_ctc",
+      "source": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/hubert/run.json",
+      "sha256": "d82cca07f455be0904954a5d5d88c5bb4ba7b64eef54024d76a348eb78e8db71",
+      "catalog_matches": true,
+      "content_equal_before_byte_restore": true
+    },
+    {
+      "system": "whisper_hparl",
+      "source": "/home/serda/p3-runs/hparl-20261120/outputs/hparl_primary_20261120/whisper_hparl/run.json",
+      "sha256": "5f4a35719f1b4a5dc51d5d5f0f10f4bf093e6b199b96912460a9aa8bcc565643",
+      "catalog_matches": true,
+      "content_equal_before_byte_restore": true
+    },
+    {
+      "system": "whisper_mixed",
+      "source": "/home/serda/p3-runs/mixed-20261120/outputs/whisper_mixed_20261120/run.json",
+      "sha256": "f80d09d668d0aba20574dc29c9346f82f58d72f0e33edb520d556258a8b90865",
+      "catalog_matches": true,
+      "content_equal_before_byte_restore": true
+    }
+  ]
+}

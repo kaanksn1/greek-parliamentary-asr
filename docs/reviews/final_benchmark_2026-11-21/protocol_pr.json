@@ -1,0 +1,12 @@
+{
+  "number": 12,
+  "url": "https://github.com/kaanksn1/greek-parliamentary-asr/pull/12",
+  "state": "closed",
+  "merged": true,
+  "head": "0ff3196c9870317be89d11a7fd09277bd0445dde",
+  "base": "79f9623f1eb817644315fd60838de37776b3223c",
+  "main": "a30089accdf842ada3083bf820e838a3890874f4",
+  "mergeable": null,
+  "changed_files": 113,
+  "merge_commit": "a30089accdf842ada3083bf820e838a3890874f4"
+}

@@ -74,13 +74,29 @@ python -m greek_asr.data verify --selection configs/training_data_selection.json
 The original WAVs and selected local checkpoints are actual repository LFS
 objects. `checkpoints/README.md` explains optimizer-free exports and licenses.
 Published upstream models are separately cached at their exact locked revisions
-by the inference adapters; do not substitute another checkpoint. The selected
+by the following command; do not substitute another checkpoint. The queue is
+deliberately offline, so run this network-enabled preparation before launching it:
+
+```bash
+python scripts/cache_benchmark_models.py
+python scripts/cache_benchmark_models.py --check-only
+```
+
+To reproduce HuBERT training as well, add `--include-training-encoder` to the
+cache preparation command before the offline primary training queue. This bare
+encoder is training initialization, not an ASR baseline result.
+
+The cache preparation uses the pinned Hugging Face Hub dependency in the
+Transformers environment; it neither loads a GPU model nor transcribes test
+audio. It fetches the exact files/caches used by both standard and trained
+Whisper loaders, wav2vec and NeMo. The selected
 Greek HuBERT system has our trained CTC head, rather than a bare encoder.
 
 Reproduce training using the commands/configs in `docs/KEMAL_BASELINES.md`,
 `docs/SEQUENCE_MODELS.md` and `configs/training_budget.json`. The full execution
 snapshots above preserve the original training code and run records. In a
-separate calibration checkout, export selected models and run dev first:
+separate calibration checkout at preparation candidate `220eb85` (before the
+selected-weight export directories exist), export selected models and run dev first:
 
 ```bash
 python scripts/prepare_benchmark.py --primary-run PRIMARY_OUTPUT --mixed-run MIXED_OUTPUT
@@ -116,8 +132,10 @@ HParl uses its documented official session split; it is not speaker-disjoint.
 The selected training data share 49 speakers with test, covering 4,782 test
 clips; session overlap is zero. This is not an unseen-speaker benchmark.
 Literal/normalized sentence overlap and split counts are in the generated data
-report and selected-training record. Historical normalized-overlap counts use
-the explicitly named older diagnostic policy, not the final punctuation rule.
+report and selected-training record. `scripts/report_benchmark_data.py`
+recomputes the final-policy overlap in `results/data_integrity.json`: nine test
+utterances / nine unique sentences for both actual training conditions. Keep
+this separate from the historical diagnostic, which uses an older rule.
 
 The main contribution compares matched HParl-only and HParl+CSS10 Whisper
 fine-tuning with the same starting weights, seed, effective batch, learning

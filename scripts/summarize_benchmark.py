@@ -49,6 +49,10 @@ def main():
                        word_insertions=score['word_counts']['insertions'], word_deletions=score['word_counts']['deletions'],
                        empty_predictions=score['empty_predictions'], records=score['examples'],
                        peak_gpu_bytes=run.get('environment', {}).get('peak_gpu_memory_allocated_bytes'))
+            intervals = score['speaker_bootstrap_95_ci']
+            for metric in ('wer','cer'):
+                row[metric+'_ci95_low_percent'] = 100*intervals[metric][0]
+                row[metric+'_ci95_high_percent'] = 100*intervals[metric][1]
             completed[job['name']] = (score, run)
             details = lines(folder/'utterances.jsonl')
             ranked = sorted(details, key=lambda r: (-r['word_counts']['errors']/max(r['word_counts']['reference_units'], 1), r['id']))
@@ -57,7 +61,8 @@ def main():
                 'highest_error': ranked[:10], 'random_sample': random_sample}, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
         rows.append(row)
     fields = ['system','role','status','model_id','revision','trained_by_group','records','wer_percent','cer_percent','rtfx','inference_seconds','batch_size','device',
-              'word_substitutions','word_insertions','word_deletions','empty_predictions','peak_gpu_bytes']
+              'word_substitutions','word_insertions','word_deletions','empty_predictions','peak_gpu_bytes',
+              'wer_ci95_low_percent','wer_ci95_high_percent','cer_ci95_low_percent','cer_ci95_high_percent']
     with (destination/'results.csv').open('w', encoding='utf-8', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
@@ -111,24 +116,50 @@ def main():
         figures.mkdir(exist_ok=True)
         colors = ['#0072B2' if row['role']=='baseline' else '#D55E00' for row in available]
         for metric, title in [('wer_percent','WER (%)'), ('cer_percent','CER (%)')]:
-            fig, ax = plt.subplots(figsize=(10,6))
+            fig, ax = plt.subplots(figsize=(10,max(2.8,.42*len(available)+1.6)))
             ax.barh([r['system'] for r in available], [r[metric] for r in available], color=colors)
+            short = metric.split('_')[0]
+            for index, row in enumerate(available):
+                low, high = row[short+'_ci95_low_percent'], row[short+'_ci95_high_percent']
+                ax.hlines(index,low,high,color='black',linewidth=1.2)
+                ax.plot([low,high],[index,index],'|',color='black',markersize=5)
+                ax.text(max(high,row[metric])+.6,index,f"{row[metric]:.2f}",va='center',fontsize=9)
             ax.invert_yaxis()
             ax.set_xlabel(title+' — lower is better')
-            ax.set_title(f"Greek parliamentary ASR ({len(available)}/{len(rows)} systems complete)")
+            ax.set_title(f"Greek parliamentary ASR ({len(available)}/{len(rows)} complete)\n95% speaker-bootstrap intervals",fontsize=11)
             ax.grid(axis='x', alpha=.2)
+            ax.margins(x=.12)
             fig.tight_layout()
             for extension in ('png','svg'):
                 fig.savefig(figures/(metric+'.'+extension), dpi=180)
             plt.close(fig)
         fig, ax = plt.subplots(figsize=(9,6))
-        for row in available:
+        for index,row in enumerate(available):
             ax.scatter(row['rtfx'],row['wer_percent'],color='#D55E00' if row['role']=='contribution' else '#0072B2')
-            ax.annotate(row['system'],(row['rtfx'],row['wer_percent']),fontsize=7,xytext=(3,3),textcoords='offset points')
-        ax.set_xlabel('RTFx — higher is faster'); ax.set_ylabel('WER (%) — lower is better')
+            ax.annotate(row['system'],(row['rtfx'],row['wer_percent']),fontsize=7,xytext=(4,5 if index%2==0 else -9),textcoords='offset points')
+        if len(available)>1: ax.set_xscale('log')
+        ax.set_xlabel('RTFx — higher is faster (log scale with multiple systems)'); ax.set_ylabel('WER (%) — lower is better')
         ax.set_title('Accuracy / speed on the same frozen test cohort'); ax.grid(alpha=.2); fig.tight_layout()
         for extension in ('png','svg'): fig.savefig(figures/('speed_accuracy.'+extension),dpi=180)
         plt.close(fig)
+        comparison_names=('whisper_pretrained','whisper_hparl','whisper_mixed')
+        if all(name in completed for name in comparison_names):
+            fig, axes=plt.subplots(1,2,figsize=(10,4))
+            labels=['Pretrained','HParl only','HParl + CSS10']
+            for ax,metric in zip(axes,('wer','cer')):
+                values=[100*completed[name][0][metric] for name in comparison_names]
+                ax.bar(labels,values,color=['#0072B2','#D55E00','#009E73'])
+                for index,name in enumerate(comparison_names):
+                    low,high=[100*x for x in completed[name][0]['speaker_bootstrap_95_ci'][metric]]
+                    ax.vlines(index,low,high,color='black',linewidth=1.2)
+                    ax.plot([index,index],[low,high],'_',color='black')
+                    ax.text(index,max(high,values[index])+.5,f'{values[index]:.2f}',ha='center',fontsize=9)
+                ax.set_ylabel(metric.upper()+' (%) — lower is better'); ax.set_ylim(bottom=0)
+                ax.margins(y=.2); ax.grid(axis='y',alpha=.2)
+            fig.suptitle('Whisper-small: same original test, 95% speaker-bootstrap intervals',fontsize=12)
+            fig.tight_layout()
+            for extension in ('png','svg'): fig.savefig(figures/('whisper_conditions.'+extension),dpi=180)
+            plt.close(fig)
     text += ['## Limits','', 'One training seed and finite update budgets; from-scratch models may remain undertrained.',
              'The official session split is not speaker-disjoint: 49 test speakers also occur in selected training; results are not unseen-speaker generalization.',
              'Case/punctuation are unscored; accents, digits and symbols are retained. Empty normalized references remain in the full cohort.',
@@ -145,6 +176,16 @@ def main():
              'Resmî split konuşmacı ayrık değildir; bunu sunumda belirt. Sınırlamalar ve başarısız/çok zayıf modelleri gizleme.',
              'Kendi sunum/analiz katkını contributions/OZAN_SERHAN_DENIZHAN_220911758_serhandenizhan.md içinde kendi hesabınla kaydet; kendi branch/PR üzerinden sunumu ekle.','']
     (root/'results/PRESENTATION_BRIEF_TR.md').write_text('\n'.join(brief),encoding='utf-8')
+    if 'paired_data_composition_comparison' in report:
+        comparison=report['paired_data_composition_comparison']
+        low,high=comparison['paired_speaker_bootstrap_95_ci']
+        extra=['','## Tamamlanan katkı deneyinin gerçek sonuçları','',
+               f"HParl-only WER: %{100*completed['whisper_hparl'][0]['wer']:.2f}; HParl+CSS10 WER: %{100*completed['whisper_mixed'][0]['wer']:.2f}.",
+               f"Karışım eksi HParl farkı: {comparison['delta_percentage_points']:.2f} yüzde puan; eşleştirilmiş %95 konuşmacı-bootstrap aralığı [{low:.2f}, {high:.2f}].",
+               'Bu, tek eğitim seed’i ve bu resmî test kohortu için gözlenen farktır; farklı seed/konuşmacı/alanlarda garanti değildir.',
+               'Çok zayıf CTC sonuçlarını ve Whisper baseline hata örneklerini gizleme; bunlar da aynı testin gerçek sonuçlarıdır.','']
+        with (root/'results/PRESENTATION_BRIEF_TR.md').open('a',encoding='utf-8') as stream:
+            stream.write('\n'.join(extra))
     print(json.dumps({'status':report['status'],'completed':len(completed),'expected':len(rows)}),flush=True)
 
 

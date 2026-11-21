@@ -1,0 +1,467 @@
+{
+  "selection": "highest utterance error rate plus seed-42 random sample",
+  "highest_error": [
+    {
+      "id": "hparl:anastasia_xristodoulopoulou-olomeleia_22_01545000_01548000_3_1",
+      "reference": "διαστάσεις",
+      "prediction": "ατταα τα",
+      "normalized_reference": "διαστάσεισ",
+      "normalized_prediction": "ατταα τα",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 1,
+        "deletions": 0,
+        "reference_units": 1,
+        "hypothesis_units": 2,
+        "errors": 2
+      },
+      "character_counts": {
+        "substitutions": 6,
+        "insertions": 0,
+        "deletions": 2,
+        "reference_units": 10,
+        "hypothesis_units": 8,
+        "errors": 8
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02237500_02240500_1_1",
+      "reference": "<spoken_noise> λυθεί μέχρι το τέλος του χρόνου έτσι στο πρώτο κομμάτι",
+      "prediction": "νττοντοτοτ",
+      "normalized_reference": "λυθεί μέχρι το τέλοσ του χρόνου έτσι στο πρώτο κομμάτι",
+      "normalized_prediction": "νττοντοτοτ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 9,
+        "reference_units": 10,
+        "hypothesis_units": 1,
+        "errors": 10
+      },
+      "character_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 44,
+        "reference_units": 54,
+        "hypothesis_units": 10,
+        "errors": 45
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02237500_02240500_1_2",
+      "reference": "<spoken_noise> που έγινε αναφορά για την <spoken_noise>",
+      "prediction": "ονναατν",
+      "normalized_reference": "που έγινε αναφορά για την",
+      "normalized_prediction": "ονναατν",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 4,
+        "reference_units": 5,
+        "hypothesis_units": 1,
+        "errors": 5
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 18,
+        "reference_units": 25,
+        "hypothesis_units": 7,
+        "errors": 18
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02240000_02243000_1_1",
+      "reference": "<spoken_noise> η τροποποίηση του άρθρου εβδομηνταδύο του κώδικα φορολογίας εισοδήματος",
+      "prediction": "τοτοτοταο τοατ",
+      "normalized_reference": "η τροποποίηση του άρθρου εβδομηνταδύο του κώδικα φορολογίασ εισοδήματοσ",
+      "normalized_prediction": "τοτοτοταο τοατ",
+      "word_counts": {
+        "substitutions": 2,
+        "insertions": 0,
+        "deletions": 7,
+        "reference_units": 9,
+        "hypothesis_units": 2,
+        "errors": 9
+      },
+      "character_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 57,
+        "reference_units": 71,
+        "hypothesis_units": 14,
+        "errors": 58
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02242500_02245500_1_1",
+      "reference": "<spoken_noise> που έχουν συναφθεί πριν την έναρξη ισχύος του παρόντος κώδικα",
+      "prediction": "οονναντνναοτοντο",
+      "normalized_reference": "που έχουν συναφθεί πριν την έναρξη ισχύοσ του παρόντοσ κώδικα",
+      "normalized_prediction": "οονναντνναοτοντο",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 9,
+        "reference_units": 10,
+        "hypothesis_units": 1,
+        "errors": 10
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 45,
+        "reference_units": 61,
+        "hypothesis_units": 16,
+        "errors": 45
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02242500_02245500_2_1",
+      "reference": "έχουν εφαρμογή τα <spoken_noise>",
+      "prediction": "τ",
+      "normalized_reference": "έχουν εφαρμογή τα",
+      "normalized_prediction": "τ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 2,
+        "reference_units": 3,
+        "hypothesis_units": 1,
+        "errors": 3
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 16,
+        "reference_units": 17,
+        "hypothesis_units": 1,
+        "errors": 16
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02242500_02245500_2_2",
+      "reference": "<spoken_noise> στον κώδικα φορολογίας εισοδήματος",
+      "prediction": "ταα",
+      "normalized_reference": "στον κώδικα φορολογίασ εισοδήματοσ",
+      "normalized_prediction": "ταα",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 3,
+        "reference_units": 4,
+        "hypothesis_units": 1,
+        "errors": 4
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 31,
+        "reference_units": 34,
+        "hypothesis_units": 3,
+        "errors": 31
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02242500_02245500_3_1",
+      "reference": "του κώδικα φπα και τα εισιτήρια των θεατρικών παραστάσεων και συναυλιών για τα οποία ο συντελεστής του φόρου ορίζεται στο",
+      "prediction": "ατοααταττνατνατανανατττττ",
+      "normalized_reference": "του κώδικα φπα και τα εισιτήρια των θεατρικών παραστάσεων και συναυλιών για τα οποία ο συντελεστήσ του φόρου ορίζεται στο",
+      "normalized_prediction": "ατοααταττνατνατανανατττττ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 19,
+        "reference_units": 20,
+        "hypothesis_units": 1,
+        "errors": 20
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 1,
+        "deletions": 97,
+        "reference_units": 121,
+        "hypothesis_units": 25,
+        "errors": 98
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02245000_02248000_1_1",
+      "reference": "<spoken_noise> αν δεν το κάναμε τώρα θα έπρεπε να πάει από την <spoken_noise>",
+      "prediction": "νττοναατνατ",
+      "normalized_reference": "αν δεν το κάναμε τώρα θα έπρεπε να πάει από την",
+      "normalized_prediction": "νττοναατνατ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 10,
+        "reference_units": 11,
+        "hypothesis_units": 1,
+        "errors": 11
+      },
+      "character_counts": {
+        "substitutions": 2,
+        "insertions": 0,
+        "deletions": 36,
+        "reference_units": 47,
+        "hypothesis_units": 11,
+        "errors": 38
+      }
+    },
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_11_02245000_02248000_2_1",
+      "reference": "οπότε θα ήταν ένα ζήτημα για τους ανθρώπους που κλείνουν τις συμφωνίες για τις συναυλίες από την αρχή του έτους δίνουμε μία δυνατότητα",
+      "prediction": "τατανναταατοντοπονοντνατνααοτνατοτοναναττ",
+      "normalized_reference": "οπότε θα ήταν ένα ζήτημα για τουσ ανθρώπουσ που κλείνουν τισ συμφωνίεσ για τισ συναυλίεσ από την αρχή του έτουσ δίνουμε μία δυνατότητα",
+      "normalized_prediction": "τατανναταατοντοπονοντνατνααοτνατοτοναναττ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 22,
+        "reference_units": 23,
+        "hypothesis_units": 1,
+        "errors": 23
+      },
+      "character_counts": {
+        "substitutions": 2,
+        "insertions": 0,
+        "deletions": 93,
+        "reference_units": 134,
+        "hypothesis_units": 41,
+        "errors": 95
+      }
+    }
+  ],
+  "random_sample": [
+    {
+      "id": "hparl:diamantw_manwlakou-olomeleia_11_00747500_00750500_1_2",
+      "reference": "<spoken_noise> φορέων της αυστραλίας που έχουν ταχθεί κατά της σύμβασης αφού όπως λένε",
+      "prediction": "ντατααοονταταο",
+      "normalized_reference": "φορέων τησ αυστραλίασ που έχουν ταχθεί κατά τησ σύμβασησ αφού όπωσ λένε",
+      "normalized_prediction": "ντατααοονταταο",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 11,
+        "reference_units": 12,
+        "hypothesis_units": 1,
+        "errors": 12
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 57,
+        "reference_units": 71,
+        "hypothesis_units": 14,
+        "errors": 57
+      }
+    },
+    {
+      "id": "hparl:alekshs_tsipras-olomeleia_1_01380000_01383000_4_1",
+      "reference": "ούτε τη δραματική κατάσταση που υπάρχει σήμερα στην ελληνική οικονομία στα ελληνικά νοικοκυριά και στις επιχειρήσεις πίσω από την <spoken_noise>",
+      "prediction": "τ τταταοατνατανοαατ",
+      "normalized_reference": "ούτε τη δραματική κατάσταση που υπάρχει σήμερα στην ελληνική οικονομία στα ελληνικά νοικοκυριά και στισ επιχειρήσεισ πίσω από την",
+      "normalized_prediction": "τ τταταοατνατανοαατ",
+      "word_counts": {
+        "substitutions": 2,
+        "insertions": 0,
+        "deletions": 17,
+        "reference_units": 19,
+        "hypothesis_units": 2,
+        "errors": 19
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 110,
+        "reference_units": 129,
+        "hypothesis_units": 19,
+        "errors": 110
+      }
+    },
+    {
+      "id": "hparl:kwnstantinos_katsikhs-olomeleia_11_02775000_02778000_2_1",
+      "reference": "υποχρεούται να καλύψει από <spoken_noise>",
+      "prediction": "τνα",
+      "normalized_reference": "υποχρεούται να καλύψει από",
+      "normalized_prediction": "τνα",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 3,
+        "reference_units": 4,
+        "hypothesis_units": 1,
+        "errors": 4
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 23,
+        "reference_units": 26,
+        "hypothesis_units": 3,
+        "errors": 23
+      }
+    },
+    {
+      "id": "hparl:iwannhs_lagos-olomeleia_22_01860000_01863000_1_1",
+      "reference": "<spoken_noise> της αντιπολίτευσης αν η χρυσή αυγή μπορεί να κάνει κάτι για να σταματήσει έστω και τώρα αυτή τη συμφωνία",
+      "prediction": "αντποτνα ποναντανατναττοταατν",
+      "normalized_reference": "τησ αντιπολίτευσησ αν η χρυσή αυγή μπορεί να κάνει κάτι για να σταματήσει έστω και τώρα αυτή τη συμφωνία",
+      "normalized_prediction": "αντποτνα ποναντανατναττοταατν",
+      "word_counts": {
+        "substitutions": 2,
+        "insertions": 0,
+        "deletions": 17,
+        "reference_units": 19,
+        "hypothesis_units": 2,
+        "errors": 19
+      },
+      "character_counts": {
+        "substitutions": 2,
+        "insertions": 0,
+        "deletions": 75,
+        "reference_units": 104,
+        "hypothesis_units": 29,
+        "errors": 77
+      }
+    },
+    {
+      "id": "hparl:hlias_panagiwtaros-olomeleia_11_00620000_00623000_2_1",
+      "reference": "στην ελλάδα κυρίες και <spoken_noise>",
+      "prediction": "τνα",
+      "normalized_reference": "στην ελλάδα κυρίεσ και",
+      "normalized_prediction": "τνα",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 3,
+        "reference_units": 4,
+        "hypothesis_units": 1,
+        "errors": 4
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 19,
+        "reference_units": 22,
+        "hypothesis_units": 3,
+        "errors": 19
+      }
+    },
+    {
+      "id": "hparl:gewrgios_germenhs-olomeleia_11_01527500_01530500_1_1",
+      "reference": "<spoken_noise> δεν ξέρουμε τι θέλει να πει ο νομοθέτης ή ο ποιητής",
+      "prediction": "οτναονττοανατ",
+      "normalized_reference": "δεν ξέρουμε τι θέλει να πει ο νομοθέτησ ή ο ποιητήσ",
+      "normalized_prediction": "οτναονττοανατ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 10,
+        "reference_units": 11,
+        "hypothesis_units": 1,
+        "errors": 11
+      },
+      "character_counts": {
+        "substitutions": 4,
+        "insertions": 0,
+        "deletions": 38,
+        "reference_units": 51,
+        "hypothesis_units": 13,
+        "errors": 42
+      }
+    },
+    {
+      "id": "hparl:dhmhtrios_vitsas-olomeleia_11_01052500_01055500_2_1",
+      "reference": "<spoken_noise> αυτός που τη χρησιμοποιεί",
+      "prediction": "τοτ",
+      "normalized_reference": "αυτόσ που τη χρησιμοποιεί",
+      "normalized_prediction": "τοτ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 3,
+        "reference_units": 4,
+        "hypothesis_units": 1,
+        "errors": 4
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 22,
+        "reference_units": 25,
+        "hypothesis_units": 3,
+        "errors": 22
+      }
+    },
+    {
+      "id": "hparl:dhmhtrios_koutsoumpas-olomeleia_1_00735000_00738000_2_1",
+      "reference": "<spoken_noise> για τη φτώχεια",
+      "prediction": "αττ",
+      "normalized_reference": "για τη φτώχεια",
+      "normalized_prediction": "αττ",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 2,
+        "reference_units": 3,
+        "hypothesis_units": 1,
+        "errors": 3
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 11,
+        "reference_units": 14,
+        "hypothesis_units": 3,
+        "errors": 11
+      }
+    },
+    {
+      "id": "hparl:mixahl_katrinhs-olomeleia_1_01515000_01518000_1_1",
+      "reference": "<spoken_noise> πραγματικά δεν καταλαβαίνω την επιμονή σας",
+      "prediction": "αατν αταανοτν",
+      "normalized_reference": "πραγματικά δεν καταλαβαίνω την επιμονή σασ",
+      "normalized_prediction": "αατν αταανοτν",
+      "word_counts": {
+        "substitutions": 2,
+        "insertions": 0,
+        "deletions": 4,
+        "reference_units": 6,
+        "hypothesis_units": 2,
+        "errors": 6
+      },
+      "character_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 29,
+        "reference_units": 42,
+        "hypothesis_units": 13,
+        "errors": 30
+      }
+    },
+    {
+      "id": "hparl:anastasia_xristodoulopoulou-olomeleia_22_01505000_01508000_2_2",
+      "reference": "<spoken_noise> ανθρώπους που υποβάλλουν αιτήσεις να τους μεταχειρίζονται ως πολίτες και όχι να περιμένουν τρία χρόνια για ένα αποτέλεσμα",
+      "prediction": "οοονναταντταναναανατα",
+      "normalized_reference": "ανθρώπουσ που υποβάλλουν αιτήσεισ να τουσ μεταχειρίζονται ωσ πολίτεσ και όχι να περιμένουν τρία χρόνια για ένα αποτέλεσμα",
+      "normalized_prediction": "οοονναταντταναναανατα",
+      "word_counts": {
+        "substitutions": 1,
+        "insertions": 0,
+        "deletions": 17,
+        "reference_units": 18,
+        "hypothesis_units": 1,
+        "errors": 18
+      },
+      "character_counts": {
+        "substitutions": 0,
+        "insertions": 0,
+        "deletions": 100,
+        "reference_units": 121,
+        "hypothesis_units": 21,
+        "errors": 100
+      }
+    }
+  ]
+}
