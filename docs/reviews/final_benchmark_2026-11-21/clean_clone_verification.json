@@ -1,0 +1,43 @@
+{
+  "schema": "p3-clean-clone-verification-v1",
+  "status": "ok",
+  "checked_utc": "2026-11-21T10:45:39.813213+00:00",
+  "public_clone_url": "https://github.com/kaanksn1/greek-parliamentary-asr.git",
+  "commit": "a30089accdf842ada3083bf820e838a3890874f4",
+  "lfs_files_materialized": 41258,
+  "lfs_logical_bytes": 9614874926,
+  "lfs_payload_redownloaded": false,
+  "materialization": "existing uploaded local LFS cache, hard-linked into clean checkout to avoid duplicate bandwidth/storage",
+  "all_selected_weight_hashes_verified": true,
+  "checks": [
+    {
+      "command": [
+        "python",
+        "-m",
+        "greek_asr.data",
+        "verify-source-metadata"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "greek_asr.data",
+        "verify-freeze"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "greek_asr.data",
+        "verify",
+        "--selection",
+        "configs/training_data_selection.json"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

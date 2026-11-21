@@ -1,0 +1,63 @@
+{
+  "examples": 8679,
+  "wer": 0.22466471171676225,
+  "cer": 0.09082261524310531,
+  "word_counts": {
+    "substitutions": 15429,
+    "insertions": 2542,
+    "deletions": 2868,
+    "reference_units": 92756,
+    "hypothesis_units": 92430,
+    "errors": 20839
+  },
+  "character_counts": {
+    "substitutions": 18032,
+    "insertions": 14968,
+    "deletions": 19036,
+    "reference_units": 572941,
+    "hypothesis_units": 568873,
+    "errors": 52036
+  },
+  "empty_normalized_references": 0,
+  "empty_predictions": 0,
+  "schema": "greek-asr-final-score-v1",
+  "split": "test",
+  "policy": {
+    "name": "greek-asr-nfc-casefold-punctuation-v1",
+    "status": "final",
+    "annotation_tokens": "remove angle-bracket non-speech annotation tags in memory",
+    "unicode": "NFC, casefold, NFC",
+    "punctuation": "replace Unicode P* characters by spaces",
+    "whitespace": "strip/collapse Unicode whitespace",
+    "diacritics": "retain Greek accents and diaeresis",
+    "numbers": "retain digits; no number-word conversion",
+    "symbols": "retain non-punctuation symbols",
+    "cer_spaces": "include the normalized internal spaces",
+    "alignment": "JiWER 4.0.0 / RapidFuzz",
+    "aggregation": "sum S/I/D and reference units across every utterance, then divide",
+    "empty_references": "keep all IDs; nonempty hypotheses contribute insertions; zero corpus denominator is null",
+    "test_source_files": "never rewritten or filtered"
+  },
+  "scorer_code_sha256": "f8d413a232dfdb650d970b513e4955fc986b77be68e567e0ec03abc55c9e0e60",
+  "reference_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+  "predictions_sha256": "0c536bb6fd1f710d2702a61290071c513d30b84e37b6c374a93ebd00f7ebbcf6",
+  "manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+  "audio_seconds": 40348.4,
+  "jiwer": "4.0.0",
+  "rapidfuzz": "3.14.6",
+  "speaker_bootstrap_95_ci": {
+    "unit": "speaker (fallback recording/id)",
+    "clusters": 82,
+    "seed": 42,
+    "resamples": 1000,
+    "confidence": 0.95,
+    "wer": [
+      0.21102842922652654,
+      0.24106092041235302
+    ],
+    "cer": [
+      0.08286543279654972,
+      0.10130900451237121
+    ]
+  }
+}

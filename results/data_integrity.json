@@ -1,0 +1,108 @@
+{
+  "cohorts": {
+    "css10_train": {
+      "hours": 4.137269337364575,
+      "manifest": "data/manifests/css10_el_train.jsonl",
+      "recordings_with_ids": 0,
+      "sha256": "8deab17bc1dd5be9b1baf2c57fac4ee1eda0f913b6956423b8d7f0c014748855",
+      "speakers_with_ids": 0,
+      "utterances": 1844,
+      "utterances_without_recording_id": 1844,
+      "utterances_without_speaker_id": 1844
+    },
+    "dev": {
+      "hours": 9.059188888888889,
+      "manifest": "data/manifests/dev.jsonl",
+      "recordings_with_ids": 3,
+      "sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+      "speakers_with_ids": 64,
+      "utterances": 7113,
+      "utterances_without_recording_id": 0,
+      "utterances_without_speaker_id": 0
+    },
+    "hparl_train": {
+      "hours": 30.883408333333335,
+      "manifest": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+      "recordings_with_ids": 18,
+      "sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+      "speakers_with_ids": 208,
+      "utterances": 23602,
+      "utterances_without_recording_id": 0,
+      "utterances_without_speaker_id": 0
+    },
+    "mixed_train": {
+      "hours": 35.02067767069791,
+      "manifest": "data/manifests/subsets/train_hparl_30.5h_seed42_css10.jsonl",
+      "recordings_with_ids": 18,
+      "sha256": "309d9909f60408e29d68bbfbad95a0b7f12f2d75c0a77cfcd07f42526c83ddca",
+      "speakers_with_ids": 208,
+      "utterances": 25446,
+      "utterances_without_recording_id": 1844,
+      "utterances_without_speaker_id": 1844
+    },
+    "raw_hparl_train": {
+      "hours": 30.896591666666666,
+      "manifest": "data/manifests/subsets/raw/train_hparl_30.5h_seed42.jsonl",
+      "recordings_with_ids": 18,
+      "sha256": "3991a65229c95fdf6a9f4451b6cb9888b64f341460a428850237f912d07715da",
+      "speakers_with_ids": 208,
+      "utterances": 23615,
+      "utterances_without_recording_id": 0,
+      "utterances_without_speaker_id": 0
+    },
+    "test": {
+      "hours": 11.20788888888889,
+      "manifest": "data/manifests/test.jsonl",
+      "recordings_with_ids": 3,
+      "sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+      "speakers_with_ids": 82,
+      "utterances": 8679,
+      "utterances_without_recording_id": 0,
+      "utterances_without_speaker_id": 0
+    }
+  },
+  "computed_after_selection_frozen": true,
+  "css10_speaker_note": "Producer single-reader corpus; original manifests encode no speaker/session IDs. All CSS10 is training-only; no invented IDs or cross-source identity claims.",
+  "generator_sha256": "e730d920fc75213f478d356528832650010168291a179b92281c454e59a30252",
+  "normalization_policy": "greek-asr-nfc-casefold-punctuation-v1",
+  "normalized_empty_test_references_retained": 0,
+  "schema": "p3-benchmark-data-report-v1",
+  "split_pair_group_overlap": {
+    "dev__test": {
+      "recordings": 0,
+      "speakers": 16
+    },
+    "hparl_train__dev": {
+      "recordings": 0,
+      "speakers": 41
+    },
+    "hparl_train__test": {
+      "recordings": 0,
+      "speakers": 49
+    }
+  },
+  "training_to_test_overlap": {
+    "hparl_train": {
+      "final_policy_matching_test_utterances": 9,
+      "final_policy_matching_unique_sentences": 9,
+      "literal_matching_test_utterances": 3,
+      "literal_matching_unique_sentences": 3,
+      "recordings": 0,
+      "shared_audio_sha256_values": 0,
+      "speakers": 49,
+      "test_clips_with_shared_audio_sha256": 0,
+      "test_clips_with_shared_speaker": 4782
+    },
+    "mixed_train": {
+      "final_policy_matching_test_utterances": 9,
+      "final_policy_matching_unique_sentences": 9,
+      "literal_matching_test_utterances": 3,
+      "literal_matching_unique_sentences": 3,
+      "recordings": 0,
+      "shared_audio_sha256_values": 0,
+      "speakers": 49,
+      "test_clips_with_shared_audio_sha256": 0,
+      "test_clips_with_shared_speaker": 4782
+    }
+  }
+}

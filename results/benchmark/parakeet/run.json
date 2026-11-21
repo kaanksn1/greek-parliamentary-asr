@@ -1,0 +1,74 @@
+{
+  "schema": "greek-asr-inference-v1",
+  "status": "complete",
+  "purpose": "baseline",
+  "created_utc": "2026-11-21T13:40:10.903765+00:00",
+  "backend": "parakeet",
+  "batch_size": 4,
+  "model": {
+    "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+    "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+    "pipeline_tag": "automatic-speech-recognition",
+    "license": "cc-by-4.0",
+    "source": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+    "status": "metadata_verified_runtime_pending"
+  },
+  "seed": 42,
+  "device": "cuda",
+  "split": "test",
+  "manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+  "source_lock_sha256": "fd720cd46842ee20f9278d8635f36276d0bd44ccbca985a6c6c84d72c68defaa",
+  "test_protocol_sha256": "b322570ca6376e7524466534b758155d6a28cb6ef0f3f92bf458969710742db2",
+  "expected_records": 8679,
+  "total_audio_seconds": 40348.4,
+  "training_performed": false,
+  "references_used_as_model_input": false,
+  "wer_cer": null,
+  "completed_records": 8679,
+  "code_sha256": {
+    "greek_asr/infer.py": "3cfbd49f598738ed0b55b95f62cb0fcaf0e0c131829457fff7861813916e07da",
+    "greek_asr/audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "greek_asr/pretrained/__init__.py": "729b49beb875b629929f515457c1fc59680d28e6a56b9e14be1e656af37c7a2f",
+    "greek_asr/pretrained/nemo.py": "a6614bc1b69a10d090451c0a890e9d3f2e80e2cc4a23485932a79217648899a3",
+    "greek_asr/pretrained/qwen.py": "71bfec89eb6e048d9209c3bf922f0a47199690c2d31f0b3e30be815d3ff32309",
+    "greek_asr/pretrained/whisper.py": "f405a072d85e74ab98dd7c41379616895beea9a7ac57e43e20441d15558a571a"
+  },
+  "download_and_load_seconds": 87.05909126199913,
+  "settings": {
+    "runtime": "nemo",
+    "checkpoint_file": "parakeet-tdt-0.6b-v3.nemo",
+    "batch_size": 4,
+    "source_lang": "auto",
+    "target_lang": "auto",
+    "decoder": "checkpoint defaults",
+    "use_cuda_graph_decoder": false,
+    "execution_override": "NVIDIA CUDA Graph optimization disabled on ROCm; same greedy TDT"
+  },
+  "inference_seconds_including_output_io": 486.77430108599947,
+  "predictions_sha256": "ba52ad899d2055e71a87fe3de257bac8c18ccfbada0601af6bda6dbf0c31069e",
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "2.2.6",
+      "nemo-toolkit": "3.0.0",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 5061389824
+  },
+  "job": {
+    "backend": "parakeet",
+    "batch_size": 4,
+    "device": "cuda",
+    "kind": "pretrained",
+    "name": "parakeet",
+    "role": "baseline"
+  },
+  "worker_seconds_including_load": 576.4252844010007,
+  "worker_code_sha256": "7e03fcebd4a2ceed6d0ba3c3cc8dfc0ad1f1c6aab0047d4c1bd479c874022688",
+  "code_commit": "0ff3196c9870317be89d11a7fd09277bd0445dde"
+}

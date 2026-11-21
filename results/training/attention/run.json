@@ -1,12 +1,5 @@
 {
-  "best_dev_loss": 2.186731884184848,
-  "best_optimizer_update": 3000,
-  "code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
-  "code_sha256": {
-    "attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
-    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
-    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d"
-  },
+  "schema": "greek-asr-attention-train-v1",
   "config": {
     "_comment": "Owner train/dev budget generated from configs/training_data_selection.json and docs/reviews/budget_2026-11-20. Seeded approximate passes are a compute allocation, not convergence evidence. HParl-only jobs require the committed HParl raw-to-clean acceptance; the mixed condition additionally requires corrected CSS10 audit/acceptance. Repository audio delivery must finish before submission. Final test remains locked.",
     "architecture": "Listen, Attend and Spell encoder-decoder with an auxiliary CTC head (hybrid CTC/attention)",
@@ -29,35 +22,42 @@
     "train_manifest": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
     "train_references": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl"
   },
-  "created_utc": "2026-11-20T04:06:07.714363+00:00",
-  "dev_manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
-  "dev_references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
-  "dev_utterances": 7113,
-  "device_requested": "cuda",
-  "device_used": "cuda",
-  "effective_batch_size": 16,
-  "max_steps": 3000,
-  "micro_steps_completed": 3000,
   "model_config": {
-    "attention_dim": 256,
-    "ctc_weight": 0.3,
+    "vocab_size": 62,
+    "input_dim": 80,
+    "encoder_hidden": 256,
+    "encoder_pyramid_layers": 3,
     "decoder_embedding": 256,
     "decoder_hidden": 512,
     "decoder_layers": 2,
-    "encoder_hidden": 256,
-    "encoder_pyramid_layers": 3,
-    "input_dim": 80,
-    "max_decode_length": 400,
-    "vocab_size": 62
+    "attention_dim": 256,
+    "ctc_weight": 0.3,
+    "max_decode_length": 400
   },
-  "optimizer_updates_completed": 3000,
-  "precision": "float32",
-  "schema": "greek-asr-attention-train-v1",
+  "vocab_size": 62,
   "seed": 42,
+  "created_utc": "2026-11-20T04:06:07.714363+00:00",
+  "code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+  "code_sha256": {
+    "attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5"
+  },
   "train_manifest_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
   "train_references_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
-  "train_utterances": 23602,
+  "dev_manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+  "dev_references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
   "trainable_parameters": 11043964,
-  "training_seconds": 3331.367488320002,
-  "vocab_size": 62
+  "effective_batch_size": 16,
+  "precision": "float32",
+  "train_utterances": 23602,
+  "dev_utterances": 7113,
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "max_steps": 3000,
+  "optimizer_updates_completed": 3000,
+  "micro_steps_completed": 3000,
+  "best_dev_loss": 2.186731884184848,
+  "best_optimizer_update": 3000,
+  "training_seconds": 3331.367488320002
 }

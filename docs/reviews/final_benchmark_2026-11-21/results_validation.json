@@ -1,0 +1,59 @@
+{
+  "status": "passed",
+  "complete_systems_checked": 10,
+  "expected_systems": 12,
+  "systems": [
+    {
+      "system": "attention",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "canary",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "gmm_hmm",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "hubert_ctc",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "plain_ctc",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "transducer",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "wav2vec",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "whisper_hparl",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "whisper_mixed",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    },
+    {
+      "system": "whisper_pretrained",
+      "records": 8679,
+      "identity_and_counts_verified": true
+    }
+  ],
+  "original_training_run_hashes_match": true,
+  "final_test_still_running": true
+}

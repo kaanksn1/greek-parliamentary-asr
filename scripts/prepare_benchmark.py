@@ -126,7 +126,9 @@ def main():
         exports[name]['training_code_commit'] = run.get('code_commit')
         exports[name]['selection'] = 'best full-DEV loss' if name != 'gmm_hmm' else 'completed fixed EM allocation'
         exports[name]['training_run_sha256'] = sha(source.parent / 'run.json')
-        write(root / f'results/training/{name}/run.json', run)
+        run_target = root / f'results/training/{name}/run.json'
+        run_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source.parent / 'run.json', run_target)
         print(json.dumps({'exported': name, 'bytes': destination.stat().st_size}), flush=True)
     hubert_source = args.primary_run / 'hubert/checkpoint-best'
     hubert_target = root / 'checkpoints/hubert_ctc'
@@ -134,7 +136,9 @@ def main():
     exports['hubert_ctc'] = {'path': 'checkpoints/hubert_ctc', 'files': {
         p.relative_to(hubert_target).as_posix(): sha(p) for p in sorted(hubert_target.rglob('*')) if p.is_file()},
         'selection': 'best full-DEV loss', 'training_run_sha256': sha(args.primary_run / 'hubert/run.json')}
-    write(root / 'results/training/hubert_ctc/run.json', read(args.primary_run / 'hubert/run.json'))
+    run_target = root / 'results/training/hubert_ctc/run.json'
+    run_target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(args.primary_run / 'hubert/run.json', run_target)
     weights_bytes = sum(p.stat().st_size for p in (root / 'checkpoints').rglob('*') if p.is_file())
     audio_gib = read(root / 'configs/training_data_selection.json')['storage']['all_audio_unique_lfs_gib']
     if audio_gib + weights_bytes / 1024**3 > 10:
