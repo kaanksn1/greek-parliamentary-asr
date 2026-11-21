@@ -1,0 +1,127 @@
+{
+  "status": "complete",
+  "split": "dev",
+  "records": 65,
+  "completed_records": 65,
+  "inference_seconds": 146.796366208,
+  "tuning": {
+    "gmm_hmm": {
+      "lm_weight": 10.0,
+      "insertion_penalty": 0.0,
+      "space_skip_logprob": 0.0
+    },
+    "source": "fixed seeded DEV calibration only",
+    "dev_manifest_sha256": "7b946113fc14c5346111ca2badcd80324a80341c78a85f1ba9dbdb83db3fdc19",
+    "scoring_policy": "greek-asr-nfc-casefold-punctuation-v1",
+    "trials": [
+      {
+        "settings": {
+          "lm_weight": 6.0,
+          "insertion_penalty": -10.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 0.96248382923674,
+        "cer": 0.5472251308900523
+      },
+      {
+        "settings": {
+          "lm_weight": 6.0,
+          "insertion_penalty": 0.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 0.9197930142302717,
+        "cer": 0.4875392670157068
+      },
+      {
+        "settings": {
+          "lm_weight": 6.0,
+          "insertion_penalty": 10.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 1.2238033635187582,
+        "cer": 0.5233507853403141
+      },
+      {
+        "settings": {
+          "lm_weight": 10.0,
+          "insertion_penalty": -10.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 0.9495472186287193,
+        "cer": 0.5899476439790576
+      },
+      {
+        "settings": {
+          "lm_weight": 10.0,
+          "insertion_penalty": 0.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 0.9055627425614489,
+        "cer": 0.5061780104712041
+      },
+      {
+        "settings": {
+          "lm_weight": 10.0,
+          "insertion_penalty": 10.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 0.9948253557567918,
+        "cer": 0.492565445026178
+      },
+      {
+        "settings": {
+          "lm_weight": 14.0,
+          "insertion_penalty": -10.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 0.943078913324709,
+        "cer": 0.6144502617801048
+      },
+      {
+        "settings": {
+          "lm_weight": 14.0,
+          "insertion_penalty": 0.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 0.9055627425614489,
+        "cer": 0.5543455497382199
+      },
+      {
+        "settings": {
+          "lm_weight": 14.0,
+          "insertion_penalty": 10.0,
+          "space_skip_logprob": 0.0
+        },
+        "wer": 0.9327296248382924,
+        "cer": 0.5149738219895288
+      }
+    ]
+  },
+  "test_used": false,
+  "emissions_cached_once": true,
+  "job": {
+    "batch_size": 1,
+    "checkpoint": "checkpoints/gmm_hmm/model.pt",
+    "device": "cpu",
+    "kind": "gmm",
+    "name": "gmm_hmm",
+    "role": "baseline"
+  },
+  "worker_seconds_including_load": 146.894393358,
+  "worker_code_sha256": "efc19889f7e6ab29317ae397f05f58ea392848ecf4a786d85eb1875d3708e30e",
+  "seed": 42,
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "qwen-asr": "0.0.6",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": false
+  },
+  "code_commit": "220eb85bba186067b562c9bc794ac220b0f0610f",
+  "manifest_sha256": "7b946113fc14c5346111ca2badcd80324a80341c78a85f1ba9dbdb83db3fdc19"
+}

@@ -1,0 +1,495 @@
+{
+  "authorizations": "user assigned all remaining benchmark/report work on 21 November after all seven trainings completed",
+  "benchmark_plan_sha256": "57c1748b2f14a91952200a50fe4ff8dd8f53c182e3df8fd21adc4858d5f60bb2",
+  "created_utc": "2026-11-21T09:32:20.614103+00:00",
+  "dev_acceptance": {
+    "attention": {
+      "cer": 0.70282722513089,
+      "records": 65,
+      "run_sha256": "32bd94fd1e29e51cff25bcde47aee8a1d59872dd4f63e9ae9c75a57435692b57",
+      "score_sha256": "a11e06a9c0654cbc0dd7841743b50484c2fbc59b58dacd2cccf0f6379e03b63d",
+      "wer": 1.0155239327296248
+    },
+    "canary": {
+      "cer": 0.09821989528795812,
+      "records": 65,
+      "run_sha256": "ac12f1bb293c414139eb5587e52c0c00f6ea7da6a6bdfa6ba4b427b2bd6dea7a",
+      "score_sha256": "673fdd02e54a8add88ee5a32a9021d2b5782e66d92be253ebbde024d682cde40",
+      "wer": 0.2910737386804657
+    },
+    "gmm_hmm": {
+      "cer": 0.5061780104712041,
+      "records": 65,
+      "run_sha256": "63a540b1f5a5a5068801763b055a31d39dcfeff09c643aab5d1e9d46528f0808",
+      "score_sha256": "0d6fbde093d25eb420dc3a5ade221ec2e84b8e3269a6c8f12fdb7364cb134c48",
+      "wer": 0.9055627425614489
+    },
+    "hubert_ctc": {
+      "cer": 0.8121465968586388,
+      "records": 65,
+      "run_sha256": "ca8490f604b52c385e3e7507dc00c599866f7b698f5eb3bff4d639020d4ce106",
+      "score_sha256": "8dbd2563aad89b8365be96963265ff252c4c9e6a9e281ec4381f8a660dfbfb88",
+      "wer": 1.0
+    },
+    "parakeet": {
+      "cer": 0.14701570680628273,
+      "records": 65,
+      "run_sha256": "d45a75d2ec5ce298f379c1b88e50d263357791f512496561a159a6e739858dde",
+      "score_sha256": "c17b70aa7f32b27b42f1870946f28152aa4b604c9344d2c78dd4a28308bb0eb4",
+      "wer": 0.36739974126778785
+    },
+    "plain_ctc": {
+      "cer": 0.9132984293193718,
+      "records": 65,
+      "run_sha256": "63e7cd91fe848ee42ceb737efb207ca4a16a9dafd428810fcbb7e3418cd0bc70",
+      "score_sha256": "f55b0c0c90be0714b36d5ae958ceafba67390df2902eb496377ab6c7fa47dd57",
+      "wer": 1.0
+    },
+    "qwen": {
+      "cer": 0.19958115183246072,
+      "records": 65,
+      "run_sha256": "a45317198d614c919f6a935c4e9b7f671f4a4e0c2939516cd55b017eb559a450",
+      "score_sha256": "ad443126b7f4db1d7b7c77c619bc5eb1332b4a2584add18e8daf0c351ddc823d",
+      "wer": 0.44372574385511
+    },
+    "transducer": {
+      "cer": 0.5786387434554974,
+      "records": 65,
+      "run_sha256": "52183501dffdeabb9e054038b547c17c392f4977cec0d25a128553e4bbfb96a5",
+      "score_sha256": "c5cc91012b915c846e02c849c6ddc4e74d6afe17dfdf629df7535cb4023a9061",
+      "wer": 0.8835705045278137
+    },
+    "wav2vec": {
+      "cer": 0.1870157068062827,
+      "records": 65,
+      "run_sha256": "192721ef9a8c6644c9bcb62ecdc9bedc7524bc05198d3825983f129511126041",
+      "score_sha256": "70d6227fe38cce23d6c24f763d19a297c886242c392f2a17197f2400254acd14",
+      "wer": 0.5252263906856404
+    },
+    "whisper_hparl": {
+      "cer": 0.08544502617801047,
+      "records": 65,
+      "run_sha256": "b599f2ff6b0fc3b85390a3386d5e32eb9fcd4a28e520bcd185c9f60ad1bfae53",
+      "score_sha256": "441a5e5d7b87de243d8e7c248477dd70ff56814c0e550386c040d402f52bd0ad",
+      "wer": 0.21216041397153945
+    },
+    "whisper_mixed": {
+      "cer": 0.08209424083769634,
+      "records": 65,
+      "run_sha256": "a87755ac673997da0071d1124f9f65456cf0a37ce45288a0ce73b6521cd80604",
+      "score_sha256": "5708d7dc90e25b8a326adf7381d2df6ea1c8aefa4f3850b79229d805a6df154c",
+      "wer": 0.21345407503234154
+    },
+    "whisper_pretrained": {
+      "cer": 0.19581151832460733,
+      "records": 65,
+      "run_sha256": "5036d66159e8888ded5d21c8c1c3b99e9b9f09cbd63bbca095fd5bfc5dc5f50d",
+      "score_sha256": "65758a87ff6618fcdcfcdba68c052bc7cc8e40bd3cf94ba59fda5b65f90008dd",
+      "wer": 0.35834411384217335
+    }
+  },
+  "dev_batch_resources_sha256": "7f6facd1d7d831c421060a5054d6cb49ee295ac7c2b0ca70c39795993869887e",
+  "dev_selection_sha256": "543e5f891923f8727bffde6c2425277de9dec4913dac3354fea23a51a2f8379f",
+  "evaluation_rule": "one successful complete test prediction pass per frozen system; no test-driven changes",
+  "expected_systems": 12,
+  "inference_code_sha256": {
+    "greek_asr/__init__.py": "c987d4e934768a2a0e36624984837b7db5175431870e95f63f1de1acd8642d96",
+    "greek_asr/audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5",
+    "greek_asr/data/__init__.py": "4df3826b9b25c1d763154356f8235b27ab18e6518a2a3920da2a33d93e6cbacc",
+    "greek_asr/data/__main__.py": "61ffc2581c86242da581b11f1e2b1de8bf0b56a5597f5bc8d5c9b6b45738e5c4",
+    "greek_asr/data/audit.py": "7173473d520a202bc7099053885d7b5f3c6f05437ccc3da86173d4b4fda05600",
+    "greek_asr/data/clean.py": "399680731d40fb476ac2c2bbd6ec7f58582b1d442dbc50ef739f0eaba6050574",
+    "greek_asr/data/cohort.py": "096e8bebef2a12fc9fc8f4e9ad9832e6316901c464f7599e5cf681ea6225f8fb",
+    "greek_asr/data/common.py": "d9fa75160ea7b444e8eba86c55a43980ea45579a137e2e6a30c0d181548dbd18",
+    "greek_asr/data/css10.py": "6361f4a9114a9ddb1457a85573d6ccda07b183a4eb64017320c1a538e38f10a4",
+    "greek_asr/data/freeze.py": "496e4006e42a02970f0cf9194772cf01d137fd95305884c6ff09de76e53a8cd4",
+    "greek_asr/data/hparl.py": "1d6fb61782c671469e87c2192737dd30bef9bc883be8a6cddc3e472e89908bc1",
+    "greek_asr/data/publish.py": "6e19faef785ba49297571fda055b060ff54d1cf602b3a95532d033a99d14e737",
+    "greek_asr/data/report.py": "fde33554c71775eddb27673267585ec79068ea3b46c05210425e05b0a268c32b",
+    "greek_asr/data/report_selected.py": "2222f743f1a52d67f283b4ef1173ef07812ee2db177b7de590f0a82f7e87958e",
+    "greek_asr/data/selection.py": "d5fc80391ef1af01369a39cad6c0138811dcf822496fed916cfbe291604f4797",
+    "greek_asr/evaluation.py": "06ade2abe5b54fd2446c66720ff0d7de749f8974f82244ef41697c259253b458",
+    "greek_asr/infer.py": "3cfbd49f598738ed0b55b95f62cb0fcaf0e0c131829457fff7861813916e07da",
+    "greek_asr/models/__init__.py": "697d55b06d6deddffab61dca0d8d95e4e08c86fa60305ba7cb02f53b204d8e07",
+    "greek_asr/models/attention.py": "c00175ab952f8c6623fbdb49702a7157e46481e2dd57a836616a4499a9d6407f",
+    "greek_asr/models/common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "greek_asr/models/ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "greek_asr/models/ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "greek_asr/models/gmm_hmm.py": "080f4c0fb334b4292088e7b7406f6247ffaf3b14bee3347f1538766e6b4102fc",
+    "greek_asr/models/hubert.py": "603f9495ccea3ea1fd60d7ff93a2624fa985f77099d89213f9884a4d00f3c3de",
+    "greek_asr/models/rnnt_loss.py": "50789fc37f78db00487817f129fea6a0a5a21c97f108cd2c9b46da6019b0e60e",
+    "greek_asr/models/transducer.py": "7f2cd009641868138c8348c722d6455f781c5d87eb3973fa4754aefcb9df58db",
+    "greek_asr/models/wav2vec.py": "08a821c77eff2476a2dab2799061d56d14fe5b52110647001d2f7967f25c4309",
+    "greek_asr/models/whisper_finetune.py": "119b91c497493ccaf3db44ce0c495c000e23c0c25efed19546fd0809fb4cb9be",
+    "greek_asr/pilot_data.py": "eaa3f1c95f8d3dacdd07f6a3b9074b09818312a435c271062845f283943b5205",
+    "greek_asr/pretrained/__init__.py": "729b49beb875b629929f515457c1fc59680d28e6a56b9e14be1e656af37c7a2f",
+    "greek_asr/pretrained/nemo.py": "a6614bc1b69a10d090451c0a890e9d3f2e80e2cc4a23485932a79217648899a3",
+    "greek_asr/pretrained/qwen.py": "71bfec89eb6e048d9209c3bf922f0a47199690c2d31f0b3e30be815d3ff32309",
+    "greek_asr/pretrained/whisper.py": "f405a072d85e74ab98dd7c41379616895beea9a7ac57e43e20441d15558a571a",
+    "greek_asr/score.py": "1b994549b872aecb5759d9a299d4ebec2a6d0c1ed545925520fb9300d020e5b3",
+    "greek_asr/scoring.py": "e6a823b657d5692810ef75d1ae7bd757a2a507b1df3c314899b5ba6dc38519cc",
+    "scripts/benchmark_worker.py": "7e03fcebd4a2ceed6d0ba3c3cc8dfc0ad1f1c6aab0047d4c1bd479c874022688",
+    "scripts/run_benchmark_queue.py": "ae40ff76851a4f0fcc61e288020690baaea9303f387ecf305e605d959a799930"
+  },
+  "metrics": {
+    "confidence_intervals": "95% percentile speaker-cluster bootstrap, 1000 resamples, seed 42",
+    "primary": "corpus WER",
+    "secondary": [
+      "corpus CER including spaces",
+      "S/I/D counts",
+      "RTFx",
+      "empty-hypothesis rate"
+    ]
+  },
+  "normalization": {
+    "aggregation": "sum S/I/D and reference units across every utterance, then divide",
+    "alignment": "JiWER 4.0.0 / RapidFuzz",
+    "annotation_tokens": "remove angle-bracket non-speech annotation tags in memory",
+    "cer_spaces": "include the normalized internal spaces",
+    "diacritics": "retain Greek accents and diaeresis",
+    "empty_references": "keep all IDs; nonempty hypotheses contribute insertions; zero corpus denominator is null",
+    "name": "greek-asr-nfc-casefold-punctuation-v1",
+    "numbers": "retain digits; no number-word conversion",
+    "punctuation": "replace Unicode P* characters by spaces",
+    "status": "final",
+    "symbols": "retain non-punctuation symbols",
+    "test_source_files": "never rewritten or filtered",
+    "unicode": "NFC, casefold, NFC",
+    "whitespace": "strip/collapse Unicode whitespace"
+  },
+  "professor_exact_cutoff_unknown": true,
+  "runtime": {
+    "HSA_ENABLE_DXG_DETECTION": "1",
+    "MIOPEN_FIND_MODE": "FAST",
+    "MKL_NUM_THREADS": "2",
+    "OMP_NUM_THREADS": "2"
+  },
+  "runtime_failure_policy": "retain failures/partial files; retry infrastructure faults with identical settings; never score partial cohorts",
+  "schema": "p3-final-test-protocol-v1",
+  "scorer_code_sha256": "f8d413a232dfdb650d970b513e4955fc986b77be68e567e0ec03abc55c9e0e60",
+  "scoring_policy": "greek-asr-nfc-casefold-punctuation-v1",
+  "seed": 42,
+  "selected_checkpoints_sha256": "6bf02134068eb23b3376da0ffae6a3804e0cd51bd50baaee2e8e6aeb9c3435b6",
+  "selected_decoders_sha256": "d1432ae9da40ff6e3acc4a1e731083a1f3729efa9296ace8139011a8719421d2",
+  "selection_fixed": true,
+  "selection_uses": "full-DEV checkpoint losses and DEV calibration only",
+  "source_locks": {
+    "configs/kemal_model_sources.json": "b6eb52442432ba940bcd62722b1bc897ae6bd2ce56ad657afd5c3e442806b576",
+    "configs/model_sources.lock.json": "fd720cd46842ee20f9278d8635f36276d0bd44ccbca985a6c6c84d72c68defaa"
+  },
+  "system_details": {
+    "attention": {
+      "architecture": "Listen, Attend and Spell encoder-decoder with an auxiliary CTC head (hybrid CTC/attention)",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_id": "group-implemented/attention",
+      "revision": "selected local checkpoint SHA-256",
+      "selected_weight_identity": {
+        "export_sha256": "a767de757477192e761953c206def27f31a1de705771a300bd2b48525ce946e7",
+        "inference_tensors_sha256": "f533d24280ba34e80fa6121eb40f08e8a58452fcf075d30df451e3c3aafedbb1",
+        "path": "checkpoints/attention/model.pt",
+        "removed_training_state_keys": [
+          "optimizer_state",
+          "scheduler_state",
+          "rng_state"
+        ],
+        "selection": "best full-DEV loss",
+        "source_sha256": "51dcaf8ce7543472d6bb0252d6b54d5515a90ee933238f8f6a407cc3ca831c01",
+        "step": 3000,
+        "tensor_values_identical": true,
+        "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+        "training_run_sha256": "1f49a8f5e5c220d7dea2b3c8ca0f1ab395474039e49f433f33f8e1f6ba986ba0"
+      },
+      "trained_by_group": true
+    },
+    "canary": {
+      "architecture": "multilingual Canary FastConformer encoder-decoder",
+      "decoder": "pinned NeMo checkpoint defaults; Parakeet CUDA graphs disabled for ROCm",
+      "model_card": "https://huggingface.co/nvidia/canary-1b-v2",
+      "model_id": "nvidia/canary-1b-v2",
+      "revision": "d455706339a6b32e1aa40f82c713a482a0c938e2",
+      "trained_by_group": false,
+      "upstream_license": "cc-by-4.0"
+    },
+    "gmm_hmm": {
+      "architecture": "MFCC + diagonal-mixture GMM, character HMM and bigram LM",
+      "decoder": {
+        "insertion_penalty": 0.0,
+        "lm_weight": 10.0,
+        "space_skip_logprob": 0.0
+      },
+      "model_id": "group-implemented/gmm_hmm",
+      "revision": "selected local checkpoint SHA-256",
+      "selected_weight_identity": {
+        "export_sha256": "cd8af43a061352c08bcb11672a43bc62c87e8e065a2d23e4171cf118b047cb47",
+        "inference_tensors_sha256": "5011311cdad8c414cff71f2d6c554733d6727cd12d09ac2239547e009a0ca8f1",
+        "path": "checkpoints/gmm_hmm/model.pt",
+        "removed_training_state_keys": [],
+        "selection": "completed fixed EM allocation",
+        "source_sha256": "ee8d656d6930e114ac77e697a98e550b64568087d1e430208419d1ab400de472",
+        "step": null,
+        "tensor_values_identical": true,
+        "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+        "training_run_sha256": "214ad8d77d8f54b8802410dc31229f1f117edb8eedf00bf50a974e14d2c51b24"
+      },
+      "trained_by_group": true
+    },
+    "hubert_ctc": {
+      "architecture": "mHuBERT-147 encoder + our trained Greek CTC head",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_card": "https://huggingface.co/utter-project/mHuBERT-147",
+      "model_id": "utter-project/mHuBERT-147",
+      "revision": "7ad3fc0bc5106c58c9c13526abccad527150d135",
+      "selected_weight_identity": {
+        "files": {
+          "config.json": "a4f19f0e407bcbe3c75cd9a990ba9c1f6e3d0c144702a98c5412783c0ec9ac83",
+          "greek_asr_ctc.json": "d895ed5995598c894945b3a5954d7bba531cc9d26fc7bea036d98d31e394a664",
+          "model.safetensors": "5c855dfea80209251f654683c58850a7b5952d492e790f935510ccaf39e60c2f",
+          "preprocessor_config.json": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86"
+        },
+        "path": "checkpoints/hubert_ctc",
+        "selection": "best full-DEV loss",
+        "training_run_sha256": "d82cca07f455be0904954a5d5d88c5bb4ba7b64eef54024d76a348eb78e8db71"
+      },
+      "trained_by_group": true,
+      "upstream_license": "cc-by-nc-sa-4.0"
+    },
+    "parakeet": {
+      "architecture": "multilingual Parakeet FastConformer TDT transducer",
+      "decoder": "pinned NeMo checkpoint defaults; Parakeet CUDA graphs disabled for ROCm",
+      "model_card": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+      "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+      "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+      "trained_by_group": false,
+      "upstream_license": "cc-by-4.0"
+    },
+    "plain_ctc": {
+      "architecture": "from-scratch log-mel BiLSTM encoder + character CTC",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_id": "group-implemented/plain_ctc",
+      "revision": "selected local checkpoint SHA-256",
+      "selected_weight_identity": {
+        "export_sha256": "9d73bc1284722b3a49ca341eb043c5e7ab055145b42a07a215f62ead078bed8c",
+        "inference_tensors_sha256": "93bc79efabe7882be37d57f4a6f3604530da75c1e556f034f9ebed77ea7d0859",
+        "path": "checkpoints/plain_ctc/model.pt",
+        "removed_training_state_keys": [
+          "optimizer_state",
+          "scheduler_state",
+          "rng_state"
+        ],
+        "selection": "best full-DEV loss",
+        "source_sha256": "7f56a445c92a40e5b221d159b0e22fd56cff2a6da09b46b910be56f91b149b98",
+        "step": 2300,
+        "tensor_values_identical": true,
+        "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+        "training_run_sha256": "50368fc2140f4efe3d1a2553edaa264e407f55a8429dca488e9ed0f9ef640187"
+      },
+      "trained_by_group": true
+    },
+    "qwen": {
+      "architecture": "Qwen3-ASR-0.6B audio encoder and autoregressive decoder",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_card": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+      "model_id": "Qwen/Qwen3-ASR-0.6B",
+      "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "trained_by_group": false,
+      "upstream_license": "apache-2.0"
+    },
+    "transducer": {
+      "architecture": "RNN-T: unidirectional pyramidal LSTM encoder, LSTM prediction network, feed-forward joint network",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_id": "group-implemented/transducer",
+      "revision": "selected local checkpoint SHA-256",
+      "selected_weight_identity": {
+        "export_sha256": "ea2c500507ad144df888967408937ec875eb6891211dfe0bbe158f514404990e",
+        "inference_tensors_sha256": "80a0ba3599f359b24be3a67913a3da2d806daebda58b2a866062a0e499acf77b",
+        "path": "checkpoints/transducer/model.pt",
+        "removed_training_state_keys": [
+          "optimizer_state",
+          "scheduler_state",
+          "rng_state"
+        ],
+        "selection": "best full-DEV loss",
+        "source_sha256": "9895ff1baaab629e6372b404001c182c8185d9e231ae205e57795027ba6bea2e",
+        "step": 3000,
+        "tensor_values_identical": true,
+        "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+        "training_run_sha256": "5ae2bf9f077dfad78ead956ed2afa457ee9eec6d1d09e1ea4dc8a936a9dfd09f"
+      },
+      "trained_by_group": true
+    },
+    "wav2vec": {
+      "architecture": "wav2vec 2.0 XLSR-53 + published Greek CTC head",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_card": "https://huggingface.co/lighteternal/wav2vec2-large-xlsr-53-greek",
+      "model_id": "lighteternal/wav2vec2-large-xlsr-53-greek",
+      "revision": "c5c82840b689b827a2029deefe82670c7c5809a0",
+      "trained_by_group": false,
+      "upstream_license": "apache-2.0"
+    },
+    "whisper_hparl": {
+      "architecture": "multilingual Whisper-small, our HParl fine-tuning",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_card": "https://huggingface.co/openai/whisper-small",
+      "model_id": "openai/whisper-small",
+      "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+      "selected_weight_identity": {
+        "export_sha256": "ee85a2b51a4933155fb6e3a77dd1e0ea0fac54b1c2d38e3f54f5757768ce7d27",
+        "inference_tensors_sha256": "8a3802f799b3ef49c19aa5dad7a8f2654ae53b9a56bca03462ece982d424400b",
+        "path": "checkpoints/whisper_hparl/model.pt",
+        "removed_training_state_keys": [
+          "optimizer_state",
+          "scheduler_state",
+          "rng_state"
+        ],
+        "selection": "best full-DEV loss",
+        "source_sha256": "ae8f1f1d80e34123745f405f702d94b639dc68d92a19a4346e3c0c85d93724ee",
+        "step": 500,
+        "tensor_values_identical": true,
+        "training_code_commit": "d98abe995f85ff634704ec9f60b26ca671a21a29",
+        "training_run_sha256": "5f4a35719f1b4a5dc51d5d5f0f10f4bf093e6b199b96912460a9aa8bcc565643"
+      },
+      "trained_by_group": true,
+      "upstream_license": "apache-2.0"
+    },
+    "whisper_mixed": {
+      "architecture": "multilingual Whisper-small, our HParl + CSS10 fine-tuning",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_card": "https://huggingface.co/openai/whisper-small",
+      "model_id": "openai/whisper-small",
+      "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+      "selected_weight_identity": {
+        "export_sha256": "c5b97718f9fa571b98c6ef9980dbf34ed9ed9f132b3174d1acd55a514c2a6ff4",
+        "inference_tensors_sha256": "a8c3da5f20da0d23cf52a604910b9ab6b3811c0f0b7b5b9fae5c397e4f734c58",
+        "path": "checkpoints/whisper_mixed/model.pt",
+        "removed_training_state_keys": [
+          "optimizer_state",
+          "scheduler_state",
+          "rng_state"
+        ],
+        "selection": "best full-DEV loss",
+        "source_sha256": "eab4787c60211ad3c3ff6f817a6c67c69229149f453a3081261fe77f1fd1ea26",
+        "step": 500,
+        "tensor_values_identical": true,
+        "training_code_commit": "b760cdcf2662dbe6a40ee3267e59cb7f41dbe0c5",
+        "training_run_sha256": "f80d09d668d0aba20574dc29c9346f82f58d72f0e33edb520d556258a8b90865"
+      },
+      "trained_by_group": true,
+      "upstream_license": "apache-2.0"
+    },
+    "whisper_pretrained": {
+      "architecture": "multilingual Whisper-small encoder-decoder",
+      "decoder": "fixed standard greedy decoding; no external LM",
+      "model_card": "https://huggingface.co/openai/whisper-small",
+      "model_id": "openai/whisper-small",
+      "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+      "trained_by_group": false,
+      "upstream_license": "apache-2.0"
+    }
+  },
+  "systems": [
+    {
+      "batch_size": 1,
+      "checkpoint": "checkpoints/gmm_hmm/model.pt",
+      "device": "cpu",
+      "kind": "gmm",
+      "name": "gmm_hmm",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 16,
+      "checkpoint": "checkpoints/plain_ctc/model.pt",
+      "device": "cuda",
+      "kind": "ctc",
+      "name": "plain_ctc",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 1,
+      "checkpoint": "checkpoints/attention/model.pt",
+      "device": "cuda",
+      "kind": "attention",
+      "name": "attention",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 1,
+      "checkpoint": "checkpoints/transducer/model.pt",
+      "device": "cuda",
+      "kind": "transducer",
+      "name": "transducer",
+      "role": "baseline"
+    },
+    {
+      "backend": "wav2vec",
+      "batch_size": 1,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "wav2vec",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 4,
+      "checkpoint": "checkpoints/hubert_ctc",
+      "device": "cuda",
+      "kind": "hubert",
+      "name": "hubert_ctc",
+      "role": "baseline"
+    },
+    {
+      "backend": "whisper",
+      "batch_size": 8,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "whisper_pretrained",
+      "role": "baseline"
+    },
+    {
+      "backend": "canary",
+      "batch_size": 2,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "canary",
+      "role": "baseline"
+    },
+    {
+      "backend": "parakeet",
+      "batch_size": 4,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "parakeet",
+      "role": "baseline"
+    },
+    {
+      "backend": "qwen",
+      "batch_size": 8,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "qwen",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 8,
+      "checkpoint": "checkpoints/whisper_hparl/model.pt",
+      "device": "cuda",
+      "kind": "whisper",
+      "name": "whisper_hparl",
+      "role": "contribution"
+    },
+    {
+      "batch_size": 8,
+      "checkpoint": "checkpoints/whisper_mixed/model.pt",
+      "device": "cuda",
+      "kind": "whisper",
+      "name": "whisper_mixed",
+      "role": "contribution"
+    }
+  ],
+  "test_audio_seconds": 40348.4,
+  "test_cohort_policy": "every original frozen test clip, no exclusions",
+  "test_freeze_sha256": "9a680104427fa0e202229167f5eb09bf61c713ebce29c9e369413a9f230675c3",
+  "test_manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+  "test_predictions_before_freeze": false,
+  "test_records": 8679,
+  "test_references_sha256": "f3d6b377959b8a8183e4b45d1ee1e2db693f5f53fb1467b194f7c258bae2e5f9",
+  "user_working_cutoff": "2026-11-21T21:00:00+03:00"
+}

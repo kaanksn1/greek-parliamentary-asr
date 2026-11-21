@@ -26,8 +26,11 @@ def main():
     plan = json.loads((ROOT / 'configs/benchmark_plan.json').read_text())
     if args.phase == 'test':
         sys.path.insert(0, str(ROOT))
-        from greek_asr.infer import _test_protocol
-        _test_protocol(ROOT / plan['protocol'], ROOT / plan['test_manifest'], ROOT)
+        from benchmark_worker import validate_test
+        from greek_asr.data.freeze import verify_freeze
+        validate_test(plan)
+        verification = verify_freeze(ROOT, check_audio=True)
+        (output / 'test_freeze_before.json').write_text(json.dumps(verification, indent=2)+'\n', encoding='utf-8')
     state = {'schema': 'p3-benchmark-queue-v1', 'phase': args.phase, 'status': 'running', 'pid': os.getpid(),
              'started_utc': datetime.now(timezone.utc).isoformat(), 'expected_systems': len(plan['jobs']), 'jobs': {}}
     destination = ROOT / 'results' / ('dev_calibration' if args.phase == 'dev' else 'benchmark')
@@ -77,8 +80,10 @@ def main():
             target = destination/job['name']
             shutil.copytree(output/job['name'], target, dirs_exist_ok=False)
             if args.phase == 'test':
-                subprocess.run([sys.executable, str(ROOT/'scripts/summarize_benchmark.py')], cwd=ROOT,
-                               env=environment(True), check=True)
+                with (output/'reports.log').open('a', encoding='utf-8') as report_log:
+                    reported = subprocess.run([sys.executable, str(ROOT/'scripts/summarize_benchmark.py')], cwd=ROOT,
+                                              env=environment(True), stdout=report_log, stderr=subprocess.STDOUT)
+                entry['report_exit_code'] = reported.returncode
         save()
         print(json.dumps({'finished': job['name'], 'status': entry['status']}), flush=True)
 
@@ -103,6 +108,15 @@ def main():
             time.sleep(5)
         finish(cpu_job, cpu, cpu_log)
     state['status'] = 'complete' if all(row['status']=='complete' for row in state['jobs'].values()) else 'has_failures'
+    if args.phase == 'test':
+        verification = verify_freeze(ROOT, check_audio=True)
+        (output/'test_freeze_after.json').write_text(json.dumps(verification, indent=2)+'\n', encoding='utf-8')
+        with (output/'reports.log').open('a', encoding='utf-8') as report_log:
+            final_report = subprocess.run([sys.executable, str(ROOT/'scripts/summarize_benchmark.py')], cwd=ROOT,
+                                          env=environment(True), stdout=report_log, stderr=subprocess.STDOUT)
+        state['final_report_exit_code'] = final_report.returncode
+        if final_report.returncode:
+            state['status'] = 'report_failed'
     state['finished_utc'] = datetime.now(timezone.utc).isoformat()
     save()
     if state['status'] != 'complete':

@@ -1,0 +1,42 @@
+{
+  "schema": "greek-asr-attention-predict-v1",
+  "status": "complete",
+  "checkpoint": "/home/serda/p3-runs/benchmark-dev-20261121/checkpoints/attention/model.pt",
+  "split": "dev",
+  "decode": "greedy",
+  "beam_size": null,
+  "records": 65,
+  "completed_records": 65,
+  "inference_seconds": 10.780869697000014,
+  "references_used_as_model_input": false,
+  "created_utc": "2026-11-21T09:19:13.998120+00:00",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "qwen-asr": "0.0.6",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 188627456
+  },
+  "job": {
+    "batch_size": 1,
+    "checkpoint": "checkpoints/attention/model.pt",
+    "device": "cuda",
+    "kind": "attention",
+    "name": "attention",
+    "role": "baseline"
+  },
+  "worker_seconds_including_load": 11.289304490000006,
+  "worker_code_sha256": "efc19889f7e6ab29317ae397f05f58ea392848ecf4a786d85eb1875d3708e30e",
+  "seed": 42,
+  "code_commit": "220eb85bba186067b562c9bc794ac220b0f0610f",
+  "manifest_sha256": "7b946113fc14c5346111ca2badcd80324a80341c78a85f1ba9dbdb83db3fdc19"
+}

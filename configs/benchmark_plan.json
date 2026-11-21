@@ -1,0 +1,110 @@
+{
+  "batch_selection": "resource settings verified on seeded DEV, same frozen decoding at test",
+  "dev_manifest": "data/manifests/evaluation/dev_calibration_seed42.jsonl",
+  "dev_references": "data/manifests/evaluation/references/dev_calibration_seed42.jsonl",
+  "jobs": [
+    {
+      "batch_size": 1,
+      "checkpoint": "checkpoints/gmm_hmm/model.pt",
+      "device": "cpu",
+      "kind": "gmm",
+      "name": "gmm_hmm",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 16,
+      "checkpoint": "checkpoints/plain_ctc/model.pt",
+      "device": "cuda",
+      "kind": "ctc",
+      "name": "plain_ctc",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 1,
+      "checkpoint": "checkpoints/attention/model.pt",
+      "device": "cuda",
+      "kind": "attention",
+      "name": "attention",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 1,
+      "checkpoint": "checkpoints/transducer/model.pt",
+      "device": "cuda",
+      "kind": "transducer",
+      "name": "transducer",
+      "role": "baseline"
+    },
+    {
+      "backend": "wav2vec",
+      "batch_size": 1,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "wav2vec",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 4,
+      "checkpoint": "checkpoints/hubert_ctc",
+      "device": "cuda",
+      "kind": "hubert",
+      "name": "hubert_ctc",
+      "role": "baseline"
+    },
+    {
+      "backend": "whisper",
+      "batch_size": 8,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "whisper_pretrained",
+      "role": "baseline"
+    },
+    {
+      "backend": "canary",
+      "batch_size": 2,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "canary",
+      "role": "baseline"
+    },
+    {
+      "backend": "parakeet",
+      "batch_size": 4,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "parakeet",
+      "role": "baseline"
+    },
+    {
+      "backend": "qwen",
+      "batch_size": 8,
+      "device": "cuda",
+      "kind": "pretrained",
+      "name": "qwen",
+      "role": "baseline"
+    },
+    {
+      "batch_size": 8,
+      "checkpoint": "checkpoints/whisper_hparl/model.pt",
+      "device": "cuda",
+      "kind": "whisper",
+      "name": "whisper_hparl",
+      "role": "contribution"
+    },
+    {
+      "batch_size": 8,
+      "checkpoint": "checkpoints/whisper_mixed/model.pt",
+      "device": "cuda",
+      "kind": "whisper",
+      "name": "whisper_mixed",
+      "role": "contribution"
+    }
+  ],
+  "professor_exact_deadline_unknown": true,
+  "protocol": "configs/final_test_protocol.json",
+  "schema": "p3-complete-benchmark-v1",
+  "seed": 42,
+  "test_manifest": "data/manifests/test.jsonl",
+  "test_references": "data/manifests/references/test.jsonl",
+  "user_working_cutoff": "2026-11-21T21:00:00+03:00"
+}

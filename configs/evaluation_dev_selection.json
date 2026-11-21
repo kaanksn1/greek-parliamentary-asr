@@ -1,0 +1,92 @@
+{
+  "audio_seconds": 326.0,
+  "full_dev_manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+  "manifest": "data/manifests/evaluation/dev_calibration_seed42.jsonl",
+  "manifest_sha256": "7b946113fc14c5346111ca2badcd80324a80341c78a85f1ba9dbdb83db3fdc19",
+  "normalization": {
+    "aggregation": "sum S/I/D and reference units across every utterance, then divide",
+    "alignment": "JiWER 4.0.0 / RapidFuzz",
+    "annotation_tokens": "remove angle-bracket non-speech annotation tags in memory",
+    "cer_spaces": "include the normalized internal spaces",
+    "diacritics": "retain Greek accents and diaeresis",
+    "empty_references": "keep all IDs; nonempty hypotheses contribute insertions; zero corpus denominator is null",
+    "name": "greek-asr-nfc-casefold-punctuation-v1",
+    "numbers": "retain digits; no number-word conversion",
+    "punctuation": "replace Unicode P* characters by spaces",
+    "status": "final",
+    "symbols": "retain non-punctuation symbols",
+    "test_source_files": "never rewritten or filtered",
+    "unicode": "NFC, casefold, NFC",
+    "whitespace": "strip/collapse Unicode whitespace"
+  },
+  "normalization_examples": [
+    {
+      "after": "ακούτε αν είναι δυνατόν κυρίεσ και κύριοι συνάδελφοι μπορεί λέει να εξαιρούνται από την κατεδάφιση κατά παρέκκλιση από κάθε γενική ή ειδική διάταξη με απόφαση του υπουργού των οικονομικών έργα που κατασκευάστηκαν και μετά την",
+      "before": "<spoken_noise> ακούτε αν είναι δυνατόν κυρίες και κύριοι συνάδελφοι μπορεί λέει να εξαιρούνται από την κατεδάφιση κατά παρέκκλιση από κάθε γενική ή ειδική διάταξη με απόφαση του υπουργού των οικονομικών έργα που κατασκευάστηκαν και μετά την",
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_30_00687500_00690500_1_1"
+    },
+    {
+      "after": "πρόκειται ουσιαστικά για την δυνατότητα την οποία παρέχουμε και για την φετινή χρονιά η κατανομή των πόρων για την κάλυψη δράσεων",
+      "before": "<spoken_noise> πρόκειται ουσιαστικά για την δυνατότητα την οποία παρέχουμε και για την φετινή χρονιά η κατανομή των πόρων για την κάλυψη δράσεων",
+      "id": "hparl:alekshs_xaritshs-olomeleia_30_00325000_00328000_1_1"
+    },
+    {
+      "after": "πρόεδροσ τησ κεντρικήσ ένωσησ ένασ δικόσ μασ αυτό παραπέμπει πολύ πίσω",
+      "before": "πρόεδρος της κεντρικής ένωσης ένας δικός μας αυτό παραπέμπει πολύ πίσω",
+      "id": "hparl:andreas_loverdos-olomeleia_4_00082500_00085500_2_2"
+    },
+    {
+      "after": "είναι σημαντικό ότι εφόσον είναι στο εσπα πληρώνονται",
+      "before": "είναι σημαντικό ότι εφόσον είναι στο εσπα πληρώνονται",
+      "id": "hparl:andreas_poulas-olomeleia_4_01125000_01128000_2_1"
+    },
+    {
+      "after": "ταυτόχρονα αυτό το σχέδιο νόμου χαρακτηρίζεται από την αναγκαία ευελιξία",
+      "before": "ταυτόχρονα αυτό το σχέδιο νόμου χαρακτηρίζεται από την αναγκαία ευελιξία",
+      "id": "hparl:antwnhs_balwmenakhs-olomeleia_30_01735000_01738000_2_1"
+    },
+    {
+      "after": "στισ υπηρεσίεσ υγείασ",
+      "before": "στις υπηρεσίες υγείας",
+      "id": "hparl:apostolos_avdelas-olomeleia_4_00675000_00678000_1_2"
+    },
+    {
+      "after": "αν καταστεί αναγκαίο μπορεί να γίνει άμεσα επικοινωνία με παιδίατρο επίσησ μέσω τησ τηλε ατρικήσ πραγματοποιούνται στο νησί παιδοψυχιατρικά και αναπτυξιολογικά ραντεβού",
+      "before": "<spoken_noise> αν καταστεί αναγκαίο μπορεί να γίνει άμεσα επικοινωνία με παιδίατρο επίσης μέσω της τηλε ατρικής πραγματοποιούνται στο νησί παιδοψυχιατρικά και αναπτυξιολογικά ραντεβού",
+      "id": "hparl:ashmina_gkagka-olomeleia_4_00825000_00828000_2_1"
+    },
+    {
+      "after": "και τη φύλαξη θα βρεθεί στο δρόμο ξαφνικά επειδή η δικιά σασ κυβέρνηση έχει αποφασίσει ότι οι εργαζόμενοι πρέπει να πατηθούν στον λαιμό εγώ σασ λέω και από αυτό το βήμα κύριε υπουργέ",
+      "before": "<spoken_noise> και τη φύλαξη θα βρεθεί στο δρόμο ξαφνικά επειδή η δικιά σας κυβέρνηση έχει αποφασίσει ότι οι εργαζόμενοι πρέπει να πατηθούν στον λαιμό εγώ σας λέω και από αυτό το βήμα κύριε υπουργέ",
+      "id": "hparl:athanasia_sia_anagnwstopoulou-olomeleia_4_00327500_00330500_2_1"
+    },
+    {
+      "after": "υπάρχει και ένα σκέλοσ στην ερώτησή σασ που έχει να κάνει",
+      "before": "υπάρχει και ένα σκέλος στην ερώτησή σας που έχει να κάνει",
+      "id": "hparl:athanasios_plevrhs-olomeleia_4_00260000_00263000_2_1"
+    },
+    {
+      "after": "αλλά με την όξυνση των ανταγωνισμών των ομίλων",
+      "before": "αλλά με την όξυνση των ανταγωνισμών των ομίλων",
+      "id": "hparl:athanasios_vardalhs-olomeleia_30_00462500_00465500_3_1"
+    },
+    {
+      "after": "είτε προ πήρχαν του έτουσ",
+      "before": "είτε προ πήρχαν του έτους",
+      "id": "hparl:dhmhtrios_gakhs-olomeleia_30_01365000_01368000_1_1"
+    },
+    {
+      "after": "τσίπρα του κυρίου πρωθυπουργού ασχέτωσ εάν αργότερα τον",
+      "before": "<spoken_noise> τσίπρα του κυρίου πρωθυπουργού ασχέτως εάν αργότερα τον",
+      "id": "hparl:dhmhtrios_kavadellas-olomeleia_14_01677500_01680500_1_1"
+    }
+  ],
+  "records": 65,
+  "references": "data/manifests/evaluation/references/dev_calibration_seed42.jsonl",
+  "references_sha256": "5bc3344fdec86428aa44cf3045157b075dda391cd50791171fa4dae80b323142",
+  "rule": "one seeded clip per DEV speaker plus the two longest DEV clips",
+  "schema": "p3-dev-calibration-v1",
+  "seed": 42,
+  "selection_uses": "DEV metadata only, before any test ASR",
+  "speakers": 64
+}

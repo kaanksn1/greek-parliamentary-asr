@@ -1,0 +1,119 @@
+{
+  "schema": "p3-benchmark-queue-v1",
+  "phase": "dev",
+  "status": "complete",
+  "pid": 309,
+  "started_utc": "2026-11-21T09:16:46.968675+00:00",
+  "expected_systems": 12,
+  "jobs": {
+    "gmm_hmm": {
+      "status": "complete",
+      "pid": 402,
+      "started_utc": "2026-11-21T09:16:46.969963+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/gmm_hmm.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:19:17.404688+00:00",
+      "score_exit_code": 0
+    },
+    "whisper_pretrained": {
+      "status": "complete",
+      "pid": 403,
+      "started_utc": "2026-11-21T09:16:46.970748+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/whisper_pretrained.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:17:36.981031+00:00",
+      "score_exit_code": 0
+    },
+    "whisper_hparl": {
+      "status": "complete",
+      "pid": 437,
+      "started_utc": "2026-11-21T09:17:37.044658+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/whisper_hparl.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:18:17.056650+00:00",
+      "score_exit_code": 0
+    },
+    "whisper_mixed": {
+      "status": "complete",
+      "pid": 459,
+      "started_utc": "2026-11-21T09:18:17.164931+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/whisper_mixed.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:18:52.174063+00:00",
+      "score_exit_code": 0
+    },
+    "plain_ctc": {
+      "status": "complete",
+      "pid": 481,
+      "started_utc": "2026-11-21T09:18:52.249160+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/plain_ctc.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:18:57.249990+00:00",
+      "score_exit_code": 0
+    },
+    "hubert_ctc": {
+      "status": "complete",
+      "pid": 546,
+      "started_utc": "2026-11-21T09:18:57.321139+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/hubert_ctc.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:19:12.322746+00:00",
+      "score_exit_code": 0
+    },
+    "attention": {
+      "status": "complete",
+      "pid": 1105,
+      "started_utc": "2026-11-21T09:19:12.404054+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/attention.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:19:27.494333+00:00",
+      "score_exit_code": 0
+    },
+    "transducer": {
+      "status": "complete",
+      "pid": 1119,
+      "started_utc": "2026-11-21T09:19:27.559133+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/transducer.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:19:37.560091+00:00",
+      "score_exit_code": 0
+    },
+    "wav2vec": {
+      "status": "complete",
+      "pid": 1131,
+      "started_utc": "2026-11-21T09:19:37.637869+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/wav2vec.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:19:57.641791+00:00",
+      "score_exit_code": 0
+    },
+    "canary": {
+      "status": "complete",
+      "pid": 2776,
+      "started_utc": "2026-11-21T09:19:57.701754+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/canary.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:24:07.741147+00:00",
+      "score_exit_code": 0
+    },
+    "parakeet": {
+      "status": "complete",
+      "pid": 4432,
+      "started_utc": "2026-11-21T09:24:07.819174+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/parakeet.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:25:47.830674+00:00",
+      "score_exit_code": 0
+    },
+    "qwen": {
+      "status": "complete",
+      "pid": 5373,
+      "started_utc": "2026-11-21T09:25:47.891488+00:00",
+      "log": "/home/serda/p3-runs/benchmark-dev-20261121/outputs/dev_calibration_20261121/qwen.log",
+      "exit_code": 0,
+      "finished_utc": "2026-11-21T09:27:27.917360+00:00",
+      "score_exit_code": 0
+    }
+  },
+  "finished_utc": "2026-11-21T09:27:27.979241+00:00"
+}

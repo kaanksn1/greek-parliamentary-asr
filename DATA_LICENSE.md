@@ -15,17 +15,23 @@ Keep the authors, source, license link and a description of our actual changes
 with any redistributed subset. Non-commercial license conditions remain in
 force. Our MIT code license does not relicense the recordings or transcripts.
 
-Source access and archive structure were checked, and three unmodified training
-clips with their original reference lines were acquired. Their provenance is
-in `data/raw/pilot/source_summary.json`. No new human transcription is claimed.
-Check the acquired release's own license/attribution details before full data
-publication; preserve the non-commercial condition and document our changes.
+The selected 23,615 original RAW training clips, all original dev/test clips
+and their source metadata are delivered through Git LFS. The cleaned training
+manifest keeps 23,602 of those clips, removing nine extreme transcription-speed
+cases and four duplicate-audio records; original audio bytes remain intact.
+The selected training identities and changes are recorded in
+`configs/training_data_selection.json` and the data cleaning logs. The small
+startup pilot remains historical provenance in `data/raw/pilot/`.
+No new human transcription is claimed. The non-commercial condition is
+preserved for both the redistributed subset and its derived manifest.
 
-## Additional planned training source: CSS10 Greek v1
+## Additional training source: CSS10 Greek v1
 
 CSS10 Greek / Greek Single Speaker Speech Dataset, by Kyubyong Park and
-Thomas (Tommy) Mulc. Selected for the plan on 17 November 2026; the audio has
-not yet been acquired/audited locally.
+Thomas (Tommy) Mulc. All 1,844 original IEEE-float32 audio clips were acquired,
+hash-verified and audited using their actual format tag. All are retained in
+the training-only mixture. Their bytes and transcripts remain unchanged.
+See `configs/css10_mixture_lineage.json` and the corrected audit reports.
 
 - Producer repository: https://github.com/Kyubyong/css10
 - Producer distribution: https://www.kaggle.com/datasets/bryanpark/greek-single-speaker-speech-dataset

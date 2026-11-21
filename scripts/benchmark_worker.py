@@ -28,6 +28,40 @@ def digest(path):
     return h.hexdigest()
 
 
+def validate_test(plan):
+    """Check immutable inputs/code without passing references to a decoder."""
+    from greek_asr.infer import _test_protocol
+    protocol = ROOT / plan['protocol']
+    _test_protocol(protocol, ROOT / plan['test_manifest'], ROOT)
+    fixed = read(protocol)
+    paths = {'configs/benchmark_plan.json': fixed['benchmark_plan_sha256'],
+             'configs/selected_checkpoints.json': fixed['selected_checkpoints_sha256'],
+             'configs/selected_decoders.json': fixed['selected_decoders_sha256'],
+             'configs/dev_batch_resources.json': fixed['dev_batch_resources_sha256'],
+             'data/manifests/test.freeze.json': fixed['test_freeze_sha256'],
+             plan['test_references']: fixed['test_references_sha256'],
+             **fixed['source_locks'], **fixed['inference_code_sha256']}
+    for relative, expected in paths.items():
+        if digest(ROOT / relative) != expected:
+            raise ValueError('frozen input/code changed: ' + relative)
+    if subprocess.run(['git', 'diff', '--quiet', 'HEAD', '--', 'greek_asr', 'scripts', 'configs'], cwd=ROOT).returncode:
+        raise ValueError('runtime code/configs changed after protocol commit')
+    return fixed
+
+
+def verify_checkpoint(job):
+    if 'checkpoint' not in job:
+        return
+    selected = read(ROOT / 'configs/selected_checkpoints.json')['exports'][job['name']]
+    if 'files' in selected:
+        expected = {str(Path(selected['path']) / name): value for name, value in selected['files'].items()}
+    else:
+        expected = {selected['path']: selected['export_sha256']}
+    for relative, wanted in expected.items():
+        if digest(ROOT / relative) != wanted:
+            raise ValueError('selected inference weights changed: ' + relative)
+
+
 def tune_gmm(checkpoint, manifest, references, output):
     import torch
     from greek_asr.models import gmm_hmm, common
@@ -84,13 +118,10 @@ def main():
     references = ROOT / plan[args.phase + '_references']
     protocol = ROOT / plan['protocol'] if args.phase == 'test' else None
     if protocol is not None:
-        from greek_asr.infer import _test_protocol
-        _test_protocol(protocol, manifest, ROOT)
-        fixed = read(protocol)
+        fixed = validate_test(plan)
         if job not in fixed['systems'] or digest(ROOT / 'configs/benchmark_plan.json') != fixed['benchmark_plan_sha256']:
             raise ValueError('system settings differ from final committed protocol')
-        if subprocess.run(['git', 'diff', '--quiet', 'HEAD', '--', 'greek_asr', 'scripts', 'configs'], cwd=ROOT).returncode:
-            raise ValueError('runtime code/configs changed after protocol commit')
+        verify_checkpoint(job)
     import numpy as np
     import torch
     random.seed(42)
@@ -127,7 +158,7 @@ def main():
     result.update(job=job, worker_seconds_including_load=time.perf_counter()-started,
                   worker_code_sha256=digest(Path(__file__)), seed=42, environment=_environment(),
                   code_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-                  manifest_sha256=digest(manifest))
+                  manifest_sha256=digest(manifest), predictions_sha256=digest(args.output / 'predictions.jsonl'))
     (args.output / 'run.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(json.dumps({'completed': args.job, 'records': result.get('completed_records')}), flush=True)
 
