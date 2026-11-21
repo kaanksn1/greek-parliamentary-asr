@@ -1,10 +1,10 @@
 {
   "schema": "p3-benchmark-summary-v1",
   "status": "complete",
-  "generated_utc": "2026-11-21T16:17:09.155394+00:00",
+  "generated_utc": "2026-11-21T18:37:39.267480+00:00",
   "expected_systems": 12,
   "completed_systems": 12,
-  "generator_sha256": "55c1e369e651e55a4ab291ccb873d86effcf2cfc785b759541e94619ba768a89",
+  "generator_sha256": "bd1c55571b94f9253542213fa6e3882b8762eb486c6191187dce667c29817722",
   "rows": [
     {
       "system": "gmm_hmm",

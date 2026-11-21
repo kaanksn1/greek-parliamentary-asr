@@ -11,3 +11,6 @@ outputs/
 data/downloads/
 data/raw/**/*.partial
 data/**/*.tmp
+
+# macOS Finder metadata
+.DS_Store

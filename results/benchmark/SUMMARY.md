@@ -31,12 +31,13 @@ Inference includes output I/O, excludes model loading unless a run explicitly la
 
 ## Matched data-composition comparison
 
-Mixed minus HParl-only WER: **-0.85 percentage points**; paired speaker-bootstrap 95% CI [-1.9254442819473065, -0.05694387170242872].
-Both conditions share the original checkpoint, seed, effective batch, learning rate, warmup, 1,600-update training allocation and full dev/test sets. Full-dev loss selected step 500 in both runs. A confidence interval spanning zero does not support a directional improvement claim.
+Mixed minus HParl-only WER: **-0.85 percentage points**; paired speaker-bootstrap 95% CI [-1.93, -0.06].
+Both conditions share the original checkpoint, seed, effective batch, learning rate, warmup, 1,600-update training allocation and full dev/test sets. Full-dev loss selected step 500 in both runs. The paired 95% CI lies entirely below zero: on this test cohort and this single training seed, adding CSS10 gave a small but statistically supported WER reduction. It does not estimate variation over training seeds.
 
 ## Limits
 
 One training seed and finite update budgets; from-scratch models may remain undertrained.
+plain_ctc and hubert_ctc did not converge within their update allocations (WER near 100%): their predictions are almost empty, repeated-character strings. They are reported unchanged as real results of the frozen protocol, not as representative CTC/HuBERT performance; see the README.
 The official session split is not speaker-disjoint: 49 test speakers also occur in selected training; results are not unseen-speaker generalization.
 Case/punctuation are unscored; accents, digits and symbols are retained. Empty normalized references remain in the full cohort.
 CPU/GPU and batch settings differ by system; speed is hardware/runtime dependent. Speaker-bootstrap CIs do not estimate variation over training seeds.
