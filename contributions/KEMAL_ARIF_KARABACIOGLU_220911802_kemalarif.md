@@ -1,11 +1,13 @@
 # Kemal Arif Karabacıoğlu — 220911802 — kemalarif
 
 Person 3, owner of the HMM/CTC family (`docs/TEAM.md`): MFCC + GMM-HMM,
-plain CTC, Greek wav2vec 2.0 ASR and HuBERT ASR. This report lists only work
-done on branch `feature/p3-ctc-hmm`. It does not claim Samed's data pipeline,
-Adnan's sequence models, Ozan's evaluation/presentation or Serdar's
-integration and central runs. No full-data training, dev selection or test
-inference has been run yet, so there are no WER/CER results.
+plain CTC, Greek wav2vec 2.0 ASR and HuBERT ASR. This report lists my own work:
+the model code on branch `feature/p3-ctc-hmm` (PR #9, merged 19 November) and
+the result analysis and slide draft on branch `docs/p3-kemal-results`. It does
+not claim Samed's data pipeline, Adnan's sequence models, Ozan's presentation
+or Serdar's integration, central training, test inference and scoring. All
+full training and benchmark runs of my models were executed by Serdar on his
+machine (21 November); I did not run them.
 
 ## Baseline implementations (standard methods, my implementation work)
 
@@ -35,7 +37,8 @@ inference has been run yet, so there are no WER/CER results.
   recorded the result in `configs/kemal_model_sources.json`. The only checkpoint
   with a Greek CTC head (`ntinouldinho/hubert_greek_6gram`) has no license or
   model card; I prepared its standard inference (`--backend hubert`) and left
-  the use decision to the integration owner.
+  the use decision to the integration owner, who did not select it for the
+  benchmark (`docs/reviews/KEMAL_PR9_REVIEW_TR.md`).
 - Small change to the shared runner `greek_asr/infer.py`: two backend entries,
   dotted module paths, a per-backend source record and code hashes of the backend
   module. The four existing backends behave as before.
@@ -46,7 +49,8 @@ inference has been run yet, so there are no WER/CER results.
   fine-tuning of the multilingual `utter-project/mHuBERT-147` encoder (Greek in
   its pretraining) with a new character head; frozen CNN, optional frozen-transformer
   warm-up, true encoder output lengths in the loss, Hugging Face checkpoints.
-  The run itself is pending on the central machine.
+  This is the HuBERT path used in the benchmark; Serdar ran its training
+  (1,500 updates) centrally.
 
 ## Configs, tests and documentation
 
@@ -59,7 +63,21 @@ inference has been run yet, so there are no WER/CER results.
   clips on my CPU through the shared runner: `results/runtime_smoke/kemal_*_train_cpu/`.
 - `docs/KEMAL_BASELINES.md`, plus the related rows in `README.md` and `docs/BASELINES.md`.
 
-## Pending
+## Result analysis (21 November)
 
-Central measurement runs and full training/prediction on Serdar's machine, dev
-selection, analysis of the returned results with error examples, and 1–2 slides.
+After the central runs I analysed the returned score, error-example and
+training files of my four systems (`docs/KEMAL_BASELINES.md`, "Results and
+analysis"); I only read these results, nothing was computed or tuned on test:
+
+- wav2vec 2.0 (published): WER 57.81%, CER 20.30%, my best system; its errors are
+  mostly near-homophone misspellings.
+- MFCC + GMM-HMM (my implementation): WER 89.15%, CER 49.67%; lower CER than the
+  attention and RNN-T baselines with non-overlapping speaker-bootstrap CIs,
+  comparable to off-the-shelf Whisper-small; the training likelihood converged.
+- HuBERT-CTC (99.89% / 82.18%) and plain CTC (99.95% / 91.37%) are undertrained:
+  dev loss was still falling at the last allowed update; plain CTC emits one
+  "word" per clip, so most errors are deletions.
+- Data observation: a few test references are much shorter than their audio
+  (5 of 8,679 clips under 4 characters per second); they produce the
+  highest-error examples. The frozen test was not changed.
+- Wrote the 2-slide draft with speaker notes for Ozan: `docs/KEMAL_SLIDES_DRAFT_TR.md`.
