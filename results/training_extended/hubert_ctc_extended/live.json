@@ -1,0 +1,26 @@
+{
+  "schema": "p3-owner-live-training-v1",
+  "status": "complete",
+  "job": "hubert_extended",
+  "pid": 426,
+  "created_utc": "2026-11-21T19:37:57.395571+00:00",
+  "code_commit": "0a008d1183a0ee7ae63b9da0bb24c4705261cb71",
+  "config": "configs/kemal/hubert_ctc_extended.json",
+  "config_sha256": "5c29b1aa0973cc7fac9e8a821b3fa9ec4a8448e9eb07ae8a787883f84fe29f43",
+  "acceptance_sha256": "beb8f0a3ab60eda00e9833016cde111ce9ecbce4966a2e0e12d57de89cae87f5",
+  "optimizer_updates": 8000,
+  "expected_optimizer_updates": 8000,
+  "final_test_used": false,
+  "runtime_env": {
+    "HSA_ENABLE_DXG_DETECTION": "1",
+    "MIOPEN_FIND_MODE": "FAST",
+    "OMP_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "elapsed_seconds": 12559.220465241,
+  "gpu": "AMD Radeon RX 7800 XT",
+  "torch": "2.9.1+rocm7.2.1.gitff65f5bc",
+  "hip": "7.2.53211-e1a6bc5663",
+  "last_gradient_norm": 3.048635482788086,
+  "peak_gpu_allocated_bytes": 11696943616
+}
