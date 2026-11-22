@@ -16,3 +16,6 @@ HParl-only WER: %23.32; HParl+CSS10 WER: %22.47.
 Karışım eksi HParl farkı: -0.85 yüzde puan; eşleştirilmiş %95 konuşmacı-bootstrap aralığı [-1.93, -0.06].
 Bu, tek eğitim seed’i ve bu resmî test kohortu için gözlenen farktır; farklı seed/konuşmacı/alanlarda garanti değildir.
 Çok zayıf CTC sonuçlarını ve Whisper baseline hata örneklerini gizleme; bunlar da aynı testin gerçek sonuçlarıdır.
+
+Kayıtlı uzatılmış eğitim — hubert_ctc_extended: WER %99.89 → %30.78, CER %82.18 → %9.54 (seçilen adım 8,000); ayrı satırdır, orijinal satır korunur.
+Kayıtlı uzatılmış eğitim — plain_ctc_extended: WER %99.95 → %100.69, CER %91.37 → %78.74 (seçilen adım 15,000); ayrı satırdır, orijinal satır korunur.

@@ -35,7 +35,34 @@ families. Original benchmark rows remain available below.
 `scripts/summarize_benchmark.py` from actual complete prediction/score files.
 Incomplete systems remain visibly pending. Every final result uses all 8,679
 unchanged test clips, identical references and the same frozen scoring policy.
-No result-table number is entered by hand.
+No result-table number is entered by hand: the block below is rewritten by
+`scripts/summarize_benchmark.py`.
+
+<!-- generated-results:start -->
+
+All 8,679 frozen test clips, one scoring policy; WER/CER in %, lower is better; 95% speaker-bootstrap CI for WER. Full table with speed and batch settings: [results/benchmark/SUMMARY.md](results/benchmark/SUMMARY.md).
+
+| System | WER % | CER % | WER 95% CI | Group training |
+|---|---:|---:|---|---|
+| **Standard baselines** | | | | |
+| gmm_hmm | 89.15 | 49.67 | [88.52, 89.78] | own implementation |
+| plain_ctc | 99.95 | 91.37 | [99.93, 99.96] | own implementation |
+| attention | 93.77 | 60.96 | [91.25, 96.39] | own implementation |
+| transducer | 88.60 | 56.49 | [87.92, 89.31] | own implementation |
+| wav2vec | 57.81 | 20.30 | [56.36, 59.35] | none (published Greek fine-tune) |
+| hubert_ctc | 99.89 | 82.18 | [99.86, 99.91] | own CTC head training |
+| whisper_pretrained | 72.08 | 48.42 | [66.96, 78.21] | none |
+| canary | 30.18 | 11.70 | [29.50, 30.87] | none |
+| parakeet | 37.30 | 15.04 | [36.46, 38.18] | none |
+| qwen | 48.23 | 22.54 | [46.72, 49.86] | none |
+| **Registered extended training (follow-up rows)** | | | | |
+| hubert_ctc_extended | 30.78 | 9.54 | [29.16, 32.64] | own training, longer registered schedule |
+| plain_ctc_extended | 100.69 | 78.74 | [100.26, 101.13] | own training, longer registered schedule |
+| **Our contribution: Whisper-small fine-tuning** | | | | |
+| whisper_hparl | 23.32 | 10.00 | [21.67, 25.18] | HParl only |
+| whisper_mixed | 22.47 | 9.08 | [21.10, 24.11] | HParl + CSS10 |
+
+<!-- generated-results:end -->
 
 | Required family | Implemented / selected system | Group training |
 |---|---|---|
