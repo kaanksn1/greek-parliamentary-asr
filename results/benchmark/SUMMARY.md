@@ -34,10 +34,21 @@ Inference includes output I/O, excludes model loading unless a run explicitly la
 Mixed minus HParl-only WER: **-0.85 percentage points**; paired speaker-bootstrap 95% CI [-1.93, -0.06].
 Both conditions share the original checkpoint, seed, effective batch, learning rate, warmup, 1,600-update training allocation and full dev/test sets. Full-dev loss selected step 500 in both runs. The paired 95% CI lies entirely below zero: on this test cohort and this single training seed, adding CSS10 gave a small but statistically supported WER reduction. It does not estimate variation over training seeds.
 
+## Registered extended-training follow-up (separate rows)
+
+Longer training of the two group-trained CTC baselines whose original runs had not converged on full-DEV loss. [The registered protocol](../../configs/extended_ctc_protocol.json) fixed the schedules, DEV-loss checkpoint selection and one test pass before training; data, model, seed, learning rate and decoder are unchanged. The original rows above stay unchanged.
+
+| System | Updates (original → extended) | Selected update | WER % (original → extended) | CER % (original → extended) | WER 95% CI | RTFx | Status |
+|---|---:|---:|---:|---:|---|---:|---|
+| hubert_ctc_extended | 1,500 → 8,000 | 8,000 | 99.89 → **30.78** | 82.18 → 9.54 | [29.16, 32.64] | 108.70 | complete |
+| plain_ctc_extended | 2,300 → 15,000 | 15,000 | 99.95 → 100.69 | 91.37 → 78.74 | [100.26, 101.13] | 816.43 | complete |
+
+The original test results were known when this follow-up was registered, so these rows are not an independent unseen-test confirmation. A WER near or above 100% means the condition still did not learn usable transcriptions.
+
 ## Limits
 
 One training seed and finite update budgets; from-scratch models may remain undertrained.
-plain_ctc and hubert_ctc did not converge within their update allocations (WER near 100%): their predictions are almost empty, repeated-character strings. They are reported unchanged as real results of the frozen protocol, not as representative CTC/HuBERT performance; see the README.
+The original plain_ctc and hubert_ctc allocations did not learn usable transcriptions (WER near 100%); their rows are kept unchanged. Registered extended training made HuBERT-CTC usable, while extended plain CTC still produces degenerate repeated-character output (see the follow-up section).
 The official session split is not speaker-disjoint: 49 test speakers also occur in selected training; results are not unseen-speaker generalization.
 Case/punctuation are unscored; accents, digits and symbols are retained. Empty normalized references remain in the full cohort.
 CPU/GPU and batch settings differ by system; speed is hardware/runtime dependent. Speaker-bootstrap CIs do not estimate variation over training seeds.

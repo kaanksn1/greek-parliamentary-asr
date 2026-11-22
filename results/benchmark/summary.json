@@ -1,10 +1,10 @@
 {
   "schema": "p3-benchmark-summary-v1",
   "status": "complete",
-  "generated_utc": "2026-11-21T18:37:39.267480+00:00",
+  "generated_utc": "2026-11-22T11:56:22.913023+00:00",
   "expected_systems": 12,
   "completed_systems": 12,
-  "generator_sha256": "bd1c55571b94f9253542213fa6e3882b8762eb486c6191187dce667c29817722",
+  "generator_sha256": "1b6cbc08b1e6d53c41cbb45c76221f8e86f644579a559750fd3b0c028c2bccc7",
   "rows": [
     {
       "system": "gmm_hmm",
@@ -305,5 +305,61 @@
     "speakers": 82,
     "seed": 42,
     "resamples": 1000
-  }
+  },
+  "extended_rows": [
+    {
+      "system": "hubert_ctc_extended",
+      "role": "baseline_extended_training",
+      "status": "complete",
+      "original_system": "hubert_ctc",
+      "original_wer_percent": 99.88679977575575,
+      "original_cer_percent": 82.18018958322061,
+      "records": 8679,
+      "wer_percent": 30.778601923325716,
+      "cer_percent": 9.53553681792715,
+      "wer_ci95_low_percent": 29.1613387280183,
+      "wer_ci95_high_percent": 32.64430566086292,
+      "cer_ci95_low_percent": 8.793013314815424,
+      "cer_ci95_high_percent": 10.414629668933491,
+      "rtfx": 108.69612077461382,
+      "inference_seconds": 371.2036796939992,
+      "batch_size": 4,
+      "device": "cuda",
+      "original_updates": 1500,
+      "extended_updates": 8000,
+      "selected_update": 8000,
+      "best_dev_loss": 0.4642987399968638,
+      "word_substitutions": 22160,
+      "word_insertions": 2499,
+      "word_deletions": 3890,
+      "empty_predictions": 0
+    },
+    {
+      "system": "plain_ctc_extended",
+      "role": "baseline_extended_training",
+      "status": "complete",
+      "original_system": "plain_ctc",
+      "original_wer_percent": 99.94609513131226,
+      "original_cer_percent": 91.37188645951329,
+      "records": 8679,
+      "wer_percent": 100.68566992970804,
+      "cer_percent": 78.7389975582128,
+      "wer_ci95_low_percent": 100.25991699526577,
+      "wer_ci95_high_percent": 101.13341662325408,
+      "cer_ci95_low_percent": 78.408874113492,
+      "cer_ci95_high_percent": 79.08864990270033,
+      "rtfx": 816.4286617508351,
+      "inference_seconds": 49.420606955998664,
+      "batch_size": 16,
+      "device": "cuda",
+      "original_updates": 2300,
+      "extended_updates": 15000,
+      "selected_update": 15000,
+      "best_dev_loss": 2.943152984162755,
+      "word_substitutions": 66812,
+      "word_insertions": 1554,
+      "word_deletions": 25026,
+      "empty_predictions": 0
+    }
+  ]
 }

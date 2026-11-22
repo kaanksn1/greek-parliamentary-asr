@@ -18,6 +18,118 @@ def lines(path):
     return [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines() if line.strip()]
 
 
+def extended_section(root, protocol, rows, text):
+    """Separate rows for the registered extended-training follow-up (configs/extended_ctc_protocol.json).
+
+    The original 12 rows, results.csv and their validation stay unchanged; these rows are written to
+    results/benchmark_extended/results.csv and a separate SUMMARY.md section.
+    """
+    extended_dir = root/'results/benchmark_extended'
+    record_path, protocol_path = extended_dir/'run_record.json', root/'configs/extended_ctc_protocol.json'
+    if not record_path.exists():
+        return []
+    record, registered = read(record_path), read(protocol_path)
+    if record['protocol_sha256'] != hashlib.sha256(protocol_path.read_bytes()).hexdigest():
+        raise ValueError('extended run record does not belong to the committed extended protocol')
+    if record.get('test_freeze_verified_before_and_after') is not True:
+        raise ValueError('extended run lacks before/after test-freeze verification')
+    original = {row['system']: row for row in rows}
+    extended_rows = []
+    for name in registered['system_order']:
+        entry, spec = record['systems'][name], registered['systems'][name]
+        if entry['status'] != 'complete':
+            extended_rows.append({'system': name, 'status': entry['status']})
+            continue
+        score, run = read(extended_dir/name/'score.json'), read(extended_dir/name/'run.json')
+        if (run['status'] != 'complete' or score['examples'] != protocol['test_records']
+                or score['reference_sha256'] != protocol['test_references_sha256']
+                or score['scorer_code_sha256'] != protocol['scorer_code_sha256']
+                or score['predictions_sha256'] != run['predictions_sha256']):
+            raise ValueError('refusing a partial/inconsistent extended row: '+name)
+        inference = run.get('inference_seconds', run.get('worker_seconds_including_load'))
+        intervals = score['speaker_bootstrap_95_ci']
+        before = original[spec['original']]
+        extended_rows.append({
+            'system': name, 'role': 'baseline_extended_training', 'status': 'complete', 'original_system': spec['original'],
+            'original_wer_percent': before['wer_percent'], 'original_cer_percent': before['cer_percent'],
+            'records': score['examples'], 'wer_percent': 100*score['wer'], 'cer_percent': 100*score['cer'],
+            'wer_ci95_low_percent': 100*intervals['wer'][0], 'wer_ci95_high_percent': 100*intervals['wer'][1],
+            'cer_ci95_low_percent': 100*intervals['cer'][0], 'cer_ci95_high_percent': 100*intervals['cer'][1],
+            'rtfx': score['audio_seconds']/inference, 'inference_seconds': inference,
+            'batch_size': spec['batch_size'], 'device': spec['device'],
+            'original_updates': spec['changes_from_original']['max_steps']['original'],
+            'extended_updates': spec['changes_from_original']['max_steps']['extended'],
+            'selected_update': entry['best_optimizer_update'], 'best_dev_loss': entry['best_dev_loss'],
+            'word_substitutions': score['word_counts']['substitutions'], 'word_insertions': score['word_counts']['insertions'],
+            'word_deletions': score['word_counts']['deletions'], 'empty_predictions': score['empty_predictions']})
+    fields = ['system','role','status','original_system','original_updates','extended_updates','selected_update','best_dev_loss',
+              'records','original_wer_percent','wer_percent','original_cer_percent','cer_percent','rtfx','inference_seconds',
+              'batch_size','device','word_substitutions','word_insertions','word_deletions','empty_predictions',
+              'wer_ci95_low_percent','wer_ci95_high_percent','cer_ci95_low_percent','cer_ci95_high_percent']
+    with (extended_dir/'results.csv').open('w', encoding='utf-8', newline='') as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields, extrasaction='ignore')
+        writer.writeheader()
+        writer.writerows(extended_rows)
+    text += ['## Registered extended-training follow-up (separate rows)', '',
+             'Longer training of the two group-trained CTC baselines whose original runs had not converged on full-DEV loss. '
+             '[The registered protocol](../../configs/extended_ctc_protocol.json) fixed the schedules, DEV-loss checkpoint selection and '
+             'one test pass before training; data, model, seed, learning rate and decoder are unchanged. '
+             'The original rows above stay unchanged.', '',
+             '| System | Updates (original → extended) | Selected update | WER % (original → extended) | CER % (original → extended) | WER 95% CI | RTFx | Status |',
+             '|---|---:|---:|---:|---:|---|---:|---|']
+    for row in extended_rows:
+        if row['status'] != 'complete':
+            text.append(f"| {row['system']} | | | | | | | {row['status']} |")
+            continue
+        text.append(f"| {row['system']} | {row['original_updates']:,} → {row['extended_updates']:,} | {row['selected_update']:,} | "
+                    f"{row['original_wer_percent']:.2f} → " + (f"**{row['wer_percent']:.2f}**" if row['wer_percent'] < min(100, row['original_wer_percent']) else f"{row['wer_percent']:.2f}") + " | " + f"{row['original_cer_percent']:.2f} → {row['cer_percent']:.2f} | "
+                    f"[{row['wer_ci95_low_percent']:.2f}, {row['wer_ci95_high_percent']:.2f}] | {row['rtfx']:.2f} | {row['status']} |")
+    text += ['', 'The original test results were known when this follow-up was registered, so these rows are not an independent '
+             'unseen-test confirmation. A WER near or above 100% means the condition still did not learn usable transcriptions.', '']
+    return extended_rows
+
+
+README_START, README_END = '<!-- generated-results:start -->', '<!-- generated-results:end -->'
+
+
+def readme_block(root, rows, extended_rows):
+    """Rewrite the generated results block in README.md from the same rows as SUMMARY.md."""
+    readme = root/'README.md'
+    if not readme.exists():
+        return
+    content = readme.read_text(encoding='utf-8')
+    if content.count(README_START) != 1 or content.count(README_END) != 1:
+        return
+    def line(name, row, note):
+        if row.get('status') != 'complete':
+            return f"| {name} | {row.get('status', 'pending')} | | | {note} |"
+        return (f"| {name} | {row['wer_percent']:.2f} | {row['cer_percent']:.2f} | "
+                f"[{row['wer_ci95_low_percent']:.2f}, {row['wer_ci95_high_percent']:.2f}] | {note} |")
+    by_name = {row['system']: row for row in rows}
+    block = [README_START, '', 'All 8,679 frozen test clips, one scoring policy; WER/CER in %, lower is better; '
+             '95% speaker-bootstrap CI for WER. Full table with speed and batch settings: '
+             '[results/benchmark/SUMMARY.md](results/benchmark/SUMMARY.md).', '',
+             '| System | WER % | CER % | WER 95% CI | Group training |', '|---|---:|---:|---|---|']
+    notes = {'gmm_hmm': 'own implementation', 'plain_ctc': 'own implementation', 'attention': 'own implementation',
+             'transducer': 'own implementation', 'hubert_ctc': 'own CTC head training', 'wav2vec': 'none (published Greek fine-tune)',
+             'whisper_pretrained': 'none', 'canary': 'none', 'parakeet': 'none', 'qwen': 'none'}
+    block.append('| **Standard baselines** | | | | |')
+    for row in rows:
+        if row['role'] == 'baseline':
+            block.append(line(row['system'], row, notes.get(row['system'], '')))
+    if extended_rows:
+        block.append('| **Registered extended training (follow-up rows)** | | | | |')
+        for row in extended_rows:
+            block.append(line(row['system'], row, 'own training, longer registered schedule'))
+    block.append('| **Our contribution: Whisper-small fine-tuning** | | | | |')
+    for name, note in (('whisper_hparl', 'HParl only'), ('whisper_mixed', 'HParl + CSS10')):
+        if name in by_name:
+            block.append(line(name, by_name[name], note))
+    block += ['', README_END]
+    start, end = content.index(README_START), content.index(README_END) + len(README_END)
+    readme.write_text(content[:start] + '\n'.join(block) + content[end:], encoding='utf-8')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
@@ -116,6 +228,10 @@ def main():
             ci_reading = 'The paired 95% CI spans zero, so it does not support a directional improvement claim.'
         text += ['## Matched data-composition comparison','',f"Mixed minus HParl-only WER: **{comparison['delta_percentage_points']:.2f} percentage points**; paired speaker-bootstrap 95% CI [{ci_low:.2f}, {ci_high:.2f}].",
                  'Both conditions share the original checkpoint, seed, effective batch, learning rate, warmup, 1,600-update training allocation and full dev/test sets. Full-dev loss selected step 500 in both runs. '+ci_reading+' It does not estimate variation over training seeds.','']
+    extended_rows = extended_section(root, protocol, rows, text)
+    if extended_rows:
+        report['extended_rows'] = extended_rows
+    readme_block(root, rows, extended_rows)
     available = [row for row in rows if row['status']=='complete']
     if available:
         import matplotlib
@@ -169,8 +285,30 @@ def main():
             fig.tight_layout()
             for extension in ('png','svg'): fig.savefig(figures/('whisper_conditions.'+extension),dpi=180)
             plt.close(fig)
+        complete_extended = [row for row in extended_rows if row['status']=='complete']
+        if complete_extended:
+            # Separate figure: original vs registered extended training, same frozen test.
+            fig, axes = plt.subplots(1,2,figsize=(10,4))
+            labels = [row['system'].replace('_extended','') for row in complete_extended]
+            positions = list(range(len(labels)))
+            for ax, metric in zip(axes, ('wer','cer')):
+                before = [row['original_'+metric+'_percent'] for row in complete_extended]
+                after = [row[metric+'_percent'] for row in complete_extended]
+                ax.bar([x-.2 for x in positions], before, width=.4, color='#999999', label='original allocation')
+                ax.bar([x+.2 for x in positions], after, width=.4, color='#0072B2', label='registered extended training')
+                for x, value in zip(positions, after):
+                    ax.text(x+.2, value+1, f'{value:.2f}', ha='center', fontsize=9)
+                ax.set_xticks(list(positions)); ax.set_xticklabels(labels)
+                ax.set_ylabel(metric.upper()+' (%) — lower is better'); ax.set_ylim(bottom=0); ax.margins(y=.15)
+                ax.grid(axis='y', alpha=.2)
+            handles, legend_labels = axes[0].get_legend_handles_labels()
+            fig.legend(handles, legend_labels, loc='lower center', ncol=2, fontsize=9, frameon=False)
+            fig.suptitle('Group-trained CTC baselines: original vs registered extended training (same frozen test)', fontsize=11)
+            fig.tight_layout(rect=(0, .07, 1, 1))
+            for extension in ('png','svg'): fig.savefig(figures/('extended_ctc.'+extension), dpi=180)
+            plt.close(fig)
     text += ['## Limits','', 'One training seed and finite update budgets; from-scratch models may remain undertrained.',
-             'plain_ctc and hubert_ctc did not converge within their update allocations (WER near 100%): their predictions are almost empty, repeated-character strings. They are reported unchanged as real results of the frozen protocol, not as representative CTC/HuBERT performance; see the README.',
+             'The original plain_ctc and hubert_ctc allocations did not learn usable transcriptions (WER near 100%); their rows are kept unchanged. Registered extended training made HuBERT-CTC usable, while extended plain CTC still produces degenerate repeated-character output (see the follow-up section).',
              'The official session split is not speaker-disjoint: 49 test speakers also occur in selected training; results are not unseen-speaker generalization.',
              'Case/punctuation are unscored; accents, digits and symbols are retained. Empty normalized references remain in the full cohort.',
              'CPU/GPU and batch settings differ by system; speed is hardware/runtime dependent. Speaker-bootstrap CIs do not estimate variation over training seeds.',
@@ -194,6 +332,10 @@ def main():
                f"Karışım eksi HParl farkı: {comparison['delta_percentage_points']:.2f} yüzde puan; eşleştirilmiş %95 konuşmacı-bootstrap aralığı [{low:.2f}, {high:.2f}].",
                'Bu, tek eğitim seed’i ve bu resmî test kohortu için gözlenen farktır; farklı seed/konuşmacı/alanlarda garanti değildir.',
                'Çok zayıf CTC sonuçlarını ve Whisper baseline hata örneklerini gizleme; bunlar da aynı testin gerçek sonuçlarıdır.','']
+        for row in extended_rows:
+            if row['status']=='complete':
+                extra.append(f"Kayıtlı uzatılmış eğitim — {row['system']}: WER %{row['original_wer_percent']:.2f} → %{row['wer_percent']:.2f}, "
+                             f"CER %{row['original_cer_percent']:.2f} → %{row['cer_percent']:.2f} (seçilen adım {row['selected_update']:,}); ayrı satırdır, orijinal satır korunur.")
         with (root/'results/PRESENTATION_BRIEF_TR.md').open('a',encoding='utf-8') as stream:
             stream.write('\n'.join(extra))
     print(json.dumps({'status':report['status'],'completed':len(completed),'expected':len(rows)}),flush=True)
