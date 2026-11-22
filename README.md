@@ -115,13 +115,21 @@ checkpoints or a bare encoder.
 
 ## Data, cleaning and split limitations
 
+<!-- generated-data:start -->
+
 | Actual cleaned cohort | Utterances | Speakers | Hours |
 |---|---:|---:|---:|
 | Selected HParl training | 23,602 | 208 | 30.883408 |
 | Additional CSS10 training | 1,844 | No encoded IDs; producer single reader | 4.137269 |
-| Mixed training | 25,446 | 208 identified; CSS10 IDs absent | 35.020678 |
+| Mixed training | 25,446 | 208 identified; 1,844 utterances without IDs | 35.020678 |
 | HParl development | 7,113 | 64 | 9.059189 |
 | Original frozen HParl test | 8,679 | 82 | 11.207889 |
+
+- Selected raw HParl training: 23,615 original clips from 18 whole sessions (30.90 h). Cleaning removed 13 records (9 extreme transcription speed, 4 duplicate audio); 176 review-queue flags, 0 human review decisions.
+- Speaker overlap (the official split is not speaker-disjoint): 49 of 82 test speakers also occur in selected training, covering 4,782 test clips; shared recordings/sessions 0, shared audio hashes 0. Dev-test shared speakers: 16; train-dev: 41.
+- Test sentences found word for word in the clean training targets: 3 utterances (3 unique); under the frozen final normalization: 9 utterances (9 unique).
+
+<!-- generated-data:end -->
 
 These counts come from the committed manifests, selected-training record and
 generated [data report](docs/DATA_REPORT_TR.md). CSS10 is literary read speech
@@ -132,9 +140,8 @@ reports. The root MIT license covers our code, not third-party audio/models.
 CSS10 has no encoded speaker/session IDs; its entire source is training-only.
 No speaker identifiers or cross-source speaker identities are invented.
 
-The selected raw HParl cohort contains 23,615 original clips from 18 whole
-sessions chosen with seed 42. Cleaning removes nine extreme transcription-speed
-records and four duplicate-audio records. All original selected raw clips,
+The selected raw HParl cohort consists of whole sessions chosen with seed 42; the
+generated block above gives its size and what cleaning removed. All original selected raw clips,
 including removals, plus dev/test/CSS10 audio are actually stored in this
 repository through Git LFS. Clean manifests and reference files select the
 clean corpus from those original WAVs; no gain, waveform normalization or
@@ -142,12 +149,10 @@ audio rewriting is applied. Format conversion or merging alone is not claimed
 as cleaning. The format-aware audit reads original PCM16/PCM32/IEEE-float32
 correctly. Original CSS10 float32 audio is retained byte for byte.
 
-HParl's **documented official session split is not speaker-disjoint**.
-49 test speakers also occur in selected training, accounting for 4,782 test
-clips; recording/session overlap is zero. Results must not be described as
-unseen-speaker generalization. Three test sentences appear literally among
-actual clean training targets. The frozen final normalization gives nine
-matching test utterances/nine unique sentences. These are recomputed by
+HParl's **documented official session split is not speaker-disjoint**: the
+generated block above lists the speaker overlap and the test sentences that
+appear in training. Results must not be described as unseen-speaker
+generalization. These numbers are recomputed by
 `scripts/report_benchmark_data.py` in [the selected-cohort integrity report](results/data_integrity.json),
 separately from the older diagnostic policy.
 

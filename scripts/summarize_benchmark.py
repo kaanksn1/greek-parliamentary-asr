@@ -130,6 +130,50 @@ def readme_block(root, rows, extended_rows):
     readme.write_text(content[:start] + '\n'.join(block) + content[end:], encoding='utf-8')
 
 
+DATA_START, DATA_END = '<!-- generated-data:start -->', '<!-- generated-data:end -->'
+
+
+def data_block(root):
+    """Rewrite the generated data/overlap block in README.md from results/data_integrity.json."""
+    readme, source = root/'README.md', root/'results/data_integrity.json'
+    if not readme.exists() or not source.exists():
+        return
+    content = readme.read_text(encoding='utf-8')
+    if content.count(DATA_START) != 1 or content.count(DATA_END) != 1:
+        return
+    data = json.loads(source.read_text(encoding='utf-8'))
+    cohorts, cleaning, overlap = data['cohorts'], data['cleaning'], data['split_pair_group_overlap']
+    to_test = data['training_to_test_overlap']['hparl_train']
+    def speakers(cohort):
+        if not cohort['speakers_with_ids']:
+            return 'No encoded IDs; producer single reader'
+        missing = cohort['utterances_without_speaker_id']
+        return f"{cohort['speakers_with_ids']} identified; {missing:,} utterances without IDs" if missing else f"{cohort['speakers_with_ids']}"
+    rows = (('Selected HParl training', 'hparl_train'), ('Additional CSS10 training', 'css10_train'),
+            ('Mixed training', 'mixed_train'), ('HParl development', 'dev'), ('Original frozen HParl test', 'test'))
+    block = [DATA_START, '', '| Actual cleaned cohort | Utterances | Speakers | Hours |', '|---|---:|---:|---:|']
+    for label, key in rows:
+        cohort = cohorts[key]
+        block.append(f"| {label} | {cohort['utterances']:,} | {speakers(cohort)} | {cohort['hours']:.6f} |")
+    raw, dropped = cohorts['raw_hparl_train'], cleaning['dropped_by_rule']
+    block += ['',
+              f"- Selected raw HParl training: {raw['utterances']:,} original clips from {raw['recordings_with_ids']} whole sessions "
+              f"({raw['hours']:.2f} h). Cleaning removed {cleaning['removed_records']} records "
+              f"({dropped['cps_extreme']} extreme transcription speed, {dropped['duplicate_audio']} duplicate audio); "
+              f"{cleaning['review_queue_records']} review-queue flags, {cleaning['human_review_decisions']} human review decisions.",
+              f"- Speaker overlap (the official split is not speaker-disjoint): {to_test['speakers']} of "
+              f"{cohorts['test']['speakers_with_ids']} test speakers also occur in selected training, covering "
+              f"{to_test['test_clips_with_shared_speaker']:,} test clips; shared recordings/sessions {to_test['recordings']}, "
+              f"shared audio hashes {to_test['shared_audio_sha256_values']}. Dev-test shared speakers: "
+              f"{overlap['dev__test']['speakers']}; train-dev: {overlap['hparl_train__dev']['speakers']}.",
+              f"- Test sentences found word for word in the clean training targets: {to_test['literal_matching_test_utterances']} "
+              f"utterances ({to_test['literal_matching_unique_sentences']} unique); under the frozen final normalization: "
+              f"{to_test['final_policy_matching_test_utterances']} utterances ({to_test['final_policy_matching_unique_sentences']} unique).",
+              '', DATA_END]
+    start, end = content.index(DATA_START), content.index(DATA_END) + len(DATA_END)
+    readme.write_text(content[:start] + '\n'.join(block) + content[end:], encoding='utf-8')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
@@ -232,6 +276,7 @@ def main():
     if extended_rows:
         report['extended_rows'] = extended_rows
     readme_block(root, rows, extended_rows)
+    data_block(root)
     available = [row for row in rows if row['status']=='complete']
     if available:
         import matplotlib

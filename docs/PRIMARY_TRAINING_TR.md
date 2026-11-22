@@ -42,10 +42,6 @@ mevcut gradient clipping'e nonfinite hata kontrolü ve gerçek adım sayacı ekl
 GMM feature çıkarım ilerlemesini de loglar. Rastgele seed ve ölçülmüş bütçeler
 configlerden gelir. Yaklaşık epoch hedefleri yakınsama iddiası değildir.
 
-Eğitim süresince Windows'taki WSL sürecinin uyumaması için geçici bir
-system-awake isteği kullanıldı; bu yerel yardımcı betik model veya veri işi
-olmadığı için depodan çıkarıldı. Eğitim kayıtları ve sonuçlar etkilenmez.
-
 Samed'in kalan görevi CSS10 float-aware veri probe/audit/clean düzeltmesi,
 karışımın doğrulanması ve ilgili raporlardır. İkinci Whisper koşulu ancak bu
 ayrı kabulden sonra başlar; optimizasyon bütçesi ilk koşulla aynı tutulur.
