@@ -71,9 +71,18 @@ runs and execution of the extended training on his machine.
   original 12 rows, `results/benchmark/results.csv` and existing figures are
   unchanged; `validate_final_benchmark.py` still recomputes all 12 rows.
 
-## Presentation
+## Presentation (`presentation/`)
 
-- Slides and the speaker narrative for the group presentation.
+- Planned and designed the 2-minute, 5-slide deck: problem and data flow,
+  data/cleaning, a 12-system benchmark dot plot with speaker-bootstrap
+  intervals coloured by model family, the Whisper fine-tuning contribution
+  with the HuBERT-CTC result, and WER-vs-CER on a real test clip with the
+  limits. Speaker notes are included; I present it.
+- `presentation/build_presentation.py` builds the `.pptx` and the appendix PDF
+  (full 14-row table, metric definitions, split report required by the course,
+  reproduction commands) directly from `results/benchmark/summary.json`,
+  `results/data_integrity.json` and the scored test utterances, so no slide
+  number is typed by hand. Fonts are vendored under the SIL OFL.
 
 ## Tools
 
