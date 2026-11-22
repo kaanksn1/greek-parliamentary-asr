@@ -1,5 +1,7 @@
 # Hoca yönergeleri ve son depo denetimi
 
+> **22 Kasım durum notu:** aşağıdaki tablo 21 Kasım denetim anını korur. Serhan'ın kişisel dosyası (`contributions/OZAN_SERHAN_DENIZHAN_220911758_serhandenizhan.md`), kendi hesabından commit'leri ve 2 dakikalık sunum (`presentation/`) sonradan eklendi; ilgili "eksik" satırları bu durumda tarihsel kalır. Blackboard teslimi, LFS kalan indirme hakkı ve sınıf tablosu kontrolü hâlâ depo dışı, kullanıcıya ait işlerdir.
+
 21 Kasım 2026 denetimi; başlangıç public main sürümü `0db2307179a977213615cdc17ba1ab0ce9368e9e`.
 Kapsam, kullanıcının paylaştığı genel proje yönergesi, önceki projelerdeki puan kesintisi duyurusu, P3 baseline/bonus maili, doğrudan hocanın üç maddelik yanıtı ve daha sonra paylaşılan split/baseline mailleridir. Bu belge bir not veya bonus garantisi değildir.
 
