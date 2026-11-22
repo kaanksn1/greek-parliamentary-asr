@@ -10,8 +10,9 @@ predictions, corpus edit counts, WER/CER, speaker-bootstrap intervals and
 CSV values passed independent regeneration checks. Original test audio
 passed verification before and after execution. Clean-clone data/weight
 verification and all 240 frozen-runtime regression tests passed.
-The linked original table is complete. Presentation delivery and
-Serhan's own contribution report remain separate member-owned work.
+The linked original table is complete. The 2-minute presentation
+([`presentation/`](presentation/)) and Serhan's own contribution report
+([`contributions/`](contributions/)) are included.
 
 The task is automatic transcription of Greek parliamentary speech. Our main
 experiment compares matched Whisper fine-tuning on HParl alone and HParl plus
@@ -300,7 +301,7 @@ Arial because these fonts have no Greek glyphs.
 | `results/` | Original training records, dev calibration/resource trials, historical runtime smoke and generated final benchmark |
 | `docs/` | Data/model/reproduction guides, teacher instructions, team handoffs and dated review evidence |
 | `tests/` | Data/model/evaluation regression tests and small synthetic fixtures |
-| `contributions/` | Each member's own report; its README lists required names and remaining member-owned delivery |
+| `contributions/` | Each member's own report; its README lists the required names |
 | `presentation/` | 2-minute deck (`.pptx` with speaker notes, `.pdf` export), appendix PDF and the script that builds both from committed results; vendored OFL fonts |
 | `LICENSE` | MIT license for our code |
 | `DATA_LICENSE.md` | Dataset authors, distribution licenses, attribution and actual changes |
@@ -333,7 +334,7 @@ requirements and remaining member/submission/access items; it is not a grade gua
 Samed wrote the data pipeline; Kemal wrote GMM-HMM/plain CTC/wav2vec/HuBERT work;
 Adnan wrote attention/RNN-T/Whisper fine-tuning. Serdar handled integration,
 environments, central full runs, standard pretrained adapters and the explicitly
-reassigned final evaluation/reporting. Serhan prepares the presentation and
-must commit his own real contribution report from his own account. Central
+reassigned final evaluation/reporting. Serhan prepared the presentation and
+wrote his own contribution report from his own account. Central
 execution does not transfer model/data code authorship. See `docs/TEAM.md` and
 `contributions/README.md`; planned workload percentages are not measured results.

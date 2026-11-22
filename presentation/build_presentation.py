@@ -217,6 +217,7 @@ def slide_problem(canvas, integrity, rows):
     cohorts = integrity['cohorts']
     canvas.text(28, 18, 624, 16, 'COE025 · PROJECT 3 · GREEK PARLIAMENTARY ASR · ANONYMOUS GROUP', 11, font=MONO, color=MUTED)
     canvas.text(28, 42, 624, 36, 'Does read speech help parliamentary ASR?', 27, font=HEAD, color=NAVY, bold=True)
+    canvas.text(28, 82, 624, 14, 'benchmark of ASR · Greek parliament speech', 11, font=MONO, color=CUE)
     canvas.rect(36, 110, 196, 84, fill=CARD, line=BLUE_DARK, line_width=1.5, radius=12, name='HParl card')
     # Parliament glyph: pediment, four columns, base.
     pediment = canvas.shapes.add_shape(MSO_SHAPE.ISOSCELES_TRIANGLE, u(54), u(124), u(36), u(10))
@@ -232,7 +233,7 @@ def slide_problem(canvas, integrity, rows):
         canvas.rect(x, 258, 16, 22, line='C2185B', line_width=1.5, radius=3)
     canvas.text(102, 252, 120, 22, 'CSS10', 20, font=HEAD, color=NAVY, bold=True)
     canvas.text(102, 278, 125, 14, f"audiobook · {hours(cohorts['css10_train']['hours'])}", 11, font=MONO, color='C2185B')
-    canvas.text(40, 326, 190, 14, 'read · literary · one voice', 11, font=MONO, color=CUE)
+    canvas.text(40, 326, 190, 14, 'read · one voice · train only', 11, font=MONO, color=CUE)
     canvas.line(232, 152, 300, 194, NAVY, 1.75, arrow=True)
     canvas.line(232, 276, 300, 220, 'C2185B', 1.75, dash=True, arrow=True)
     canvas.oval(262, 254, 13, 'C2185B')
@@ -287,7 +288,7 @@ def slide_data(canvas, integrity):
         canvas.text(xs[index], 262, w, 14, label, 12, color=label_color, align='c')
         if index < 3:
             canvas.line(xs[index] + w + 4, 255, xs[index + 1] - 4, 255, MUTED, 1.25, arrow=True)
-    canvas.text(28, 302, 400, 14, f"float32 · tags · {cleaning['review_queue_records']} flagged", 11, font=MONO, color=CUE)
+    canvas.text(28, 302, 400, 14, f"float32 read fixed · {cleaning['review_queue_records']} flagged", 11, font=MONO, color=CUE)
 
 
 def benchmark_rows(rows, extended):
@@ -317,9 +318,11 @@ def slide_benchmark(canvas, rows, extended):
     for index, (key, (label, color)) in enumerate(FAMILY.items()):
         canvas.oval(538, 116 + index * 22, 5, color)
         canvas.text(550, 108 + index * 22, 120, 16, label, 12, color='333333')
+    canvas.text(532, 224, 130, 14, '10 baselines + ours', 11, font=MONO, color=CUE)
     canvas.text(532, 244, 130, 14, 'Best official:', 11, font=MONO, color=RED)
     canvas.text(532, 259, 130, 14, f"{best_official['label']} {best_official['wer']:.2f}", 11, font=MONO, color=RED)
     canvas.text(532, 282, 130, 14, f"Ours: {ours['wer']:.2f}", 11, font=MONO, color=RED)
+    canvas.text(532, 297, 130, 14, 'best overall', 11, font=MONO, color=RED)
     canvas.text(28, 362, 624, 14, 'dot = WER %, lower is better · bar = speaker-bootstrap 95% CI · '
                 f"same {rows['canary']['records']:,} clips", 11, font=MONO, color=MUTED)
 
@@ -329,7 +332,7 @@ def slide_contribution(canvas, rows, extended, summary):
     hubert, hubert_old, canary = extended['hubert_ctc'], rows['hubert_ctc'], rows['canary']
     canvas.header('04 · OUR CONTRIBUTION', f"Fine-tuning cuts Whisper's WER from {pre['wer_percent']:.0f}% to {mixed['wer_percent']:.1f}%")
     cards = [(28, 'Official Whisper-small', pre['wer_percent'], 'WER % · no training', CARD, CARD_LINE, '5F6B63', '1F8A5B', '1F8A5B'),
-             (242, 'Our Whisper fine-tune', mixed['wer_percent'], 'HParl + CSS10 · best', 'FBEAF0', 'C2185B', '8C1242', 'C2185B', '8C1242'),
+             (242, 'Our Whisper fine-tune', mixed['wer_percent'], f"HParl-only was {hparl['wer_percent']:.2f}", 'FBEAF0', 'C2185B', '8C1242', 'C2185B', '8C1242'),
              (456, 'Our HuBERT-CTC head', hubert['wer_percent'], f"was {hubert_old['wer_percent']:.2f} · ≈ Canary",
               CARD, CARD_LINE, '5A3AA8', '7C4DDB', '5A3AA8')]
     for x, label, value, sub, fill, line, label_color, number_color, sub_color in cards:
@@ -348,9 +351,10 @@ def slide_contribution(canvas, rows, extended, summary):
              label_size=12, dot_r=6.5, annotate_from=480)
     comparison = summary['paired_data_composition_comparison']
     low, high = comparison['paired_speaker_bootstrap_95_ci']
-    for index, line in enumerate(('+CSS10:', f"{comparison['delta_percentage_points']:.2f} pts".replace('-', '−'),
+    for index, line in enumerate(('+CSS10 gain:', f"{comparison['delta_percentage_points']:.2f} pts".replace('-', '−'),
                                   f'CI [{low:.2f},'.replace('-', '−'), f'{high:.2f}]'.replace('-', '−'))):
         canvas.text(574, 218 + index * 15, 90, 14, line, 11, font=MONO, color=RED)
+    canvas.text(574, 278, 90, 14, 'small, real', 11, font=MONO, color=CUE)
     canvas.text(28, 362, 624, 14, 'dot = WER %, lower is better · bar = speaker-bootstrap 95% CI · '
                 f"{pre['records']:,} frozen test clips", 11, font=MONO, color=MUTED)
 
@@ -374,7 +378,7 @@ def slide_takeaways(canvas, example, integrity, summary):
         canvas.rect(92, y, 200, 16, fill='E9E1D2', radius=8)
         canvas.rect(92, y, max(8.0, 200 * value / 100), 16, fill=color, radius=8 if value > 4 else 4)
         canvas.text(300, y, 64, 16, f'{value:.1f}%', 12, font=MONO, color=color)
-    canvas.text(44, 252, 310, 14, 'ω = ο · inflection · corpus sums', 11, font=MONO, color=CUE)
+    canvas.text(44, 252, 310, 14, 'should be ω · written ο · one letter', 11, font=MONO, color=CUE)
     canvas.text(44, 274, 310, 14, 'real test clip · Whisper FT + CSS10', 11, font=MONO, color=MUTED)
     overlap = integrity['split_pair_group_overlap']['hparl_train__test']['speakers']
     test_speakers = integrity['cohorts']['test']['speakers_with_ids']
@@ -405,25 +409,21 @@ def speaker_notes(summary, rows, extended, integrity, example):
     delta = -summary['paired_data_composition_comparison']['delta_percentage_points']
     words, chars = example['word_counts'], example['character_counts']
     overlap = integrity['split_pair_group_overlap']['hparl_train__test']['speakers']
-    return [
-        "Greek parliament speech: spontaneous, fast, political vocabulary.\n"
-        "Question: does adding read audiobook speech (CSS10) help a fine-tuned Whisper?\n"
-        "CSS10 is training-only; we always test on the original parliament test.",
-        f"{total:.0f} hours in total. We froze the test set first, before any cleaning.\n"
-        f"Cleaning fixed real problems: {drops['duplicate_audio']} duplicate recordings, {drops['cps_extreme']} clips with impossible "
-        f"speech rate; CSS10 was stored as float32, so we fixed decoding; tags stripped; "
-        f"{cleaning['review_queue_records']} suspicious clips flagged and logged.",
-        f"All 10 required baselines plus our trained systems, same {cohorts['test']['utterances']:,} clips, one normalisation.\n"
-        f"Colours are model families. Best official model: Canary, {canary:.1f}% WER.\n"
-        f"Our fine-tuned Whisper: {mixed:.1f}%, the best result overall.",
-        f"Official Whisper-small: {pre:.0f}%. Our fine-tuning on HParl: {hparl:.1f}%; adding CSS10: {mixed:.1f}%.\n"
-        f"That is a {delta:.2f}-point gain, and its speaker-bootstrap interval stays below zero.\n"
-        f"We also trained a CTC head on mHuBERT-147: {hubert:.1f}%, on par with Canary.",
-        "A real test clip: one letter wrong, omega instead of omicron, the same sound.\n"
-        f"WER counts the whole word: {100 * words['errors'] / words['reference_units']:.1f}%. "
-        f"CER counts one character: {100 * chars['errors'] / chars['reference_units']:.1f}%. That is why we report both.\n"
-        f"Limits: one seed; {overlap} of {cohorts['test']['speakers_with_ids']} test speakers also appear in training; "
-        "the CSS10 gain is small.\nEvery number regenerates from the repository.",
+    return [  # presenter's own final wording (Serhan); numbers are spoken rounded
+        "Hello everyone, our project is a benchmark of ASR for Greek parliamentary speech. "
+        "Greek parliament speech is fast, spontaneous and mostly political terms. "
+        "Our question: does adding CSS10, read audiobook speech, help a fine-tuned Whisper? "
+        "CSS10 is used for training only.",
+        "We froze the test set before cleaning. Cleaning removed 4 duplicate recordings and 9 clips with impossible speech rate. "
+        "We fixed how CSS10's float32 files are read, and logged 176 suspicious clips.",
+        "We benchmarked ten required baselines and our systems, on the same nearly nine thousand clips. "
+        "And the best official model is Canary with thirty percent WER but we achieved the best overall "
+        "with our fine-tuned Whisper with twenty two percent.",
+        "Official Whisper-small is seventy two percent. And fine-tuned on HParl is twenty three percent. "
+        "If we are adding CSS10, it reached twenty two percent. It is a small but real gain. "
+        "And our mHuBERT CTC head is close to Canary.",
+        "And it is a real test clip: one letter wrong. It should be omega but it is written as omicron. "
+        "And our limits are one seed, 49 of 82 test speakers also in training, small CSS10 gain.",
     ]
 
 
