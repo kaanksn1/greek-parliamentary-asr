@@ -283,8 +283,10 @@ python presentation/build_presentation.py
 ```
 
 The deck uses Bricolage Grotesque, Figtree and DM Mono (SIL Open Font License,
-`presentation/fonts/`); install them before opening the `.pptx`, or use the PDF.
-Greek text uses Arial because these fonts have no Greek glyphs.
+`presentation/fonts/`). The build script embeds them in the `.pptx`, so it
+renders correctly in PowerPoint without installing them; this was checked by
+opening the deck on a machine where they were not installed. Greek text uses
+Arial because these fonts have no Greek glyphs.
 
 ## Repository map and authorship
 

@@ -82,7 +82,8 @@ runs and execution of the extended training on his machine.
   (full 14-row table, metric definitions, split report required by the course,
   reproduction commands) directly from `results/benchmark/summary.json`,
   `results/data_integrity.json` and the scored test utterances, so no slide
-  number is typed by hand. Fonts are vendored under the SIL OFL.
+  number is typed by hand. Fonts are vendored under the SIL OFL and embedded
+  in the `.pptx`, so the deck renders on machines without them installed.
 
 ## Tools
 

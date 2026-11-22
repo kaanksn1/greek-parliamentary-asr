@@ -443,7 +443,90 @@ def build_deck(data):
         slide.notes_slide.notes_text_frame.text = notes
     target = OUT / 'greek_parliamentary_asr.pptx'
     deck.save(target)
+    embed_fonts(target)
     return target
+
+
+# --------------------------------------------------------------------------- font embedding
+EMBEDDED_FONTS = {  # typeface -> {style: vendored TrueType file}
+    HEAD: {'bold': 'BricolageGrotesque-ExtraBold.ttf'},  # 800 weight in the Bold slot
+    BODY: {'regular': 'Figtree-Regular.ttf', 'bold': 'Figtree-Bold.ttf'},
+    MONO: {'regular': 'DMMono-Regular.ttf'},
+}
+
+
+def eot(path):
+    """Wrap a TrueType file as uncompressed Embedded OpenType (v2.1), PowerPoint's .fntdata format."""
+    import struct
+    from fontTools.ttLib import TTFont
+
+    data = path.read_bytes()
+    font = TTFont(path)
+    os2, head, names = font['OS/2'], font['head'], font['name']
+    if os2.fsType & 0x0002:
+        raise ValueError(f'{path.name} forbids embedding')
+    def name(identifier):
+        value = (names.getDebugName(identifier) or '').encode('utf-16-le')
+        return struct.pack('<H', len(value)) + value
+    panose = os2.panose
+    body = struct.pack('<10B', panose.bFamilyType, panose.bSerifStyle, panose.bWeight, panose.bProportion, panose.bContrast,
+                       panose.bStrokeVariation, panose.bArmStyle, panose.bLetterForm, panose.bMidline, panose.bXHeight)
+    body += struct.pack('<BBIHH', 1, 1 if head.macStyle & 2 else 0, os2.usWeightClass, os2.fsType, 0x504C)
+    body += struct.pack('<4I', os2.ulUnicodeRange1, os2.ulUnicodeRange2, os2.ulUnicodeRange3, os2.ulUnicodeRange4)
+    body += struct.pack('<2I', getattr(os2, 'ulCodePageRange1', 1), getattr(os2, 'ulCodePageRange2', 0))
+    body += struct.pack('<I4I', head.checkSumAdjustment, 0, 0, 0, 0)
+    body += b'\0\0' + name(1) + b'\0\0' + name(2) + b'\0\0' + name(5) + b'\0\0' + name(4) + b'\0\0' + struct.pack('<H', 0)
+    prefix = struct.pack('<III', len(data), 0x00020001, 0)  # FontDataSize, Version 2.1, Flags: no compression/XOR
+    total = 4 + len(prefix) + len(body) + len(data)
+    return struct.pack('<I', total) + prefix + body + data
+
+
+def embed_fonts(target):
+    """Embed the vendored fonts so the deck renders correctly on machines without them installed."""
+    import shutil
+    import tempfile
+    import zipfile
+
+    r_ns = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+    font_rel = r_ns + '/font'
+    with zipfile.ZipFile(target) as source:
+        parts = {item.filename: source.read(item.filename) for item in source.infolist()}
+    presentation = etree.fromstring(parts['ppt/presentation.xml'])
+    rels = etree.fromstring(parts['ppt/_rels/presentation.xml.rels'])
+    types = etree.fromstring(parts['[Content_Types].xml'])
+    ct_ns = types.nsmap[None]
+    if not any(d.get('Extension') == 'fntdata' for d in types):
+        etree.SubElement(types, f'{{{ct_ns}}}Default', Extension='fntdata', ContentType='application/x-fontdata')
+    used = {rel.get('Id') for rel in rels}
+    font_list = etree.Element(qn('p:embeddedFontLst'))
+    index = 0
+    for typeface, styles in EMBEDDED_FONTS.items():
+        entry = etree.SubElement(font_list, qn('p:embeddedFont'))
+        etree.SubElement(entry, qn('p:font'), typeface=typeface)
+        for style in ('regular', 'bold'):
+            if style not in styles:
+                continue
+            index += 1
+            rel_id = next(f'rIdFont{n}' for n in range(index, 10_000) if f'rIdFont{n}' not in used)
+            used.add(rel_id)
+            parts[f'ppt/fonts/font{index}.fntdata'] = eot(OUT / 'fonts' / styles[style])
+            etree.SubElement(rels, f'{{{rels.nsmap[None]}}}Relationship', Id=rel_id, Type=font_rel,
+                             Target=f'fonts/font{index}.fntdata')
+            etree.SubElement(entry, qn(f'p:{style}')).set(f'{{{r_ns}}}id', rel_id)
+    notes_size = presentation.find(qn('p:notesSz'))
+    notes_size.addnext(font_list)
+    presentation.set('embedTrueTypeFonts', '1')
+    presentation.find(qn('p:sldSz')).attrib.pop('type', None)  # custom 16:9 size, not the template's 4:3 label
+    parts['ppt/presentation.xml'] = etree.tostring(presentation, xml_declaration=True, encoding='UTF-8', standalone=True)
+    parts['ppt/_rels/presentation.xml.rels'] = etree.tostring(rels, xml_declaration=True, encoding='UTF-8', standalone=True)
+    parts['[Content_Types].xml'] = etree.tostring(types, xml_declaration=True, encoding='UTF-8', standalone=True)
+    with tempfile.NamedTemporaryFile(dir=target.parent, delete=False, suffix='.pptx') as handle:
+        temporary = Path(handle.name)
+    with zipfile.ZipFile(temporary, 'w', zipfile.ZIP_DEFLATED) as output:
+        output.writestr('[Content_Types].xml', parts.pop('[Content_Types].xml'))
+        for name, content in parts.items():
+            output.writestr(name, content)
+    shutil.move(temporary, target)
 
 
 # --------------------------------------------------------------------------- appendix PDF
