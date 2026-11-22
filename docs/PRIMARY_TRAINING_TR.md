@@ -42,10 +42,9 @@ mevcut gradient clipping'e nonfinite hata kontrolü ve gerçek adım sayacı ekl
 GMM feature çıkarım ilerlemesini de loglar. Rastgele seed ve ölçülmüş bütçeler
 configlerden gelir. Yaklaşık epoch hedefleri yakınsama iddiası değildir.
 
-`keep_training_awake.ps1`, yalnız Windows'taki eğitim WSL süreci çalışırken
-geçici system-awake isteği tutar. Power plan/registry değiştirmez; ekranın
-kapanmasına izin verir. Süreç bitince istek temizlenir. Yardımcı süreçler
-`Start-Process -WindowStyle Hidden` ile başlatılır.
+Eğitim süresince Windows'taki WSL sürecinin uyumaması için geçici bir
+system-awake isteği kullanıldı; bu yerel yardımcı betik model veya veri işi
+olmadığı için depodan çıkarıldı. Eğitim kayıtları ve sonuçlar etkilenmez.
 
 Samed'in kalan görevi CSS10 float-aware veri probe/audit/clean düzeltmesi,
 karışımın doğrulanması ve ilgili raporlardır. İkinci Whisper koşulu ancak bu
