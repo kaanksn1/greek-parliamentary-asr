@@ -85,6 +85,17 @@ runs and execution of the extended training on his machine.
   number is typed by hand. Fonts are vendored under the SIL OFL and embedded
   in the `.pptx`, so the deck renders on machines without them installed.
 
+## Seen vs unseen test speakers (post-hoc)
+
+- The official HParl split shares 49 of 82 test speakers with training, so I added
+  `scripts/report_speaker_overlap.py`: it re-aggregates the already saved per-utterance
+  scores of every final system separately for test speakers that do and do not occur in
+  training (no decoding, no tuning, frozen test untouched). Output:
+  `results/speaker_overlap_scores.json`, a generated README block, appendix page D and
+  `tests/test_speaker_overlap_scores.py`. It was computed after the test results were
+  known and is labelled post-hoc. I also made the README data table and overlap numbers
+  generated from `results/data_integrity.json` (`tests/test_readme_generated_data.py`).
+
 ## Tools
 
 I used an AI coding assistant (Claude Code) for parts of the code and text

@@ -14,6 +14,7 @@ Local GitHub/monitor helpers under ignored `outputs/` are not ML methods.
 | [`freeze_benchmark_protocol.py`](../scripts/freeze_benchmark_protocol.py) | Freeze all systems and scoring only after complete DEV calibration acceptance. |
 | [`prepare_benchmark.py`](../scripts/prepare_benchmark.py) | Export exact inference weights and select a seeded DEV-only calibration cohort. |
 | [`report_benchmark_data.py`](../scripts/report_benchmark_data.py) | Report actual selected cohorts and literal/final-policy overlap; never edit data. |
+| [`report_speaker_overlap.py`](../scripts/report_speaker_overlap.py) | Post-hoc: re-aggregate the saved test scores for test speakers that do and do not occur in training; writes `results/speaker_overlap_scores.json` and a README block. |
 | [`run_benchmark_queue.py`](../scripts/run_benchmark_queue.py) | Run all planned ASR systems, score complete cohorts, and produce reproducible reports. |
 | [`run_extended_ctc.py`](../scripts/run_extended_ctc.py) | Execute the registered longer CTC conditions and their single test passes; preserve original runs and outcomes. |
 | [`run_primary_training_queue.py`](../scripts/run_primary_training_queue.py) | Run independent CPU GMM and sequential GPU HParl jobs; never run final test. |

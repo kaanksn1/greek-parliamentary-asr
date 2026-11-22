@@ -1,0 +1,342 @@
+{
+  "schema": "p3-speaker-overlap-scores-v1",
+  "note": "Computed after the test results were known and never used for any selection or tuning; it is an additional breakdown of the same single test pass, not a new test.",
+  "bootstrap": "speaker clusters, 1000 resamples, seed 42, 95%",
+  "test_speakers": 82,
+  "subsets": {
+    "seen_in_training": {
+      "speakers": 49,
+      "clips": 4782,
+      "hours": 6.286505555555555
+    },
+    "not_in_training": {
+      "speakers": 33,
+      "clips": 3897,
+      "hours": 4.921383333333333
+    }
+  },
+  "systems": [
+    {
+      "system": "gmm_hmm",
+      "role": "baseline",
+      "all_wer_percent": 89.15218422527923,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 88.67645884888641,
+        "cer_percent": 48.46425825298317,
+        "wer_ci95_percent": [
+          87.916701676601,
+          89.40708164888585
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 89.71112361658226,
+        "cer_percent": 51.09150980107892,
+        "wer_ci95_percent": [
+          88.73618100853427,
+          90.66215721782795
+        ]
+      }
+    },
+    {
+      "system": "plain_ctc",
+      "role": "baseline",
+      "all_wer_percent": 99.94609513131226,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 99.94611638860063,
+        "cer_percent": 91.45215827453858,
+        "wer_ci95_percent": [
+          99.92528478416502,
+          99.9649155003237
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 99.94607015569312,
+        "cer_percent": 91.27669639927664,
+        "wer_ci95_percent": [
+          99.91785997867174,
+          99.97242548838476
+        ]
+      }
+    },
+    {
+      "system": "attention",
+      "role": "baseline",
+      "all_wer_percent": 93.76967527707103,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 92.34852718128842,
+        "cer_percent": 59.722932692462365,
+        "wer_ci95_percent": [
+          89.42714891756239,
+          95.34373113205936
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 95.43941099230913,
+        "cer_percent": 62.43085069855101,
+        "wer_ci95_percent": [
+          91.53079784273893,
+          99.33620887666906
+        ]
+      }
+    },
+    {
+      "system": "transducer",
+      "role": "baseline",
+      "all_wer_percent": 88.6045107594118,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 88.30925201564621,
+        "cer_percent": 55.72810598821852,
+        "wer_ci95_percent": [
+          87.31446221181942,
+          89.34815838933075
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 88.95141624460702,
+        "cer_percent": 57.40364879403618,
+        "wer_ci95_percent": [
+          88.11737215384863,
+          89.71605984809639
+        ]
+      }
+    },
+    {
+      "system": "wav2vec",
+      "role": "baseline",
+      "all_wer_percent": 57.81297166760102,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 55.89327053564301,
+        "cer_percent": 19.233528618813683,
+        "wer_ci95_percent": [
+          54.06886425542559,
+          57.85918234740364
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 60.06846745451135,
+        "cer_percent": 21.557032436268187,
+        "wer_ci95_percent": [
+          58.14526116348679,
+          61.80857214181417
+        ]
+      }
+    },
+    {
+      "system": "hubert_ctc",
+      "role": "baseline",
+      "all_wer_percent": 99.88679977575575,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 99.92017242755648,
+        "cer_percent": 82.95160973789278,
+        "wer_ci95_percent": [
+          99.89266944352809,
+          99.94265125130408
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 99.84758957043707,
+        "cer_percent": 81.26540360301243,
+        "wer_ci95_percent": [
+          99.81644356459371,
+          99.87995273789825
+        ]
+      }
+    },
+    {
+      "system": "whisper_pretrained",
+      "role": "baseline",
+      "all_wer_percent": 72.0783561171245,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 70.08461722679013,
+        "cer_percent": 47.51324691870397,
+        "wer_ci95_percent": [
+          63.38930899286424,
+          76.74290763418131
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 74.42084036766086,
+        "cer_percent": 49.5032695697292,
+        "wer_ci95_percent": [
+          65.0282332987237,
+          85.61438879194047
+        ]
+      }
+    },
+    {
+      "system": "canary",
+      "role": "baseline",
+      "all_wer_percent": 30.183492173013065,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 30.08900774327453,
+        "cer_percent": 11.450099251352038,
+        "wer_ci95_percent": [
+          29.24198859080624,
+          31.090944405134536
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 30.294503845432377,
+        "cer_percent": 11.994780896861672,
+        "wer_ci95_percent": [
+          29.189910634652747,
+          31.25679865524103
+        ]
+      }
+    },
+    {
+      "system": "parakeet",
+      "role": "baseline",
+      "all_wer_percent": 37.30109103454224,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 36.7905324499082,
+        "cer_percent": 14.519652411148323,
+        "wer_ci95_percent": [
+          35.743536550115145,
+          38.05332112814631
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 37.900956668542484,
+        "cer_percent": 15.654638821276238,
+        "wer_ci95_percent": [
+          36.440393102424764,
+          39.23226376282469
+        ]
+      }
+    },
+    {
+      "system": "qwen",
+      "role": "baseline",
+      "all_wer_percent": 48.22868601492087,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 47.148159974455176,
+        "cer_percent": 21.655776364344153,
+        "wer_ci95_percent": [
+          45.42094383055966,
+          49.31605257202629
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 49.498217970362035,
+        "cer_percent": 23.595839978024827,
+        "wer_ci95_percent": [
+          47.36795694385817,
+          51.73567693984894
+        ]
+      }
+    },
+    {
+      "system": "whisper_hparl",
+      "role": "contribution",
+      "all_wer_percent": 23.316011902195005,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 21.391793725552805,
+        "cer_percent": 9.098308705485689,
+        "wer_ci95_percent": [
+          20.16953905063907,
+          22.829410535735363
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 25.57681485649972,
+        "cer_percent": 11.059310071190398,
+        "wer_ci95_percent": [
+          22.655191156979253,
+          28.820784194145403
+        ]
+      }
+    },
+    {
+      "system": "whisper_mixed",
+      "role": "contribution",
+      "all_wer_percent": 22.466471171676226,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 21.05053085335675,
+        "cer_percent": 8.438777841049845,
+        "wer_ci95_percent": [
+          19.774329475900608,
+          22.466456169326797
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 24.130088163571564,
+        "cer_percent": 9.84533447278665,
+        "wer_ci95_percent": [
+          21.721074122088872,
+          26.72258259265638
+        ]
+      }
+    },
+    {
+      "system": "hubert_ctc_extended",
+      "role": "baseline_extended_training",
+      "all_wer_percent": 30.778601923325716,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 28.7239562544903,
+        "cer_percent": 8.881146103781203,
+        "wer_ci95_percent": [
+          27.333234677938407,
+          30.52703491564399
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 33.19264678296755,
+        "cer_percent": 10.311543832073067,
+        "wer_ci95_percent": [
+          30.386706927691325,
+          36.044620711695515
+        ]
+      }
+    },
+    {
+      "system": "plain_ctc_extended",
+      "role": "baseline_extended_training",
+      "all_wer_percent": 100.68566992970804,
+      "seen_in_training": {
+        "clips": 4782,
+        "wer_percent": 101.20539634389718,
+        "cer_percent": 78.46840847159352,
+        "wer_ci95_percent": [
+          100.61919545576781,
+          101.80762825956744
+        ]
+      },
+      "not_in_training": {
+        "clips": 3897,
+        "wer_percent": 100.07503282686176,
+        "cer_percent": 79.05987471100362,
+        "wer_ci95_percent": [
+          99.72850354479908,
+          100.45436833758717
+        ]
+      }
+    }
+  ]
+}
