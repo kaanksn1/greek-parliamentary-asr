@@ -115,13 +115,21 @@ checkpoints or a bare encoder.
 
 ## Data, cleaning and split limitations
 
+<!-- generated-data:start -->
+
 | Actual cleaned cohort | Utterances | Speakers | Hours |
 |---|---:|---:|---:|
 | Selected HParl training | 23,602 | 208 | 30.883408 |
 | Additional CSS10 training | 1,844 | No encoded IDs; producer single reader | 4.137269 |
-| Mixed training | 25,446 | 208 identified; CSS10 IDs absent | 35.020678 |
+| Mixed training | 25,446 | 208 identified; 1,844 utterances without IDs | 35.020678 |
 | HParl development | 7,113 | 64 | 9.059189 |
 | Original frozen HParl test | 8,679 | 82 | 11.207889 |
+
+- Selected raw HParl training: 23,615 original clips from 18 whole sessions (30.90 h). Cleaning removed 13 records (9 extreme transcription speed, 4 duplicate audio); 176 review-queue flags, 0 human review decisions.
+- Speaker overlap (the official split is not speaker-disjoint): 49 of 82 test speakers also occur in selected training, covering 4,782 test clips; shared recordings/sessions 0, shared audio hashes 0. Dev-test shared speakers: 16; train-dev: 41.
+- Test sentences found word for word in the clean training targets: 3 utterances (3 unique); under the frozen final normalization: 9 utterances (9 unique).
+
+<!-- generated-data:end -->
 
 These counts come from the committed manifests, selected-training record and
 generated [data report](docs/DATA_REPORT_TR.md). CSS10 is literary read speech
@@ -132,9 +140,8 @@ reports. The root MIT license covers our code, not third-party audio/models.
 CSS10 has no encoded speaker/session IDs; its entire source is training-only.
 No speaker identifiers or cross-source speaker identities are invented.
 
-The selected raw HParl cohort contains 23,615 original clips from 18 whole
-sessions chosen with seed 42. Cleaning removes nine extreme transcription-speed
-records and four duplicate-audio records. All original selected raw clips,
+The selected raw HParl cohort consists of whole sessions chosen with seed 42; the
+generated block above gives its size and what cleaning removed. All original selected raw clips,
 including removals, plus dev/test/CSS10 audio are actually stored in this
 repository through Git LFS. Clean manifests and reference files select the
 clean corpus from those original WAVs; no gain, waveform normalization or
@@ -142,14 +149,40 @@ audio rewriting is applied. Format conversion or merging alone is not claimed
 as cleaning. The format-aware audit reads original PCM16/PCM32/IEEE-float32
 correctly. Original CSS10 float32 audio is retained byte for byte.
 
-HParl's **documented official session split is not speaker-disjoint**.
-49 test speakers also occur in selected training, accounting for 4,782 test
-clips; recording/session overlap is zero. Results must not be described as
-unseen-speaker generalization. Three test sentences appear literally among
-actual clean training targets. The frozen final normalization gives nine
-matching test utterances/nine unique sentences. These are recomputed by
+HParl's **documented official session split is not speaker-disjoint**: the
+generated block above lists the speaker overlap and the test sentences that
+appear in training. Results must not be described as unseen-speaker
+generalization. These numbers are recomputed by
 `scripts/report_benchmark_data.py` in [the selected-cohort integrity report](results/data_integrity.json),
 separately from the older diagnostic policy.
+
+**Seen vs unseen test speakers (post-hoc breakdown).** Because the official split shares
+speakers, the saved per-utterance scores of every final system are also aggregated
+separately for the two groups of test speakers by `scripts/report_speaker_overlap.py`
+(committed script; output in [`results/speaker_overlap_scores.json`](results/speaker_overlap_scores.json)).
+
+<!-- generated-speaker-overlap:start -->
+
+Test speakers that also occur in the selected training data: 49 (4,782 clips, 6.29 h); test speakers absent from training: 33 (3,897 clips, 4.92 h). Computed after the test results were known and never used for any selection or tuning; it is an additional breakdown of the same single test pass, not a new test. Intervals are speaker clusters, 1000 resamples, seed 42, 95%.
+
+| System | WER % seen speakers | WER % unseen speakers | Gap (pts) |
+|---|---:|---:|---:|
+| gmm_hmm | 88.68 [87.92, 89.41] | 89.71 [88.74, 90.66] | +1.03 |
+| plain_ctc | 99.95 [99.93, 99.96] | 99.95 [99.92, 99.97] | -0.00 |
+| attention | 92.35 [89.43, 95.34] | 95.44 [91.53, 99.34] | +3.09 |
+| transducer | 88.31 [87.31, 89.35] | 88.95 [88.12, 89.72] | +0.64 |
+| wav2vec | 55.89 [54.07, 57.86] | 60.07 [58.15, 61.81] | +4.18 |
+| hubert_ctc | 99.92 [99.89, 99.94] | 99.85 [99.82, 99.88] | -0.07 |
+| whisper_pretrained | 70.08 [63.39, 76.74] | 74.42 [65.03, 85.61] | +4.34 |
+| canary | 30.09 [29.24, 31.09] | 30.29 [29.19, 31.26] | +0.21 |
+| parakeet | 36.79 [35.74, 38.05] | 37.90 [36.44, 39.23] | +1.11 |
+| qwen | 47.15 [45.42, 49.32] | 49.50 [47.37, 51.74] | +2.35 |
+| whisper_hparl | 21.39 [20.17, 22.83] | 25.58 [22.66, 28.82] | +4.19 |
+| whisper_mixed | 21.05 [19.77, 22.47] | 24.13 [21.72, 26.72] | +3.08 |
+| hubert_ctc_extended | 28.72 [27.33, 30.53] | 33.19 [30.39, 36.04] | +4.47 |
+| plain_ctc_extended | 101.21 [100.62, 101.81] | 100.08 [99.73, 100.45] | -1.13 |
+
+<!-- generated-speaker-overlap:end -->
 
 The original test was frozen before cleaning and never filtered, relabeled,
 resplit or augmented. Its manifest, references and original audio hashes are
@@ -275,8 +308,8 @@ No paid storage or compute is used.
 
 `presentation/greek_parliamentary_asr.pptx` is the 2-minute deck (speaker notes
 included; `greek_parliamentary_asr.pdf` is its PowerPoint PDF export). The
-appendix with the full 14-row table, metric definitions, split report and
-reproduction commands is `presentation/appendix.pdf`. Both are generated from
+appendix with the full 14-row table, metric definitions, split report, the
+seen/unseen test-speaker breakdown and reproduction commands is `presentation/appendix.pdf`. Both are generated from
 the committed result files, so no slide number is typed by hand:
 
 ```bash
