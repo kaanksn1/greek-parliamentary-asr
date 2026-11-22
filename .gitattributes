@@ -27,3 +27,7 @@ results/benchmark/figures/*.svg -whitespace
 
 # Preserve the exact captured regression-test output.
 docs/reviews/pr17_2026-11-22/unit_tests.log -text -whitespace
+
+# Presentation binaries and vendored fonts are stored byte for byte.
+*.pptx -text
+*.ttf -text
