@@ -3,14 +3,14 @@
 COE025 NLP Project 3 — Anonymous group.
 Public repository: https://github.com/kaanksn1/greek-parliamentary-asr
 
-**21 November final model status:** all seven training allocations and all
+**Original 21 November benchmark status:** all seven training allocations and all
 12 final test systems are complete. Every system uses all 8,679 unchanged
 original test clips at immutable execution snapshot `0ff3196c`. Saved
 predictions, corpus edit counts, WER/CER, speaker-bootstrap intervals and
 CSV values passed independent regeneration checks. Original test audio
 passed verification before and after execution. Clean-clone data/weight
 verification and all 240 frozen-runtime regression tests passed.
-The generated final table below is complete. Presentation delivery and
+The linked original table is complete. Presentation delivery and
 Serhan's own contribution report remain separate member-owned work.
 
 The task is automatic transcription of Greek parliamentary speech. Our main
@@ -19,9 +19,16 @@ CSS10 Greek, with evaluation restricted to the original parliamentary test.
 The professor approved the two-corpus custom-benchmark and domain-evaluation
 plan in principle. This is not a claim that bonus points have been awarded.
 
+**22 November addendum:** the pre-registered longer Plain CTC and HuBERT-CTC
+training conditions have completed. Their selected checkpoints, full-DEV
+losses and test metrics are in the [extended run record](results/benchmark_extended/run_record.json),
+with [training records](results/training_extended/) and [prediction/score files](results/benchmark_extended/).
+These are additional training conditions of the existing CTC baseline
+families. Original benchmark rows remain available below.
+
 ## Results and model contribution
 
-[Generated final table](results/benchmark/SUMMARY.md),
+[Original generated final table](results/benchmark/SUMMARY.md),
 [machine-readable results](results/benchmark/results.csv),
 [figures](results/benchmark/figures/) and
 [presentation brief](results/PRESENTATION_BRIEF_TR.md) are produced by
@@ -51,17 +58,25 @@ corpus coverage. Other group-trained methods remain standard baseline families
 and earn implementation/training credit; a powerful pretrained model alone is
 not our model contribution.
 
-**Two group-trained baselines did not converge.** Plain CTC (WER 99.95%) and
-mHuBERT-147 + our CTC head (WER 99.89%) produce almost empty, repeated-character
-outputs: on average 1.0 and 1.5 predicted words per test clip. Their final
-full-dev CTC losses were 3.03 (plain CTC, 2,300 updates, about 11 minutes of
-training) and 2.52 (HuBERT, 1,500 updates, still decreasing). The CTC decoder
-itself is standard greedy collapse and is unit-tested; the models had not yet
-learned usable alignments within their measured allocations. These rows are kept
-unchanged as real frozen-protocol results. They show that these allocations were
-too short, not what CTC or HuBERT-CTC can reach on Greek. The published Greek
-wav2vec 2.0 CTC checkpoint (WER 57.81%) shows the same family working with
-sufficient training.
+**The original CTC runs failed to learn usable transcriptions.** Their
+recorded outputs, training allocations and full-DEV histories remain in
+`results/benchmark/` and `results/training/`. Standard greedy collapse and
+passing software tests do not establish successful ASR learning. Training
+duration and objective loss alone do not identify the cause of a failure.
+
+The [registered extended-training protocol](configs/extended_ctc_protocol.json)
+fixed the longer schedules before either new training or new test pass.
+It retained the data, model families, seed, base learning rate and decoder.
+Checkpoint selection used the lowest scheduled full-DEV loss. HuBERT
+improved substantially; **extended Plain CTC still produces degenerate
+repeated-character output and remains a failed ASR training condition**.
+Both outcomes are preserved in the extended run record, independently of
+the original rows. The exact Plain CTC failure mechanism is unresolved.
+
+The original test results were already known when this addendum was
+registered. These are follow-up conditions, each with one recorded pass
+on the same frozen test; they are not an independent unseen-test
+confirmation. No old prediction, score or selected weight was replaced.
 
 Exact model IDs, full 40-character upstream revisions, local selected-weight
 hashes, decoding and batch settings are in
@@ -222,8 +237,11 @@ Original run bytes match the source hashes in the checkpoint catalog; see
 
 Selected inference weights remove optimizer/scheduler/RNG resume state while
 preserving every retained tensor exactly; source/export hashes and tensor
-fingerprints are recorded. Audio plus selected weights occupy about 8.95 GiB,
-within the user's free 10 GiB storage cap. No paid storage or compute is used.
+fingerprints are recorded. The original audio and original selected weights occupy about 8.95 GiB;
+the addendum contributes about 0.39 GiB of new selected weights. The
+combined payload remains within the free 10 GiB storage cap, as checked
+in the [integration review](docs/reviews/pr17_2026-11-22/validation.json).
+No paid storage or compute is used.
 
 ## Repository map and authorship
 
