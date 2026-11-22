@@ -1,5 +1,7 @@
 # Kemal's baselines: MFCC + GMM-HMM, plain CTC, wav2vec 2.0, HuBERT
 
+> **22 November integration clarification:** the analysis below describes the original four conditions, before the separately registered [extended run](../results/benchmark_extended/run_record.json). It does not rank all group-trained checkpoints; the Whisper fine-tuning conditions are separate. Extended HuBERT improved, while extended Plain CTC remains degenerate, so duration alone is not an established explanation of both original failures. Single-system intervals are marginal speaker-cluster intervals; only the matched Whisper difference has an explicitly paired interval. Overlapping confidence intervals do not establish statistical equivalence. Read the dated comparisons with these limits and the [current README](../README.md).
+
 > **21 November completion note:** all selected data delivery and seven training allocations are complete; all twelve final systems were evaluated. Current evidence: [training](../results/training/SUMMARY.md), [benchmark](../results/benchmark/SUMMARY.md), [reproduction guide](FINAL_BENCHMARK.md). Earlier pilot-stage pending statements below describe their dated review stage, not current delivery.
 
 Owner: Kemal Arif Karabacıoğlu (`kemalarif`), branch `feature/p3-ctc-hmm`

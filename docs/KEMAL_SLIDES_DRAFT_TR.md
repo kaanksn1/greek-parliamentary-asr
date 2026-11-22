@@ -1,5 +1,7 @@
 # Kemal — 2 slayt taslağı (Ozan'ın sunumu için)
 
+> **22 Kasım entegrasyon notu:** aşağıdaki taslak eski dört koşulun 21 Kasım analizidir. Sunumda [uzatılmış koşu kaydını](../results/benchmark_extended/run_record.json) da kullanın: HuBERT iyileşti, Plain CTC başarısız kaldı. Her iki sorunun nedenini yalnız eğitim süresine bağlamayın. GMM-HMM karşılaştırması bütün grup eğitimlerinin sıralaması değildir; Whisper fine-tuning koşulları ayrıdır. Güven aralıklarının örtüşmesi “denk/eşdeğer” olduklarını kanıtlamaz. Güncel sonuç ve sınırlamalar için [README](../README.md) esas alınmalıdır.
+
 Ozan'a girdi olarak hazırlandı; bütün sunumu üstlenmez. Sayılar
 `results/benchmark/*/score.json` ve `results/training/*/run.json` dosyalarından
 alındı (21 Kasım, dondurulmuş testin tamamı: 8.679 klip). Ayrıntılı analiz:
