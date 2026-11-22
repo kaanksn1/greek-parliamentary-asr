@@ -1,0 +1,51 @@
+{
+  "schema": "greek-asr-ctc-predict-v1",
+  "status": "complete",
+  "checkpoint": "/home/serda/p3-runs/extended-ctc-20261121/checkpoints/plain_ctc_extended/model.pt",
+  "checkpoint_sha256": "fa1b1844e050d6917409e5632d4ffcac06946f241229108bc9599d4adb16679f",
+  "checkpoint_step": 15000,
+  "split": "test",
+  "decode": "greedy CTC best path over valid frames",
+  "batch_size": 16,
+  "manifest_sha256": "b0842bfbcbffa173585adb2debf35fb359748e0bd693da5a8dfabdb69de6f65a",
+  "test_protocol_sha256": "b322570ca6376e7524466534b758155d6a28cb6ef0f3f92bf458969710742db2",
+  "records": 8679,
+  "completed_records": 8679,
+  "references_used_as_model_input": false,
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "code_commit": "0a008d1183a0ee7ae63b9da0bb24c4705261cb71",
+  "code_sha256": {
+    "ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5"
+  },
+  "created_utc": "2026-11-22T00:06:37.835852+00:00",
+  "inference_seconds": 49.420606955998664,
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "qwen-asr": "0.0.6",
+      "huggingface-hub": "0.36.2"
+    },
+    "hip": "7.2.53211-e1a6bc5663",
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 342028288
+  },
+  "job": {
+    "name": "plain_ctc_extended",
+    "kind": "ctc",
+    "batch_size": 16,
+    "device": "cuda",
+    "checkpoint": "checkpoints/plain_ctc_extended/model.pt",
+    "role": "baseline_extended_training"
+  },
+  "worker_seconds_including_load": 51.646702145000745,
+  "seed": 42,
+  "extended_protocol_sha256": "ca8bd07d976469c1f57a2135925a6bcd2cec0fbb81773dabc226bf28e6d27feb",
+  "predictions_sha256": "6a49456007a7f3769090d89318a868c542ed266368df8a59fb6feb00847b0fe0"
+}

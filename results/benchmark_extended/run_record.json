@@ -1,0 +1,57 @@
+{
+  "schema": "p3-extended-ctc-run-v1",
+  "status": "complete",
+  "protocol_sha256": "ca8bd07d976469c1f57a2135925a6bcd2cec0fbb81773dabc226bf28e6d27feb",
+  "code_commit": "0a008d1183a0ee7ae63b9da0bb24c4705261cb71",
+  "started_utc": "2026-11-21T19:37:50.259193+00:00",
+  "systems": {
+    "hubert_ctc_extended": {
+      "status": "complete",
+      "started_utc": "2026-11-21T19:37:57.198459+00:00",
+      "training_wall_seconds": 12567.020510213999,
+      "best_optimizer_update": 8000,
+      "best_dev_loss": 0.4642987399968638,
+      "export": {
+        "files": {
+          "config.json": "a4f19f0e407bcbe3c75cd9a990ba9c1f6e3d0c144702a98c5412783c0ec9ac83",
+          "greek_asr_ctc.json": "00d9d0f880a762a45e55c7133b2fa92259495b8c315e7a4d87c8cac8261f322d",
+          "model.safetensors": "6b5a3d8f5a8c1e0fd0608842c485ee42da7a8c42143224ee434f29ae34e7c051",
+          "preprocessor_config.json": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86"
+        },
+        "copied_unchanged_from": "checkpoint-best",
+        "step": 8000,
+        "path": "checkpoints/hubert_ctc_extended",
+        "selection": "best full-DEV loss",
+        "training_run_sha256": "d3992f28ae76e2438a15904b4c9f06511a7b3951b1255f565535a4edb5029403"
+      },
+      "test_wer": 0.30778601923325716,
+      "test_cer": 0.09535536817927151
+    },
+    "plain_ctc_extended": {
+      "status": "complete",
+      "started_utc": "2026-11-21T23:13:54.897966+00:00",
+      "training_wall_seconds": 3158.617212546,
+      "best_optimizer_update": 15000,
+      "best_dev_loss": 2.943152984162755,
+      "export": {
+        "source_sha256": "bec4ac7ea98d1d39a4ad12a55feefe1ce435bba6931daec715bfd891d1201f6e",
+        "export_sha256": "fa1b1844e050d6917409e5632d4ffcac06946f241229108bc9599d4adb16679f",
+        "removed_training_state_keys": [
+          "optimizer_state",
+          "scheduler_state",
+          "rng_state"
+        ],
+        "inference_tensors_sha256": "4b0963299b4299cf7deadc093349f10dd89a87f0ff1e2a258016d2b358371c51",
+        "tensor_values_identical": true,
+        "step": 15000,
+        "path": "checkpoints/plain_ctc_extended/model.pt",
+        "selection": "best full-DEV loss",
+        "training_run_sha256": "4161557600534b047d589a208cdbf6731ce3bf5e03b4c56bbb30d04eda36e36c"
+      },
+      "test_wer": 1.0068566992970804,
+      "test_cer": 0.787389975582128
+    }
+  },
+  "test_freeze_verified_before_and_after": true,
+  "finished_utc": "2026-11-22T00:07:30.013172+00:00"
+}

@@ -1,0 +1,747 @@
+{
+  "schema": "greek-asr-ctc-train-v1",
+  "status": "complete",
+  "config": {
+    "_comment": "Pre-registered extended-training addendum (configs/extended_ctc_protocol.json), committed before training and before any new test inference. Identical to the original config except the training-length fields: max_steps, warmup_steps (kept at 10% of updates, as in the original allocation) and dev_eval_every (DEV-loss evaluation frequency). Motivation is DEV-only: the original run's full-DEV CTC loss had not converged. Original run/results are kept unchanged.",
+    "architecture": "conv2d x2 (stride 2) + BiLSTM 4x320 + linear CTC head",
+    "batch_size": 32,
+    "cmvn_utterances": 2000,
+    "dev_eval_every": 1500,
+    "dev_manifest": "data/manifests/dev.jsonl",
+    "dev_references": "data/manifests/references/dev.jsonl",
+    "gradient_accumulation_steps": 1,
+    "infeasible_policy": "exclude_and_report",
+    "learning_rate": 0.001,
+    "max_excluded_fraction": 0.01,
+    "max_grad_norm": 5.0,
+    "max_steps": 15000,
+    "model": {
+      "conv_channels": 32,
+      "dropout": 0.1,
+      "input_dim": 80,
+      "lstm_hidden": 320,
+      "lstm_layers": 4,
+      "model_dim": 320
+    },
+    "num_workers": 4,
+    "primary_sources": [
+      "Graves et al. (2006), Connectionist Temporal Classification, ICML",
+      "Amodei et al. (2016), Deep Speech 2, ICML",
+      "Park et al. (2019), SpecAugment, Interspeech"
+    ],
+    "sample_rate": 16000,
+    "seed": 42,
+    "spec_augment": {
+      "freq_masks": 2,
+      "freq_width": 27,
+      "time_masks": 2,
+      "time_ratio": 0.05
+    },
+    "train_manifest": "data/manifests/subsets/train_hparl_30.5h_seed42.jsonl",
+    "train_references": "data/manifests/subsets/references/train_hparl_30.5h_seed42.jsonl",
+    "warmup_steps": 1500,
+    "weight_decay": 0.01
+  },
+  "max_steps": 15000,
+  "max_steps_source": "config",
+  "model_config": {
+    "vocab_size": 59,
+    "input_dim": 80,
+    "conv_channels": 32,
+    "model_dim": 320,
+    "lstm_hidden": 320,
+    "lstm_layers": 4,
+    "dropout": 0.1
+  },
+  "vocab_size": 59,
+  "seed": 42,
+  "created_utc": "2026-11-21T23:14:05.242536+00:00",
+  "code_commit": "0a008d1183a0ee7ae63b9da0bb24c4705261cb71",
+  "code_sha256": {
+    "ctc.py": "2881ced7bc0e57e74390ec256d6d6a1edb441cbc80f248270db300fcae14d6af",
+    "common.py": "48f6e955918303c718d885f6fe5d6b76a74482bbec8fc244f2ef856a9768899d",
+    "ctc_utils.py": "0d734581f80ae110254971d3aaf085f743c6229e041b729b528964c5042bbda3",
+    "audio.py": "fd1d60709755e6b8782a123c85647513410a540c9d70f015a7ad4bda3adc6ac5"
+  },
+  "train_manifest_sha256": "f9731a5679c90e55cb97902e3b2996805fb49164f9382dc09b85fa2f66ee75db",
+  "train_references_sha256": "bcf07eb981fa21369d081e9e1b8f682e7e07fe96cbcf4fefc0794d619acc5198",
+  "dev_manifest_sha256": "316fbcfbfaf42a3f34a84f75427bd28ec33ee012b7a9e9a2ac10e38b8a69a29a",
+  "dev_references_sha256": "438fdd178dd01a873a9e6adf05de8f717c22da94743527afe45c83fdcad24c4c",
+  "train_source_breakdown": {
+    "hparl": {
+      "utterances": 23602,
+      "hours": 30.883408333333563
+    }
+  },
+  "train_items": 23532,
+  "train_excluded_infeasible": [
+    {
+      "id": "hparl:alekshs_tsipras-olomeleia_15_04060000_04063000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 53,
+      "required_frames": 58
+    },
+    {
+      "id": "hparl:alekshs_tsipras-olomeleia_15_04092500_04095500_5_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 28,
+      "required_frames": 31
+    },
+    {
+      "id": "hparl:alekshs_tsipras-olomeleia_15_04120000_04123000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 61,
+      "required_frames": 62
+    },
+    {
+      "id": "hparl:andreas_loverdos-olomeleia_29_02567500_02570500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 78,
+      "required_frames": 79
+    },
+    {
+      "id": "hparl:dhmhtrios_dhmhtriadhs-olomeleia_48_03100000_03103000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 43,
+      "required_frames": 44
+    },
+    {
+      "id": "hparl:dhmhtrios_kammenos-olomeleia_36_00160000_00163000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 45,
+      "required_frames": 49
+    },
+    {
+      "id": "hparl:dhmhtrios_kwnstantopoulos-olomeleia_5_03672500_03675500_3_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 43,
+      "required_frames": 46
+    },
+    {
+      "id": "hparl:dhmhtrios_tzanakopoulos-olomeleia_15_01077500_01080500_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 93,
+      "required_frames": 95
+    },
+    {
+      "id": "hparl:domna_maria_mixahlidou-olomeleia_2_00055000_00058000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 75,
+      "required_frames": 85
+    },
+    {
+      "id": "hparl:gewrgios_mavrwtas-olomeleia_29_04352500_04355500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 58,
+      "required_frames": 70
+    },
+    {
+      "id": "hparl:gewrgios_oursouzidhs-olomeleia_29_03620000_03623000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 31,
+      "required_frames": 33
+    },
+    {
+      "id": "hparl:gewrgios_tsipras-olomeleia_9_00187500_00190500_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 109,
+      "required_frames": 243
+    },
+    {
+      "id": "hparl:gewrgios_tsipras-olomeleia_9_00195000_00198000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 85,
+      "required_frames": 93
+    },
+    {
+      "id": "hparl:iwannhs_gkiokas-olomeleia_29_01202500_01205500_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 91,
+      "required_frames": 96
+    },
+    {
+      "id": "hparl:iwannhs_kefalogiannhs-olomeleia_35_00160000_00163000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 32,
+      "required_frames": 34
+    },
+    {
+      "id": "hparl:iwannhs_saxinidhs-olomeleia_48_03615000_03618000_2_3",
+      "reason": "too_few_output_frames",
+      "output_frames": 38,
+      "required_frames": 43
+    },
+    {
+      "id": "hparl:katerina_notopoulou-olomeleia_15_00130000_00133000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 36,
+      "required_frames": 38
+    },
+    {
+      "id": "hparl:klewn_grhgoriadhs-olomeleia_5_02205000_02208000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 76,
+      "required_frames": 82
+    },
+    {
+      "id": "hparl:klewn_grhgoriadhs-olomeleia_5_02285000_02288000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 88,
+      "required_frames": 99
+    },
+    {
+      "id": "hparl:kwnstantina_nantia_giannakopoulou-olomeleia_5_03155000_03158000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 98,
+      "required_frames": 102
+    },
+    {
+      "id": "hparl:kwnstantinos_blouxos-olomeleia_5_01665000_01668000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 38,
+      "required_frames": 47
+    },
+    {
+      "id": "hparl:kwnstantinos_blouxos-olomeleia_5_01672500_01675500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 53,
+      "required_frames": 54
+    },
+    {
+      "id": "hparl:kwnstantinos_blouxos-olomeleia_5_01675000_01678000_5_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 48,
+      "required_frames": 49
+    },
+    {
+      "id": "hparl:kwnstantinos_gavroglou-olomeleia_40_00130000_00133000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 58,
+      "required_frames": 60
+    },
+    {
+      "id": "hparl:kwnstantinos_katsafados-olomeleia_49_00015000_00018000_1_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 67,
+      "required_frames": 69
+    },
+    {
+      "id": "hparl:kyriakos_mhtsotakhs-olomeleia_15_03320000_03323000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 48,
+      "required_frames": 49
+    },
+    {
+      "id": "hparl:kyriakos_mhtsotakhs-olomeleia_15_03400000_03403000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 31,
+      "required_frames": 32
+    },
+    {
+      "id": "hparl:kyriakos_mhtsotakhs-olomeleia_33_00120000_00123000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 30,
+      "required_frames": 33
+    },
+    {
+      "id": "hparl:kyriakos_mhtsotakhs-olomeleia_33_00290000_00293000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 36,
+      "required_frames": 40
+    },
+    {
+      "id": "hparl:kyriakos_mhtsotakhs-olomeleia_37_00707500_00710500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 72,
+      "required_frames": 95
+    },
+    {
+      "id": "hparl:maria_thelerith-olomeleia_37_01632500_01635500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 38,
+      "required_frames": 40
+    },
+    {
+      "id": "hparl:marios_gewrgiadhs-olomeleia_20_00120000_00123000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 90,
+      "required_frames": 91
+    },
+    {
+      "id": "hparl:marios_gewrgiadhs-olomeleia_29_04867500_04870500_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 38,
+      "required_frames": 40
+    },
+    {
+      "id": "hparl:marios_gewrgiadhs-olomeleia_29_04942500_04945500_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 66,
+      "required_frames": 76
+    },
+    {
+      "id": "hparl:marios_salmas-olomeleia_15_00892500_00895500_4_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 52,
+      "required_frames": 54
+    },
+    {
+      "id": "hparl:mavroudhs_voridhs-olomeleia_32_00150000_00153000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 26,
+      "required_frames": 29
+    },
+    {
+      "id": "hparl:mixahl_kaloghrou-olomeleia_13_00077500_00080500_3_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 53,
+      "required_frames": 55
+    },
+    {
+      "id": "hparl:nikhtas_kaklamanhs-olomeleia_36_00720000_00723000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 27,
+      "required_frames": 29
+    },
+    {
+      "id": "hparl:nikolaos_karathanasopoulos-olomeleia_15_01817500_01820500_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 46,
+      "required_frames": 53
+    },
+    {
+      "id": "hparl:nikolaos_nikolopoulos-olomeleia_29_02017500_02020500_2_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 28,
+      "required_frames": 31
+    },
+    {
+      "id": "hparl:nikolaos_papadopoulos-olomeleia_15_01150000_01153000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 48,
+      "required_frames": 56
+    },
+    {
+      "id": "hparl:nikolaos_pappas-olomeleia_15_00635000_00638000_2_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 41,
+      "required_frames": 44
+    },
+    {
+      "id": "hparl:olga_gerovasilh-olomeleia_49_00035000_00038000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 39,
+      "required_frames": 46
+    },
+    {
+      "id": "hparl:panagiwta_vrantza-olomeleia_15_00210000_00213000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 42,
+      "required_frames": 45
+    },
+    {
+      "id": "hparl:panagiwta_vrantza-olomeleia_15_00210000_00213000_3_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 31,
+      "required_frames": 47
+    },
+    {
+      "id": "hparl:panagiwta_vrantza-olomeleia_15_00212500_00215500_4_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 97,
+      "required_frames": 103
+    },
+    {
+      "id": "hparl:panagiwta_vrantza-olomeleia_29_05440000_05443000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 31,
+      "required_frames": 33
+    },
+    {
+      "id": "hparl:panagiwta_vrantza-olomeleia_29_05452500_05455500_3_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 98,
+      "required_frames": 110
+    },
+    {
+      "id": "hparl:panagiwta_vrantza-olomeleia_29_05485000_05488000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 28,
+      "required_frames": 29
+    },
+    {
+      "id": "hparl:panagiwta_vrantza-olomeleia_29_05490000_05493000_1_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 41,
+      "required_frames": 42
+    },
+    {
+      "id": "hparl:panagiwths_rhgas-olomeleia_29_04242500_04245500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 96,
+      "required_frames": 98
+    },
+    {
+      "id": "hparl:panagiwths_tsakloglou-olomeleia_5_00200000_00203000_4_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 37,
+      "required_frames": 40
+    },
+    {
+      "id": "hparl:panos_kammenos-olomeleia_15_02490000_02493000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 46,
+      "required_frames": 49
+    },
+    {
+      "id": "hparl:panos_kammenos-olomeleia_15_02507500_02510500_4_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 28,
+      "required_frames": 37
+    },
+    {
+      "id": "hparl:panos_kammenos-olomeleia_15_02510000_02513000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 93,
+      "required_frames": 98
+    },
+    {
+      "id": "hparl:panos_kammenos-olomeleia_37_01297500_01300500_5_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 91,
+      "required_frames": 94
+    },
+    {
+      "id": "hparl:panos_kammenos-olomeleia_37_01325000_01328000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 68,
+      "required_frames": 71
+    },
+    {
+      "id": "hparl:rallia_xrhstidou-olomeleia_5_01592500_01595500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 58,
+      "required_frames": 63
+    },
+    {
+      "id": "hparl:sofia_sakorafa-olomeleia_5_01412500_01415500_4_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 33,
+      "required_frames": 34
+    },
+    {
+      "id": "hparl:stathhs_giannakidhs-olomeleia_48_03702500_03705500_4_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 63,
+      "required_frames": 64
+    },
+    {
+      "id": "hparl:stavros_theodwrakhs-olomeleia_15_02337500_02340500_1_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 66,
+      "required_frames": 67
+    },
+    {
+      "id": "hparl:swkraths_famellos-olomeleia_29_04372500_04375500_1_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 31,
+      "required_frames": 35
+    },
+    {
+      "id": "hparl:swkraths_famellos-olomeleia_29_04450000_04453000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 73,
+      "required_frames": 81
+    },
+    {
+      "id": "hparl:theodwra_megalooikonomou-olomeleia_29_05380000_05383000_5_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 28,
+      "required_frames": 34
+    },
+    {
+      "id": "hparl:theodwros_karaoglou-olomeleia_5_01765000_01768000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 41,
+      "required_frames": 50
+    },
+    {
+      "id": "hparl:vasileios_giogiakas-olomeleia_29_00260000_00263000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 35,
+      "required_frames": 36
+    },
+    {
+      "id": "hparl:vasilhs_levenths-olomeleia_32_00835000_00838000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 232,
+      "required_frames": 243
+    },
+    {
+      "id": "hparl:xrhstos_karagiannidhs-olomeleia_29_02307500_02310500_3_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 43,
+      "required_frames": 51
+    },
+    {
+      "id": "hparl:xrhstos_mantas-olomeleia_15_01317500_01320500_1_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 53,
+      "required_frames": 55
+    },
+    {
+      "id": "hparl:xrhstos_xatzhsavvas-olomeleia_32_00462500_00465500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 68,
+      "required_frames": 69
+    }
+  ],
+  "dev_loss_items": 7088,
+  "dev_loss_excluded": [
+    {
+      "id": "hparl:aikaterinh_papanatsiou-olomeleia_30_02282500_02285500_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 181,
+      "required_frames": 305
+    },
+    {
+      "id": "hparl:ashmina_gkagka-olomeleia_4_00867500_00870500_2_3",
+      "reason": "too_few_output_frames",
+      "output_frames": 43,
+      "required_frames": 44
+    },
+    {
+      "id": "hparl:ashmina_gkagka-olomeleia_4_00985000_00988000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 31,
+      "required_frames": 42
+    },
+    {
+      "id": "hparl:ashmina_gkagka-olomeleia_4_01215000_01218000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 28,
+      "required_frames": 29
+    },
+    {
+      "id": "hparl:athanasios_plevrhs-olomeleia_4_00260000_00263000_4_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 26,
+      "required_frames": 30
+    },
+    {
+      "id": "hparl:athanasios_plevrhs-olomeleia_4_00382500_00385500_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 27,
+      "required_frames": 32
+    },
+    {
+      "id": "hparl:athanasios_vardalhs-olomeleia_30_00470000_00473000_3_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 60,
+      "required_frames": 68
+    },
+    {
+      "id": "hparl:dhmhtrios_gakhs-olomeleia_30_01330000_01333000_4_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 26,
+      "required_frames": 32
+    },
+    {
+      "id": "hparl:dhmhtrios_vettas-olomeleia_14_00075000_00078000_4_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 51,
+      "required_frames": 56
+    },
+    {
+      "id": "hparl:evaggelia_evh_karakwsta-olomeleia_30_01265000_01268000_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 161,
+      "required_frames": 274
+    },
+    {
+      "id": "hparl:gewrgios_amyras-olomeleia_14_00880000_00883000_2_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 40,
+      "required_frames": 56
+    },
+    {
+      "id": "hparl:gewrgios_amyras-olomeleia_4_01937500_01940500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 38,
+      "required_frames": 45
+    },
+    {
+      "id": "hparl:gewrgios_amyras-olomeleia_4_02110000_02113000_1_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 41,
+      "required_frames": 43
+    },
+    {
+      "id": "hparl:giannhs_koutsoukos-olomeleia_14_01400000_01403000_1_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 26,
+      "required_frames": 34
+    },
+    {
+      "id": "hparl:giannhs_koutsoukos-olomeleia_30_00262500_00265500_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 30,
+      "required_frames": 31
+    },
+    {
+      "id": "hparl:iwannhs_tsirwnhs-olomeleia_30_01612500_01615500_1_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 28,
+      "required_frames": 29
+    },
+    {
+      "id": "hparl:kwnstantinos_pavlidhs-olomeleia_30_00052500_00055500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 72,
+      "required_frames": 114
+    },
+    {
+      "id": "hparl:marios_gewrgiadhs-olomeleia_14_01000000_01003000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 73,
+      "required_frames": 74
+    },
+    {
+      "id": "hparl:marios_gewrgiadhs-olomeleia_30_01225000_01228000_3_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 33,
+      "required_frames": 34
+    },
+    {
+      "id": "hparl:odysseas_kwnstantinopoulos-olomeleia_4_01312500_01315500_5_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 108,
+      "required_frames": 109
+    },
+    {
+      "id": "hparl:proedros_nikolaos_voytshs-olomeleia_14_00442500_00445500_4_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 197,
+      "required_frames": 201
+    },
+    {
+      "id": "hparl:stylianos_petsas-olomeleia_4_00170000_00173000_1_3",
+      "reason": "too_few_output_frames",
+      "output_frames": 95,
+      "required_frames": 96
+    },
+    {
+      "id": "hparl:theodwros_karaoglou-olomeleia_14_01937500_01940500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 81,
+      "required_frames": 83
+    },
+    {
+      "id": "hparl:theodwros_karaoglou-olomeleia_14_01982500_01985500_1_1",
+      "reason": "too_few_output_frames",
+      "output_frames": 68,
+      "required_frames": 74
+    },
+    {
+      "id": "hparl:theoxarhs_xarhs_theoxarhs-olomeleia_14_01822500_01825500_2_2",
+      "reason": "too_few_output_frames",
+      "output_frames": 33,
+      "required_frames": 41
+    }
+  ],
+  "dev_reference_preparation": "annotation tags removed in memory for dev loss only",
+  "cmvn_utterances": 2000,
+  "cmvn_seconds": 1.3455398280002555,
+  "trainable_parameters": 9284187,
+  "effective_batch_size": 32,
+  "precision": "float32",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "optimizer_updates_completed": 15000,
+  "best_dev_loss": 2.943152984162755,
+  "best_optimizer_update": 15000,
+  "dev_history": [
+    {
+      "optimizer_update": 1500,
+      "dev_loss": 3.199053602885985,
+      "train_loss": 3.1500329971313477,
+      "dev_seconds": 21.786137390001386
+    },
+    {
+      "optimizer_update": 3000,
+      "dev_loss": 2.9893227974394376,
+      "train_loss": 3.085127830505371,
+      "dev_seconds": 19.6749791680013
+    },
+    {
+      "optimizer_update": 4500,
+      "dev_loss": 2.9751574212756706,
+      "train_loss": 2.9691734313964844,
+      "dev_seconds": 19.683245584999895
+    },
+    {
+      "optimizer_update": 6000,
+      "dev_loss": 2.974510667555488,
+      "train_loss": 2.840390682220459,
+      "dev_seconds": 19.71176502600065
+    },
+    {
+      "optimizer_update": 7500,
+      "dev_loss": 2.9781725508903003,
+      "train_loss": 2.953899383544922,
+      "dev_seconds": 19.716033554001115
+    },
+    {
+      "optimizer_update": 9000,
+      "dev_loss": 2.9726115575493326,
+      "train_loss": 2.949838638305664,
+      "dev_seconds": 19.702238120000402
+    },
+    {
+      "optimizer_update": 10500,
+      "dev_loss": 2.967647280165627,
+      "train_loss": 3.041105270385742,
+      "dev_seconds": 19.66473714300082
+    },
+    {
+      "optimizer_update": 12000,
+      "dev_loss": 2.9473817569138503,
+      "train_loss": 2.913022518157959,
+      "dev_seconds": 19.67674399700263
+    },
+    {
+      "optimizer_update": 13500,
+      "dev_loss": 2.943393150247785,
+      "train_loss": 2.8337016105651855,
+      "dev_seconds": 19.697926536002342
+    },
+    {
+      "optimizer_update": 15000,
+      "dev_loss": 2.943152984162755,
+      "train_loss": 2.8428711891174316,
+      "dev_seconds": 19.718263945000217
+    }
+  ],
+  "training_seconds": 3147.948489941,
+  "dev_eval_seconds": 199.03207046401076,
+  "seconds_per_update_excluding_dev": 0.1965944279651326,
+  "micro_steps_completed": 15000,
+  "epochs_started": 21,
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "packages": {
+      "torch": "2.9.1+rocm7.2.1.lw.gitff65f5bc",
+      "torchaudio": "2.9.0+rocm7.2.1.gite3c6ee2b",
+      "transformers": "4.57.6",
+      "numpy": "1.26.4",
+      "huggingface-hub": "0.36.2"
+    },
+    "torch_build": "2.9.1+rocm7.2.1.gitff65f5bc",
+    "hip": "7.2.53211-e1a6bc5663",
+    "cuda": null,
+    "gpu_available": true,
+    "gpu": "AMD Radeon RX 7800 XT",
+    "peak_gpu_memory_allocated_bytes": 2199614464
+  }
+}

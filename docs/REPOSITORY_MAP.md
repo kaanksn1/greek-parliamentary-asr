@@ -16,6 +16,7 @@ Local GitHub/monitor helpers under ignored `outputs/` are not ML methods.
 | [`prepare_benchmark.py`](../scripts/prepare_benchmark.py) | Export exact inference weights and select a seeded DEV-only calibration cohort. |
 | [`report_benchmark_data.py`](../scripts/report_benchmark_data.py) | Report actual selected cohorts and literal/final-policy overlap; never edit data. |
 | [`run_benchmark_queue.py`](../scripts/run_benchmark_queue.py) | Run all planned ASR systems, score complete cohorts, and produce reproducible reports. |
+| [`run_extended_ctc.py`](../scripts/run_extended_ctc.py) | Execute the registered longer CTC conditions and their single test passes; preserve original runs and outcomes. |
 | [`run_primary_training_queue.py`](../scripts/run_primary_training_queue.py) | Run independent CPU GMM and sequential GPU HParl jobs; never run final test. |
 | [`run_selected_data_checks.py`](../scripts/run_selected_data_checks.py) | Run the selected-scope data chain on real audio and record every command's output. |
 | [`run_training_job.py`](../scripts/run_training_job.py) | Owner's observable full-run wrapper; submitted model algorithms stay unchanged. |
@@ -58,11 +59,10 @@ These reproduce dated diagnostics or resource measurements using train fixtures,
 - [Data pipeline](DATA_PIPELINE_TR.md): raw-to-clean commands; scope is stated at the top.
 - [Protocol erratum](FINAL_PROTOCOL_ERRATA.md): descriptive GMM LM typo and original-byte archive restoration.
 - [Teacher audit](TEACHER_FINAL_AUDIT_TR.md): evidence and open items.
-- [Serhan handoff](HANDOFF_SERHAN_FINAL_TR.md): presentation/member-owned delivery.
 
 ## Historical and ownership documents
 
-`PROTOCOL_DRAFT.md`, `SECONDARY_SOURCE_TR.md`, `INITIAL_WORK_TR.md`, `TOPIC_DECISION_TR.md` and earlier handoffs preserve dated plans/source choices. They do not override the final protocol.
+`PROTOCOL_DRAFT.md`, `SECONDARY_SOURCE_TR.md`, `INITIAL_WORK_TR.md`, `TOPIC_DECISION_TR.md` preserve dated plans/source choices. Earlier handoffs preserve dated team instructions; two superseded handoff prompts were removed from the final tree and remain in the git history. They do not override the final protocol.
 `docs/reviews/` retains dated train-pilot bug reviews, budget measurements, training and final verification evidence. Failed/OOM diagnostics are not final benchmark rows.
 `TEAM.md` is the dated ownership plan. Individual contribution reports preserve their authors' dated development work; current central execution is recorded in generated results.
 Teacher clarification documents record the supplied rules. Old text-classification-specific novelty examples are not the Project 3 ASR baseline list.

@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "reviewed_head": "35e1b48331ff82ff567e82b570198ff53746321f",
+  "systems": [
+    {
+      "system": "hubert_ctc_extended",
+      "records": 8679,
+      "saved_scores_recomputed": true,
+      "best_dev_selection_verified": true,
+      "wer": 0.30778601923325716,
+      "cer": 0.09535536817927151
+    },
+    {
+      "system": "plain_ctc_extended",
+      "records": 8679,
+      "saved_scores_recomputed": true,
+      "best_dev_selection_verified": true,
+      "wer": 1.0068566992970804,
+      "cer": 0.787389975582128
+    }
+  ],
+  "original_rows_and_paired_comparison_unchanged": true,
+  "original_inputs_weights_predictions_scores_runs_unchanged": true,
+  "both_audio_freezes_passed": true,
+  "new_weight_bytes": 414845011,
+  "combined_audio_and_weights_gib": 9.34073552582413,
+  "asr_or_training_repeated": false,
+  "plain_ctc_quality_issue_remains": true
+}
